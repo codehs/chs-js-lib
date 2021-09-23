@@ -1,10 +1,9 @@
 // import the npm-hosted editor utils only if the other is not available
 // var editorUtils = require('codehs-js-utils');
-import { getDistance } from './graphics-utils';
-import { getAudioContext } from './audioContext';
-import Sound from './sound';
-import WebVideo from './webvideo';
-import graphics from 'codehs-graphics/graphics';
+import { getDistance } from './graphics-utils.js'
+import { getAudioContext } from './audioContext.js'
+import Sound from './sound.js'
+import WebVideo from './webvideo.js'
 
 const DEFAULT_FRAME_RATE = 40;
 const FULLSCREEN_PADDING = 5;
@@ -285,8 +284,6 @@ export default class CodeHSGraphics {
             );
         }
 
-        var self = this;
-
         // Safety, set a min frequency
         if (isNaN(time) || time < 15) {
             time = 15;
@@ -297,7 +294,7 @@ export default class CodeHSGraphics {
                 fn: fn,
                 time: time,
                 data: data,
-                clicks: self.clickCount,
+                clicks: this.clickCount,
                 name: name,
             });
         } else {
@@ -396,8 +393,7 @@ export default class CodeHSGraphics {
      * Set the canvas to take up the entire parent element
      */
     setFullscreen() {
-        var self = this;
-        self.fullscreenMode = true; // when this is true, canvas will resize with parent
+        this.fullscreenMode = true; // when this is true, canvas will resize with parent
         var canvas = this.getCanvas();
         canvas.width = canvas.parentElement.offsetWidth - FULLSCREEN_PADDING;
         canvas.height = canvas.parentElement.offsetHeight - FULLSCREEN_PADDING;
@@ -639,8 +635,6 @@ export default class CodeHSGraphics {
      */
     setup() {
         var drawingCanvas = this.getCanvas();
-
-        // self.setMainTimer();
 
         drawingCanvas.onclick = e => {
             if (this.waitingForClick()) {

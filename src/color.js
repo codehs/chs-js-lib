@@ -1,10 +1,8 @@
-'use strict';
-
 /**
  * @namespace Color
  */
 
-import * as Randomizer from './randomizer.js';
+import * as Randomizer from './randomizer.js.js'
 
 /**
  * @class Color

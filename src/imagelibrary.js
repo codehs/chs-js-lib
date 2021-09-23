@@ -1,4 +1,4 @@
-module.exports = {
+export default {
     Characters: {
         penguin: 'https://static.codehs.com/img/library/characters/penguin.png',
         monkey: 'https://static.codehs.com/img/library/characters/monkey.jpg',

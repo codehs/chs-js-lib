@@ -1,8 +1,6 @@
-'use strict';
-
-import Thing from './thing';
-import Color from './color';
-import { getDistance } from './graphics-utils';
+import Thing from './thing.js'
+import Color from './color.js'
+import { getDistance } from './graphics-utils.js'
 
 /**
  * @class Circle

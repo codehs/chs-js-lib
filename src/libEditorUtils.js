@@ -1,5 +1,3 @@
-'use strict';
-
 /*
  * This is the version of Editor Utils packaged with NPM to be used
  * in the distributed version of the library.
@@ -13,7 +11,7 @@
  * a semicolon.
  */
 // TODO handle this in the linter module.
-function linesWithoutSemicolons(code) {
+export function linesWithoutSemicolons(code) {
     // TODO: Shim JSLINT
     var lintResults = window.jslint(code);
     var warnings = lintResults.warnings;
@@ -32,7 +30,7 @@ function linesWithoutSemicolons(code) {
 /* This code adapted from
  * http://james.padolsey.com/javascript/removing-comments-in-javascript/
  * Removes comments from a string of javascript text. */
-function removeComments(str) {
+export function removeComments(str) {
     str = str.split('');
     var mode = {
         singleQuote: false,
@@ -122,7 +120,7 @@ function removeComments(str) {
 // loops), the line number for the error will be incorrect.
 // For this case, we need to examine the stack trace of the
 // error to get the line number within the user's code.
-function lineNumberFromError(error) {
+export function lineNumberFromError(error) {
     var realLineNo = -1;
 
     // User code shows up as <anonymous> in stack trace.
@@ -141,7 +139,7 @@ function lineNumberFromError(error) {
 // Okay to run after comments are stripped, as
 // the removeComments() function leaves a newline character if a line contains
 // only a comment.
-function generateCodeArray(code) {
+export function generateCodeArray(code) {
     var lines = code.split('\n');
     return lines;
 }
@@ -165,7 +163,7 @@ function generateCodeArray(code) {
  *     returns whatever fnToTry or fnOnError returns.
  *
  */
-function safeEditorCode(fnToTry, options) {
+ export function safeEditorCode(fnToTry, options) {
     options = options || {};
     // fnOnError is noop if not passed.
     var fnOnError = options.fnOnError || function() {};
@@ -206,7 +204,7 @@ function safeEditorCode(fnToTry, options) {
  *     }.
  *
  */
-function safeEval(code, context, contextName) {
+ export function safeEval(code, context, contextName) {
     /* We need to inject another context into the code being eval'd, so we wrap
     the code in an IIFE with the param `contextName` and the arg `__context__` .
     We are able to reference the var `__context__` in the eval environment b/c
@@ -238,7 +236,7 @@ function safeEval(code, context, contextName) {
 }
 
 // Return whether or not there was an infinite loop
-function testInfiniteLoops(code) {
+export function testInfiniteLoops(code) {
     // try to find if there is an infinite loop in the code.
     try {
         code = "function start(){}\n" + code;
@@ -263,7 +261,7 @@ function testInfiniteLoops(code) {
  * Safely run a student python code with skulpt. Safely implies that any errors
  * will be caught and handled appropriately by the editor.
  */
- function safeSkulpt(/*simply pass args to skulpt*/) {
+ export function safeSkulpt(/*simply pass args to skulpt*/) {
      var argsToUse = arguments;
      return window.Sk.misceval.asyncToPromise(function() {
          return window.Sk.importMainWithBody.apply(null, argsToUse);
@@ -297,7 +295,7 @@ function testInfiniteLoops(code) {
  *     will be caught and handled appropriately by the editor.
  *
  */
-function safeCallback(fnToTry, fnOnError) {
+ export function safeCallback(fnToTry, fnOnError) {
     return function() {
         var options = {};
         options.fnOnError = fnOnError;
@@ -320,7 +318,7 @@ function safeCallback(fnToTry, fnOnError) {
  *     intervalId.
  *
  */
-function safeSetInterval(fnToTry, data, time) {
+ export function safeSetInterval(fnToTry, data, time) {
     var fnOnError = function() {
         // Has access to intervalId becuase of closure.
         clearInterval(intervalId);
@@ -330,18 +328,3 @@ function safeSetInterval(fnToTry, data, time) {
 
     return intervalId;
 }
-
-/**
- * Editor utils export
- */
-module.exports = {
-    linesWithoutSemicolons: linesWithoutSemicolons,
-    removeComments: removeComments,
-    lineNumberFromError: lineNumberFromError,
-    generateCodeArray: generateCodeArray,
-    safeSkulpt: safeSkulpt,
-    safeEval: safeEval,
-    safeCallback: safeCallback,
-    safeSetInterval: safeSetInterval,
-    testInfiniteLoops: testInfiniteLoops
-};

@@ -2,8 +2,8 @@
  * @namespace Arc
  */
 
-import Thing from './thing';
-import { getDistance } from './graphics-utils';
+import Thing from './thing.js'
+import { getDistance } from './graphics-utils.js'
 
 /**
  * Arc class. TODO docs
@@ -64,8 +64,6 @@ export default class Arc extends Thing {
                     'angleUnit)</span>',
             );
         }
-
-        Thing.call(this);
 
         this.radius = radius;
         this.angleUnit = angleUnit == Arc.DEGREES ? Arc.DEGREES : Arc.RADIANS;

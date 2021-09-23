@@ -1,6 +1,6 @@
 'use strict';
 
-import Thing from './thing';
+import Thing from './thing.js'
 
 var DEFAULT_WIDTH = 150;
 var DEFAULT_HEIGHT = (DEFAULT_WIDTH * 3) / 4;
@@ -13,6 +13,8 @@ const WEBCAM_INDICATOR = 'WEBCAM';
  * @param {string} filename - Filepath to the video
  */
 export default class WebVideo extends Thing {
+    static WEBCAM = WEBCAM_INDICATOR;
+
     constructor(filename) {
         if (typeof filename !== 'string') {
             throw new TypeError(
@@ -20,8 +22,6 @@ export default class WebVideo extends Thing {
                     "new WebVideo(filename)</span> that has the video's location.",
             );
         }
-        Thing.call(this);
-        var self = this;
 
         var vid = document.createElement('video');
         this.width = DEFAULT_WIDTH;
@@ -38,9 +38,9 @@ export default class WebVideo extends Thing {
             } else if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
                 navigator.mediaDevices
                     .getUserMedia({ video: true })
-                    .then(function (stream) {
-                        self.video.srcObject = stream;
-                        self.video.play();
+                    .then(stream => {
+                        this.video.srcObject = stream;
+                        this.video.play();
                     })
                     .catch(function (error) {
                         throw new Error('Web camera access was denied: ' + error);
@@ -58,177 +58,178 @@ export default class WebVideo extends Thing {
             this.video.crossOrigin = 'anonymous';
         }
     }
-}
 
-WebVideo.WEBCAM = WEBCAM_INDICATOR;
+    /**
+     * Draws the WebVideo in the canvas.
+     *
+     * @param {CodeHSGraphics} __graphics__ - Instance of the __graphics__ module.
+     */
+    draw(__graphics__) {
+        if (this.browserSupportsVideo) {
+            var context = __graphics__.getContext('2d');
 
-WebVideo.prototype = new Thing();
-WebVideo.prototype.constructor = WebVideo;
+            // Scale and translate
+            // X scale, X scew, Y scew, Y scale, X position, Y position
+            context.setTransform(1, 0, 0, 1, this.x + this.width / 2, this.y + this.height / 2);
+            context.rotate(this.rotation);
 
-/**
- * Draws the WebVideo in the canvas.
- *
- * @param {CodeHSGraphics} __graphics__ - Instance of the __graphics__ module.
- */
-WebVideo.prototype.draw = function (__graphics__) {
-    if (this.browserSupportsVideo) {
-        var context = __graphics__.getContext('2d');
+            context.drawImage(
+                this.video,
+                -this.width / 2,
+                -this.height / 2,
+                this.width,
+                this.height,
+            );
 
-        // Scale and translate
-        // X scale, X scew, Y scew, Y scale, X position, Y position
-        context.setTransform(1, 0, 0, 1, this.x + this.width / 2, this.y + this.height / 2);
-        context.rotate(this.rotation);
-
-        context.drawImage(this.video, -this.width / 2, -this.height / 2, this.width, this.height);
-
-        // Reset transformation matrix
-        // X scale, X scew, Y scew, Y scale, X position, Y position
-        context.setTransform(1, 0, 0, 1, 0, 0);
-    }
-};
-
-/**
- * Checks if the passed point is contained in the WebVideo.
- *
- * @param {number} x - The x coordinate of the point being tested.
- * @param {number} y - The y coordinate of the point being tested.
- * @returns {boolean} Whether the passed point is contained in the WebVideo.
- */
-WebVideo.prototype.containsPoint = function (x, y) {
-    if (this.browserSupportsVideo) {
-        return x >= this.x && x <= this.x + this.width && y >= this.y && y <= this.y + this.height;
-    }
-    return false;
-};
-
-/**
- * Gets the width of the WebVideo.
- *
- * @returns {number} Width of the WebVideo.
- */
-WebVideo.prototype.getWidth = function () {
-    return this.width;
-};
-
-/**
- * Gets the height of the WebVideo.
- *
- * @returns {number} Height of the WebVideo.
- */
-WebVideo.prototype.getHeight = function () {
-    return this.height;
-};
-
-/**
- * Sets the size of the WebVideo.
- *
- * @param {number} width - The desired width of the resulting WebVideo.
- * @param {number} height - The desired height of the resulting WebVideo.
- */
-WebVideo.prototype.setSize = function (width, height) {
-    this.width = width;
-    this.height = height;
-};
-
-/**
- * Sets whether the WebVideo should start playing automatically once loaded.
- *
- * @param {boolean} autoplay - True/false whether the video should start playing automatically.
- */
-WebVideo.prototype.setAutoplay = function (autoplay) {
-    if (this.browserSupportsVideo) {
-        this.video.autoplay = autoplay;
-    }
-};
-
-/**
- * Sets whether the WebVideo should loop and play again once finished.
- *
- * @param {boolean} loop - True/false whether the video should loop.
- */
-WebVideo.prototype.setLoop = function (loop) {
-    if (this.browserSupportsVideo) {
-        this.video.loop = loop;
-    }
-};
-
-/**
- * Sets whether the WebVideo is muted or not.
- *
- * @param {boolean} muted - True/false whether the video should be muted.
- */
-WebVideo.prototype.setMuted = function (muted) {
-    if (this.browserSupportsVideo) {
-        this.video.muted = muted;
-    }
-};
-
-/**
- * Starts playing the WebVideo.
- */
-WebVideo.prototype.play = function () {
-    if (this.browserSupportsVideo) {
-        this.video.play();
-    }
-};
-
-/**
- * Pauses the WebVideo.
- */
-WebVideo.prototype.pause = function () {
-    if (this.browserSupportsVideo) {
-        this.video.pause();
-    }
-};
-
-/**
- * Stops the WebVideo.
- */
-WebVideo.prototype.stop = function () {
-    if (this.browserSupportsVideo) {
-        this.video.pause();
-        this.video.currentTime = 0;
-
-        if (this.isWebCam && this.video.srcObject) {
-            this.video.srcObject.getTracks().forEach(function (track) {
-                track.stop();
-            });
+            // Reset transformation matrix
+            // X scale, X scew, Y scew, Y scale, X position, Y position
+            context.setTransform(1, 0, 0, 1, 0, 0);
         }
     }
-};
 
-/**
- * Returns whether the WebVideo is currently playing.
- *
- * @returns {boolean} True if the video is playing, false if it is not.
- */
-WebVideo.prototype.isPlaying = function () {
-    if (this.browserSupportsVideo) {
-        return !(this.video.paused || this.video.ended);
+    /**
+     * Checks if the passed point is contained in the WebVideo.
+     *
+     * @param {number} x - The x coordinate of the point being tested.
+     * @param {number} y - The y coordinate of the point being tested.
+     * @returns {boolean} Whether the passed point is contained in the WebVideo.
+     */
+    containsPoint(x, y) {
+        if (this.browserSupportsVideo) {
+            return (
+                x >= this.x && x <= this.x + this.width && y >= this.y && y <= this.y + this.height
+            );
+        }
+        return false;
     }
-    return false;
-};
 
-/**
- * Returns whether the WebVideo is currently muted.
- *
- * @returns {boolean} True if the video is muted, false if it is not.
- */
-WebVideo.prototype.isMuted = function () {
-    if (this.browserSupportsVideo) {
-        return this.video.muted;
+    /**
+     * Gets the width of the WebVideo.
+     *
+     * @returns {number} Width of the WebVideo.
+     */
+    getWidth() {
+        return this.width;
     }
-    return false;
-};
 
-/**
- * Defines a function to call once the video has loaded enough and is ready to play.
- * @param  {Function} fn A function to call when the video is ready to play.
- */
-WebVideo.prototype.onReadyToPlay = function (fn) {
-    if (this.browserSupportsVideo) {
-        this.video.oncanplay = fn;
+    /**
+     * Gets the height of the WebVideo.
+     *
+     * @returns {number} Height of the WebVideo.
+     */
+    getHeight() {
+        return this.height;
     }
-};
 
-// module.exports = WebVideo;
+    /**
+     * Sets the size of the WebVideo.
+     *
+     * @param {number} width - The desired width of the resulting WebVideo.
+     * @param {number} height - The desired height of the resulting WebVideo.
+     */
+    setSize(width, height) {
+        this.width = width;
+        this.height = height;
+    }
+
+    /**
+     * Sets whether the WebVideo should start playing automatically once loaded.
+     *
+     * @param {boolean} autoplay - True/false whether the video should start playing automatically.
+     */
+    setAutoplay(autoplay) {
+        if (this.browserSupportsVideo) {
+            this.video.autoplay = autoplay;
+        }
+    }
+
+    /**
+     * Sets whether the WebVideo should loop and play again once finished.
+     *
+     * @param {boolean} loop - True/false whether the video should loop.
+     */
+    setLoop(loop) {
+        if (this.browserSupportsVideo) {
+            this.video.loop = loop;
+        }
+    }
+
+    /**
+     * Sets whether the WebVideo is muted or not.
+     *
+     * @param {boolean} muted - True/false whether the video should be muted.
+     */
+    setMuted(muted) {
+        if (this.browserSupportsVideo) {
+            this.video.muted = muted;
+        }
+    }
+
+    /**
+     * Starts playing the WebVideo.
+     */
+    play() {
+        if (this.browserSupportsVideo) {
+            this.video.play();
+        }
+    }
+
+    /**
+     * Pauses the WebVideo.
+     */
+    pause() {
+        if (this.browserSupportsVideo) {
+            this.video.pause();
+        }
+    }
+
+    /**
+     * Stops the WebVideo.
+     */
+    stop() {
+        if (this.browserSupportsVideo) {
+            this.video.pause();
+            this.video.currentTime = 0;
+
+            if (this.isWebCam && this.video.srcObject) {
+                this.video.srcObject.getTracks().forEach(function (track) {
+                    track.stop();
+                });
+            }
+        }
+    }
+
+    /**
+     * Returns whether the WebVideo is currently playing.
+     *
+     * @returns {boolean} True if the video is playing, false if it is not.
+     */
+    isPlaying() {
+        if (this.browserSupportsVideo) {
+            return !(this.video.paused || this.video.ended);
+        }
+        return false;
+    }
+
+    /**
+     * Returns whether the WebVideo is currently muted.
+     *
+     * @returns {boolean} True if the video is muted, false if it is not.
+     */
+    isMuted() {
+        if (this.browserSupportsVideo) {
+            return this.video.muted;
+        }
+        return false;
+    }
+
+    /**
+     * Defines a function to call once the video has loaded enough and is ready to play.
+     * @param  {Function} fn A function to call when the video is ready to play.
+     */
+    onReadyToPlay(fn) {
+        if (this.browserSupportsVideo) {
+            this.video.oncanplay = fn;
+        }
+    }
+}
