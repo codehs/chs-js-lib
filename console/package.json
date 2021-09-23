@@ -1,0 +1,16 @@
+{
+  "name": "codehs-console",
+  "version": "1.5.6",
+  "description": "Helpers for console programs in the CodeHS editor.",
+  "main": "console.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "teaching",
+    "console",
+    "codehs"
+  ],
+  "author": "CodeHS <hello@codehs.com>",
+  "license": "ISC"
+}

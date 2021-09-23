@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Test</title>
+  <script src="../../windowchs.js"></script>
+</head>
+<body>
+  <canvas id="game" width="480" height="400"></canvas>
+  <script id="code">
+    const g = new Graphics();
+    g.attachToWindow(window);
+    var c = new Circle(20);
+    add(c);
+    mouseMoveMethod(({x, y}) => {
+        c.setPosition(x, y);
+    });
+    mouseClickMethod(({x, y}) => {
+        stopTimer('MAIN_TIMER');
+    });
+  </script>
+</body>
+</html>

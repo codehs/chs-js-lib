@@ -1,0 +1,17 @@
+{
+  "name": "codehs-datastructures",
+  "version": "1.2.0",
+  "description": "Data structures used in the CodeHS editor.",
+  "main": "datastructuresbase.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "data",
+    "structures",
+    "teaching",
+    "codehs"
+  ],
+  "author": "CodeHS <hello@codehs.com>",
+  "license": "ISC"
+}
