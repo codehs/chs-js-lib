@@ -1,4 +1,4 @@
-import Thing from './thing.js'
+import Thing from './thing.js';
 
 /**
  * Note: this is not used as a subclass for Circle since drawing ovals
@@ -14,45 +14,32 @@ import Thing from './thing.js'
  */
 export default class Oval extends Thing {
     constructor(width, height) {
+        super();
         if (arguments.length !== 2) {
-            throw new Error(
-                'You should pass exactly 2 arguments to <span ' +
-                    'class="code">new Oval(width, height)</span>',
-            );
+            throw new Error('You should pass exactly 2 arguments to `new Oval(width, height)`.');
         }
         if (typeof width !== 'number' || !isFinite(width)) {
             throw new TypeError(
-                'Invalid value for <span class="code">width' +
-                    '</span>. Make sure you are passing finite numbers to <span ' +
-                    'class="code">new Oval(width, height)</span>. Did you ' +
-                    'forget the parentheses in <span class="code">getWidth()</span> ' +
-                    'or <span class="code">getHeight()</span>? Or did you perform a ' +
-                    'calculation on a variable that is not a number?',
+                'Invalid value for `width`. Make sure you are passing finite numbers to `new Oval(width, height)`. Did you forget the parentheses in `getWidth()` or `getHeight()`? Or did you perform a calculation on a variable that is not a number?',
             );
         }
         if (typeof height !== 'number' || !isFinite(height)) {
             throw new TypeError(
-                'Invalid value for <span class="code">height' +
-                    '</span>. Make sure you are passing finite numbers to <span ' +
-                    'class="code">new Oval(width, height)</span>. Did you ' +
-                    'forget the parentheses in <span class="code">getWidth()</span> ' +
-                    'or <span class="code">getHeight()</span>? Or did you perform a ' +
-                    'calculation on a variable that is not a number?',
+                'Invalid value for `height`. Make sure you are passing finite numbers to `new Oval(width, height)`. Did you forget the parentheses in `getWidth()` or `getHeight()`? Or did you perform a calculation on a variable that is not a number?',
             );
         }
         this.width = Math.max(0, width);
         this.height = Math.max(0, height);
-        this.type = 'Oval';
     }
     /**
      * Draws an ellipse centered at this.x and this.y.
      * adapted from http://stackoverflow.com/questions/2172798/
      * how-to-draw-an-oval-in-html5-canvas
      *
-     * @param {CodeHSGraphics} __graphics__ - Instance of the __graphics__ module.
+     * @param {CodeHSGraphics} graphics - Instance of the Graphics module.
      */
-    draw(__graphics__) {
-        var context = __graphics__.getContext();
+    draw(graphics) {
+        var context = graphics.getContext();
         // http://stackoverflow.com/questions/17125632/html5-canvas-rotate-object-without-moving-coordinates
         context.save();
 
@@ -116,18 +103,11 @@ export default class Oval extends Thing {
      */
     setWidth(width) {
         if (arguments.length !== 1) {
-            throw new Error(
-                'You should pass exactly 1 argument to <span ' +
-                    'class="code">setWidth(width)</span>',
-            );
+            throw new Error('You should pass exactly 1 argument to `setWidth(width)`.');
         }
         if (typeof width !== 'number' || !isFinite(width)) {
             throw new TypeError(
-                'You must pass a finite number to <span class=' +
-                    '"code">setWidth(width)</span>. Did you forget the ' +
-                    'parentheses in <span class="code">getWidth()</span> or <span ' +
-                    'class="code">getHeight()</span>? Or did you perform a ' +
-                    'calculation on a variable that is not a number?',
+                'You must pass a finite number to `setWidth(width)`. Did you forget the parentheses in `getWidth()` or `getHeight()`? Or did you perform a calculation on a variable that is not a number?',
             );
         }
 
@@ -141,18 +121,11 @@ export default class Oval extends Thing {
      */
     setHeight(height) {
         if (arguments.length !== 1) {
-            throw new Error(
-                'You should pass exactly 1 argument to <span ' +
-                    'class="code">setHeight(height)</span>',
-            );
+            throw new Error('You should pass exactly 1 argument to `setHeight(height)`.');
         }
         if (typeof height !== 'number' || !isFinite(height)) {
             throw new TypeError(
-                'You must pass a finite number to <span class=' +
-                    '"code">setHeight(height)</span>. Did you forget the ' +
-                    'parentheses in <span class="code">getWidth()</span> or <span ' +
-                    'class="code">getHeight()</span>? Or did you perform a ' +
-                    'calculation on a variable that is not a number?',
+                'You must pass a finite number to `setHeight(height)`. Did you forget the parentheses in `getWidth()` or `getHeight()`? Or did you perform a calculation on a variable that is not a number?',
             );
         }
 

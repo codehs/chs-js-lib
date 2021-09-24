@@ -1,4 +1,4 @@
-import Thing from './thing.js'
+import Thing from './thing.js';
 
 const UNDEFINED = -1;
 const NOT_LOADED = 0;
@@ -22,8 +22,7 @@ export default class WebImage extends Thing {
     constructor(filename) {
         if (typeof filename !== 'string') {
             throw new TypeError(
-                'You must pass a string to <span class="code">' +
-                    "new WebImage(filename)</span> that has the image's URL.",
+                'You must pass a string to `' + "new WebImage(filename)` that has the image's URL.",
             );
         }
 
@@ -66,7 +65,6 @@ export default class WebImage extends Thing {
             }
         };
         this.set = 0;
-        this.type = 'WebImage';
 
         this.displayFromData = false;
         this.dirtyHiddenCanvas = false;
@@ -90,8 +88,7 @@ export default class WebImage extends Thing {
     setImage(filename) {
         if (typeof filename !== 'string') {
             throw new TypeError(
-                'You must pass a string to <span class="code">' +
-                    "new WebImage(filename)</span> that has the image's URL.",
+                'You must pass a string to `' + "new WebImage(filename)` that has the image's URL.",
             );
         }
 
@@ -188,9 +185,9 @@ export default class WebImage extends Thing {
             );
         } catch (err) {
             throw new TypeError(
-                'Unable to create a WebImage from <span class="code">' +
+                'Unable to create a WebImage from `' +
                     this.filename +
-                    '</span> ' +
+                    '` ' +
                     'Make sure you have a valid image URL. ' +
                     'Hint: You can use More > Upload to upload your image and create a valid image URL.',
             );
@@ -271,26 +268,26 @@ export default class WebImage extends Thing {
         if (arguments.length !== 2) {
             throw new Error(
                 'You should pass exactly 2 arguments to <span ' +
-                    'class="code">setSize(width, height)</span>',
+                    'class="code">setSize(width, height)`',
             );
         }
         if (typeof width !== 'number' || !isFinite(width)) {
             throw new TypeError(
-                'Invalid value for <span class="code">width' +
-                    '</span>. Make sure you are passing finite numbers to <span ' +
-                    'class="code">setSize(width, height)</span>. Did you ' +
-                    'forget the parentheses in <span class="code">getWidth()</span> ' +
-                    'or <span class="code">getHeight()</span>? Or did you perform a ' +
+                'Invalid value for `width' +
+                    '`. Make sure you are passing finite numbers to <span ' +
+                    'class="code">setSize(width, height)`. Did you ' +
+                    'forget the parentheses in `getWidth()` ' +
+                    'or `getHeight()`? Or did you perform a ' +
                     'calculation on a variable that is not a number?',
             );
         }
         if (typeof height !== 'number' || !isFinite(height)) {
             throw new TypeError(
-                'Invalid value for <span class="code">height' +
-                    '</span>. Make sure you are passing finite numbers to <span ' +
-                    'class="code">setSize(width, height)</span>. Did you ' +
-                    'forget the parentheses in <span class="code">getWidth()</span> ' +
-                    'or <span class="code">getHeight()</span>? Or did you perform a ' +
+                'Invalid value for `height' +
+                    '`. Make sure you are passing finite numbers to <span ' +
+                    'class="code">setSize(width, height)`. Did you ' +
+                    'forget the parentheses in `getWidth()` ' +
+                    'or `getHeight()`? Or did you perform a ' +
                     'calculation on a variable that is not a number?',
             );
         }

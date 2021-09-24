@@ -1,7 +1,8 @@
 var chsjs = (function (exports) {
 
     /**
-     * Generic class. TODO docs.
+     * Generic class. You should never need to construct a thing directly, only extend from
+     * Thing as a superclass.
      */
     class Thing {
         static DEGREES = 0;
@@ -30,14 +31,12 @@ var chsjs = (function (exports) {
          */
         setFilled(filled) {
             if (arguments.length !== 1) {
-                throw new Error(
-                    'You should pass exactly 1 argument to ' + '<span class="code">setFilled</span>',
-                );
+                throw new Error('You should pass exactly 1 argument to ' + '`setFilled`');
             }
             if (typeof filled !== 'boolean') {
                 throw new Error(
-                    'Invalid value passed to <span class="code">' +
-                        'setFilled</span>. Make sure you are passing a ' +
+                    'Invalid value passed to `' +
+                        'setFilled`. Make sure you are passing a ' +
                         'boolean value.',
                 );
             }
@@ -61,13 +60,13 @@ var chsjs = (function (exports) {
         setBorder(hasBorder) {
             if (arguments.length !== 1) {
                 throw new Error(
-                    'You should pass exactly 1 argument to <span class=' + '"code">setBorder</span>',
+                    'You should pass exactly 1 argument to <span class=' + '"code">setBorder`',
                 );
             }
             if (typeof hasBorder !== 'boolean') {
                 throw new Error(
-                    'Invalid value passed to <span class="code">' +
-                        'setBorder</span>. Make sure you are passing a ' +
+                    'Invalid value passed to `' +
+                        'setBorder`. Make sure you are passing a ' +
                         'boolean value.',
                 );
             }
@@ -84,30 +83,6 @@ var chsjs = (function (exports) {
         }
 
         /**
-         * Sets a Thing object's type.
-         * Questionable of whether or not this method is used.
-         *
-         * @param {type} type - A type to set the Thing to.
-         */
-        setType(type) {
-            if (arguments.length !== 1) {
-                throw new Error(
-                    'You should pass exactly 1 argument to <span ' + 'class="code">setType</span>',
-                );
-            }
-            this.type = type;
-        }
-
-        /**
-         * Returns the type of a Thing.
-         *
-         * @return {type} The type of the Thing.
-         */
-        getType() {
-            return this.type;
-        }
-
-        /**
          * Sets the position of a Thing.
          * Throws an error if there are fewer than 2 params or if
          * they are not numbers.
@@ -118,17 +93,16 @@ var chsjs = (function (exports) {
         setPosition(x, y) {
             if (arguments.length !== 2) {
                 throw new Error(
-                    'You should pass exactly 2 arguments to <span ' +
-                        'class="code">setPosition(x, y)</span>',
+                    'You should pass exactly 2 arguments to <span ' + 'class="code">setPosition(x, y)`',
                 );
             }
             if (typeof x !== 'number' || !isFinite(x)) {
                 throw new TypeError(
                     'Invalid value for x-coordinate. ' +
                         'Make sure you are passing finite numbers to <span ' +
-                        'class="code">setPosition(x, y)</span>. Did you ' +
-                        'forget the parentheses in <span class="code">getWidth()</span> ' +
-                        'or <span class="code">getHeight()</span>? Or did you perform a ' +
+                        'class="code">setPosition(x, y)`. Did you ' +
+                        'forget the parentheses in `getWidth()` ' +
+                        'or `getHeight()`? Or did you perform a ' +
                         'calculation on a variable that is not a number?',
                 );
             }
@@ -136,9 +110,9 @@ var chsjs = (function (exports) {
                 throw new TypeError(
                     'Invalid value for y-coordinate. ' +
                         'Make sure you are passing finite numbers to <span ' +
-                        'class="code">setPosition(x, y)</span>. Did you ' +
-                        'forget the parentheses in <span class="code">getWidth()</span> ' +
-                        'or <span class="code">getHeight()</span>? Or did you perform a ' +
+                        'class="code">setPosition(x, y)`. Did you ' +
+                        'forget the parentheses in `getWidth()` ' +
+                        'or `getHeight()`? Or did you perform a ' +
                         'calculation on a variable that is not a number?',
                 );
             }
@@ -159,14 +133,14 @@ var chsjs = (function (exports) {
             if (arguments.length < 1 || arguments.length > 2) {
                 throw new Error(
                     'You should pass 1 or 2 arguments to <span ' +
-                        'class="code">setRotation(degrees, angleUnit)</span>',
+                        'class="code">setRotation(degrees, angleUnit)`',
                 );
             }
             if (typeof degrees !== 'number' || !isFinite(degrees)) {
                 throw new TypeError(
                     'Invalid value for degrees. ' +
                         'Make sure you are passing finite numbers to <span ' +
-                        'class="code">setRotation(degrees, angleUnit)</span>. Did you ' +
+                        'class="code">setRotation(degrees, angleUnit)`. Did you ' +
                         'perform a calculation on a variable that is not a number?',
                 );
             }
@@ -175,9 +149,9 @@ var chsjs = (function (exports) {
             }
             if (typeof angleUnit !== 'number' || !isFinite(angleUnit)) {
                 throw new TypeError(
-                    'Invalid value for <span class="code">angleUnit' +
-                        '</span>. Make sure you are passing finite numbers to <span ' +
-                        'class="code">setRotation(degrees, angleUnit)</span>',
+                    'Invalid value for `angleUnit' +
+                        '`. Make sure you are passing finite numbers to <span ' +
+                        'class="code">setRotation(degrees, angleUnit)`',
                 );
             }
             if (angleUnit == Thing.DEGREES) {
@@ -198,14 +172,14 @@ var chsjs = (function (exports) {
             if (arguments.length < 1 || arguments.length > 2) {
                 throw new Error(
                     'You should pass exactly 1 argument to <span ' +
-                        'class="code">rotate(degrees, angleUnit)</span>',
+                        'class="code">rotate(degrees, angleUnit)`',
                 );
             }
             if (typeof degrees !== 'number' || !isFinite(degrees)) {
                 throw new TypeError(
                     'Invalid value for degrees. ' +
                         'Make sure you are passing finite numbers to <span ' +
-                        'class="code">rotate(degrees, angleUnit)</span>. Did you perform ' +
+                        'class="code">rotate(degrees, angleUnit)`. Did you perform ' +
                         'a calculation on a variable that is not a number?',
                 );
             }
@@ -214,9 +188,9 @@ var chsjs = (function (exports) {
             }
             if (typeof angleUnit !== 'number' || !isFinite(angleUnit)) {
                 throw new TypeError(
-                    'Invalid value for <span class="code">angleUnit' +
-                        '</span>. Make sure you are passing finite numbers to <span ' +
-                        'class="code">rotate(degrees, angleUnit)</span>',
+                    'Invalid value for `angleUnit' +
+                        '`. Make sure you are passing finite numbers to <span ' +
+                        'class="code">rotate(degrees, angleUnit)`',
                 );
             }
             if (angleUnit == Thing.DEGREES) {
@@ -236,7 +210,7 @@ var chsjs = (function (exports) {
         setColor(color) {
             if (arguments.length !== 1) {
                 throw new Error(
-                    'You should pass exactly 1 argument to <span ' + 'class="code">setColor</span>',
+                    'You should pass exactly 1 argument to <span ' + 'class="code">setColor`',
                 );
             }
             if (color === undefined) {
@@ -264,8 +238,7 @@ var chsjs = (function (exports) {
         setBorderColor(color) {
             if (arguments.length !== 1) {
                 throw new Error(
-                    'You should pass exactly 1 argument to <span ' +
-                        'class="code">setBorderColor</span>',
+                    'You should pass exactly 1 argument to <span ' + 'class="code">setBorderColor`',
                 );
             }
             if (color === undefined) {
@@ -293,15 +266,14 @@ var chsjs = (function (exports) {
         setBorderWidth(width) {
             if (arguments.length !== 1) {
                 throw new Error(
-                    'You should pass exactly 1 argument to <span ' +
-                        'class="code">setBorderWidth</span>',
+                    'You should pass exactly 1 argument to <span ' + 'class="code">setBorderWidth`',
                 );
             }
             if (typeof width !== 'number' || !isFinite(width)) {
                 throw new Error(
                     'Invalid value for border width. Make sure you are ' +
-                        'passing a finite number to <span class="code">' +
-                        'setBorderWidth</span>',
+                        'passing a finite number to `' +
+                        'setBorderWidth`',
                 );
             }
             this.lineWidth = width;
@@ -325,22 +297,20 @@ var chsjs = (function (exports) {
          */
         move(dx, dy) {
             if (arguments.length !== 2) {
-                throw new Error(
-                    'You should pass exactly 2 arguments to <span ' + 'class="code">move</span>',
-                );
+                throw new Error('You should pass exactly 2 arguments to <span ' + 'class="code">move`');
             }
             if (typeof dx !== 'number' || !isFinite(dx)) {
                 throw new TypeError(
-                    'Invalid number passed for <span class="code">' +
-                        'dx</span>. Make sure you are passing finite numbers to <span ' +
-                        'class="code">move(dx, dy)</span>',
+                    'Invalid number passed for `' +
+                        'dx`. Make sure you are passing finite numbers to <span ' +
+                        'class="code">move(dx, dy)`',
                 );
             }
             if (typeof dy !== 'number' || !isFinite(dy)) {
                 throw new TypeError(
-                    'Invalid number passed for <span class="code">' +
-                        'dy</span>. Make sure you are passing finite numbers to <span ' +
-                        'class="code">move(dx, dy)</span>',
+                    'Invalid number passed for `' +
+                        'dy`. Make sure you are passing finite numbers to <span ' +
+                        'class="code">move(dx, dy)`',
                 );
             }
             this.x += dx;
@@ -391,16 +361,14 @@ var chsjs = (function (exports) {
      * @param {number} y2
      * @returns {number} Distance between the two points.
      */
-    const getDistance = function(x1, y1, x2, y2) {
+    const getDistance = function (x1, y1, x2, y2) {
         return Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2));
     };
 
-    /**
-     * @namespace Arc
+    /** * @namespace Arc
      */
 
-    /**
-     * Arc class. TODO docs
+    /** * Arc class. TODO docs
      */
     class Arc extends Thing {
         static COUNTER_CLOCKWISE = true;
@@ -421,51 +389,34 @@ var chsjs = (function (exports) {
             super();
             if (arguments.length !== 4) {
                 throw new Error(
-                    'You should pass exactly 4 arguments to <span ' +
-                        'class="code">new Arc(raduis, startAngle, endAngle, ' +
-                        'angleUnit)</span>',
+                    'You should pass exactly 4 arguments to `new Arc(raduis, startAngle, endAngle, angleUnit)`',
                 );
             }
             if (typeof radius !== 'number' || !isFinite(radius)) {
                 throw new TypeError(
-                    'Invalid value for <span class="code">radius' +
-                        '</span>. Make sure you are passing finite numbers to <span ' +
-                        'class="code">new Arc(raduis, startAngle, endAngle, ' +
-                        'angleUnit)</span>',
+                    'Invalid value for `radius`. Make sure you are passing finite numbers to `new Arc(raduis, startAngle, endAngle, angleUnit)`',
                 );
             }
             if (typeof startAngle !== 'number' || !isFinite(startAngle)) {
                 throw new TypeError(
-                    'Invalid value for <span class="code">startAngle' +
-                        '</span>. Make sure you are passing finite numbers to <span ' +
-                        'class="code">new Arc(raduis, startAngle, endAngle, ' +
-                        'angleUnit)</span>',
+                    'Invalid value for `startAngle`. Make sure you are passing finite numbers to `new Arc(raduis, startAngle, endAngle, angleUnit)`',
                 );
             }
             if (typeof endAngle !== 'number' || !isFinite(endAngle)) {
                 throw new TypeError(
-                    'Invalid value for <span class="code">endAngle' +
-                        '</span>. Make sure you are passing finite numbers to <span ' +
-                        'class="code">new Arc(raduis, startAngle, endAngle, ' +
-                        'angleUnit)</span>',
+                    'Invalid value for `endAngle`. Make sure you are passing finite numbers to `new Arc(raduis, startAngle, endAngle, angleUnit)`',
                 );
             }
             if (typeof angleUnit !== 'number' || !isFinite(angleUnit)) {
                 throw new TypeError(
-                    'Invalid value for <span class="code">angleUnit' +
-                        '</span>. Make sure you are passing finite numbers to <span ' +
-                        'class="code">new Arc(raduis, startAngle, endAngle, ' +
-                        'angleUnit)</span>',
+                    'Invalid value for `angleUnit`. Make sure you are passing finite numbers to `new Arc(raduis, startAngle, endAngle, angleUnit)`',
                 );
             }
-
-            Thing.call(this);
 
             this.radius = radius;
             this.angleUnit = angleUnit == Arc.DEGREES ? Arc.DEGREES : Arc.RADIANS;
 
             this.counterclockwise = Arc.COUNTER_CLOCKWISE;
-            this.type = 'Arc';
 
             if (this.angleUnit == Arc.DEGREES) {
                 startAngle = degreesToRadians(startAngle);
@@ -479,10 +430,10 @@ var chsjs = (function (exports) {
         /**
          * Draws the arc in the canvas.
          *
-         * @param {CodeHSGraphics} __graphics__ - Instance of the __graphics__ module.
+         * @param {CodeHSGraphics} graphics - Instance of the CodeHSGraphics module.
          */
-        draw(__graphics__) {
-            var context = __graphics__.getContext();
+        draw(graphics) {
+            var context = graphics.getContext();
             // http://stackoverflow.com/questions/17125632/html5-canvas-rotate-object-without-moving-coordinates
             context.save();
             context.beginPath();
@@ -517,16 +468,11 @@ var chsjs = (function (exports) {
          */
         setStartAngle(angle) {
             if (arguments.length !== 1) {
-                throw new Error(
-                    'You should pass exactly 1 argument to ' +
-                        '<span class="code">setStartAngle</span>',
-                );
+                throw new Error('You should pass exactly 1 argument to `setStartAngle`');
             }
             if (typeof angle !== 'number' || !isFinite(angle)) {
                 throw new Error(
-                    'Invalid value passed to <span class="code">' +
-                        'setStartAngle</span>. Make sure you are passing a ' +
-                        'finite number.',
+                    'Invalid value passed to `setStartAngle`. Make sure you are passing a finite number.',
                 );
             }
             if (this.angleUnit == Arc.DEGREES) {
@@ -543,15 +489,11 @@ var chsjs = (function (exports) {
          */
         setEndAngle(angle) {
             if (arguments.length !== 1) {
-                throw new Error(
-                    'You should pass exactly 1 argument to ' + '<span class="code">setEndAngle</span>',
-                );
+                throw new Error('You should pass exactly 1 argument to `setEndAngle`');
             }
             if (typeof angle !== 'number' || !isFinite(angle)) {
                 throw new Error(
-                    'Invalid value passed to <span class="code">' +
-                        'setEndAngle</span>. Make sure you are passing a ' +
-                        'finite number.',
+                    'Invalid value passed to `setEndAngle`. Make sure you are passing a finite number.',
                 );
             }
             if (this.angleUnit == Arc.DEGREES) {
@@ -592,15 +534,11 @@ var chsjs = (function (exports) {
          */
         setDirection(val) {
             if (arguments.length !== 1) {
-                throw new Error(
-                    'You should pass exactly 1 argument to ' + '<span class="code">setDirection</span>',
-                );
+                throw new Error('You should pass exactly 1 argument to `setDirection`');
             }
             if (typeof val !== 'boolean') {
                 throw new Error(
-                    'Invalid value passed to <span class="code">' +
-                        'setDirection</span>. Make sure you are passing a ' +
-                        'boolean value. true for counterclockwise, false for clockwise.',
+                    'Invalid value passed to `setDirection`. Make sure you are passing a boolean value. `true` for counterclockwise, false for clockwise.',
                 );
             }
             this.counterclockwise = val;
@@ -714,6 +652,22 @@ var chsjs = (function (exports) {
     };
 
     /**
+     * Get a random float between low to high, inclusive.
+     * If only one parameter is given, a random float
+     * from (0, low-1) inclusive.
+     * @param {number} low - Lower bound on range of random int.
+     * @param {number} high - Upper bound on range of random int.
+     * @returns {number} Random number between low and high, inclusive.
+     */
+    const nextFloat = function (low, high) {
+        if (typeof high == 'undefined') {
+            high = low;
+            low = 0;
+        }
+        return low + (high - low) * Math.random();
+    };
+
+    /**
      * Generates a random number in range (0,255) in hexadecimal.
      * @returns {string} Random number in hexadecimal form.
      */
@@ -733,6 +687,33 @@ var chsjs = (function (exports) {
         var b = nextHex();
         return '#' + r + g + b;
     };
+
+    /**
+     * Generate a random boolean via fair probability coin toss.
+     * If `probabilityTrue` is supplied, the coin toss is skewed by that value.
+     * @param {number} probabilityTrue - Skewed probability of true.
+     * @returns {boolean} Result of coin flip skewed toward `probabilityTrue`.
+     */
+    const nextBoolean = function (probabilityTrue) {
+        if (typeof probabilityTrue == 'undefined') {
+            probabilityTrue = 0.5;
+        }
+
+        return Math.random() < probabilityTrue;
+    };
+
+    var randomizer = /*#__PURE__*/Object.freeze({
+        __proto__: null,
+        nextInt: nextInt,
+        nextFloat: nextFloat,
+        nextHex: nextHex,
+        nextColor: nextColor,
+        nextBoolean: nextBoolean
+    });
+
+    /**
+     * @namespace Color
+     */
 
     /**
      * @class Color
@@ -1021,16 +1002,15 @@ var chsjs = (function (exports) {
             super();
             if (arguments.length !== 1) {
                 throw new Error(
-                    'You should pass exactly 1 argument to <span ' +
-                        'class="code">new Circle(radius)</span>',
+                    'You should pass exactly 1 argument to <span ' + 'class="code">new Circle(radius)`',
                 );
             }
             if (typeof radius !== 'number' || !isFinite(radius)) {
                 throw new TypeError(
                     'You must pass a finite number to <span class=' +
-                        '"code">new Circle(radius)</span>. Did you forget the ' +
-                        'parentheses in <span class="code">getWidth()</span> or <span ' +
-                        'class="code">getHeight()</span>? Or did you perform a ' +
+                        '"code">new Circle(radius)`. Did you forget the ' +
+                        'parentheses in `getWidth()` or <span ' +
+                        'class="code">getHeight()`? Or did you perform a ' +
                         'calculation on a variable that is not a number?',
                 );
             }
@@ -1038,15 +1018,14 @@ var chsjs = (function (exports) {
             this.radius = Math.max(0, radius);
             this.color = Color.black;
             this.lineWidth = 3;
-            this.type = 'Circle';
         }
 
         /**
          * Draws the circle in the canvas.
-         * @param {CodeHSGraphics} __graphics__ - Instance of the Graphics module.
+         * @param {CodeHSGraphics} graphics - Instance of the Graphics module.
          */
-        draw(__graphics__) {
-            var context = __graphics__.getContext();
+        draw(graphics) {
+            var context = graphics.getContext();
             context.beginPath();
 
             if (this.hasBorder) {
@@ -1094,16 +1073,15 @@ var chsjs = (function (exports) {
         setRadius(radius) {
             if (arguments.length !== 1) {
                 throw new Error(
-                    'You should pass exactly 1 argument to <span ' +
-                        'class="code">setRadius(radius)</span>',
+                    'You should pass exactly 1 argument to <span ' + 'class="code">setRadius(radius)`',
                 );
             }
             if (typeof radius !== 'number' || !isFinite(radius)) {
                 throw new TypeError(
                     'You must pass a finite number to <span class=' +
-                        '"code">setRadius(radius)</span>. Did you forget the ' +
-                        'parentheses in <span class="code">getWidth()</span> or <span ' +
-                        'class="code">getHeight()</span>? Or did you perform a ' +
+                        '"code">setRadius(radius)`. Did you forget the ' +
+                        'parentheses in `getWidth()` or <span ' +
+                        'class="code">getHeight()`? Or did you perform a ' +
                         'calculation on a variable that is not a number?',
                 );
             }
@@ -1127,7 +1105,7 @@ var chsjs = (function (exports) {
         }
     }
 
-    /*
+    /**
      * Defines a cross-browser compatible way of creating a new AudioContext.
      * Returns 0 and logs an error message if creating a new AudioContext is not possible.
      */
@@ -1164,6 +1142,254 @@ var chsjs = (function (exports) {
         }
     }
 
+    /* IMPORTANT NOTE:
+     * In the case that ToneJS is not supported or not on the window, we make all
+     * corresponding Sound functions no-ops so that student code is still able to run.
+     */
+
+    /** * Construct a new Sound.
+     * Optionally set the frequency and the oscillator type.
+     *
+     * @param frequency - Either a number (Hertz) or note ("C#4" for middle C Sharp)
+     * @param oscillatorType {string} - several options
+     * basic types: "sine", "triangle", "square", "sawtooth"
+     * any basic type can be prefixed with "fat", "am" or "fm", ie "fatsawtooth"
+     * any basic type can be suffixed with a number ie "4" for the number of partials
+     *     ie "square4"
+     * special types: "pwm", "pulse"
+     * drum instrument: "drum"
+     * cymbal instrument: "metal"
+     * https://tonejs.github.io/docs/13.8.25/OmniOscillator
+     */
+    class Sound {
+        static soundElements = [];
+
+        constructor(frequency, oscillatorType) {
+            if (window.Tone && window.Tone.supported) {
+                this.frequency = frequency || 440;
+                this.oscillatorType = oscillatorType || 'fatsawtooth';
+                this.volume = 1;
+                if (this.oscillatorType == 'drum') {
+                    this.synth = new window.Tone.MembraneSynth().toMaster();
+                } else if (this.oscillatorType == 'metal') {
+                    this.synth = new window.Tone.MetalSynth().toMaster();
+                } else {
+                    this.synth = new window.Tone.Synth({
+                        oscillator: { type: this.oscillatorType },
+                    }).toMaster();
+                }
+                this.setFrequency(this.frequency);
+            }
+            Sound.soundElements.push(this);
+        }
+
+        static stopSounds() {
+            Sound.soundElements.forEach(sound => {
+                sound.stop();
+                sound.disconnect();
+            });
+        }
+
+        /**
+         * Set the Sound's frequency
+         *
+         * @param frequency - Either a number (Hertz) or note ("C#4" for middle C Sharp)
+         */
+        setFrequency(frequency) {
+            if (window.Tone && window.Tone.supported) {
+                this.frequency = frequency;
+                if (this.getOscillatorType() == 'metal') {
+                    this.synth.frequency.value = frequency;
+                } else {
+                    this.synth.oscillator.frequency.value = frequency;
+                }
+            }
+        }
+
+        /**
+         * Set the Sound's volume
+         *
+         * @param {float} - the volume in decibels
+         */
+        setVolume(volume) {
+            if (window.Tone && window.Tone.supported) {
+                this.volume = volume;
+                this.synth.volume.value = volume;
+            }
+        }
+
+        /**
+         * Get the Sound's frequency
+         *
+         * @returns The Sound's frequency
+         */
+        getFrequency() {
+            if (window.Tone && window.Tone.supported) {
+                return this.frequency;
+            }
+        }
+
+        /**
+         * Get the Sound's volume
+         *
+         * @returns the volume
+         */
+        getVolume() {
+            if (window.Tone && window.Tone.supported) {
+                return this.volume;
+            }
+        }
+
+        /**     *
+         * Set the Sound's oscillator type
+         *
+         * @param oscillatorType {string} - several options
+         * basic types: "sine", "triangle", "square", "sawtooth"
+         * any basic type can be prefixed with "fat", "am" or "fm", ie "fatsawtooth"
+         * any basic type can be suffixed with a number ie "4" for the number of partials
+         *     ie "square4"
+         * special types: "pwm", "pulse"
+         * drum instrument: "drum"
+         * cymbal instrument: "metal"
+         * https://tonejs.github.io/docs/13.8.25/OmniOscillator
+         */
+        setOscillatorType(oscillatorType) {
+            if (window.Tone && window.Tone.supported) {
+                var originalOscillatorType = this.getOscillatorType();
+                if (oscillatorType == originalOscillatorType) {
+                    return;
+                }
+
+                this.oscillatorType = oscillatorType;
+                if (oscillatorType == 'drum') {
+                    this.disconnect();
+                    this.synth = new window.Tone.MembraneSynth().toMaster();
+                    this.setFrequency(this.getFrequency());
+                } else if (oscillatorType == 'metal') {
+                    this.disconnect();
+                    this.synth = new window.Tone.MetalSynth().toMaster();
+                    this.setFrequency(this.getFrequency());
+                } else if (originalOscillatorType == 'drum' || originalOscillatorType == 'metal') {
+                    this.disconnect();
+                    this.synth = new window.Tone.Synth({
+                        oscillator: { type: oscillatorType },
+                    }).toMaster();
+                    this.setFrequency(this.frequency);
+                } else {
+                    this.synth.oscillator.type = oscillatorType;
+                }
+            }
+        }
+
+        /**     *
+         * Get the Sound's oscillator type
+         *
+         * @return a String representing the oscillator type
+         */
+        getOscillatorType() {
+            if (window.Tone && window.Tone.supported) {
+                return this.oscillatorType;
+            }
+        }
+
+        /**
+         * Play the sound indefinitely
+         */
+        play() {
+            if (window.Tone && window.Tone.supported) {
+                if (this.getOscillatorType() == 'metal') {
+                    this.synth.triggerAttack();
+                } else {
+                    this.synth.triggerAttack(this.getFrequency());
+                }
+            }
+        }
+
+        /**
+         * Play the sound for a given duration.
+         *
+         * @param {string} - duration in one of several formats, mainly:
+         * number: the number of seconds to play the sound for.
+         *     "2" for 2 seconds
+         *     "1.5" for 1.5 seconds
+         * OR
+         * notation: Describes time in BPM and time signature relative values.
+         *     "4n" for quarter note
+         *     "8t" for eigth note triplet,
+         *     "2m" for 2 measures
+         *     "8n." for dotted eighth note
+         */
+        playFor(duration) {
+            if (window.Tone && window.Tone.supported) {
+                if (this.getOscillatorType() == 'metal') {
+                    this.synth.triggerAttackRelease(duration);
+                } else {
+                    this.synth.triggerAttackRelease(this.getFrequency(), duration);
+                }
+            }
+        }
+
+        /**
+         * Stop playing the sound immediately.
+         */
+        stop() {
+            if (window.Tone && window.Tone.supported) {
+                this.synth.triggerRelease();
+            }
+        }
+
+        /**
+         * Disconnect the sound from the AudioNode.
+         *
+         * This generally should not be used by students. We use it to force stop
+         * sounds that are playing when the "STOP" button is pressed in the editor.
+         */
+        disconnect() {
+            if (window.Tone && window.Tone.supported) {
+                this.synth.disconnect();
+            }
+        }
+
+        /**
+         * Add an effect to this sound
+         *
+         * @param effectName {String} - the name of the prepackaged effect, ie "reverb"
+         * @param effectValue {float} - value from 0 to 1 defining how heavily the
+         *                              effect applies
+         */
+        setEffect(effectName, effectValue) {
+            if (window.Tone && window.Tone.supported) {
+                switch (effectName) {
+                    case 'distortion':
+                        var distortion = new window.Tone.Distortion(effectValue).toMaster();
+                        this.synth.connect(distortion);
+                        return;
+                    case 'chebyshev':
+                        var chebyshev = new window.Tone.Chebyshev(effectValue * 100).toMaster();
+                        this.synth.connect(chebyshev);
+                        return;
+                    case 'reverb':
+                        var reverb = new window.Tone.Freeverb().toMaster();
+                        reverb.wet.value = effectValue;
+                        this.synth.connect(reverb);
+                        return;
+                    case 'tremolo':
+                        var tremolo = new window.Tone.Tremolo().toMaster().start();
+                        tremolo.wet.value = effectValue;
+                        this.synth.connect(tremolo);
+                        return;
+                    case 'vibrato':
+                        var vibrato = new window.Tone.Vibrato().toMaster();
+                        vibrato.wet.value = effectValue;
+                        this.synth.connect(vibrato);
+                        return;
+                    default:
+                        return;
+                }
+            }
+        }
+    }
+
     var DEFAULT_WIDTH = 150;
     var DEFAULT_HEIGHT = (DEFAULT_WIDTH * 3) / 4;
 
@@ -1175,20 +1401,19 @@ var chsjs = (function (exports) {
      * @param {string} filename - Filepath to the video
      */
     class WebVideo extends Thing {
+        static WEBCAM = WEBCAM_INDICATOR;
+
         constructor(filename) {
             if (typeof filename !== 'string') {
                 throw new TypeError(
-                    'You must pass a string to <span class="code">' +
-                        "new WebVideo(filename)</span> that has the video's location.",
+                    'You must pass a string to `' +
+                        "new WebVideo(filename)` that has the video's location.",
                 );
             }
-            Thing.call(this);
-            var self = this;
 
             var vid = document.createElement('video');
             this.width = DEFAULT_WIDTH;
             this.height = DEFAULT_HEIGHT;
-            this.type = 'WebVideo';
 
             this.isWebCam = filename === WEBCAM_INDICATOR;
 
@@ -1200,9 +1425,9 @@ var chsjs = (function (exports) {
                 } else if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
                     navigator.mediaDevices
                         .getUserMedia({ video: true })
-                        .then(function (stream) {
-                            self.video.srcObject = stream;
-                            self.video.play();
+                        .then(stream => {
+                            this.video.srcObject = stream;
+                            this.video.play();
                         })
                         .catch(function (error) {
                             throw new Error('Web camera access was denied: ' + error);
@@ -1220,187 +1445,190 @@ var chsjs = (function (exports) {
                 this.video.crossOrigin = 'anonymous';
             }
         }
-    }
 
-    WebVideo.WEBCAM = WEBCAM_INDICATOR;
+        /**
+         * Draws the WebVideo in the canvas.
+         *
+         * @param {CodeHSGraphics} __graphics__ - Instance of the __graphics__ module.
+         */
+        draw(__graphics__) {
+            if (this.browserSupportsVideo) {
+                var context = __graphics__.getContext('2d');
 
-    WebVideo.prototype = new Thing();
-    WebVideo.prototype.constructor = WebVideo;
+                // Scale and translate
+                // X scale, X scew, Y scew, Y scale, X position, Y position
+                context.setTransform(1, 0, 0, 1, this.x + this.width / 2, this.y + this.height / 2);
+                context.rotate(this.rotation);
 
-    /**
-     * Draws the WebVideo in the canvas.
-     *
-     * @param {CodeHSGraphics} __graphics__ - Instance of the __graphics__ module.
-     */
-    WebVideo.prototype.draw = function (__graphics__) {
-        if (this.browserSupportsVideo) {
-            var context = __graphics__.getContext('2d');
+                context.drawImage(
+                    this.video,
+                    -this.width / 2,
+                    -this.height / 2,
+                    this.width,
+                    this.height,
+                );
 
-            // Scale and translate
-            // X scale, X scew, Y scew, Y scale, X position, Y position
-            context.setTransform(1, 0, 0, 1, this.x + this.width / 2, this.y + this.height / 2);
-            context.rotate(this.rotation);
-
-            context.drawImage(this.video, -this.width / 2, -this.height / 2, this.width, this.height);
-
-            // Reset transformation matrix
-            // X scale, X scew, Y scew, Y scale, X position, Y position
-            context.setTransform(1, 0, 0, 1, 0, 0);
-        }
-    };
-
-    /**
-     * Checks if the passed point is contained in the WebVideo.
-     *
-     * @param {number} x - The x coordinate of the point being tested.
-     * @param {number} y - The y coordinate of the point being tested.
-     * @returns {boolean} Whether the passed point is contained in the WebVideo.
-     */
-    WebVideo.prototype.containsPoint = function (x, y) {
-        if (this.browserSupportsVideo) {
-            return x >= this.x && x <= this.x + this.width && y >= this.y && y <= this.y + this.height;
-        }
-        return false;
-    };
-
-    /**
-     * Gets the width of the WebVideo.
-     *
-     * @returns {number} Width of the WebVideo.
-     */
-    WebVideo.prototype.getWidth = function () {
-        return this.width;
-    };
-
-    /**
-     * Gets the height of the WebVideo.
-     *
-     * @returns {number} Height of the WebVideo.
-     */
-    WebVideo.prototype.getHeight = function () {
-        return this.height;
-    };
-
-    /**
-     * Sets the size of the WebVideo.
-     *
-     * @param {number} width - The desired width of the resulting WebVideo.
-     * @param {number} height - The desired height of the resulting WebVideo.
-     */
-    WebVideo.prototype.setSize = function (width, height) {
-        this.width = width;
-        this.height = height;
-    };
-
-    /**
-     * Sets whether the WebVideo should start playing automatically once loaded.
-     *
-     * @param {boolean} autoplay - True/false whether the video should start playing automatically.
-     */
-    WebVideo.prototype.setAutoplay = function (autoplay) {
-        if (this.browserSupportsVideo) {
-            this.video.autoplay = autoplay;
-        }
-    };
-
-    /**
-     * Sets whether the WebVideo should loop and play again once finished.
-     *
-     * @param {boolean} loop - True/false whether the video should loop.
-     */
-    WebVideo.prototype.setLoop = function (loop) {
-        if (this.browserSupportsVideo) {
-            this.video.loop = loop;
-        }
-    };
-
-    /**
-     * Sets whether the WebVideo is muted or not.
-     *
-     * @param {boolean} muted - True/false whether the video should be muted.
-     */
-    WebVideo.prototype.setMuted = function (muted) {
-        if (this.browserSupportsVideo) {
-            this.video.muted = muted;
-        }
-    };
-
-    /**
-     * Starts playing the WebVideo.
-     */
-    WebVideo.prototype.play = function () {
-        if (this.browserSupportsVideo) {
-            this.video.play();
-        }
-    };
-
-    /**
-     * Pauses the WebVideo.
-     */
-    WebVideo.prototype.pause = function () {
-        if (this.browserSupportsVideo) {
-            this.video.pause();
-        }
-    };
-
-    /**
-     * Stops the WebVideo.
-     */
-    WebVideo.prototype.stop = function () {
-        if (this.browserSupportsVideo) {
-            this.video.pause();
-            this.video.currentTime = 0;
-
-            if (this.isWebCam && this.video.srcObject) {
-                this.video.srcObject.getTracks().forEach(function (track) {
-                    track.stop();
-                });
+                // Reset transformation matrix
+                // X scale, X scew, Y scew, Y scale, X position, Y position
+                context.setTransform(1, 0, 0, 1, 0, 0);
             }
         }
-    };
 
-    /**
-     * Returns whether the WebVideo is currently playing.
-     *
-     * @returns {boolean} True if the video is playing, false if it is not.
-     */
-    WebVideo.prototype.isPlaying = function () {
-        if (this.browserSupportsVideo) {
-            return !(this.video.paused || this.video.ended);
+        /**
+         * Checks if the passed point is contained in the WebVideo.
+         *
+         * @param {number} x - The x coordinate of the point being tested.
+         * @param {number} y - The y coordinate of the point being tested.
+         * @returns {boolean} Whether the passed point is contained in the WebVideo.
+         */
+        containsPoint(x, y) {
+            if (this.browserSupportsVideo) {
+                return (
+                    x >= this.x && x <= this.x + this.width && y >= this.y && y <= this.y + this.height
+                );
+            }
+            return false;
         }
-        return false;
-    };
 
-    /**
-     * Returns whether the WebVideo is currently muted.
-     *
-     * @returns {boolean} True if the video is muted, false if it is not.
-     */
-    WebVideo.prototype.isMuted = function () {
-        if (this.browserSupportsVideo) {
-            return this.video.muted;
+        /**
+         * Gets the width of the WebVideo.
+         *
+         * @returns {number} Width of the WebVideo.
+         */
+        getWidth() {
+            return this.width;
         }
-        return false;
-    };
 
-    /**
-     * Defines a function to call once the video has loaded enough and is ready to play.
-     * @param  {Function} fn A function to call when the video is ready to play.
-     */
-    WebVideo.prototype.onReadyToPlay = function (fn) {
-        if (this.browserSupportsVideo) {
-            this.video.oncanplay = fn;
+        /**
+         * Gets the height of the WebVideo.
+         *
+         * @returns {number} Height of the WebVideo.
+         */
+        getHeight() {
+            return this.height;
         }
-    };
 
-    // module.exports = WebVideo;
+        /**
+         * Sets the size of the WebVideo.
+         *
+         * @param {number} width - The desired width of the resulting WebVideo.
+         * @param {number} height - The desired height of the resulting WebVideo.
+         */
+        setSize(width, height) {
+            this.width = width;
+            this.height = height;
+        }
+
+        /**
+         * Sets whether the WebVideo should start playing automatically once loaded.
+         *
+         * @param {boolean} autoplay - True/false whether the video should start playing automatically.
+         */
+        setAutoplay(autoplay) {
+            if (this.browserSupportsVideo) {
+                this.video.autoplay = autoplay;
+            }
+        }
+
+        /**
+         * Sets whether the WebVideo should loop and play again once finished.
+         *
+         * @param {boolean} loop - True/false whether the video should loop.
+         */
+        setLoop(loop) {
+            if (this.browserSupportsVideo) {
+                this.video.loop = loop;
+            }
+        }
+
+        /**
+         * Sets whether the WebVideo is muted or not.
+         *
+         * @param {boolean} muted - True/false whether the video should be muted.
+         */
+        setMuted(muted) {
+            if (this.browserSupportsVideo) {
+                this.video.muted = muted;
+            }
+        }
+
+        /**
+         * Starts playing the WebVideo.
+         */
+        play() {
+            if (this.browserSupportsVideo) {
+                this.video.play();
+            }
+        }
+
+        /**
+         * Pauses the WebVideo.
+         */
+        pause() {
+            if (this.browserSupportsVideo) {
+                this.video.pause();
+            }
+        }
+
+        /**
+         * Stops the WebVideo.
+         */
+        stop() {
+            if (this.browserSupportsVideo) {
+                this.video.pause();
+                this.video.currentTime = 0;
+
+                if (this.isWebCam && this.video.srcObject) {
+                    this.video.srcObject.getTracks().forEach(function (track) {
+                        track.stop();
+                    });
+                }
+            }
+        }
+
+        /**
+         * Returns whether the WebVideo is currently playing.
+         *
+         * @returns {boolean} True if the video is playing, false if it is not.
+         */
+        isPlaying() {
+            if (this.browserSupportsVideo) {
+                return !(this.video.paused || this.video.ended);
+            }
+            return false;
+        }
+
+        /**
+         * Returns whether the WebVideo is currently muted.
+         *
+         * @returns {boolean} True if the video is muted, false if it is not.
+         */
+        isMuted() {
+            if (this.browserSupportsVideo) {
+                return this.video.muted;
+            }
+            return false;
+        }
+
+        /**
+         * Defines a function to call once the video has loaded enough and is ready to play.
+         * @param  {Function} fn A function to call when the video is ready to play.
+         */
+        onReadyToPlay(fn) {
+            if (this.browserSupportsVideo) {
+                this.video.oncanplay = fn;
+            }
+        }
+    }
 
     // import the npm-hosted editor utils only if the other is not available
 
     const DEFAULT_FRAME_RATE = 40;
     const FULLSCREEN_PADDING = 5;
 
-    let graphicsSingleton = null;
+    let GraphicsInstances = {};
+    let graphicsID = 0;
+    let pressedKeys = [];
 
     class CodeHSGraphics {
         audioElements = [];
@@ -1423,26 +1651,40 @@ var chsjs = (function (exports) {
             options = { ...options };
             this.resetAllState();
             this.setCurrentCanvas(options.canvas);
-            this.currentCanvas = null;
             this.fullscreenMode = false;
             this.fpsInterval = 1000 / DEFAULT_FRAME_RATE;
             this.lastDrawTime = Date.now();
-            graphicsSingleton = this;
+            GraphicsInstances[graphicsID++] = this;
         }
 
-        attachToWindow(window, options) {
-            window.add = this.add.bind(this);
-            window.Audio = this.Audio.bind(this);
-            window.Sound = this.Sound.bind(this);
-            window.mouseClickMethod = this.mouseClickMethod.bind(this);
-            window.mouseMoveMethod = this.mouseMoveMethod.bind(this);
-            window.stopAllTimers = this.stopAllTimers.bind(this);
-            window.setMainTimer = this.setMainTimer.bind(this);
-            window.stopTimer = this.stopTimer.bind(this);
-            options = { ...options };
-            this.resetAllState();
-            this.setCurrentCanvas(options.canvas);
-            this.fullscreenMode = false;
+        static attachToWindow(graphics, window) {
+            window.add = graphics.add.bind(graphics);
+            window.Audio = graphics.Audio.bind(graphics);
+            window.getWidth = graphics.getWidth.bind(graphics);
+            window.getHeight = graphics.getHeight.bind(graphics);
+            window.mouseClickMethod = graphics.mouseClickMethod.bind(graphics);
+            window.mouseDownMethod = graphics.mouseDownMethod.bind(graphics);
+            window.mouseUpMethod = graphics.mouseUpMethod.bind(graphics);
+            window.mouseMoveMethod = graphics.mouseMoveMethod.bind(graphics);
+            window.stopAllTimers = graphics.stopAllTimers.bind(graphics);
+            window.setMainTimer = graphics.setMainTimer.bind(graphics);
+            window.stopTimer = graphics.stopTimer.bind(graphics);
+            window.setTimer = graphics.setTimer.bind(graphics);
+            window.keyDownMethod = graphics.keyDownMethod.bind(graphics);
+            window.removeAll = graphics.removeAll.bind(graphics);
+            window.setBackgroundColor = graphics.setBackgroundColor.bind(graphics);
+            window.getElementAt = graphics.getElementAt.bind(graphics);
+        }
+
+        static unbindFromWindow(window) {
+            window.add = undefined;
+            window.Audio = undefined;
+            window.Sound = undefined;
+            window.mouseClickMethod = undefined;
+            window.mouseMoveMethod = undefined;
+            window.stopAllTimers = undefined;
+            window.setMainTimer = undefined;
+            window.stopTimer = undefined;
         }
 
         /**
@@ -1459,27 +1701,6 @@ var chsjs = (function (exports) {
             audioElem.crossOrigin = 'anonymous';
             this.audioElements.push(audioElem);
             return audioElem;
-        }
-        /**
-         * Wrapper around Sound so we have reference to all Sound objects created.
-         * Following the example set by tracking Audio elements.
-         * @param frequency - Either a number (Hertz) or note ("C#4" for middle C Sharp)
-         * @param oscillatorType {string} - several options
-         * basic types: "sine", "triangle", "square", "sawtooth"
-         * any basic type can be prefixed with "fat", "am" or "fm", ie "fatsawtooth"
-         * any basic type can be suffixed with a number ie "4" for the number of partials
-         *     ie "square4"
-         * special types: "pwm", "pulse"
-         * drum instrument: "membrane"
-         * cymbal instrument: "metal"
-         * https://tonejs.github.io/docs/13.8.25/OmniOscillator
-         */
-        Sound(frequency, oscillatorType) {
-            frequency = frequency || 440;
-            oscillatorType = oscillatorType || 'fatsawtooth';
-            var soundElem = new oldSound(frequency, oscillatorType);
-            this.soundElements.push(soundElem);
-            return soundElem;
         }
 
         /**
@@ -1652,31 +1873,29 @@ var chsjs = (function (exports) {
         setTimer(fn, time, data, name) {
             if (arguments.length < 2) {
                 throw new Error(
-                    '2 parameters required for <span class="code">' +
-                        'setTimer</span>, ' +
+                    '2 parameters required for `' +
+                        'setTimer`, ' +
                         arguments.length +
                         ' found. You must ' +
                         'provide a callback function and ' +
                         'a number representing the time delay ' +
-                        'to <span class="code">setTimer</span>',
+                        'to `setTimer`',
                 );
             }
             if (typeof fn !== 'function') {
                 throw new TypeError(
                     'Invalid callback function. ' +
                         'Make sure you are passing an actual function to ' +
-                        '<span class="code">setTimer</span>.',
+                        '`setTimer`.',
                 );
             }
             if (typeof time !== 'number' || !isFinite(time)) {
                 throw new TypeError(
                     'Invalid value for time delay. ' +
                         'Make sure you are passing a finite number to ' +
-                        '<span class="code">setTimer</span> for the delay.',
+                        '`setTimer` for the delay.',
                 );
             }
-
-            var self = this;
 
             // Safety, set a min frequency
             if (isNaN(time) || time < 15) {
@@ -1688,7 +1907,7 @@ var chsjs = (function (exports) {
                     fn: fn,
                     time: time,
                     data: data,
-                    clicks: self.clickCount,
+                    clicks: this.clickCount,
                     name: name,
                 });
             } else {
@@ -1720,8 +1939,8 @@ var chsjs = (function (exports) {
          * @returns {Thing|null} The object at the point (x, y), if there is one (else null).
          */
         getElementAt(x, y) {
-            for (var i = this.elementPoolSize - 1; i >= 0; i--) {
-                if (this.elementPool[i].alive && this.elemementPool[i].containsPoint(x, y, this)) {
+            for (var i = this.elementPoolSize - 1; i--; ) {
+                if (this.elementPool[i].alive && this.elementPool[i].containsPoint(x, y, this)) {
                     return this.elementPool[i];
                 }
             }
@@ -1787,8 +2006,7 @@ var chsjs = (function (exports) {
          * Set the canvas to take up the entire parent element
          */
         setFullscreen() {
-            var self = this;
-            self.fullscreenMode = true; // when this is true, canvas will resize with parent
+            this.fullscreenMode = true; // when this is true, canvas will resize with parent
             var canvas = this.getCanvas();
             canvas.width = canvas.parentElement.offsetWidth - FULLSCREEN_PADDING;
             canvas.height = canvas.parentElement.offsetHeight - FULLSCREEN_PADDING;
@@ -1807,15 +2025,12 @@ var chsjs = (function (exports) {
             this.audioElements.forEach(function (audio) {
                 audio.pause();
             });
-            this.soundElements.forEach(function (soundElem) {
-                soundElem.stop();
-                soundElem.disconnect();
-            });
+            Sound.stopSounds();
         }
 
         stopAllVideo() {
             for (var i = this.elementPoolSize; i--; ) {
-                if (this.elementPool[i].type == 'WebVideo') {
+                if (this.elementPool[i] instanceof WebVideo) {
                     this.elementPool[i].stop();
                 }
             }
@@ -1967,7 +2182,7 @@ var chsjs = (function (exports) {
             }
             // sort all dead elements to the end of the pool
             if (sortPool) {
-                this.elements.sort((a, b) => b.alive - a.alive);
+                this.elementPool.sort((a, b) => b.alive - a.alive);
             }
         }
 
@@ -2030,8 +2245,6 @@ var chsjs = (function (exports) {
          */
         setup() {
             var drawingCanvas = this.getCanvas();
-
-            // self.setMainTimer();
 
             drawingCanvas.onclick = e => {
                 if (this.waitingForClick()) {
@@ -2169,7 +2382,9 @@ var chsjs = (function (exports) {
             pressedKeys.push(e.keyCode);
         }
 
-        graphicsSingleton?.keyDownCallback?.(e);
+        Object.entries(GraphicsInstances).forEach(([id, instance]) => {
+            instance.keyDownCallback?.(e);
+        });
 
         return true;
     };
@@ -2179,7 +2394,9 @@ var chsjs = (function (exports) {
         if (index !== -1) {
             pressedKeys.splice(index, 1);
         }
-        graphicsSingleton?.keyUpCallback?.(e);
+        Object.entries(GraphicsInstances).forEach(([id, instance]) => {
+            instance.keyUpCallback?.(e);
+        });
     };
 
     /** RESIZE EVENT ****/
@@ -2191,7 +2408,9 @@ var chsjs = (function (exports) {
         if (!resizeTimeout) {
             resizeTimeout = setTimeout(function () {
                 resizeTimeout = null;
-                graphicsSingleton?.setFullscreen?.();
+                Object.entries(GraphicsInstances).forEach(([id, instance]) => {
+                    instance.setFullscreen?.();
+                });
             }, DEFAULT_FRAME_RATE);
         }
     };
@@ -2199,13 +2418,17 @@ var chsjs = (function (exports) {
     /** MOBILE DEVICE EVENTS ****/
     if (window.DeviceOrientationEvent) {
         window.ondeviceorientation = function (e) {
-            graphicsSingleton?.deviceOrientationCallback?.(e);
+            Object.entries(GraphicsInstances).forEach(([id, instance]) => {
+                instance.deviceOrientationCallback?.(e);
+            });
         };
     }
 
     if (window.DeviceMotionEvent) {
         window.ondevicemotion = function (e) {
-            graphicsSingleton?.deviceMotionCallback?.(e);
+            Object.entries(GraphicsInstances).forEach(([id, instance]) => {
+                instance.deviceMotionCallback?.(e);
+            });
         };
     }
 
@@ -2225,7 +2448,7 @@ var chsjs = (function (exports) {
             y = e.clientY + document.body.scrollTop + document.documentElement.scrollTop;
         }
 
-        var offset = target.offset();
+        var offset = target.getBoundingClientRect();
         x -= offset.left;
         y -= offset.top;
 
@@ -2233,7 +2456,7 @@ var chsjs = (function (exports) {
     };
 
     CodeHSGraphics.getMouseCoordinates = function (e) {
-        var baseCoordinates = CodeHSGraphics.getBaseCoordinates(e, $(e.currentTarget));
+        var baseCoordinates = CodeHSGraphics.getBaseCoordinates(e, e.currentTarget);
         var x = baseCoordinates.x;
         var y = baseCoordinates.y;
 
@@ -2245,7 +2468,7 @@ var chsjs = (function (exports) {
     };
 
     CodeHSGraphics.getTouchCoordinates = function (e) {
-        var baseCoordinates = CodeHSGraphics.getBaseCoordinates(e, $(e.target));
+        var baseCoordinates = CodeHSGraphics.getBaseCoordinates(e, e.target);
         var x = baseCoordinates.x;
         var y = baseCoordinates.y;
 
@@ -2283,9 +2506,1036 @@ var chsjs = (function (exports) {
         };
     }
 
+    /**
+     * @class Line
+     * @augments Thing
+     * @param {number} x1 - x coordinate of starting point of line.
+     * @param {number} y1 - y coordinate of starting point of line.
+     * @param {number} x2 - x coordinate of end point of line.
+     * @param {number} y2 - y coordinate of end point of line.
+     */
+    class Line extends Thing {
+        constructor(x1, y1, x2, y2) {
+            super();
+            if (arguments.length !== 4) {
+                throw new Error('You should pass exactly 4 argument to `new Line(x1, y1, x2, y2)`.');
+            }
+            if (
+                typeof x1 !== 'number' ||
+                typeof y1 !== 'number' ||
+                typeof x2 !== 'number' ||
+                typeof y2 !== 'number'
+            ) {
+                throw new TypeError(
+                    'You must pass 4 numbers to `new Line(x1, y1, x2, y2)`. Make sure each parameter you are passing is a number.',
+                );
+            }
+            if (!isFinite(x1) || !isFinite(y1) || !isFinite(x2) || !isFinite(y2)) {
+                throw new TypeError(
+                    'One or more of the values you passed to `new Line(x1, y1, x2, y2)` is an illegal number. Did you forget the parentheses in `getWidth()` or `getHeight()`? Or did you perform a calculation on a variable that is not a ' +
+                        'number?',
+                );
+            }
+            this.x1 = x1;
+            this.y1 = y1;
+            this.x2 = x2;
+            this.y2 = y2;
+            this.lineWidth = 2;
+        }
+
+        /**
+         * Sets the color of a line.
+         *
+         * @param {Color} color - Sets the color of the line.
+         */
+        setColor(color) {
+            if (arguments.length !== 1) {
+                throw new Error('You should pass exactly 1 argument to `setColor(color)`.');
+            }
+            if (color === undefined) {
+                throw new TypeError('Invalid color');
+            }
+            this.stroke = color;
+        }
+
+        /**
+         * Gets the color of a line.
+         *
+         * @returns {Color} Color of the line.
+         */
+        getColor() {
+            return this.stroke;
+        }
+
+        /**
+         * Draws the line in the canvas.
+         *
+         * @param {CodeHSGraphics} graphics - Instance of the __graphics__ module.
+         */
+        draw(graphics) {
+            var context = graphics.getContext();
+            context.save();
+            context.fillStyle = this.color.toString();
+            context.beginPath();
+            context.strokeStyle = this.stroke.toString();
+            context.lineWidth = this.lineWidth;
+            var rotatedPoints = getRotatedPoints(this.x1, this.y1, this.x2, this.y2, this.rotation);
+            context.moveTo(rotatedPoints[0], rotatedPoints[1]);
+            context.lineTo(rotatedPoints[2], rotatedPoints[3]);
+            context.closePath();
+            context.stroke();
+            context.restore();
+        }
+
+        /**
+         * Checks if a given point is contained in the line.
+         *
+         * @param {number} x - x coordinate of the point being tested.
+         * @param {number} y - y coordinate of the point being tested.
+         */
+        containsPoint(x, y) {
+            var betweenXs = (this.x1 <= x && x <= this.x2) || (this.x2 <= x && x <= this.x1);
+            var betweenYs = (this.y1 <= y && y <= this.y2) || (this.y2 <= y && y <= this.y1);
+            if (this.x1 == this.x2) {
+                return this.x1 == x && betweenYs;
+            } else {
+                var slope = (this.y2 - this.y1) / (this.x2 - this.x1);
+                return (
+                    Math.abs(slope * (x - this.x1) - (y - this.y1)) <= this.lineWidth &&
+                    betweenXs &&
+                    betweenYs
+                );
+            }
+        }
+
+        /**
+         * Returns the width of the line.
+         *
+         * @returns {number} The width of the line.
+         */
+        getWidth() {
+            return this.width;
+        }
+
+        /**
+         * Returns the height of the line.
+         *
+         * @returns {number} The width of the line.
+         */
+        getHeight() {
+            return this.height;
+        }
+
+        /**
+         * Sets the width of the line.
+         *
+         * @param {number} width - The resulting width of the line.
+         */
+        setLineWidth(width) {
+            if (arguments.length !== 1) {
+                throw new Error('You should pass exactly 1 argument to `setLineWidth`');
+            }
+            if (typeof width !== 'number' || !isFinite(width)) {
+                throw new TypeError(
+                    'You must pass a finite number to `setLineWidth(width)`. Did you perform a calculation on a variable that is not a number?',
+                );
+            }
+            this.lineWidth = width;
+        }
+
+        /**
+         * Sets the *starting* point of the line.
+         *
+         * @param {number} x - The x coordinate of the resulting ending point.
+         * @param {number} y - The y coordinate of the resulting ending point.
+         */
+        setStartpoint(x, y) {
+            if (arguments.length !== 2) {
+                throw new Error('You should pass exactly 2 arguments to `setStartpoint(x, y)`.');
+            }
+            if (typeof x !== 'number' || !isFinite(x)) {
+                throw new TypeError(
+                    'Invalid value for x-coordinate. ' +
+                        'Make sure you are passing finite numbers to `setStartpoint(x, y)`. Did you forget the parentheses in `getWidth()` or `getHeight()`? Or did you perform a calculation on a variable that is not a number?',
+                );
+            }
+            if (typeof y !== 'number' || !isFinite(y)) {
+                throw new TypeError(
+                    'Invalid value for y-coordinate. Make sure you are passing finite numbers to `setStartpoint(x, y)`. Did you forget the parentheses in `getWidth()` or `getHeight()`? Or did you perform a calculation on a variable that is not a number?',
+                );
+            }
+
+            this.setPosition(x, y);
+        }
+
+        /**
+         * Sets the *starting* point of the line.
+         *
+         * @param {number} x - The x coordinate of the resulting starting point.
+         * @param {number} y - The y coordinate of the resulting starting point.
+         */
+        setPosition(x, y) {
+            if (arguments.length !== 2) {
+                throw new Error('You should pass exactly 2 arguments to `setPosition(x, y)`.');
+            }
+            if (typeof x !== 'number' || !isFinite(x)) {
+                throw new TypeError(
+                    'Invalid value for x-coordinate. ' +
+                        'Make sure you are passing finite numbers to `setPosition(x, y)`. Did you forget the parentheses in `getWidth()` or `getHeight()`? Or did you perform a calculation on a variable that is not a number?',
+                );
+            }
+            if (typeof y !== 'number' || !isFinite(y)) {
+                throw new TypeError(
+                    'Invalid value for y-coordinate. ' +
+                        'Make sure you are passing finite numbers to `setPosition(x, y)`. Did you forget the parentheses in `getWidth()` or `getHeight()`? Or did you perform a calculation on a variable that is not a number?',
+                );
+            }
+            this.x1 = x;
+            this.y1 = y;
+        }
+
+        /**
+         * Sets the *ending* point of the line.
+         *
+         * @param {number} x - The x coordinate of the resulting ending point.
+         * @param {number} y - The y coordinate of the resulting ending point.
+         */
+        setEndpoint(x, y) {
+            if (arguments.length !== 2) {
+                throw new Error('You should pass exactly 2 arguments to `setEndpoint(x, y)`.');
+            }
+            if (typeof x !== 'number' || !isFinite(x)) {
+                throw new TypeError(
+                    'Invalid value for x-coordinate. ' +
+                        'Make sure you are passing finite numbers to `setEndpoint(x, y)`. Did you forget the parentheses in `getWidth()` or `getHeight()`? Or did you perform a calculation on a variable that is not a number?',
+                );
+            }
+            if (typeof y !== 'number' || !isFinite(y)) {
+                throw new TypeError(
+                    'Invalid value for y-coordinate. ' +
+                        'Make sure you are passing finite numbers to `setEndpoint(x, y)`. Did you forget the parentheses in `getWidth()` or `getHeight()`? Or did you perform a calculation on a variable that is not a number?',
+                );
+            }
+            this.x2 = x;
+            this.y2 = y;
+        }
+
+        /**
+         * Moves the entire line.
+         *
+         * @param {number} dx - The change in x coordinate of both starting and ending points.
+         * @param {number} dy - The change in y coordinate of both starting and ending points.
+         */
+        move(dx, dy) {
+            if (arguments.length !== 2) {
+                throw new Error('You should pass exactly 2 arguments to `move(dx, dy)`.');
+            }
+            if (typeof dx !== 'number' || !isFinite(dx)) {
+                throw new TypeError(
+                    'Invalid number passed for `dx`. Make sure you are passing finite numbers to `move(dx, dy)`.',
+                );
+            }
+            if (typeof dy !== 'number' || !isFinite(dy)) {
+                throw new TypeError(
+                    'Invalid number passed for `dy`. Make sure you are passing finite numbers to `move(dx, dy)`.',
+                );
+            }
+            this.x1 += dx;
+            this.y1 += dy;
+            this.x2 += dx;
+            this.y2 += dy;
+        }
+
+        /**
+         * Gets the x coordinate of the Line's start point.
+         *
+         * @returns {number} The x coordinate of the Line's start point.
+         */
+        getX() {
+            return this.x1;
+        }
+
+        /**
+         * Gets the y coordinate of the Line's start point.
+         *
+         * @returns {number} The y coordinate of the Line's start point.
+         */
+        getY() {
+            return this.y1;
+        }
+
+        /**
+         * Gets the x coordinate of the Line's start point.
+         *
+         * @returns {number} The x coordinate of the Line's start point.
+         */
+        getStartX() {
+            return this.x1;
+        }
+
+        /**
+         * Gets the y coordinate of the Line's start point.
+         *
+         * @returns {number} The y coordinate of the Line's start point.
+         */
+        getStartY() {
+            return this.y1;
+        }
+
+        /**
+         * Gets the x coordinate of the Line's end point.
+         *
+         * @returns {number} The x coordinate of the Line's end point.
+         */
+        getEndX() {
+            return this.x2;
+        }
+
+        /**
+         * Gets the y coordinate of the Line's end point.
+         *
+         * @returns {number} The y coordinate of the Line's end point.
+         */
+        getEndY() {
+            return this.y2;
+        }
+    }
+    /**
+     * Gets the new points based on their rotated values.
+     *
+     * @param  {number} x1       X coordinate of start point
+     * @param  {number} y1       Y coordinate of start point
+     * @param  {number} x2       X coordinate of end point
+     * @param  {number} y2       Y Coordinate of end point
+     * @param  {number} rotation radians rotated (Expected in radians)
+     * @return {array}          List of coordinates of both points.
+     */
+    const getRotatedPoints = function (x1, y1, x2, y2, rotation) {
+        var midX = (x1 + x2) / 2;
+        var midY = (y1 + y2) / 2;
+        var sinAngle = Math.sin(rotation);
+        var cosAngle = Math.cos(rotation);
+        var newX;
+        var newY;
+        // Rotate point 1
+        x1 -= midX;
+        y1 -= midY;
+        newX = x1 * cosAngle - y1 * sinAngle;
+        newY = x1 * sinAngle + y1 * cosAngle;
+        x1 = newX + midX;
+        y1 = newY + midY;
+
+        // Rotate point 2
+        x2 -= midX;
+        y2 -= midY;
+        newX = x2 * cosAngle - y2 * sinAngle;
+        newY = x2 * sinAngle + y2 * cosAngle;
+        x2 = newX + midX;
+        y2 = newY + midY;
+
+        return [x1, y1, x2, y2];
+    };
+
+    /**
+     * Note: this is not used as a subclass for Circle since drawing ovals
+     * is much more complex than drawing circles, and there is no point in
+     * complicating the drawing just for some code reuse.
+     */
+
+    /**
+     * @class Oval
+     * @augments Thing
+     * @param {number} width - Desired width of the Oval
+     * @param {number} height - Desired height of the Oval
+     */
+    class Oval extends Thing {
+        constructor(width, height) {
+            super();
+            if (arguments.length !== 2) {
+                throw new Error('You should pass exactly 2 arguments to `new Oval(width, height)`.');
+            }
+            if (typeof width !== 'number' || !isFinite(width)) {
+                throw new TypeError(
+                    'Invalid value for `width`. Make sure you are passing finite numbers to `new Oval(width, height)`. Did you forget the parentheses in `getWidth()` or `getHeight()`? Or did you perform a calculation on a variable that is not a number?',
+                );
+            }
+            if (typeof height !== 'number' || !isFinite(height)) {
+                throw new TypeError(
+                    'Invalid value for `height`. Make sure you are passing finite numbers to `new Oval(width, height)`. Did you forget the parentheses in `getWidth()` or `getHeight()`? Or did you perform a calculation on a variable that is not a number?',
+                );
+            }
+            this.width = Math.max(0, width);
+            this.height = Math.max(0, height);
+        }
+        /**
+         * Draws an ellipse centered at this.x and this.y.
+         * adapted from http://stackoverflow.com/questions/2172798/
+         * how-to-draw-an-oval-in-html5-canvas
+         *
+         * @param {CodeHSGraphics} graphics - Instance of the Graphics module.
+         */
+        draw(graphics) {
+            var context = graphics.getContext();
+            // http://stackoverflow.com/questions/17125632/html5-canvas-rotate-object-without-moving-coordinates
+            context.save();
+
+            context.translate(this.x, this.y);
+            context.rotate(this.rotation);
+            var w = this.width;
+            var h = this.height;
+            var x = -w / 2;
+            var y = -h / 2;
+
+            var kappa = 0.5522848;
+            var ox = (w / 2) * kappa; // control point offset horizontal
+            var oy = (h / 2) * kappa; // control point offset vertical
+            var xe = x + w; // x-end
+            var ye = y + h; // y-end
+            var xm = x + w / 2; // x-middle
+            var ym = y + h / 2; // y-middle
+
+            context.beginPath();
+            context.moveTo(x, ym);
+            context.bezierCurveTo(x, ym - oy, xm - ox, y, xm, y);
+            context.bezierCurveTo(xm + ox, y, xe, ym - oy, xe, ym);
+            context.bezierCurveTo(xe, ym + oy, xm + ox, ye, xm, ye);
+            context.bezierCurveTo(xm - ox, ye, x, ym + oy, x, ym);
+
+            context.fillStyle = this.color.toString();
+            context.fill();
+
+            if (this.hasBorder) {
+                context.strokeStyle = this.stroke.toString();
+                context.lineWidth = this.lineWidth;
+                context.stroke();
+            }
+
+            context.closePath();
+            context.restore();
+        }
+
+        /**
+         * Gets the height of the oval.
+         *
+         * @returns {number} Height of the oval.
+         */
+        getHeight() {
+            return this.height;
+        }
+
+        /**
+         * Gets the width of the oval.
+         *
+         * @returns {number} Width of the oval.
+         */
+        getWidth() {
+            return this.width;
+        }
+
+        /**
+         * Sets the width of the oval.
+         *
+         * @param {number} width - Desired width of the resulting oval.
+         */
+        setWidth(width) {
+            if (arguments.length !== 1) {
+                throw new Error('You should pass exactly 1 argument to `setWidth(width)`.');
+            }
+            if (typeof width !== 'number' || !isFinite(width)) {
+                throw new TypeError(
+                    'You must pass a finite number to `setWidth(width)`. Did you forget the parentheses in `getWidth()` or `getHeight()`? Or did you perform a calculation on a variable that is not a number?',
+                );
+            }
+
+            this.width = Math.max(0, width);
+        }
+
+        /**
+         * Sets the height of the oval.
+         *
+         * @param {number} height - Desired height of the resulting oval.
+         */
+        setHeight(height) {
+            if (arguments.length !== 1) {
+                throw new Error('You should pass exactly 1 argument to `setHeight(height)`.');
+            }
+            if (typeof height !== 'number' || !isFinite(height)) {
+                throw new TypeError(
+                    'You must pass a finite number to `setHeight(height)`. Did you forget the parentheses in `getWidth()` or `getHeight()`? Or did you perform a calculation on a variable that is not a number?',
+                );
+            }
+
+            this.height = Math.max(0, height);
+        }
+
+        /**
+         * Checks if the passed point is contained in the oval.
+         * Uses the equation for an oval.
+         *
+         * @param {number} x - The x coordinate of the point being tested.
+         * @param {number} y - The y coordinate of the point being tested.
+         * @returns {boolean} Whether the passed point is contained in the circle.
+         */
+        containsPoint(x, y) {
+            var xRadiusSquared = Math.pow(this.width / 2, 2);
+            var yRadiusSquared = Math.pow(this.height / 2, 2);
+            var xDifferenceSquared = Math.pow(x - this.x, 2);
+            var yDifferenceSquared = Math.pow(y - this.y, 2);
+
+            var result = xDifferenceSquared / xRadiusSquared + yDifferenceSquared / yRadiusSquared;
+
+            return result <= 1;
+        }
+    }
+
+    /**
+     * @class Polygon
+     * @augments Thing
+     */
+    class Polygon extends Thing {
+        constructor() {
+            super();
+            if (arguments.length !== 0) {
+                throw new Error('You should pass exactly 0 arguments to `new Polygon()`');
+            }
+            this.points = [];
+            this.width = 0; // max x-distance of points in the polygon
+            this.height = 0; // max y-distance of points in the polygon
+        }
+
+        /**
+         * Draws the polygon in the canvas.
+         *
+         * @param {CodeHSGraphics} graphics - Instance of the Graphics module.
+         */
+        draw(graphics) {
+            if (this.points.length === 0) {
+                return;
+            }
+
+            var context = graphics.getContext();
+            context.fillStyle = this.color.toString();
+            context.beginPath();
+
+            var first = this.points[0];
+            context.moveTo(first.x, first.y);
+            for (var i = 1; i < this.points.length; i++) {
+                var cur = this.points[i];
+                context.lineTo(cur.x, cur.y);
+            }
+            context.closePath();
+            context.fill();
+        }
+
+        /**
+         * Checks if the passed point is contained in the polygon.
+         *
+         * @param {number} x - The x coordinate of the point being tested.
+         * @param {number} y - The y coordinate of the point being tested.
+         * @returns {boolean} Whether the passed point is contained in the polygon.
+         */
+        containsPoint(x, y) {
+            // https://www.eecs.umich.edu/courses/eecs380/HANDOUTS/PROJ2/InsidePoly.html
+            // solution 3 from above
+            var previousOrientation = -1;
+            var x1, x2, y1, y2;
+            for (var i = 0; i < this.points.length; i++) {
+                x1 = this.points[i].x;
+                y1 = this.points[i].y;
+                x2 = this.points[(i + 1) % this.points.length].x;
+                y2 = this.points[(i + 1) % this.points.length].y;
+                var orientation = (y - y1) * (x2 - x1) - (x - x1) * (y2 - y1) <= 0;
+                if (previousOrientation < 0) {
+                    previousOrientation = orientation;
+                } else {
+                    if (previousOrientation !== orientation) {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+
+        /**
+         * Gets the width of the rectangle.
+         *
+         * @returns {number} Width of the rectangle.
+         */
+        getWidth() {
+            return this.width;
+        }
+
+        /**
+         * Gets the height of the rectangle.
+         *
+         * @returns {number} Height of the rectangle.
+         */
+        getHeight() {
+            return this.height;
+        }
+
+        /**
+         * Adds a vertex to the polygon.
+         *
+         * @param {number} x - The x coordinate of the desired new vertex.
+         * @param {number} y - The y coordinate of the desired new vertex.
+         */
+        addPoint(x, y) {
+            if (arguments.length !== 2) {
+                throw new Error('You should pass exactly 2 arguments to `addPoint(x, y)`');
+            }
+            if (typeof x !== 'number' || !isFinite(x)) {
+                throw new TypeError(
+                    'Invalid value for x-coordinate. Make sure you are passing finite numbers to `addPoint(x, y)`.',
+                );
+            }
+            if (typeof y !== 'number' || !isFinite(y)) {
+                throw new TypeError(
+                    'Invalid value for y-coordinate. Make sure you are passing finite numbers to `addPoint(x, y)`.',
+                );
+            }
+
+            for (var i = 0; i < this.points.length; i++) {
+                if (Math.abs(x - this.points[i].x) > this.width) {
+                    this.width = Math.abs(x - this.points[i].x);
+                }
+                if (Math.abs(y - this.points[i].y) > this.height) {
+                    this.height = Math.abs(y - this.points[i].y);
+                }
+            }
+            this.points.push({ x: x, y: y });
+        }
+
+        /**
+         * Moves the entire polygon.
+         *
+         * @param {number} dx - The change in x coordinate of all starting and ending points.
+         * @param {number} dy - The change in y coordinate of all starting and ending points.
+         */
+        move(dx, dy) {
+            if (arguments.length !== 2) {
+                throw new Error('You should pass exactly 2 arguments to `move(dx, dy).`');
+            }
+            if (typeof dx !== 'number' || !isFinite(dx)) {
+                throw new TypeError(
+                    'Invalid number passed for `dx`. Make sure you are passing finite numbers to `move(dx, dy)`.',
+                );
+            }
+            if (typeof dy !== 'number' || !isFinite(dy)) {
+                throw new TypeError(
+                    'Invalid number passed for `dy`. Make sure you are passing finite numbers to `move(dx, dy)`.',
+                );
+            }
+
+            for (var i = 0; i < this.points.length; i++) {
+                this.points[i].x += dx;
+                this.points[i].y += dy;
+            }
+        }
+    }
+
+    /**
+     * @class Rectangle
+     * @augments Thing
+     * @param {number} width - Desired width of resulting rectangle.
+     * @param {number} height - Desired height of resulting rectangle.
+     */
+    class Rectangle extends Thing {
+        constructor(width, height) {
+            super();
+            if (arguments.length !== 2) {
+                throw new Error(
+                    'You should pass exactly 2 arguments to <span ' +
+                        'class="code">new Rectangle(width, height)`',
+                );
+            }
+            if (typeof width !== 'number' || !isFinite(width)) {
+                throw new TypeError(
+                    'Invalid value for `width' +
+                        '`. Make sure you are passing finite numbers to <span ' +
+                        'class="code">new Rectangle(width, height)`. Did you ' +
+                        'forget the parentheses in `getWidth()` ' +
+                        'or `getHeight()`? Or did you perform a ' +
+                        'calculation on a variable that is not a number?',
+                );
+            }
+            if (typeof height !== 'number' || !isFinite(height)) {
+                throw new TypeError(
+                    'Invalid value for `height' +
+                        '`. Make sure you are passing finite numbers to <span ' +
+                        'class="code">new Rectangle(width, height)`. Did you ' +
+                        'forget the parentheses in `getWidth()` ' +
+                        'or `getHeight()`? Or did you perform a ' +
+                        'calculation on a variable that is not a number?',
+                );
+            }
+            this.width = Math.max(0, width);
+            this.height = Math.max(0, height);
+        }
+
+        /**
+         * Draws the rectangle in the canvas.
+         *
+         * @param {CodeHSGraphics} __graphics__ - Instance of the __graphics__ module.
+         */
+        draw(__graphics__) {
+            var context = __graphics__.getContext();
+
+            // http://stackoverflow.com/questions/17125632/html5-canvas-rotate-object-without-moving-coordinates
+            context.save();
+            context.fillStyle = this.color.toString();
+
+            if (this.hasBorder) {
+                context.lineWidth = this.lineWidth;
+                context.strokeStyle = this.stroke.toString();
+            }
+
+            context.beginPath();
+            context.translate(this.x + this.width / 2, this.y + this.height / 2);
+            context.rotate(this.rotation);
+            // Note: after transforming [0,0] is visually [x,y]
+            // so the rect needs to be offset accordingly when drawn
+            context.rect(-this.width / 2, -this.height / 2, this.width, this.height);
+            context.closePath();
+
+            if (this.hasBorder) {
+                context.stroke();
+            }
+
+            context.fill();
+            context.restore();
+        }
+
+        /**
+         * Sets the size of the Rectangle.
+         *
+         * @param {number} width - The desired width of the resulting Rectangle.
+         * @param {number} height - The desired height of the resulting Rectangle.
+         */
+        setSize(width, height) {
+            if (arguments.length !== 2) {
+                throw new Error(
+                    'You should pass exactly 2 arguments to <span ' +
+                        'class="code">setSize(width, height)`',
+                );
+            }
+            if (typeof width !== 'number' || !isFinite(width)) {
+                throw new TypeError(
+                    'Invalid value for `width' +
+                        '`. Make sure you are passing finite numbers to <span ' +
+                        'class="code">setSize(width, height)`. Did you ' +
+                        'forget the parentheses in `getWidth()` ' +
+                        'or `getHeight()`? Or did you perform a ' +
+                        'calculation on a variable that is not a number?',
+                );
+            }
+            if (typeof height !== 'number' || !isFinite(height)) {
+                throw new TypeError(
+                    'Invalid value for `height' +
+                        '`. Make sure you are passing finite numbers to <span ' +
+                        'class="code">setSize(width, height)`. Did you ' +
+                        'forget the parentheses in `getWidth()` ' +
+                        'or `getHeight()`? Or did you perform a ' +
+                        'calculation on a variable that is not a number?',
+                );
+            }
+            this.width = Math.max(0, width);
+            this.height = Math.max(0, height);
+        }
+
+        /**
+         * Sets the width of the Rectangle.
+         *
+         * @param {number} width - The desired width of the resulting Rectangle.
+         */
+        setWidth(width) {
+            if (arguments.length !== 1) {
+                throw new Error('You should pass exactly 1 argument to `setWidth(width)`');
+            }
+            if (typeof width !== 'number' || !isFinite(width)) {
+                throw new TypeError(
+                    'Invalid value for `width' +
+                        '`. Make sure you are passing finite numbers to <span ' +
+                        'class="code">setWidth(width)`. Did you ' +
+                        'forget the parentheses in `getWidth()` ' +
+                        'or `getHeight()`? Or did you perform a ' +
+                        'calculation on a variable that is not a number?',
+                );
+            }
+            this.width = Math.max(0, width);
+        }
+
+        /**
+         * Sets the height of the Rectangle.
+         *
+         * @param {number} height - The desired height of the resulting Rectangle.
+         */
+        setHeight(height) {
+            if (arguments.length !== 1) {
+                throw new Error('You should pass exactly 1 argument to `setHeight(height)`');
+            }
+            if (typeof height !== 'number' || !isFinite(height)) {
+                throw new TypeError(
+                    'Invalid value for `height' +
+                        '`. Make sure you are passing finite numbers to <span ' +
+                        'class="code">setHeight(height)`. Did you ' +
+                        'forget the parentheses in `getWidth()` ' +
+                        'or `getHeight()`? Or did you perform a ' +
+                        'calculation on a variable that is not a number?',
+                );
+            }
+            this.height = Math.max(0, height);
+        }
+
+        /**
+         * Checks if the passed point is contained in the rectangle.
+         *
+         * @param {number} x - The x coordinate of the point being tested.
+         * @param {number} y - The y coordinate of the point being tested.
+         * @returns {boolean} Whether the passed point is contained in the rectangle.
+         */
+        containsPoint(x, y) {
+            return x >= this.x && x <= this.x + this.width && y >= this.y && y <= this.y + this.height;
+        }
+
+        /**
+         * Gets the width of the rectangle.
+         *
+         * @returns {number} Width of the rectangle.
+         */
+        getWidth() {
+            return this.width;
+        }
+
+        /**
+         * Gets the height of the rectangle.
+         *
+         * @returns {number} Height of the rectangle.
+         */
+        getHeight() {
+            return this.height;
+        }
+    }
+
+    /**
+     * @class Text
+     * @augments Thing
+     * @param {string|number} label - The words of the text.
+     * @param {string} font - String of the desired font of the text.
+     */
+    class Text extends Thing {
+        static defaultContext = null;
+
+        constructor(label, font) {
+            super();
+            if (arguments.length < 1) {
+                throw new Error(
+                    'You should pass at least one argument to <span ' +
+                        'class="code">new Text(label, font)`. `' +
+                        'label` is a required parameter.',
+                );
+            }
+            if (typeof label !== 'string' && typeof label !== 'number') {
+                throw new TypeError(
+                    'Invalid value for `label' +
+                        '`. You passed a value of type ' +
+                        typeof label +
+                        ' but a string or number is required.',
+                );
+            }
+
+            font = font === undefined ? '20pt Arial' : font;
+
+            if (typeof font !== 'string') {
+                throw new TypeError(
+                    'Invalid value for `font' +
+                        '`. You passed a value of type ' +
+                        typeof label +
+                        ' but a string is required.',
+                );
+            }
+
+            this.label = label;
+            this.font = font;
+        }
+
+        /**
+         * Define a default context for the text.
+         * Text objects need access to some 2d graphics context to compute
+         * height and width. This might be done before a draw call.
+         *
+         * @param {CodeHSGraphics} __graphics__ - Instance of the graphics module.
+         */
+
+        static giveDefaultContext(__graphics__) {
+            Text.defaultContext = __graphics__.getContext();
+        }
+
+        /**
+         * Reset the dimensions of the text to the size in the context.
+         */
+        resetDimensions(context) {
+            context.font = this.font;
+            this.width = context.measureText(this.label).width;
+            this.height = context.measureText('m').width * 1.2; /* No height provided */
+        }
+
+        /**
+         * Draw the text in the current context.
+         *
+         * @param {CodeHSGraphics} graphics - Instance of the graphics module.
+         */
+        draw(graphics) {
+            var context = graphics.getContext();
+            this.context = context;
+            // http://stackoverflow.com/questions/17125632/html5-canvas-rotate-object-without-moving-coordinates
+            context.save();
+            context.fillStyle = this.color.toString();
+            context.beginPath();
+            context.font = this.font;
+            this.resetDimensions(context);
+            context.translate(this.x, this.y);
+            context.rotate(this.rotation);
+            context.fillText(this.label, 0, 0);
+            context.closePath();
+            context.fill();
+            context.restore();
+        }
+
+        /**
+         * Set the font of the text.
+         * Re-calculates the dimensions of the font after font change.
+         *
+         * @param {string} font - String of the desired font for the text.
+         */
+        setFont(font) {
+            if (arguments.length !== 1) {
+                throw new Error(
+                    'You should pass exactly 1 argument to <span ' + 'class="code">setFont`',
+                );
+            }
+            if (typeof font !== 'string') {
+                throw new TypeError(
+                    'Invalid value passed to <span class=' +
+                        '"code">setFont`. You passed a value of type ' +
+                        typeof label +
+                        ', but a string is required.',
+                );
+            }
+            this.font = font;
+            this.resetDimensions();
+        }
+
+        /**
+         * Set the label of the text.
+         * Re-calculates the dimensions of the font after font change.
+         *
+         * @param {string|number} label - The words of the text.
+         */
+        setLabel(label) {
+            if (arguments.length !== 1) {
+                throw new Error(
+                    'You should pass exactly 1 argument to <span ' + 'class="code">setLabel`',
+                );
+            }
+            if (typeof label !== 'string' && typeof label !== 'number') {
+                throw new TypeError(
+                    'Invalid value passed to <span class=' +
+                        '"code">setLabel`. You passed a value of type ' +
+                        typeof label +
+                        ', but a string or number is required.',
+                );
+            }
+            this.label = label;
+            this.resetDimensions();
+        }
+
+        /**
+         * Equivalent to `setLabel`. Likely created to prevent errors on
+         * accidental calls.
+         * Re-calculates the dimensions of the font after font change.
+         *
+         * @param {string|number} label - The words of the text.
+         */
+        setText(label) {
+            if (arguments.length !== 1) {
+                throw new Error(
+                    'You should pass exactly 1 argument to <span ' + 'class="code">setText`',
+                );
+            }
+            if (typeof label !== 'string' && typeof label !== 'number') {
+                throw new TypeError(
+                    'Invalid value passed to <span class=' +
+                        '"code">setText`. You passed a value of type ' +
+                        typeof label +
+                        ', but a string or number is required.',
+                );
+            }
+            this.label = label;
+            this.resetDimensions();
+        }
+
+        /**
+         * Returns the label of a Text object.
+         *
+         * @returns {string} String of the Text's current label.
+         */
+        getLabel() {
+            return this.label;
+        }
+
+        /**
+         * Equivalent to `getLabel`.  Likely created to prevent errors on accidental
+         * calls.
+         * Returns the label of a Text object.
+         *
+         * @returns {string} String of the Text's current label.
+         */
+        getText() {
+            return this.label;
+        }
+
+        /**
+         * Returns the width of a Text object.
+         *
+         * @returns {number} The width of the text.
+         */
+        getWidth() {
+            return this.width;
+        }
+
+        /**
+         * Returns the height of a Text object.
+         *
+         * @returns {number} The height of the text.
+         */
+        getHeight() {
+            return this.height;
+        }
+
+        /**
+         * Checks if the passed point is contained in the text.
+         *
+         * @param {number} x - The x coordinate of the point being tested.
+         * @param {number} y - The y coordinate of the point being tested.
+         * @returns {boolean} Whether the passed point is contained in the text.
+         */
+        containsPoint(x, y) {
+            return x >= this.x && x <= this.x + this.width && y <= this.y && y >= this.y - this.height;
+        }
+    }
+
     exports.Arc = Arc;
     exports.Circle = Circle;
+    exports.Color = Color;
     exports.Graphics = CodeHSGraphics;
+    exports.Line = Line;
+    exports.Oval = Oval;
+    exports.Polygon = Polygon;
+    exports.Randomizer = randomizer;
+    exports.Rectangle = Rectangle;
+    exports.Sound = Sound;
+    exports.Text = Text;
 
     Object.defineProperty(exports, '__esModule', { value: true });
 

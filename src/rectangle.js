@@ -1,4 +1,4 @@
-import Thing from './thing.js'
+import Thing from './thing.js';
 
 /**
  * @class Rectangle
@@ -8,35 +8,35 @@ import Thing from './thing.js'
  */
 export default class Rectangle extends Thing {
     constructor(width, height) {
+        super();
         if (arguments.length !== 2) {
             throw new Error(
                 'You should pass exactly 2 arguments to <span ' +
-                    'class="code">new Rectangle(width, height)</span>',
+                    'class="code">new Rectangle(width, height)`',
             );
         }
         if (typeof width !== 'number' || !isFinite(width)) {
             throw new TypeError(
-                'Invalid value for <span class="code">width' +
-                    '</span>. Make sure you are passing finite numbers to <span ' +
-                    'class="code">new Rectangle(width, height)</span>. Did you ' +
-                    'forget the parentheses in <span class="code">getWidth()</span> ' +
-                    'or <span class="code">getHeight()</span>? Or did you perform a ' +
+                'Invalid value for `width' +
+                    '`. Make sure you are passing finite numbers to <span ' +
+                    'class="code">new Rectangle(width, height)`. Did you ' +
+                    'forget the parentheses in `getWidth()` ' +
+                    'or `getHeight()`? Or did you perform a ' +
                     'calculation on a variable that is not a number?',
             );
         }
         if (typeof height !== 'number' || !isFinite(height)) {
             throw new TypeError(
-                'Invalid value for <span class="code">height' +
-                    '</span>. Make sure you are passing finite numbers to <span ' +
-                    'class="code">new Rectangle(width, height)</span>. Did you ' +
-                    'forget the parentheses in <span class="code">getWidth()</span> ' +
-                    'or <span class="code">getHeight()</span>? Or did you perform a ' +
+                'Invalid value for `height' +
+                    '`. Make sure you are passing finite numbers to <span ' +
+                    'class="code">new Rectangle(width, height)`. Did you ' +
+                    'forget the parentheses in `getWidth()` ' +
+                    'or `getHeight()`? Or did you perform a ' +
                     'calculation on a variable that is not a number?',
             );
         }
         this.width = Math.max(0, width);
         this.height = Math.max(0, height);
-        this.type = 'Rectangle';
     }
 
     /**
@@ -82,26 +82,26 @@ export default class Rectangle extends Thing {
         if (arguments.length !== 2) {
             throw new Error(
                 'You should pass exactly 2 arguments to <span ' +
-                    'class="code">setSize(width, height)</span>',
+                    'class="code">setSize(width, height)`',
             );
         }
         if (typeof width !== 'number' || !isFinite(width)) {
             throw new TypeError(
-                'Invalid value for <span class="code">width' +
-                    '</span>. Make sure you are passing finite numbers to <span ' +
-                    'class="code">setSize(width, height)</span>. Did you ' +
-                    'forget the parentheses in <span class="code">getWidth()</span> ' +
-                    'or <span class="code">getHeight()</span>? Or did you perform a ' +
+                'Invalid value for `width' +
+                    '`. Make sure you are passing finite numbers to <span ' +
+                    'class="code">setSize(width, height)`. Did you ' +
+                    'forget the parentheses in `getWidth()` ' +
+                    'or `getHeight()`? Or did you perform a ' +
                     'calculation on a variable that is not a number?',
             );
         }
         if (typeof height !== 'number' || !isFinite(height)) {
             throw new TypeError(
-                'Invalid value for <span class="code">height' +
-                    '</span>. Make sure you are passing finite numbers to <span ' +
-                    'class="code">setSize(width, height)</span>. Did you ' +
-                    'forget the parentheses in <span class="code">getWidth()</span> ' +
-                    'or <span class="code">getHeight()</span>? Or did you perform a ' +
+                'Invalid value for `height' +
+                    '`. Make sure you are passing finite numbers to <span ' +
+                    'class="code">setSize(width, height)`. Did you ' +
+                    'forget the parentheses in `getWidth()` ' +
+                    'or `getHeight()`? Or did you perform a ' +
                     'calculation on a variable that is not a number?',
             );
         }
@@ -116,17 +116,15 @@ export default class Rectangle extends Thing {
      */
     setWidth(width) {
         if (arguments.length !== 1) {
-            throw new Error(
-                'You should pass exactly 1 argument to <span class="code">setWidth(width)</span>',
-            );
+            throw new Error('You should pass exactly 1 argument to `setWidth(width)`');
         }
         if (typeof width !== 'number' || !isFinite(width)) {
             throw new TypeError(
-                'Invalid value for <span class="code">width' +
-                    '</span>. Make sure you are passing finite numbers to <span ' +
-                    'class="code">setWidth(width)</span>. Did you ' +
-                    'forget the parentheses in <span class="code">getWidth()</span> ' +
-                    'or <span class="code">getHeight()</span>? Or did you perform a ' +
+                'Invalid value for `width' +
+                    '`. Make sure you are passing finite numbers to <span ' +
+                    'class="code">setWidth(width)`. Did you ' +
+                    'forget the parentheses in `getWidth()` ' +
+                    'or `getHeight()`? Or did you perform a ' +
                     'calculation on a variable that is not a number?',
             );
         }
@@ -140,17 +138,15 @@ export default class Rectangle extends Thing {
      */
     setHeight(height) {
         if (arguments.length !== 1) {
-            throw new Error(
-                'You should pass exactly 1 argument to <span class="code">setHeight(height)</span>',
-            );
+            throw new Error('You should pass exactly 1 argument to `setHeight(height)`');
         }
         if (typeof height !== 'number' || !isFinite(height)) {
             throw new TypeError(
-                'Invalid value for <span class="code">height' +
-                    '</span>. Make sure you are passing finite numbers to <span ' +
-                    'class="code">setHeight(height)</span>. Did you ' +
-                    'forget the parentheses in <span class="code">getWidth()</span> ' +
-                    'or <span class="code">getHeight()</span>? Or did you perform a ' +
+                'Invalid value for `height' +
+                    '`. Make sure you are passing finite numbers to <span ' +
+                    'class="code">setHeight(height)`. Did you ' +
+                    'forget the parentheses in `getWidth()` ' +
+                    'or `getHeight()`? Or did you perform a ' +
                     'calculation on a variable that is not a number?',
             );
         }
@@ -186,5 +182,3 @@ export default class Rectangle extends Thing {
         return this.height;
     }
 }
-
-module.exports = Rectangle;

@@ -1,6 +1,6 @@
 'use strict';
 
-import Thing from './thing.js'
+import Thing from './thing.js';
 
 var DEFAULT_WIDTH = 150;
 var DEFAULT_HEIGHT = (DEFAULT_WIDTH * 3) / 4;
@@ -18,15 +18,14 @@ export default class WebVideo extends Thing {
     constructor(filename) {
         if (typeof filename !== 'string') {
             throw new TypeError(
-                'You must pass a string to <span class="code">' +
-                    "new WebVideo(filename)</span> that has the video's location.",
+                'You must pass a string to `' +
+                    "new WebVideo(filename)` that has the video's location.",
             );
         }
 
         var vid = document.createElement('video');
         this.width = DEFAULT_WIDTH;
         this.height = DEFAULT_HEIGHT;
-        this.type = 'WebVideo';
 
         this.isWebCam = filename === WEBCAM_INDICATOR;
 

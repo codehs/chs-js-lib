@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Test</title>
+  <script src="../../windowchs.js"></script>
+</head>
+<body>
+    <canvas width="500" height="500"></canvas>
+<script>    
+    var g = new Graphics();
+    Graphics.attachToWindow(g, window);
+
+    var BRICK_WIDTH = 40;
+    var BRICK_HEIGHT = 20;
+    var BRICK_TOP_OFFSET = 10;
+    var BRICK_SIDE_OFFSET = 20;
+    var BRICK_SPACING = 5;
+    var PADDLE_WIDTH = 80;
+    var PADDLE_HEIGHT = 15;
+    var PADDLE_OFFSET = 10;
+    var WORLD_WIDTH = getWidth() * 3;
+    var WORLD_HEIGHT = getHeight();
+
+    var N_COLS = Math.floor(
+        (WORLD_WIDTH - 2 * BRICK_SIDE_OFFSET)/(BRICK_SPACING + BRICK_WIDTH)
+    );
+    var N_ROWS = 8;
+    var LESSENING = 1;
+    var SHAKE_POWER = 0.9;
+
+    var bricks = new Array(N_ROWS).fill(0).map(function() {
+        return new Array(N_COLS).fill(1);
+    });
+
+    var player = {
+        x: getWidth()/2,
+        y: WORLD_HEIGHT - PADDLE_HEIGHT - PADDLE_OFFSET,
+        targetX: getWidth()/2
+    };
+
+    var ball = {
+        vx: -5,
+        vy: 5,
+        x: getWidth()/2,
+        y: getHeight()/2 + 10,
+        radius: 10
+    };
+
+    var particles = [];
+
+    var cameraTransform = {
+        xShake: 0,
+        yShake: 0,
+        rotShake: 0,
+    };
+
+    var t = 0;
+
+    var EASE_PADDLE = 1;
+    var FIRE = 1;
+    var SMOKE = 1;
+    var BREAKS = 0;
+    var SHAKE = 0;
+    var SOUND = 0;
+
+    function rgbToHex(r, g, b) {
+        r = Math.floor(r);
+        g = Math.floor(g);
+        b = Math.floor(b);
+        if (r > 255 || g > 255 || b > 255) {
+            throw 'Invalid color component';
+        }
+        var shifted = ((r << 16) | (g << 8) | b);
+        return shifted.toString(16);
+    }
+
+    function shake(power) {
+        if (!SHAKE) return;
+        if (SOUND) setTimeout(function() { 
+            new Audio('https://codehs.com/uploads/9bf91f1848c17c2f3c586f6fb4d7131a').play();
+        }, 0);
+        cameraTransform.xShake = power * SHAKE_POWER;
+        cameraTransform.yShake = power * SHAKE_POWER;
+        cameraTransform.rotShake = power * SHAKE_POWER / 180;
+    }
+
+    function updateParticles() {
+        particles.forEach(function(particle) {
+            if (particle.type === 'smoke') {
+                particle.x += Math.cos(particle.direction) * Math.PI / 180 + particle.vx;
+                particle.y += Math.sin(particle.direction) * Math.PI / 180 + particle.vy;
+                particle.vy += 0.1;
+                particle.size -= 0.3;
+                if (particle.size > 0) {
+                    var circle = new Circle(particle.size);
+                    circle.setColor(particle.color);
+                    circle.setPosition(particle.x, particle.y);
+                    circle.collidable = false;
+                    draw(circle);
+                }
+            } else if (particle.type === 'brick') {
+                particle.x += Math.cos(particle.rotation) * Math.PI / 180 + particle.vx;
+                particle.y += Math.sin(particle.rotation) * Math.PI / 180 + particle.vy;
+                particle.vy += 0.2;
+                particle.width -= 0.01 * particle.width;
+                particle.height -= 0.01 * particle.height;
+                if (particle.width > 0) {
+                    var subBrick = new Rectangle(particle.width, particle.height);
+                    subBrick.setColor(particle.color);
+                    subBrick.setPosition(particle.x, particle.y);
+                    subBrick.collidable = false;
+                    subBrick.rotation = particle.rotation;
+                    draw(subBrick);
+                }
+            } else if (particle.type === 'fire') {
+                // particle.x += Math.cos(particle.direction) * Math.PI / 180 + particle.vx;
+                // particle.y += Math.sin(particle.direction) * Math.PI / 180 + particle.vy;
+                // particle.vy += 0.1;
+                particle.size -= 0.3;
+                if (particle.size > 0) {
+                    var circle = new Circle(particle.size);
+                    circle.setColor(particle.color);
+                    circle.setPosition(particle.x, particle.y);
+                    circle.collidable = false;
+                    draw(circle);
+                }
+            }
+        });
+        particles = particles.filter(function(particle) { 
+            return particle.size > 0;
+        });
+    }
+
+    function updateBall() {
+        if (FIRE) addFire(ball.x, ball.y);
+        ball.x += ball.vx;
+        ball.y += ball.vy;
+        
+        var left = ball.x - ball.radius;
+        var right = ball.x + ball.radius;
+        var top = ball.y - ball.radius;
+        var bottom = ball.y + ball.radius;
+        if (left < 0 || right > WORLD_WIDTH) {
+            ball.vx = -ball.vx;
+            shake(5);
+        }
+        if (top < 0 || bottom > WORLD_HEIGHT) {
+            ball.vy = -ball.vy;
+            shake(5);
+        }
+    }
+
+    function getBallCollision() {
+        var left = ball.x - ball.radius;
+        var right = ball.x + ball.radius;
+        var top = ball.y - ball.radius;
+        var bottom = ball.y + ball.radius;
+        
+        var topLeft = getElementAt(left, top);
+        if(topLeft && topLeft.collidable) return topLeft;
+        
+        var topRight = getElementAt(right, top);
+        if(topRight && topRight.collidable) return topRight;
+        
+        var bottomLeft = getElementAt(left, bottom);
+        if(bottomLeft && bottomLeft.collidable) return bottomLeft;
+        
+        var bottomRight = getElementAt(right, bottom);
+        if(bottomRight && bottomRight.collidable) return bottomRight;
+    }
+
+    function breakBrick(x, y) {
+        var nSubBricks = Randomizer.nextInt(2, 3);
+        for (var i = 0; i < nSubBricks; i++) {
+            particles.push({
+                x: x + Randomizer.nextInt(-7,7),
+                y: y + Randomizer.nextInt(-7,7),
+                width: BRICK_WIDTH / nSubBricks,
+                height: BRICK_HEIGHT,
+                color: '#7a2a0c',
+                rotation: Randomizer.nextFloat(0, 2),
+                size: Randomizer.nextInt(3,10),
+                vy: Randomizer.nextFloat(-2, -1),
+                vx: Randomizer.nextFloat(-1, 1),
+                type: 'brick'
+            });
+        }
+    }
+
+    function addSmoke(x, y) {
+        var nParticles = Randomizer.nextInt(2, 5);
+        for (var i = 0; i < nParticles; i++) {
+            particles.push({
+                x: x + Randomizer.nextInt(-7,7),
+                y: y + Randomizer.nextInt(-7,7),
+                color: '#' + rgbToHex(
+                    Randomizer.nextInt(250, 255),
+                    Randomizer.nextInt(250, 255),
+                    Randomizer.nextInt(250, 255)
+                ),
+                direction: Randomizer.nextFloat(0, 2),
+                size: Randomizer.nextInt(3,10),
+                vy: Randomizer.nextFloat(-2, -1),
+                vx: Randomizer.nextFloat(-1, 1),
+                type: 'smoke'
+            });
+        }
+    }
+
+    function addFire(x, y) {
+        var nParticles = Randomizer.nextInt(2, 5);
+        for (var i = 0; i < nParticles; i++) {
+            particles.push({
+                x: x + Randomizer.nextInt(-2, 2),
+                y: y + Randomizer.nextInt(-2, 2),
+                color: '#' + rgbToHex(
+                    Randomizer.nextInt(200, 255),
+                    Randomizer.nextInt(0, 100),
+                    Randomizer.nextInt(0, 100)
+                ),
+                direction: 0,
+                size: Randomizer.nextInt(5, 8),
+                vy: ball.vx,
+                vx: ball.vy,
+                type: 'fire'
+            });
+        }
+    }
+
+    function handleCollisions() {
+        var collidingElement = getBallCollision();
+        if(collidingElement != null) {
+            if (collidingElement.type === 'brick'){
+                BREAKS && breakBrick(ball.x, ball.y);
+                SMOKE && addSmoke(ball.x, ball.y);
+                remove(collidingElement);
+                bricks[collidingElement.row][collidingElement.col] = 0;
+                ball.vy = -ball.vy;
+            } else {
+                ball.vy = -Math.abs(ball.vy);
+            }
+            shake(10);
+        }
+    }
+
+    function draw(elem) {
+        elem.x += cameraTransform.xShake * (noise(t) - 0.5);
+        elem.y += cameraTransform.yShake * (noise(t) - 0.5);
+        elem.rotation += cameraTransform.rotShake * (noise(t) - 0.5);
+        add(elem);
+    }
+
+    function drawPaddle() {
+        var x = EASE_PADDLE ? player.x * .9 + player.targetX * .1 : player.targetX;
+        player.x = x;
+        var paddle = new Rectangle(PADDLE_WIDTH, PADDLE_HEIGHT);
+        paddle.setPosition(x - PADDLE_WIDTH/2, player.y);
+        paddle.collidable = true;
+        paddle.setColor(Color.ORANGE);
+        draw(paddle);
+    }
+
+    function drawBricks() {
+        bricks.forEach(function(row, i) {
+            row.forEach(function(brick, j) {
+                if (brick) {
+                    var brickElement = new Rectangle(BRICK_WIDTH, BRICK_HEIGHT);
+                    brickElement.setPosition(
+                        BRICK_SIDE_OFFSET + j * (BRICK_WIDTH + BRICK_SPACING),
+                        BRICK_TOP_OFFSET + i * (BRICK_HEIGHT + BRICK_SPACING)
+                    );
+                    brickElement.row = i;
+                    brickElement.col = j;
+                    brickElement.collidable = true;
+                    brickElement.type = 'brick';
+                    brickElement.setColor('#8d3731');
+                    draw(brickElement);
+                }
+            })
+        })
+    }
+
+    function drawBall() {
+        var ballElement = new Circle(ball.radius);
+        ballElement.setPosition(ball.x, ball.y);
+        ballElement.setColor(Color.YELLOW);
+        draw(ballElement);
+    }
+
+    function update() {
+        removeAll();
+        drawPaddle();
+        updateBall();
+        drawBricks();
+        handleCollisions();
+        // particles need to be last so getElementAt will return bricks
+        updateParticles();
+        drawBall();
+        t += 1;
+        cameraTransform.xShake = Math.max(0, cameraTransform.xShake - LESSENING);
+        cameraTransform.yShake = Math.max(0, cameraTransform.yShake - LESSENING);
+        cameraTransform.rotShake = Math.max(0, cameraTransform.rotShake - LESSENING);
+    };
+
+    function setup() {
+        var c = new Camera(0, 0, WORLD_WIDTH, WORLD_HEIGHT);
+        c.follow(ball, getWidth() / 2, getHeight());
+        c.onMove(function(dx, dy) {
+            // console.log(dx);
+            player.targetX += dx;
+            // player.x += dx;
+        })
+        setTimer(update, 4);
+        mouseMoveMethod(function(e, worldX, worldY) {
+            player.targetX = worldX;
+        });
+        keyDownMethod(function(e) {
+            if (e.keyCode === 49) {
+                EASE_PADDLE = 1 - EASE_PADDLE;
+            } else if (e.keyCode === 50) {
+                SMOKE = 1 - SMOKE;
+            } else if (e.keyCode === 51) {
+                BREAKS = 1 - BREAKS;
+            } else if (e.keyCode === 52) {
+                FIRE = 1 - FIRE;
+            } else if (e.keyCode === 53) {
+                SHAKE = 1 - SHAKE;
+            } else if (e.keyCode === 54) {
+                SOUND = 1 - SOUND;
+            }
+        });
+        setBackgroundColor('#28384a');
+    }
+
+    var Camera = (function() {
+        function Camera(x, y, worldWidth, worldHeight, following) {
+            const context = g.getContext();
+            const canvas = g.getCanvas();
+
+            this.x = x || 0;
+            this.y = y || 0;
+            this.width = worldWidth;
+            this.height = worldHeight;
+            this.destX = this.x;
+            this.destY = this.y;
+            this.easing = (c, d) => {
+                return d;
+            };
+            this.followed = following || null;
+
+            const hiddenCanvas = document.createElement("canvas");
+            hiddenCanvas.width = worldWidth;
+            hiddenCanvas.height = worldHeight;
+            hiddenCanvas.style.display = "none";
+            document.body.appendChild(hiddenCanvas);
+            const hiddenContext = hiddenCanvas.getContext("2d");
+
+            g.redraw = () => {
+                if (this.followed !== null) {
+                    if (this.followed.x - this.x > canvas.width - this.xDeadzone) {
+                        this.destX =
+                            this.followed.x - (canvas.width - this.xDeadzone);
+                    } else if (this.followed.x - this.x < this.xDeadzone) {
+                        this.destX = this.followed.x - this.xDeadzone;
+                    }
+                    if (this.followed.y - this.y > canvas.height - this.yDeadzone) {
+                        this.destY =
+                            this.followed.y - (canvas.height - this.yDeadzone);
+                    } else if (this.followed.y - this.y < this.yDeadzone) {
+                        this.destY = this.followed.y - this.yDeadzone;
+                    }
+                }
+                
+                // console.log(this.destY);
+                let { x, y } = this.easing(
+                    { x: this.x, y: this.y },
+                    { x: this.destX, y: this.destY }
+                );
+                
+                const oldX = this.x;
+                const oldY = this.y;
+
+                this.x = x;
+                this.y = y;
+
+                if (this.x < 0) {
+                    this.x = 0;
+                }
+                if (this.y < 0) {
+                    this.y = 0;
+                }
+                if (this.x > hiddenCanvas.width - canvas.width) {
+                    this.x = hiddenCanvas.width - canvas.width;
+                }
+                if (this.y > hiddenCanvas.height - canvas.height) {
+                    this.y = hiddenCanvas.height - canvas.height;
+                }
+
+                context.clearRect(0, 0, canvas.width, canvas.height);
+                hiddenContext.clearRect(
+                    0,
+                    0,
+                    hiddenCanvas.width,
+                    hiddenCanvas.height
+                );
+                hiddenContext.moveTo(-this.x, -this.y);
+                let element;
+                g.drawBackground();
+                g.currentCanvas = hiddenCanvas;
+                for (var i = 0; i < g.elementPool.length; i++) {
+                    element = g.elementPool[i];
+                    g.elementPool[i].draw(g);
+                }
+                g.currentCanvas = canvas;
+
+                const sourceX = this.x;
+                const sourceY = this.y;
+                let sourceWidth = canvas.width;
+                let sourceHeight = canvas.height;
+                sourceWidth = Math.min(hiddenCanvas.width - sourceX, sourceWidth);
+                sourceHeight = Math.min(
+                    hiddenCanvas.height - sourceY,
+                    sourceHeight
+                );
+                const destinationX = 0;
+                const destinationY = 0;
+                const destinationWidth = sourceWidth;
+                const destinationHeight = sourceHeight;
+
+                context.drawImage(
+                    hiddenCanvas,
+                    sourceX,
+                    sourceY,
+                    sourceWidth,
+                    sourceHeight,
+                    destinationX,
+                    destinationY,
+                    destinationWidth,
+                    destinationHeight
+                );
+                
+                this.onmove && this.onmove(this.x - oldX, this.y - oldY);
+            };
+
+            // override the default onmousedown methods to add world coordinates
+            // to event handlers
+            g.mouseDownMethod = callback => {
+                g.mouseDownCallback = e => {
+                    callback(e, e.getX() + this.x, e.getY() + this.y);
+                };
+            };
+
+            g.mouseMoveMethod = callback => {
+                g.moveCallback = e => {
+                    callback(e, e.getX() + this.x, e.getY() + this.y);
+                };
+            };
+
+            g.mouseUpMethod = callback => {
+                g.mouseUpCallback = e => {
+                    callback(e, e.getX() + this.x, e.getY() + this.y);
+                };
+            };
+        }
+
+        Camera.prototype.follow = function(entity, xDeadzone, yDeadzone) {
+            this.followed = entity;
+            this.xDeadzone = xDeadzone;
+            this.yDeadzone = yDeadzone;
+        };
+        
+        Camera.prototype.moveTo = function(x, y) {
+            this.destX = x;
+            this.destY = y;
+        }
+        
+        Camera.prototype.move = function(dx, dy) {
+            this.destX += dx;
+            this.destY += dy;
+        }
+        
+        Camera.prototype.onMove = function(cb) {
+            this.onmove = cb;
+        };
+
+        return Camera;
+    })();
+
+    // PERLIN BELOW 
+    // ------------
+
+    // An implementation of Perlin Noise, based on these implementations:
+    // p5js: https://github.com/processing/p5.js/blob/master/src/math/noise.js
+    // scratchapixel: https://www.scratchapixel.com/lessons/procedural-generation-virtual-worlds/procedural-patterns-noise-part-1/creating-simple-1D-noise
+
+    const PERLIN_SIZE = 4095;
+
+    // lazy-generate the perlin array for some performance boost
+    let perlin;
+
+    // linear interpolation
+    const lerp = (a, b, x) => {
+        return a * (1 - x) + b * x;
+    };
+
+    const scaled_cosine = (i) => 0.5 * (1.0 - Math.cos(i * Math.PI));
+
+    const noise = (x) => {
+        if (perlin === undefined) {
+            perlin = new Array(PERLIN_SIZE + 1);
+            for (var i = 0; i < PERLIN_SIZE + 1; i++) {
+                perlin[i] = Math.random();
+            }
+        }
+
+        x = Math.abs(x);
+        const xFloor = Math.floor(x);
+        const t = x - xFloor;
+        const tRemapSmoothstep = t * t * (3 - 2 * t);
+        
+        // get the left and right neighbors of x
+        const xMin = xFloor & PERLIN_SIZE;
+        const xMax = (xMin + 1) & PERLIN_SIZE;
+        
+        // interpolate
+        const y = lerp(perlin[xMin], perlin[xMax], scaled_cosine(t));
+        return y;
+    };
+
+
+    setup();
+</script>
+</body>
+</html>

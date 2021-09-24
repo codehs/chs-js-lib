@@ -8,21 +8,21 @@ export default class Grid {
         if (arguments.length !== 2) {
             throw new Error(
                 'You should pass exactly 2 arguments to <span ' +
-                    'class="code">new Grid(rows, cols)</span>',
+                    'class="code">new Grid(rows, cols)`',
             );
         }
         if (typeof rows !== 'number' || !isFinite(rows)) {
             throw new TypeError(
-                'Invalid value for <span class="code">rows' +
-                    '</span>. Make sure you are passing finite numbers to <span ' +
-                    'class="code">new Grid(rows, cols)</span>.',
+                'Invalid value for `rows' +
+                    '`. Make sure you are passing finite numbers to <span ' +
+                    'class="code">new Grid(rows, cols)`.',
             );
         }
         if (typeof cols !== 'number' || !isFinite(cols)) {
             throw new TypeError(
-                'Invalid value for <span class="code">cols' +
-                    '</span>. Make sure you are passing finite numbers to <span ' +
-                    'class="code">new Grid(rows, cols)</span>.',
+                'Invalid value for `cols' +
+                    '`. Make sure you are passing finite numbers to <span ' +
+                    'class="code">new Grid(rows, cols)`.',
             );
         }
 
@@ -41,15 +41,11 @@ export default class Grid {
      */
     initFromArray(arr) {
         if (arguments.length !== 1) {
-            throw new Error(
-                'You should pass exactly 1 argument to ' +
-                    '<span class="code">initFromArray</span>',
-            );
+            throw new Error('You should pass exactly 1 argument to ' + '`initFromArray`');
         }
         if (!Array.isArray(arr)) {
             throw new Error(
-                'Invalid value passed to <span class="code">' +
-                    'initFromArray</span>. Make sure you are passing an array.',
+                'Invalid value passed to `' + 'initFromArray`. Make sure you are passing an array.',
             );
         }
         for (var i = 0; i < arr.length; i++) {
@@ -68,9 +64,7 @@ export default class Grid {
      */
     init(value) {
         if (arguments.length !== 1) {
-            throw new Error(
-                'You should pass exactly 1 argument to ' + '<span class="code">init</span>',
-            );
+            throw new Error('You should pass exactly 1 argument to ' + '`init`');
         }
         if (
             typeof value !== 'boolean' &&
@@ -79,8 +73,8 @@ export default class Grid {
             typeof value !== 'object'
         ) {
             throw new TypeError(
-                'Invalid value passed to <span class="code">' +
-                    'init</span>. You passed a value of type ' +
+                'Invalid value passed to `' +
+                    'init`. You passed a value of type ' +
                     typeof value +
                     '. Make sure you are passing a number, string, object, or ' +
                     'boolean value.',
@@ -88,8 +82,8 @@ export default class Grid {
         }
         if (typeof value === 'number' && !isFinite(value)) {
             throw new TypeError(
-                'Non finite number passed to <span class="code">' +
-                    'init</span>. If you are passing a number, make sure it is a ' +
+                'Non finite number passed to `' +
+                    'init`. If you are passing a number, make sure it is a ' +
                     'finite number.',
             );
         }
@@ -111,22 +105,21 @@ export default class Grid {
     get(row, col) {
         if (arguments.length !== 2) {
             throw new Error(
-                'You should pass exactly 2 arguments to <span ' +
-                    'class="code">get(row, col)</span>',
+                'You should pass exactly 2 arguments to <span ' + 'class="code">get(row, col)`',
             );
         }
         if (typeof row !== 'number' || !isFinite(row)) {
             throw new TypeError(
-                'Invalid value for <span class="code">row' +
-                    '</span>. Make sure you are passing finite numbers to <span ' +
-                    'class="code">get(row, col)</span>.',
+                'Invalid value for `row' +
+                    '`. Make sure you are passing finite numbers to <span ' +
+                    'class="code">get(row, col)`.',
             );
         }
         if (typeof col !== 'number' || !isFinite(col)) {
             throw new TypeError(
-                'Invalid value for <span class="code">col' +
-                    '</span>. Make sure you are passing finite numbers to <span ' +
-                    'class="code">get(row, col)</span>.',
+                'Invalid value for `col' +
+                    '`. Make sure you are passing finite numbers to <span ' +
+                    'class="code">get(row, col)`.',
             );
         }
         return this.grid[row][col];
@@ -143,21 +136,21 @@ export default class Grid {
         if (arguments.length !== 3) {
             throw new Error(
                 'You should pass exactly 3 arguments to <span ' +
-                    'class="code">set(row, col, value)</span>',
+                    'class="code">set(row, col, value)`',
             );
         }
         if (typeof row !== 'number' || !isFinite(row)) {
             throw new TypeError(
-                'Invalid value for <span class="code">row' +
-                    '</span>. You passed a value of type ' +
+                'Invalid value for `row' +
+                    '`. You passed a value of type ' +
                     typeof row +
                     '. Make sure you are passing a number.',
             );
         }
         if (typeof col !== 'number' || !isFinite(col)) {
             throw new TypeError(
-                'Invalid value for <span class="code">col' +
-                    '</span>. You passed a value of type ' +
+                'Invalid value for `col' +
+                    '`. You passed a value of type ' +
                     typeof col +
                     '. Make sure you are passing a number.',
             );
@@ -169,8 +162,8 @@ export default class Grid {
             typeof value !== 'object'
         ) {
             throw new TypeError(
-                'Invalid value passed to <span class="code">' +
-                    'set</span>. You passed a value of type ' +
+                'Invalid value passed to `' +
+                    'set`. You passed a value of type ' +
                     typeof value +
                     '. Make sure you are passing a number, string, object, or ' +
                     'boolean value.',
@@ -178,8 +171,8 @@ export default class Grid {
         }
         if (typeof value === 'number' && !isFinite(value)) {
             throw new TypeError(
-                'Non finite value passed to <span class="code">' +
-                    'set</span>. If you are passing a number, make sure it is a ' +
+                'Non finite value passed to `' +
+                    'set`. If you are passing a number, make sure it is a ' +
                     'finite number.',
             );
         }
@@ -212,21 +205,21 @@ export default class Grid {
         if (arguments.length !== 2) {
             throw new Error(
                 'You should pass exactly 2 arguments to <span ' +
-                    'class="code">inBounds(row, col)</span>',
+                    'class="code">inBounds(row, col)`',
             );
         }
         if (typeof row !== 'number' || !isFinite(row)) {
             throw new TypeError(
-                'Invalid value for <span class="code">row' +
-                    '</span>. Make sure you are passing finite numbers to <span ' +
-                    'class="code">inBounds(row, col)</span>.',
+                'Invalid value for `row' +
+                    '`. Make sure you are passing finite numbers to <span ' +
+                    'class="code">inBounds(row, col)`.',
             );
         }
         if (typeof col !== 'number' || !isFinite(col)) {
             throw new TypeError(
-                'Invalid value for <span class="code">col' +
-                    '</span>. Make sure you are passing finite numbers to <span ' +
-                    'class="code">inBounds(row, col)</span>.',
+                'Invalid value for `col' +
+                    '`. Make sure you are passing finite numbers to <span ' +
+                    'class="code">inBounds(row, col)`.',
             );
         }
 

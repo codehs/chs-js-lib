@@ -1,4 +1,4 @@
-import Thing from './thing.js'
+import Thing from './thing.js';
 
 /**
  * @class Polygon
@@ -6,28 +6,26 @@ import Thing from './thing.js'
  */
 export default class Polygon extends Thing {
     constructor() {
+        super();
         if (arguments.length !== 0) {
-            throw new Error(
-                'You should pass exactly 0 arguments to <span class="code">new Polygon()</span>',
-            );
+            throw new Error('You should pass exactly 0 arguments to `new Polygon()`');
         }
         this.points = [];
         this.width = 0; // max x-distance of points in the polygon
         this.height = 0; // max y-distance of points in the polygon
-        this.type = 'Polygon';
     }
 
     /**
      * Draws the polygon in the canvas.
      *
-     * @param {CodeHSGraphics} __graphics__ - Instance of the __graphics__ module.
+     * @param {CodeHSGraphics} graphics - Instance of the Graphics module.
      */
-    draw(__graphics__) {
+    draw(graphics) {
         if (this.points.length === 0) {
             return;
         }
 
-        var context = __graphics__.getContext();
+        var context = graphics.getContext();
         context.fillStyle = this.color.toString();
         context.beginPath();
 
@@ -51,7 +49,6 @@ export default class Polygon extends Thing {
     containsPoint(x, y) {
         // https://www.eecs.umich.edu/courses/eecs380/HANDOUTS/PROJ2/InsidePoly.html
         // solution 3 from above
-        var edges = [];
         var previousOrientation = -1;
         var x1, x2, y1, y2;
         for (var i = 0; i < this.points.length; i++) {
@@ -97,22 +94,16 @@ export default class Polygon extends Thing {
      */
     addPoint(x, y) {
         if (arguments.length !== 2) {
-            throw new Error(
-                'You should pass exactly 2 arguments to <span class="code">addPoint(x, y)</span>',
-            );
+            throw new Error('You should pass exactly 2 arguments to `addPoint(x, y)`');
         }
         if (typeof x !== 'number' || !isFinite(x)) {
             throw new TypeError(
-                'Invalid value for x-coordinate. ' +
-                    'Make sure you are passing finite numbers to ' +
-                    '<span class="code">addPoint(x, y)</span>.',
+                'Invalid value for x-coordinate. Make sure you are passing finite numbers to `addPoint(x, y)`.',
             );
         }
         if (typeof y !== 'number' || !isFinite(y)) {
             throw new TypeError(
-                'Invalid value for y-coordinate. ' +
-                    'Make sure you are passing finite numbers to ' +
-                    '<span class="code">addPoint(x, y)</span>.',
+                'Invalid value for y-coordinate. Make sure you are passing finite numbers to `addPoint(x, y)`.',
             );
         }
 
@@ -135,22 +126,16 @@ export default class Polygon extends Thing {
      */
     move(dx, dy) {
         if (arguments.length !== 2) {
-            throw new Error(
-                'You should pass exactly 2 arguments to <span class="code">move</span>',
-            );
+            throw new Error('You should pass exactly 2 arguments to `move(dx, dy).`');
         }
         if (typeof dx !== 'number' || !isFinite(dx)) {
             throw new TypeError(
-                'Invalid number passed for <span class="code">' +
-                    'dx</span>. Make sure you are passing finite numbers to <span ' +
-                    'class="code">move(dx, dy)</span>',
+                'Invalid number passed for `dx`. Make sure you are passing finite numbers to `move(dx, dy)`.',
             );
         }
         if (typeof dy !== 'number' || !isFinite(dy)) {
             throw new TypeError(
-                'Invalid number passed for <span class="code">' +
-                    'dy</span>. Make sure you are passing finite numbers to <span ' +
-                    'class="code">move(dx, dy)</span>',
+                'Invalid number passed for `dy`. Make sure you are passing finite numbers to `move(dx, dy)`.',
             );
         }
 

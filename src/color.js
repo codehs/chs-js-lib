@@ -2,7 +2,7 @@
  * @namespace Color
  */
 
-import * as Randomizer from './randomizer.js.js'
+import * as Randomizer from './randomizer.js';
 
 /**
  * @class Color

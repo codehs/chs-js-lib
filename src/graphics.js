@@ -1,14 +1,15 @@
 // import the npm-hosted editor utils only if the other is not available
 // var editorUtils = require('codehs-js-utils');
-import { getDistance } from './graphics-utils.js'
-import { getAudioContext } from './audioContext.js'
-import Sound from './sound.js'
-import WebVideo from './webvideo.js'
+import { getAudioContext } from './audioContext.js';
+import Sound from './sound.js';
+import WebVideo from './webvideo.js';
 
 const DEFAULT_FRAME_RATE = 40;
 const FULLSCREEN_PADDING = 5;
 
-let graphicsSingleton = null;
+let GraphicsInstances = {};
+let graphicsID = 0;
+let pressedKeys = [];
 
 export default class CodeHSGraphics {
     audioElements = [];
@@ -31,26 +32,40 @@ export default class CodeHSGraphics {
         options = { ...options };
         this.resetAllState();
         this.setCurrentCanvas(options.canvas);
-        this.currentCanvas = null;
         this.fullscreenMode = false;
         this.fpsInterval = 1000 / DEFAULT_FRAME_RATE;
         this.lastDrawTime = Date.now();
-        graphicsSingleton = this;
+        GraphicsInstances[graphicsID++] = this;
     }
 
-    attachToWindow(window, options) {
-        window.add = this.add.bind(this);
-        window.Audio = this.Audio.bind(this);
-        window.Sound = this.Sound.bind(this);
-        window.mouseClickMethod = this.mouseClickMethod.bind(this);
-        window.mouseMoveMethod = this.mouseMoveMethod.bind(this);
-        window.stopAllTimers = this.stopAllTimers.bind(this);
-        window.setMainTimer = this.setMainTimer.bind(this);
-        window.stopTimer = this.stopTimer.bind(this);
-        options = { ...options };
-        this.resetAllState();
-        this.setCurrentCanvas(options.canvas);
-        this.fullscreenMode = false;
+    static attachToWindow(graphics, window) {
+        window.add = graphics.add.bind(graphics);
+        window.Audio = graphics.Audio.bind(graphics);
+        window.getWidth = graphics.getWidth.bind(graphics);
+        window.getHeight = graphics.getHeight.bind(graphics);
+        window.mouseClickMethod = graphics.mouseClickMethod.bind(graphics);
+        window.mouseDownMethod = graphics.mouseDownMethod.bind(graphics);
+        window.mouseUpMethod = graphics.mouseUpMethod.bind(graphics);
+        window.mouseMoveMethod = graphics.mouseMoveMethod.bind(graphics);
+        window.stopAllTimers = graphics.stopAllTimers.bind(graphics);
+        window.setMainTimer = graphics.setMainTimer.bind(graphics);
+        window.stopTimer = graphics.stopTimer.bind(graphics);
+        window.setTimer = graphics.setTimer.bind(graphics);
+        window.keyDownMethod = graphics.keyDownMethod.bind(graphics);
+        window.removeAll = graphics.removeAll.bind(graphics);
+        window.setBackgroundColor = graphics.setBackgroundColor.bind(graphics);
+        window.getElementAt = graphics.getElementAt.bind(graphics);
+    }
+
+    static unbindFromWindow(window) {
+        window.add = undefined;
+        window.Audio = undefined;
+        window.Sound = undefined;
+        window.mouseClickMethod = undefined;
+        window.mouseMoveMethod = undefined;
+        window.stopAllTimers = undefined;
+        window.setMainTimer = undefined;
+        window.stopTimer = undefined;
     }
 
     /**
@@ -67,27 +82,6 @@ export default class CodeHSGraphics {
         audioElem.crossOrigin = 'anonymous';
         this.audioElements.push(audioElem);
         return audioElem;
-    }
-    /**
-     * Wrapper around Sound so we have reference to all Sound objects created.
-     * Following the example set by tracking Audio elements.
-     * @param frequency - Either a number (Hertz) or note ("C#4" for middle C Sharp)
-     * @param oscillatorType {string} - several options
-     * basic types: "sine", "triangle", "square", "sawtooth"
-     * any basic type can be prefixed with "fat", "am" or "fm", ie "fatsawtooth"
-     * any basic type can be suffixed with a number ie "4" for the number of partials
-     *     ie "square4"
-     * special types: "pwm", "pulse"
-     * drum instrument: "membrane"
-     * cymbal instrument: "metal"
-     * https://tonejs.github.io/docs/13.8.25/OmniOscillator
-     */
-    Sound(frequency, oscillatorType) {
-        frequency = frequency || 440;
-        oscillatorType = oscillatorType || 'fatsawtooth';
-        var soundElem = new oldSound(frequency, oscillatorType);
-        this.soundElements.push(soundElem);
-        return soundElem;
     }
 
     /**
@@ -260,27 +254,27 @@ export default class CodeHSGraphics {
     setTimer(fn, time, data, name) {
         if (arguments.length < 2) {
             throw new Error(
-                '2 parameters required for <span class="code">' +
-                    'setTimer</span>, ' +
+                '2 parameters required for `' +
+                    'setTimer`, ' +
                     arguments.length +
                     ' found. You must ' +
                     'provide a callback function and ' +
                     'a number representing the time delay ' +
-                    'to <span class="code">setTimer</span>',
+                    'to `setTimer`',
             );
         }
         if (typeof fn !== 'function') {
             throw new TypeError(
                 'Invalid callback function. ' +
                     'Make sure you are passing an actual function to ' +
-                    '<span class="code">setTimer</span>.',
+                    '`setTimer`.',
             );
         }
         if (typeof time !== 'number' || !isFinite(time)) {
             throw new TypeError(
                 'Invalid value for time delay. ' +
                     'Make sure you are passing a finite number to ' +
-                    '<span class="code">setTimer</span> for the delay.',
+                    '`setTimer` for the delay.',
             );
         }
 
@@ -326,8 +320,8 @@ export default class CodeHSGraphics {
      * @returns {Thing|null} The object at the point (x, y), if there is one (else null).
      */
     getElementAt(x, y) {
-        for (var i = this.elementPoolSize - 1; i >= 0; i--) {
-            if (this.elementPool[i].alive && this.elemementPool[i].containsPoint(x, y, this)) {
+        for (var i = this.elementPoolSize - 1; i--; ) {
+            if (this.elementPool[i].alive && this.elementPool[i].containsPoint(x, y, this)) {
                 return this.elementPool[i];
             }
         }
@@ -412,15 +406,12 @@ export default class CodeHSGraphics {
         this.audioElements.forEach(function (audio) {
             audio.pause();
         });
-        this.soundElements.forEach(function (soundElem) {
-            soundElem.stop();
-            soundElem.disconnect();
-        });
+        Sound.stopSounds();
     }
 
     stopAllVideo() {
         for (var i = this.elementPoolSize; i--; ) {
-            if (this.elementPool[i].type == 'WebVideo') {
+            if (this.elementPool[i] instanceof WebVideo) {
                 this.elementPool[i].stop();
             }
         }
@@ -572,7 +563,7 @@ export default class CodeHSGraphics {
         }
         // sort all dead elements to the end of the pool
         if (sortPool) {
-            this.elements.sort((a, b) => b.alive - a.alive);
+            this.elementPool.sort((a, b) => b.alive - a.alive);
         }
     }
 
@@ -772,7 +763,9 @@ window.onkeydown = function (e) {
         pressedKeys.push(e.keyCode);
     }
 
-    graphicsSingleton?.keyDownCallback?.(e);
+    Object.entries(GraphicsInstances).forEach(([id, instance]) => {
+        instance.keyDownCallback?.(e);
+    });
 
     return true;
 };
@@ -782,7 +775,9 @@ window.onkeyup = function (e) {
     if (index !== -1) {
         pressedKeys.splice(index, 1);
     }
-    graphicsSingleton?.keyUpCallback?.(e);
+    Object.entries(GraphicsInstances).forEach(([id, instance]) => {
+        instance.keyUpCallback?.(e);
+    });
 };
 
 /** RESIZE EVENT ****/
@@ -794,7 +789,9 @@ window.onresize = function (e) {
     if (!resizeTimeout) {
         resizeTimeout = setTimeout(function () {
             resizeTimeout = null;
-            graphicsSingleton?.setFullscreen?.();
+            Object.entries(GraphicsInstances).forEach(([id, instance]) => {
+                instance.setFullscreen?.();
+            });
         }, DEFAULT_FRAME_RATE);
     }
 };
@@ -802,13 +799,17 @@ window.onresize = function (e) {
 /** MOBILE DEVICE EVENTS ****/
 if (window.DeviceOrientationEvent) {
     window.ondeviceorientation = function (e) {
-        graphicsSingleton?.deviceOrientationCallback?.(e);
+        Object.entries(GraphicsInstances).forEach(([id, instance]) => {
+            instance.deviceOrientationCallback?.(e);
+        });
     };
 }
 
 if (window.DeviceMotionEvent) {
     window.ondevicemotion = function (e) {
-        graphicsSingleton?.deviceMotionCallback?.(e);
+        Object.entries(GraphicsInstances).forEach(([id, instance]) => {
+            instance.deviceMotionCallback?.(e);
+        });
     };
 }
 
@@ -828,7 +829,7 @@ CodeHSGraphics.getBaseCoordinates = function (e, target) {
         y = e.clientY + document.body.scrollTop + document.documentElement.scrollTop;
     }
 
-    var offset = target.offset();
+    var offset = target.getBoundingClientRect();
     x -= offset.left;
     y -= offset.top;
 
@@ -836,7 +837,7 @@ CodeHSGraphics.getBaseCoordinates = function (e, target) {
 };
 
 CodeHSGraphics.getMouseCoordinates = function (e) {
-    var baseCoordinates = CodeHSGraphics.getBaseCoordinates(e, $(e.currentTarget));
+    var baseCoordinates = CodeHSGraphics.getBaseCoordinates(e, e.currentTarget);
     var x = baseCoordinates.x;
     var y = baseCoordinates.y;
 
@@ -848,7 +849,7 @@ CodeHSGraphics.getMouseCoordinates = function (e) {
 };
 
 CodeHSGraphics.getTouchCoordinates = function (e) {
-    var baseCoordinates = CodeHSGraphics.getBaseCoordinates(e, $(e.target));
+    var baseCoordinates = CodeHSGraphics.getBaseCoordinates(e, e.target);
     var x = baseCoordinates.x;
     var y = baseCoordinates.y;
 

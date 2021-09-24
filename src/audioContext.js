@@ -1,4 +1,4 @@
-/*
+/**
  * Defines a cross-browser compatible way of creating a new AudioContext.
  * Returns 0 and logs an error message if creating a new AudioContext is not possible.
  */

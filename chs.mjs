@@ -1,5 +1,6 @@
 /**
- * Generic class. TODO docs.
+ * Generic class. You should never need to construct a thing directly, only extend from
+ * Thing as a superclass.
  */
 class Thing {
     static DEGREES = 0;
@@ -28,14 +29,12 @@ class Thing {
      */
     setFilled(filled) {
         if (arguments.length !== 1) {
-            throw new Error(
-                'You should pass exactly 1 argument to ' + '<span class="code">setFilled</span>',
-            );
+            throw new Error('You should pass exactly 1 argument to ' + '`setFilled`');
         }
         if (typeof filled !== 'boolean') {
             throw new Error(
-                'Invalid value passed to <span class="code">' +
-                    'setFilled</span>. Make sure you are passing a ' +
+                'Invalid value passed to `' +
+                    'setFilled`. Make sure you are passing a ' +
                     'boolean value.',
             );
         }
@@ -59,13 +58,13 @@ class Thing {
     setBorder(hasBorder) {
         if (arguments.length !== 1) {
             throw new Error(
-                'You should pass exactly 1 argument to <span class=' + '"code">setBorder</span>',
+                'You should pass exactly 1 argument to <span class=' + '"code">setBorder`',
             );
         }
         if (typeof hasBorder !== 'boolean') {
             throw new Error(
-                'Invalid value passed to <span class="code">' +
-                    'setBorder</span>. Make sure you are passing a ' +
+                'Invalid value passed to `' +
+                    'setBorder`. Make sure you are passing a ' +
                     'boolean value.',
             );
         }
@@ -82,30 +81,6 @@ class Thing {
     }
 
     /**
-     * Sets a Thing object's type.
-     * Questionable of whether or not this method is used.
-     *
-     * @param {type} type - A type to set the Thing to.
-     */
-    setType(type) {
-        if (arguments.length !== 1) {
-            throw new Error(
-                'You should pass exactly 1 argument to <span ' + 'class="code">setType</span>',
-            );
-        }
-        this.type = type;
-    }
-
-    /**
-     * Returns the type of a Thing.
-     *
-     * @return {type} The type of the Thing.
-     */
-    getType() {
-        return this.type;
-    }
-
-    /**
      * Sets the position of a Thing.
      * Throws an error if there are fewer than 2 params or if
      * they are not numbers.
@@ -116,17 +91,16 @@ class Thing {
     setPosition(x, y) {
         if (arguments.length !== 2) {
             throw new Error(
-                'You should pass exactly 2 arguments to <span ' +
-                    'class="code">setPosition(x, y)</span>',
+                'You should pass exactly 2 arguments to <span ' + 'class="code">setPosition(x, y)`',
             );
         }
         if (typeof x !== 'number' || !isFinite(x)) {
             throw new TypeError(
                 'Invalid value for x-coordinate. ' +
                     'Make sure you are passing finite numbers to <span ' +
-                    'class="code">setPosition(x, y)</span>. Did you ' +
-                    'forget the parentheses in <span class="code">getWidth()</span> ' +
-                    'or <span class="code">getHeight()</span>? Or did you perform a ' +
+                    'class="code">setPosition(x, y)`. Did you ' +
+                    'forget the parentheses in `getWidth()` ' +
+                    'or `getHeight()`? Or did you perform a ' +
                     'calculation on a variable that is not a number?',
             );
         }
@@ -134,9 +108,9 @@ class Thing {
             throw new TypeError(
                 'Invalid value for y-coordinate. ' +
                     'Make sure you are passing finite numbers to <span ' +
-                    'class="code">setPosition(x, y)</span>. Did you ' +
-                    'forget the parentheses in <span class="code">getWidth()</span> ' +
-                    'or <span class="code">getHeight()</span>? Or did you perform a ' +
+                    'class="code">setPosition(x, y)`. Did you ' +
+                    'forget the parentheses in `getWidth()` ' +
+                    'or `getHeight()`? Or did you perform a ' +
                     'calculation on a variable that is not a number?',
             );
         }
@@ -157,14 +131,14 @@ class Thing {
         if (arguments.length < 1 || arguments.length > 2) {
             throw new Error(
                 'You should pass 1 or 2 arguments to <span ' +
-                    'class="code">setRotation(degrees, angleUnit)</span>',
+                    'class="code">setRotation(degrees, angleUnit)`',
             );
         }
         if (typeof degrees !== 'number' || !isFinite(degrees)) {
             throw new TypeError(
                 'Invalid value for degrees. ' +
                     'Make sure you are passing finite numbers to <span ' +
-                    'class="code">setRotation(degrees, angleUnit)</span>. Did you ' +
+                    'class="code">setRotation(degrees, angleUnit)`. Did you ' +
                     'perform a calculation on a variable that is not a number?',
             );
         }
@@ -173,9 +147,9 @@ class Thing {
         }
         if (typeof angleUnit !== 'number' || !isFinite(angleUnit)) {
             throw new TypeError(
-                'Invalid value for <span class="code">angleUnit' +
-                    '</span>. Make sure you are passing finite numbers to <span ' +
-                    'class="code">setRotation(degrees, angleUnit)</span>',
+                'Invalid value for `angleUnit' +
+                    '`. Make sure you are passing finite numbers to <span ' +
+                    'class="code">setRotation(degrees, angleUnit)`',
             );
         }
         if (angleUnit == Thing.DEGREES) {
@@ -196,14 +170,14 @@ class Thing {
         if (arguments.length < 1 || arguments.length > 2) {
             throw new Error(
                 'You should pass exactly 1 argument to <span ' +
-                    'class="code">rotate(degrees, angleUnit)</span>',
+                    'class="code">rotate(degrees, angleUnit)`',
             );
         }
         if (typeof degrees !== 'number' || !isFinite(degrees)) {
             throw new TypeError(
                 'Invalid value for degrees. ' +
                     'Make sure you are passing finite numbers to <span ' +
-                    'class="code">rotate(degrees, angleUnit)</span>. Did you perform ' +
+                    'class="code">rotate(degrees, angleUnit)`. Did you perform ' +
                     'a calculation on a variable that is not a number?',
             );
         }
@@ -212,9 +186,9 @@ class Thing {
         }
         if (typeof angleUnit !== 'number' || !isFinite(angleUnit)) {
             throw new TypeError(
-                'Invalid value for <span class="code">angleUnit' +
-                    '</span>. Make sure you are passing finite numbers to <span ' +
-                    'class="code">rotate(degrees, angleUnit)</span>',
+                'Invalid value for `angleUnit' +
+                    '`. Make sure you are passing finite numbers to <span ' +
+                    'class="code">rotate(degrees, angleUnit)`',
             );
         }
         if (angleUnit == Thing.DEGREES) {
@@ -234,7 +208,7 @@ class Thing {
     setColor(color) {
         if (arguments.length !== 1) {
             throw new Error(
-                'You should pass exactly 1 argument to <span ' + 'class="code">setColor</span>',
+                'You should pass exactly 1 argument to <span ' + 'class="code">setColor`',
             );
         }
         if (color === undefined) {
@@ -262,8 +236,7 @@ class Thing {
     setBorderColor(color) {
         if (arguments.length !== 1) {
             throw new Error(
-                'You should pass exactly 1 argument to <span ' +
-                    'class="code">setBorderColor</span>',
+                'You should pass exactly 1 argument to <span ' + 'class="code">setBorderColor`',
             );
         }
         if (color === undefined) {
@@ -291,15 +264,14 @@ class Thing {
     setBorderWidth(width) {
         if (arguments.length !== 1) {
             throw new Error(
-                'You should pass exactly 1 argument to <span ' +
-                    'class="code">setBorderWidth</span>',
+                'You should pass exactly 1 argument to <span ' + 'class="code">setBorderWidth`',
             );
         }
         if (typeof width !== 'number' || !isFinite(width)) {
             throw new Error(
                 'Invalid value for border width. Make sure you are ' +
-                    'passing a finite number to <span class="code">' +
-                    'setBorderWidth</span>',
+                    'passing a finite number to `' +
+                    'setBorderWidth`',
             );
         }
         this.lineWidth = width;
@@ -323,22 +295,20 @@ class Thing {
      */
     move(dx, dy) {
         if (arguments.length !== 2) {
-            throw new Error(
-                'You should pass exactly 2 arguments to <span ' + 'class="code">move</span>',
-            );
+            throw new Error('You should pass exactly 2 arguments to <span ' + 'class="code">move`');
         }
         if (typeof dx !== 'number' || !isFinite(dx)) {
             throw new TypeError(
-                'Invalid number passed for <span class="code">' +
-                    'dx</span>. Make sure you are passing finite numbers to <span ' +
-                    'class="code">move(dx, dy)</span>',
+                'Invalid number passed for `' +
+                    'dx`. Make sure you are passing finite numbers to <span ' +
+                    'class="code">move(dx, dy)`',
             );
         }
         if (typeof dy !== 'number' || !isFinite(dy)) {
             throw new TypeError(
-                'Invalid number passed for <span class="code">' +
-                    'dy</span>. Make sure you are passing finite numbers to <span ' +
-                    'class="code">move(dx, dy)</span>',
+                'Invalid number passed for `' +
+                    'dy`. Make sure you are passing finite numbers to <span ' +
+                    'class="code">move(dx, dy)`',
             );
         }
         this.x += dx;
@@ -389,16 +359,14 @@ class Thing {
  * @param {number} y2
  * @returns {number} Distance between the two points.
  */
-const getDistance = function(x1, y1, x2, y2) {
+const getDistance = function (x1, y1, x2, y2) {
     return Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2));
 };
 
-/**
- * @namespace Arc
+/** * @namespace Arc
  */
 
-/**
- * Arc class. TODO docs
+/** * Arc class. TODO docs
  */
 class Arc extends Thing {
     static COUNTER_CLOCKWISE = true;
@@ -419,51 +387,34 @@ class Arc extends Thing {
         super();
         if (arguments.length !== 4) {
             throw new Error(
-                'You should pass exactly 4 arguments to <span ' +
-                    'class="code">new Arc(raduis, startAngle, endAngle, ' +
-                    'angleUnit)</span>',
+                'You should pass exactly 4 arguments to `new Arc(raduis, startAngle, endAngle, angleUnit)`',
             );
         }
         if (typeof radius !== 'number' || !isFinite(radius)) {
             throw new TypeError(
-                'Invalid value for <span class="code">radius' +
-                    '</span>. Make sure you are passing finite numbers to <span ' +
-                    'class="code">new Arc(raduis, startAngle, endAngle, ' +
-                    'angleUnit)</span>',
+                'Invalid value for `radius`. Make sure you are passing finite numbers to `new Arc(raduis, startAngle, endAngle, angleUnit)`',
             );
         }
         if (typeof startAngle !== 'number' || !isFinite(startAngle)) {
             throw new TypeError(
-                'Invalid value for <span class="code">startAngle' +
-                    '</span>. Make sure you are passing finite numbers to <span ' +
-                    'class="code">new Arc(raduis, startAngle, endAngle, ' +
-                    'angleUnit)</span>',
+                'Invalid value for `startAngle`. Make sure you are passing finite numbers to `new Arc(raduis, startAngle, endAngle, angleUnit)`',
             );
         }
         if (typeof endAngle !== 'number' || !isFinite(endAngle)) {
             throw new TypeError(
-                'Invalid value for <span class="code">endAngle' +
-                    '</span>. Make sure you are passing finite numbers to <span ' +
-                    'class="code">new Arc(raduis, startAngle, endAngle, ' +
-                    'angleUnit)</span>',
+                'Invalid value for `endAngle`. Make sure you are passing finite numbers to `new Arc(raduis, startAngle, endAngle, angleUnit)`',
             );
         }
         if (typeof angleUnit !== 'number' || !isFinite(angleUnit)) {
             throw new TypeError(
-                'Invalid value for <span class="code">angleUnit' +
-                    '</span>. Make sure you are passing finite numbers to <span ' +
-                    'class="code">new Arc(raduis, startAngle, endAngle, ' +
-                    'angleUnit)</span>',
+                'Invalid value for `angleUnit`. Make sure you are passing finite numbers to `new Arc(raduis, startAngle, endAngle, angleUnit)`',
             );
         }
-
-        Thing.call(this);
 
         this.radius = radius;
         this.angleUnit = angleUnit == Arc.DEGREES ? Arc.DEGREES : Arc.RADIANS;
 
         this.counterclockwise = Arc.COUNTER_CLOCKWISE;
-        this.type = 'Arc';
 
         if (this.angleUnit == Arc.DEGREES) {
             startAngle = degreesToRadians(startAngle);
@@ -477,10 +428,10 @@ class Arc extends Thing {
     /**
      * Draws the arc in the canvas.
      *
-     * @param {CodeHSGraphics} __graphics__ - Instance of the __graphics__ module.
+     * @param {CodeHSGraphics} graphics - Instance of the CodeHSGraphics module.
      */
-    draw(__graphics__) {
-        var context = __graphics__.getContext();
+    draw(graphics) {
+        var context = graphics.getContext();
         // http://stackoverflow.com/questions/17125632/html5-canvas-rotate-object-without-moving-coordinates
         context.save();
         context.beginPath();
@@ -515,16 +466,11 @@ class Arc extends Thing {
      */
     setStartAngle(angle) {
         if (arguments.length !== 1) {
-            throw new Error(
-                'You should pass exactly 1 argument to ' +
-                    '<span class="code">setStartAngle</span>',
-            );
+            throw new Error('You should pass exactly 1 argument to `setStartAngle`');
         }
         if (typeof angle !== 'number' || !isFinite(angle)) {
             throw new Error(
-                'Invalid value passed to <span class="code">' +
-                    'setStartAngle</span>. Make sure you are passing a ' +
-                    'finite number.',
+                'Invalid value passed to `setStartAngle`. Make sure you are passing a finite number.',
             );
         }
         if (this.angleUnit == Arc.DEGREES) {
@@ -541,15 +487,11 @@ class Arc extends Thing {
      */
     setEndAngle(angle) {
         if (arguments.length !== 1) {
-            throw new Error(
-                'You should pass exactly 1 argument to ' + '<span class="code">setEndAngle</span>',
-            );
+            throw new Error('You should pass exactly 1 argument to `setEndAngle`');
         }
         if (typeof angle !== 'number' || !isFinite(angle)) {
             throw new Error(
-                'Invalid value passed to <span class="code">' +
-                    'setEndAngle</span>. Make sure you are passing a ' +
-                    'finite number.',
+                'Invalid value passed to `setEndAngle`. Make sure you are passing a finite number.',
             );
         }
         if (this.angleUnit == Arc.DEGREES) {
@@ -590,15 +532,11 @@ class Arc extends Thing {
      */
     setDirection(val) {
         if (arguments.length !== 1) {
-            throw new Error(
-                'You should pass exactly 1 argument to ' + '<span class="code">setDirection</span>',
-            );
+            throw new Error('You should pass exactly 1 argument to `setDirection`');
         }
         if (typeof val !== 'boolean') {
             throw new Error(
-                'Invalid value passed to <span class="code">' +
-                    'setDirection</span>. Make sure you are passing a ' +
-                    'boolean value. true for counterclockwise, false for clockwise.',
+                'Invalid value passed to `setDirection`. Make sure you are passing a boolean value. `true` for counterclockwise, false for clockwise.',
             );
         }
         this.counterclockwise = val;
@@ -731,6 +669,10 @@ const nextColor = function () {
     var b = nextHex();
     return '#' + r + g + b;
 };
+
+/**
+ * @namespace Color
+ */
 
 /**
  * @class Color
@@ -1019,16 +961,15 @@ class Circle extends Thing {
         super();
         if (arguments.length !== 1) {
             throw new Error(
-                'You should pass exactly 1 argument to <span ' +
-                    'class="code">new Circle(radius)</span>',
+                'You should pass exactly 1 argument to <span ' + 'class="code">new Circle(radius)`',
             );
         }
         if (typeof radius !== 'number' || !isFinite(radius)) {
             throw new TypeError(
                 'You must pass a finite number to <span class=' +
-                    '"code">new Circle(radius)</span>. Did you forget the ' +
-                    'parentheses in <span class="code">getWidth()</span> or <span ' +
-                    'class="code">getHeight()</span>? Or did you perform a ' +
+                    '"code">new Circle(radius)`. Did you forget the ' +
+                    'parentheses in `getWidth()` or <span ' +
+                    'class="code">getHeight()`? Or did you perform a ' +
                     'calculation on a variable that is not a number?',
             );
         }
@@ -1036,15 +977,14 @@ class Circle extends Thing {
         this.radius = Math.max(0, radius);
         this.color = Color.black;
         this.lineWidth = 3;
-        this.type = 'Circle';
     }
 
     /**
      * Draws the circle in the canvas.
-     * @param {CodeHSGraphics} __graphics__ - Instance of the Graphics module.
+     * @param {CodeHSGraphics} graphics - Instance of the Graphics module.
      */
-    draw(__graphics__) {
-        var context = __graphics__.getContext();
+    draw(graphics) {
+        var context = graphics.getContext();
         context.beginPath();
 
         if (this.hasBorder) {
@@ -1092,16 +1032,15 @@ class Circle extends Thing {
     setRadius(radius) {
         if (arguments.length !== 1) {
             throw new Error(
-                'You should pass exactly 1 argument to <span ' +
-                    'class="code">setRadius(radius)</span>',
+                'You should pass exactly 1 argument to <span ' + 'class="code">setRadius(radius)`',
             );
         }
         if (typeof radius !== 'number' || !isFinite(radius)) {
             throw new TypeError(
                 'You must pass a finite number to <span class=' +
-                    '"code">setRadius(radius)</span>. Did you forget the ' +
-                    'parentheses in <span class="code">getWidth()</span> or <span ' +
-                    'class="code">getHeight()</span>? Or did you perform a ' +
+                    '"code">setRadius(radius)`. Did you forget the ' +
+                    'parentheses in `getWidth()` or <span ' +
+                    'class="code">getHeight()`? Or did you perform a ' +
                     'calculation on a variable that is not a number?',
             );
         }

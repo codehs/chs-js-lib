@@ -30,28 +30,28 @@ window.Keyboard = keyboardModule;
 // which results as undefined.
 var CodeHSConsole = new window.CodeHSConsole();
 window.globalCodeHSConsoleInstance = CodeHSConsole;
-window.quietPrintln = function() {
+window.quietPrintln = function () {
     return CodeHSConsole.quietPrintln.apply(CodeHSConsole, arguments);
 };
-window.quietPrint = function() {
+window.quietPrint = function () {
     return CodeHSConsole.quietPrint.apply(CodeHSConsole, arguments);
 };
-window.println = function() {
+window.println = function () {
     return CodeHSConsole.println.apply(CodeHSConsole, arguments);
 };
-window.print = function() {
+window.print = function () {
     return CodeHSConsole.print.apply(CodeHSConsole, arguments);
 };
-window.readInt = function() {
+window.readInt = function () {
     return CodeHSConsole.readInt.apply(CodeHSConsole, arguments);
 };
-window.readBoolean = function() {
+window.readBoolean = function () {
     return CodeHSConsole.readBoolean.apply(CodeHSConsole, arguments);
 };
-window.readFloat = function() {
+window.readFloat = function () {
     return CodeHSConsole.readFloat.apply(CodeHSConsole, arguments);
 };
-window.readLine = function() {
+window.readLine = function () {
     return CodeHSConsole.readLine.apply(CodeHSConsole, arguments);
 };
 

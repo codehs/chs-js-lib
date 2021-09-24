@@ -25,7 +25,7 @@ const Keyboard = {
  * @returns {number} Key code corresponding to digit.
  * Usage: var code3 = Keyboard.digit(3);
  */
-Keyboard.digit = function(dig) {
+Keyboard.digit = function (dig) {
     dig = dig % 10;
     return dig + 48;
 };
@@ -37,7 +37,7 @@ Keyboard.digit = function(dig) {
  * Usage: var aCode = Keyboard.letter("a");
  * Only to be used with single-character strings.
  */
-Keyboard.letter = function(letter) {
+Keyboard.letter = function (letter) {
     if (letter.length !== 1) {
         return -1;
     }
@@ -61,12 +61,12 @@ Keyboard.nonEditingKeys = [
     Keyboard.RIGHT_WINDOW,
 ];
 
-/*
+/**
  * Check if a key is an editing key.
  * @param {number} keyCode - Key code corresponding to key pressed.
  * @returns {boolean} Whether or not the key is an editing key.
  */
-Keyboard.isEditingKey = function(keyCode) {
+Keyboard.isEditingKey = function (keyCode) {
     return Keyboard.nonEditingKeys.indexOf(keyCode) === -1;
 };
 

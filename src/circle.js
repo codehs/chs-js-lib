@@ -1,6 +1,6 @@
-import Thing from './thing.js'
-import Color from './color.js'
-import { getDistance } from './graphics-utils.js'
+import Thing from './thing.js';
+import Color from './color.js';
+import { getDistance } from './graphics-utils.js';
 
 /**
  * @class Circle
@@ -12,16 +12,15 @@ export default class Circle extends Thing {
         super();
         if (arguments.length !== 1) {
             throw new Error(
-                'You should pass exactly 1 argument to <span ' +
-                    'class="code">new Circle(radius)</span>',
+                'You should pass exactly 1 argument to <span ' + 'class="code">new Circle(radius)`',
             );
         }
         if (typeof radius !== 'number' || !isFinite(radius)) {
             throw new TypeError(
                 'You must pass a finite number to <span class=' +
-                    '"code">new Circle(radius)</span>. Did you forget the ' +
-                    'parentheses in <span class="code">getWidth()</span> or <span ' +
-                    'class="code">getHeight()</span>? Or did you perform a ' +
+                    '"code">new Circle(radius)`. Did you forget the ' +
+                    'parentheses in `getWidth()` or <span ' +
+                    'class="code">getHeight()`? Or did you perform a ' +
                     'calculation on a variable that is not a number?',
             );
         }
@@ -29,15 +28,14 @@ export default class Circle extends Thing {
         this.radius = Math.max(0, radius);
         this.color = Color.black;
         this.lineWidth = 3;
-        this.type = 'Circle';
     }
 
     /**
      * Draws the circle in the canvas.
-     * @param {CodeHSGraphics} __graphics__ - Instance of the Graphics module.
+     * @param {CodeHSGraphics} graphics - Instance of the Graphics module.
      */
-    draw(__graphics__) {
-        var context = __graphics__.getContext();
+    draw(graphics) {
+        var context = graphics.getContext();
         context.beginPath();
 
         if (this.hasBorder) {
@@ -85,16 +83,15 @@ export default class Circle extends Thing {
     setRadius(radius) {
         if (arguments.length !== 1) {
             throw new Error(
-                'You should pass exactly 1 argument to <span ' +
-                    'class="code">setRadius(radius)</span>',
+                'You should pass exactly 1 argument to <span ' + 'class="code">setRadius(radius)`',
             );
         }
         if (typeof radius !== 'number' || !isFinite(radius)) {
             throw new TypeError(
                 'You must pass a finite number to <span class=' +
-                    '"code">setRadius(radius)</span>. Did you forget the ' +
-                    'parentheses in <span class="code">getWidth()</span> or <span ' +
-                    'class="code">getHeight()</span>? Or did you perform a ' +
+                    '"code">setRadius(radius)`. Did you forget the ' +
+                    'parentheses in `getWidth()` or <span ' +
+                    'class="code">getHeight()`? Or did you perform a ' +
                     'calculation on a variable that is not a number?',
             );
         }

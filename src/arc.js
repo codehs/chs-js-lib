@@ -1,12 +1,10 @@
-/**
- * @namespace Arc
+/** * @namespace Arc
  */
 
-import Thing from './thing.js'
-import { getDistance } from './graphics-utils.js'
+import Thing from './thing.js';
+import { getDistance } from './graphics-utils.js';
 
-/**
- * Arc class. TODO docs
+/** * Arc class. TODO docs
  */
 export default class Arc extends Thing {
     static COUNTER_CLOCKWISE = true;
@@ -27,41 +25,27 @@ export default class Arc extends Thing {
         super();
         if (arguments.length !== 4) {
             throw new Error(
-                'You should pass exactly 4 arguments to <span ' +
-                    'class="code">new Arc(raduis, startAngle, endAngle, ' +
-                    'angleUnit)</span>',
+                'You should pass exactly 4 arguments to `new Arc(raduis, startAngle, endAngle, angleUnit)`',
             );
         }
         if (typeof radius !== 'number' || !isFinite(radius)) {
             throw new TypeError(
-                'Invalid value for <span class="code">radius' +
-                    '</span>. Make sure you are passing finite numbers to <span ' +
-                    'class="code">new Arc(raduis, startAngle, endAngle, ' +
-                    'angleUnit)</span>',
+                'Invalid value for `radius`. Make sure you are passing finite numbers to `new Arc(raduis, startAngle, endAngle, angleUnit)`',
             );
         }
         if (typeof startAngle !== 'number' || !isFinite(startAngle)) {
             throw new TypeError(
-                'Invalid value for <span class="code">startAngle' +
-                    '</span>. Make sure you are passing finite numbers to <span ' +
-                    'class="code">new Arc(raduis, startAngle, endAngle, ' +
-                    'angleUnit)</span>',
+                'Invalid value for `startAngle`. Make sure you are passing finite numbers to `new Arc(raduis, startAngle, endAngle, angleUnit)`',
             );
         }
         if (typeof endAngle !== 'number' || !isFinite(endAngle)) {
             throw new TypeError(
-                'Invalid value for <span class="code">endAngle' +
-                    '</span>. Make sure you are passing finite numbers to <span ' +
-                    'class="code">new Arc(raduis, startAngle, endAngle, ' +
-                    'angleUnit)</span>',
+                'Invalid value for `endAngle`. Make sure you are passing finite numbers to `new Arc(raduis, startAngle, endAngle, angleUnit)`',
             );
         }
         if (typeof angleUnit !== 'number' || !isFinite(angleUnit)) {
             throw new TypeError(
-                'Invalid value for <span class="code">angleUnit' +
-                    '</span>. Make sure you are passing finite numbers to <span ' +
-                    'class="code">new Arc(raduis, startAngle, endAngle, ' +
-                    'angleUnit)</span>',
+                'Invalid value for `angleUnit`. Make sure you are passing finite numbers to `new Arc(raduis, startAngle, endAngle, angleUnit)`',
             );
         }
 
@@ -69,7 +53,6 @@ export default class Arc extends Thing {
         this.angleUnit = angleUnit == Arc.DEGREES ? Arc.DEGREES : Arc.RADIANS;
 
         this.counterclockwise = Arc.COUNTER_CLOCKWISE;
-        this.type = 'Arc';
 
         if (this.angleUnit == Arc.DEGREES) {
             startAngle = degreesToRadians(startAngle);
@@ -83,10 +66,10 @@ export default class Arc extends Thing {
     /**
      * Draws the arc in the canvas.
      *
-     * @param {CodeHSGraphics} __graphics__ - Instance of the __graphics__ module.
+     * @param {CodeHSGraphics} graphics - Instance of the CodeHSGraphics module.
      */
-    draw(__graphics__) {
-        var context = __graphics__.getContext();
+    draw(graphics) {
+        var context = graphics.getContext();
         // http://stackoverflow.com/questions/17125632/html5-canvas-rotate-object-without-moving-coordinates
         context.save();
         context.beginPath();
@@ -121,16 +104,11 @@ export default class Arc extends Thing {
      */
     setStartAngle(angle) {
         if (arguments.length !== 1) {
-            throw new Error(
-                'You should pass exactly 1 argument to ' +
-                    '<span class="code">setStartAngle</span>',
-            );
+            throw new Error('You should pass exactly 1 argument to `setStartAngle`');
         }
         if (typeof angle !== 'number' || !isFinite(angle)) {
             throw new Error(
-                'Invalid value passed to <span class="code">' +
-                    'setStartAngle</span>. Make sure you are passing a ' +
-                    'finite number.',
+                'Invalid value passed to `setStartAngle`. Make sure you are passing a finite number.',
             );
         }
         if (this.angleUnit == Arc.DEGREES) {
@@ -147,15 +125,11 @@ export default class Arc extends Thing {
      */
     setEndAngle(angle) {
         if (arguments.length !== 1) {
-            throw new Error(
-                'You should pass exactly 1 argument to ' + '<span class="code">setEndAngle</span>',
-            );
+            throw new Error('You should pass exactly 1 argument to `setEndAngle`');
         }
         if (typeof angle !== 'number' || !isFinite(angle)) {
             throw new Error(
-                'Invalid value passed to <span class="code">' +
-                    'setEndAngle</span>. Make sure you are passing a ' +
-                    'finite number.',
+                'Invalid value passed to `setEndAngle`. Make sure you are passing a finite number.',
             );
         }
         if (this.angleUnit == Arc.DEGREES) {
@@ -196,15 +170,11 @@ export default class Arc extends Thing {
      */
     setDirection(val) {
         if (arguments.length !== 1) {
-            throw new Error(
-                'You should pass exactly 1 argument to ' + '<span class="code">setDirection</span>',
-            );
+            throw new Error('You should pass exactly 1 argument to `setDirection`');
         }
         if (typeof val !== 'boolean') {
             throw new Error(
-                'Invalid value passed to <span class="code">' +
-                    'setDirection</span>. Make sure you are passing a ' +
-                    'boolean value. true for counterclockwise, false for clockwise.',
+                'Invalid value passed to `setDirection`. Make sure you are passing a boolean value. `true` for counterclockwise, false for clockwise.',
             );
         }
         this.counterclockwise = val;

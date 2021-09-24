@@ -1,4 +1,4 @@
-import Thing from './thing.js'
+import Thing from './thing.js';
 
 /**
  * @class Text
@@ -10,17 +10,18 @@ export default class Text extends Thing {
     static defaultContext = null;
 
     constructor(label, font) {
+        super();
         if (arguments.length < 1) {
             throw new Error(
                 'You should pass at least one argument to <span ' +
-                    'class="code">new Text(label, font)</span>. <span class="code">' +
-                    'label</span> is a required parameter.',
+                    'class="code">new Text(label, font)`. `' +
+                    'label` is a required parameter.',
             );
         }
         if (typeof label !== 'string' && typeof label !== 'number') {
             throw new TypeError(
-                'Invalid value for <span class="code">label' +
-                    '</span>. You passed a value of type ' +
+                'Invalid value for `label' +
+                    '`. You passed a value of type ' +
                     typeof label +
                     ' but a string or number is required.',
             );
@@ -30,24 +31,15 @@ export default class Text extends Thing {
 
         if (typeof font !== 'string') {
             throw new TypeError(
-                'Invalid value for <span class="code">font' +
-                    '</span>. You passed a value of type ' +
+                'Invalid value for `font' +
+                    '`. You passed a value of type ' +
                     typeof label +
                     ' but a string is required.',
             );
         }
 
         this.label = label;
-        this.type = 'Text';
-
         this.font = font;
-
-        // Text needs a graphics context for computing height and width
-        // we set this by default on running any graphics program, but
-        // then it can get over-written the first time we call draw.
-        this.context = null;
-
-        this.resetDimensions();
     }
 
     /**
@@ -65,8 +57,7 @@ export default class Text extends Thing {
     /**
      * Reset the dimensions of the text to the size in the context.
      */
-    resetDimensions() {
-        var context = this.context || Text.defaultContext;
+    resetDimensions(context) {
         context.font = this.font;
         this.width = context.measureText(this.label).width;
         this.height = context.measureText('m').width * 1.2; /* No height provided */
@@ -75,17 +66,17 @@ export default class Text extends Thing {
     /**
      * Draw the text in the current context.
      *
-     * @param {CodeHSGraphics} __graphics__ - Instance of the graphics module.
+     * @param {CodeHSGraphics} graphics - Instance of the graphics module.
      */
-    draw(__graphics__) {
-        var context = __graphics__.getContext();
+    draw(graphics) {
+        var context = graphics.getContext();
         this.context = context;
         // http://stackoverflow.com/questions/17125632/html5-canvas-rotate-object-without-moving-coordinates
         context.save();
         context.fillStyle = this.color.toString();
         context.beginPath();
         context.font = this.font;
-        this.resetDimensions();
+        this.resetDimensions(context);
         context.translate(this.x, this.y);
         context.rotate(this.rotation);
         context.fillText(this.label, 0, 0);
@@ -103,13 +94,13 @@ export default class Text extends Thing {
     setFont(font) {
         if (arguments.length !== 1) {
             throw new Error(
-                'You should pass exactly 1 argument to <span ' + 'class="code">setFont</span>',
+                'You should pass exactly 1 argument to <span ' + 'class="code">setFont`',
             );
         }
         if (typeof font !== 'string') {
             throw new TypeError(
                 'Invalid value passed to <span class=' +
-                    '"code">setFont</span>. You passed a value of type ' +
+                    '"code">setFont`. You passed a value of type ' +
                     typeof label +
                     ', but a string is required.',
             );
@@ -127,13 +118,13 @@ export default class Text extends Thing {
     setLabel(label) {
         if (arguments.length !== 1) {
             throw new Error(
-                'You should pass exactly 1 argument to <span ' + 'class="code">setLabel</span>',
+                'You should pass exactly 1 argument to <span ' + 'class="code">setLabel`',
             );
         }
         if (typeof label !== 'string' && typeof label !== 'number') {
             throw new TypeError(
                 'Invalid value passed to <span class=' +
-                    '"code">setLabel</span>. You passed a value of type ' +
+                    '"code">setLabel`. You passed a value of type ' +
                     typeof label +
                     ', but a string or number is required.',
             );
@@ -152,13 +143,13 @@ export default class Text extends Thing {
     setText(label) {
         if (arguments.length !== 1) {
             throw new Error(
-                'You should pass exactly 1 argument to <span ' + 'class="code">setText</span>',
+                'You should pass exactly 1 argument to <span ' + 'class="code">setText`',
             );
         }
         if (typeof label !== 'string' && typeof label !== 'number') {
             throw new TypeError(
                 'Invalid value passed to <span class=' +
-                    '"code">setText</span>. You passed a value of type ' +
+                    '"code">setText`. You passed a value of type ' +
                     typeof label +
                     ', but a string or number is required.',
             );

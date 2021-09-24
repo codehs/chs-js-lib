@@ -1,4 +1,4 @@
-import Thing from './thing.js'
+import Thing from './thing.js';
 
 /**
  * @class Line
@@ -10,11 +10,9 @@ import Thing from './thing.js'
  */
 export default class Line extends Thing {
     constructor(x1, y1, x2, y2) {
+        super();
         if (arguments.length !== 4) {
-            throw new Error(
-                'You should pass exactly 4 argument to <span ' +
-                    'class="code">new Line(x1, y1, x2, y2)</span>',
-            );
+            throw new Error('You should pass exactly 4 argument to `new Line(x1, y1, x2, y2)`.');
         }
         if (
             typeof x1 !== 'number' ||
@@ -23,18 +21,12 @@ export default class Line extends Thing {
             typeof y2 !== 'number'
         ) {
             throw new TypeError(
-                'You must pass 4 numbers to <span class="code">' +
-                    'new Line(x1, y1, x2, y2)</span>. Make sure each parameter you' +
-                    'are passing is a number.',
+                'You must pass 4 numbers to `new Line(x1, y1, x2, y2)`. Make sure each parameter you are passing is a number.',
             );
         }
         if (!isFinite(x1) || !isFinite(y1) || !isFinite(x2) || !isFinite(y2)) {
             throw new TypeError(
-                'One or more of the values you passed to <span ' +
-                    'class="code">new Line(x1, y1, x2, y2)</span> is an illegal ' +
-                    'number. Did you forget the parentheses in <span class="code">' +
-                    'getWidth()</span> or <span class="code">getHeight()</span>? Or ' +
-                    'did you perform a calculation on a variable that is not a ' +
+                'One or more of the values you passed to `new Line(x1, y1, x2, y2)` is an illegal number. Did you forget the parentheses in `getWidth()` or `getHeight()`? Or did you perform a calculation on a variable that is not a ' +
                     'number?',
             );
         }
@@ -43,7 +35,6 @@ export default class Line extends Thing {
         this.x2 = x2;
         this.y2 = y2;
         this.lineWidth = 2;
-        this.type = 'Line';
     }
 
     /**
@@ -53,10 +44,7 @@ export default class Line extends Thing {
      */
     setColor(color) {
         if (arguments.length !== 1) {
-            throw new Error(
-                'You should pass exactly 1 argument to <span ' +
-                    'class="code">setColor(color)</span>.',
-            );
+            throw new Error('You should pass exactly 1 argument to `setColor(color)`.');
         }
         if (color === undefined) {
             throw new TypeError('Invalid color');
@@ -76,11 +64,10 @@ export default class Line extends Thing {
     /**
      * Draws the line in the canvas.
      *
-     * @param {CodeHSGraphics} __graphics__ - Instance of the __graphics__ module.
+     * @param {CodeHSGraphics} graphics - Instance of the __graphics__ module.
      */
-    draw(__graphics__) {
-        var context = __graphics__.getContext();
-        // http://stackoverflow.com/questions/17125632/html5-canvas-rotate-object-without-moving-coordinates
+    draw(graphics) {
+        var context = graphics.getContext();
         context.save();
         context.fillStyle = this.color.toString();
         context.beginPath();
@@ -140,15 +127,11 @@ export default class Line extends Thing {
      */
     setLineWidth(width) {
         if (arguments.length !== 1) {
-            throw new Error(
-                'You should pass exactly 1 argument to <span ' + 'class="code">setLineWidth</span>',
-            );
+            throw new Error('You should pass exactly 1 argument to `setLineWidth`');
         }
         if (typeof width !== 'number' || !isFinite(width)) {
             throw new TypeError(
-                'You must pass a finite number to <span class=' +
-                    '"code">setLineWidth(width)</span>. Did you perform a ' +
-                    'calculation on a variable that is not a number?',
+                'You must pass a finite number to `setLineWidth(width)`. Did you perform a calculation on a variable that is not a number?',
             );
         }
         this.lineWidth = width;
@@ -162,29 +145,17 @@ export default class Line extends Thing {
      */
     setStartpoint(x, y) {
         if (arguments.length !== 2) {
-            throw new Error(
-                'You should pass exactly 2 arguments to <span ' +
-                    'class="code">setStartpoint(x, y)</span>',
-            );
+            throw new Error('You should pass exactly 2 arguments to `setStartpoint(x, y)`.');
         }
         if (typeof x !== 'number' || !isFinite(x)) {
             throw new TypeError(
                 'Invalid value for x-coordinate. ' +
-                    'Make sure you are passing finite numbers to <span ' +
-                    'class="code">setStartpoint(x, y)</span>. Did you ' +
-                    'forget the parentheses in <span class="code">getWidth()</span> ' +
-                    'or <span class="code">getHeight()</span>? Or did you perform a ' +
-                    'calculation on a variable that is not a number?',
+                    'Make sure you are passing finite numbers to `setStartpoint(x, y)`. Did you forget the parentheses in `getWidth()` or `getHeight()`? Or did you perform a calculation on a variable that is not a number?',
             );
         }
         if (typeof y !== 'number' || !isFinite(y)) {
             throw new TypeError(
-                'Invalid value for y-coordinate. ' +
-                    'Make sure you are passing finite numbers to <span ' +
-                    'class="code">setStartpoint(x, y)</span>. Did you ' +
-                    'forget the parentheses in <span class="code">getWidth()</span> ' +
-                    'or <span class="code">getHeight()</span>? Or did you perform a ' +
-                    'calculation on a variable that is not a number?',
+                'Invalid value for y-coordinate. Make sure you are passing finite numbers to `setStartpoint(x, y)`. Did you forget the parentheses in `getWidth()` or `getHeight()`? Or did you perform a calculation on a variable that is not a number?',
             );
         }
 
@@ -199,29 +170,18 @@ export default class Line extends Thing {
      */
     setPosition(x, y) {
         if (arguments.length !== 2) {
-            throw new Error(
-                'You should pass exactly 2 arguments to <span ' +
-                    'class="code">setPosition(x, y)</span>',
-            );
+            throw new Error('You should pass exactly 2 arguments to `setPosition(x, y)`.');
         }
         if (typeof x !== 'number' || !isFinite(x)) {
             throw new TypeError(
                 'Invalid value for x-coordinate. ' +
-                    'Make sure you are passing finite numbers to <span ' +
-                    'class="code">setPosition(x, y)</span>. Did you ' +
-                    'forget the parentheses in <span class="code">getWidth()</span> ' +
-                    'or <span class="code">getHeight()</span>? Or did you perform a ' +
-                    'calculation on a variable that is not a number?',
+                    'Make sure you are passing finite numbers to `setPosition(x, y)`. Did you forget the parentheses in `getWidth()` or `getHeight()`? Or did you perform a calculation on a variable that is not a number?',
             );
         }
         if (typeof y !== 'number' || !isFinite(y)) {
             throw new TypeError(
                 'Invalid value for y-coordinate. ' +
-                    'Make sure you are passing finite numbers to <span ' +
-                    'class="code">setPosition(x, y)</span>. Did you ' +
-                    'forget the parentheses in <span class="code">getWidth()</span> ' +
-                    'or <span class="code">getHeight()</span>? Or did you perform a ' +
-                    'calculation on a variable that is not a number?',
+                    'Make sure you are passing finite numbers to `setPosition(x, y)`. Did you forget the parentheses in `getWidth()` or `getHeight()`? Or did you perform a calculation on a variable that is not a number?',
             );
         }
         this.x1 = x;
@@ -236,29 +196,18 @@ export default class Line extends Thing {
      */
     setEndpoint(x, y) {
         if (arguments.length !== 2) {
-            throw new Error(
-                'You should pass exactly 2 arguments to <span ' +
-                    'class="code">setEndpoint(x, y)</span>',
-            );
+            throw new Error('You should pass exactly 2 arguments to `setEndpoint(x, y)`.');
         }
         if (typeof x !== 'number' || !isFinite(x)) {
             throw new TypeError(
                 'Invalid value for x-coordinate. ' +
-                    'Make sure you are passing finite numbers to <span ' +
-                    'class="code">setEndpoint(x, y)</span>. Did you ' +
-                    'forget the parentheses in <span class="code">getWidth()</span> ' +
-                    'or <span class="code">getHeight()</span>? Or did you perform a ' +
-                    'calculation on a variable that is not a number?',
+                    'Make sure you are passing finite numbers to `setEndpoint(x, y)`. Did you forget the parentheses in `getWidth()` or `getHeight()`? Or did you perform a calculation on a variable that is not a number?',
             );
         }
         if (typeof y !== 'number' || !isFinite(y)) {
             throw new TypeError(
                 'Invalid value for y-coordinate. ' +
-                    'Make sure you are passing finite numbers to <span ' +
-                    'class="code">setEndpoint(x, y)</span>. Did you ' +
-                    'forget the parentheses in <span class="code">getWidth()</span> ' +
-                    'or <span class="code">getHeight()</span>? Or did you perform a ' +
-                    'calculation on a variable that is not a number?',
+                    'Make sure you are passing finite numbers to `setEndpoint(x, y)`. Did you forget the parentheses in `getWidth()` or `getHeight()`? Or did you perform a calculation on a variable that is not a number?',
             );
         }
         this.x2 = x;
@@ -273,22 +222,16 @@ export default class Line extends Thing {
      */
     move(dx, dy) {
         if (arguments.length !== 2) {
-            throw new Error(
-                'You should pass exactly 2 arguments to <span ' + 'class="code">move</span>',
-            );
+            throw new Error('You should pass exactly 2 arguments to `move(dx, dy)`.');
         }
         if (typeof dx !== 'number' || !isFinite(dx)) {
             throw new TypeError(
-                'Invalid number passed for <span class="code">' +
-                    'dx</span>. Make sure you are passing finite numbers to <span ' +
-                    'class="code">move(dx, dy)</span>',
+                'Invalid number passed for `dx`. Make sure you are passing finite numbers to `move(dx, dy)`.',
             );
         }
         if (typeof dy !== 'number' || !isFinite(dy)) {
             throw new TypeError(
-                'Invalid number passed for <span class="code">' +
-                    'dy</span>. Make sure you are passing finite numbers to <span ' +
-                    'class="code">move(dx, dy)</span>',
+                'Invalid number passed for `dy`. Make sure you are passing finite numbers to `move(dx, dy)`.',
             );
         }
         this.x1 += dx;

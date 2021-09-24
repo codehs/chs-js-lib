@@ -3,8 +3,7 @@
  * corresponding Sound functions no-ops so that student code is still able to run.
  */
 
-/*
- * Construct a new Sound.
+/** * Construct a new Sound.
  * Optionally set the frequency and the oscillator type.
  *
  * @param frequency - Either a number (Hertz) or note ("C#4" for middle C Sharp)
@@ -19,6 +18,8 @@
  * https://tonejs.github.io/docs/13.8.25/OmniOscillator
  */
 export default class Sound {
+    static soundElements = [];
+
     constructor(frequency, oscillatorType) {
         if (window.Tone && window.Tone.supported) {
             this.frequency = frequency || 440;
@@ -35,8 +36,17 @@ export default class Sound {
             }
             this.setFrequency(this.frequency);
         }
+        Sound.soundElements.push(this);
     }
-    /*
+
+    static stopSounds() {
+        Sound.soundElements.forEach(sound => {
+            sound.stop();
+            sound.disconnect();
+        });
+    }
+
+    /**
      * Set the Sound's frequency
      *
      * @param frequency - Either a number (Hertz) or note ("C#4" for middle C Sharp)
@@ -52,7 +62,7 @@ export default class Sound {
         }
     }
 
-    /*
+    /**
      * Set the Sound's volume
      *
      * @param {float} - the volume in decibels
@@ -64,7 +74,7 @@ export default class Sound {
         }
     }
 
-    /*
+    /**
      * Get the Sound's frequency
      *
      * @returns The Sound's frequency
@@ -75,7 +85,7 @@ export default class Sound {
         }
     }
 
-    /*
+    /**
      * Get the Sound's volume
      *
      * @returns the volume
@@ -86,7 +96,7 @@ export default class Sound {
         }
     }
 
-    /*
+    /**     *
      * Set the Sound's oscillator type
      *
      * @param oscillatorType {string} - several options
@@ -127,10 +137,10 @@ export default class Sound {
         }
     }
 
-    /*
+    /**     *
      * Get the Sound's oscillator type
      *
-     * @returns a String representing the oscillator type
+     * @return a String representing the oscillator type
      */
     getOscillatorType() {
         if (window.Tone && window.Tone.supported) {
@@ -138,7 +148,7 @@ export default class Sound {
         }
     }
 
-    /*
+    /**
      * Play the sound indefinitely
      */
     play() {
@@ -151,7 +161,7 @@ export default class Sound {
         }
     }
 
-    /*
+    /**
      * Play the sound for a given duration.
      *
      * @param {string} - duration in one of several formats, mainly:
@@ -175,7 +185,7 @@ export default class Sound {
         }
     }
 
-    /*
+    /**
      * Stop playing the sound immediately.
      */
     stop() {
@@ -184,7 +194,7 @@ export default class Sound {
         }
     }
 
-    /*
+    /**
      * Disconnect the sound from the AudioNode.
      *
      * This generally should not be used by students. We use it to force stop
@@ -196,7 +206,7 @@ export default class Sound {
         }
     }
 
-    /*
+    /**
      * Add an effect to this sound
      *
      * @param effectName {String} - the name of the prepackaged effect, ie "reverb"

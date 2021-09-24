@@ -1,8 +1,6 @@
-import Graphics from '../src/graphics.js'
-
 function setup() {
     const canvas = document.createElement('canvas');
-    canvas.id = 'mainCanvas';
+    canvas.id = 'game';
     canvas.width = 400;
     canvas.height = 480;
     document.body.appendChild(canvas);

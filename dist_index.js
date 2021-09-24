@@ -23,7 +23,7 @@ PUBLIC_CONSTRUCTORS.__graphics__ = graphicsModule.PUBLIC_CONSTRUCTORS;
 PUBLIC_CONSTRUCTORS.__datastructs__ = dataStructuresModule.PUBLIC_CONSTRUCTORS;
 
 // Make a wrap of all namespaced methods
-var makeNamespaceWrap = function() {
+var makeNamespaceWrap = function () {
     var result = '';
     var namespace;
     var method;
@@ -62,7 +62,7 @@ var makeNamespaceWrap = function() {
     return result;
 };
 
-var setup = function() {
+var setup = function () {
     // Attach libaries to the window as constants
     window.__graphics__ = new CodeHSGraphics();
     window.__console__ = new CodeHSConsole();
@@ -80,8 +80,7 @@ var setup = function() {
     // import audio context utils
     var getAudioContext = graphicsModule.getAudioContext;
 
-    /*
-     * Requiring the ToneJS library could throw an exception if the browser
+    /**     * Requiring the ToneJS library could throw an exception if the browser
      * doesn't support it, so we try to require it here.
      */
     try {
@@ -98,11 +97,11 @@ var setup = function() {
         }
     } catch (e) {
         console.log(
-            'Tone.js is not supported in this browser, you may not be able to make audio javascript programs. Please use the most up to date version of Chrome, Firefox, or Safari.'
+            'Tone.js is not supported in this browser, you may not be able to make audio javascript programs. Please use the most up to date version of Chrome, Firefox, or Safari.',
         );
-        var toneErrorFunction = function() {
+        var toneErrorFunction = function () {
             throw new Error(
-                "There was an error loading Sounds. You may need to refresh the page or restart your browser. If that doesn't work, try updating your browser."
+                "There was an error loading Sounds. You may need to refresh the page or restart your browser. If that doesn't work, try updating your browser.",
             );
         };
         window.Tone = {
@@ -127,7 +126,7 @@ var setup = function() {
     eval(wrap);
 };
 
-domready(function() {
+domready(function () {
     setup();
 });
 

@@ -31,7 +31,7 @@ function CodeHSConsole() {
  * Adds a method to the public methods array.
  * @param {string} name - Name of the method.
  */
-CodeHSConsole.registerPublicMethod = function(name) {
+CodeHSConsole.registerPublicMethod = function (name) {
     PUBLIC_METHODS.push(name);
 };
 
@@ -40,7 +40,7 @@ CodeHSConsole.registerPublicMethod = function(name) {
  * public namespace without having to call them with the console instance.
  * @returns {string} Line broken function definitions.
  */
-CodeHSConsole.getNamespaceModifcationString = function() {
+CodeHSConsole.getNamespaceModifcationString = function () {
     var result = '';
     for (var i = 0; i < PUBLIC_METHODS.length; i++) {
         var curMethod = PUBLIC_METHODS[i];
@@ -67,9 +67,9 @@ CodeHSConsole.getNamespaceModifcationString = function() {
  * namespace without having to call them with the console instance.
  * @returns {string} Line broken function definitions.
  */
-CodeHSConsole.getStubString = function() {
+CodeHSConsole.getStubString = function () {
     var result = '';
-    _.each(PUBLIC_METHODS, function(method) {
+    _.each(PUBLIC_METHODS, function (method) {
         result += 'function ' + method + '(){\n' + '\treturn 0;\n' + '}\n';
     });
     return result;
@@ -79,7 +79,7 @@ CodeHSConsole.getStubString = function() {
  * Set the solution code for a given exercise.
  * @param {string} soln - Solution code.
  */
-CodeHSConsole.setSolution = function(soln) {
+CodeHSConsole.setSolution = function (soln) {
     solution = soln;
 };
 
@@ -87,7 +87,7 @@ CodeHSConsole.setSolution = function(soln) {
  * Check the console output for correctness against solution code.
  * returns {object} Dictionary containing boolean of success and message.
  */
-CodeHSConsole.prototype.checkOutput = function() {
+CodeHSConsole.prototype.checkOutput = function () {
     if (!solution) {
         return;
     }
@@ -120,21 +120,15 @@ CodeHSConsole.prototype.checkOutput = function() {
 
     $(TESTER_MESSAGE).html(graded.message);
     if (graded.success) {
-        $(TESTER_MESSAGE)
-            .removeClass('gone')
-            .removeClass('alert-error')
-            .addClass('alert-info');
+        $(TESTER_MESSAGE).removeClass('gone').removeClass('alert-error').addClass('alert-info');
     } else {
-        $(TESTER_MESSAGE)
-            .removeClass('gone')
-            .removeClass('alert-info')
-            .addClass('alert-error');
+        $(TESTER_MESSAGE).removeClass('gone').removeClass('alert-info').addClass('alert-error');
     }
 
     return graded;
 };
 
-var bufferedOutputToArray = function(bufferedOutput) {
+var bufferedOutputToArray = function (bufferedOutput) {
     var bufferedOutputArray = bufferedOutput.split('\n');
     // remove the trailing "" that happens if the final element is a \n
     if (bufferedOutputArray[bufferedOutputArray.length - 1].length === 0) {
@@ -146,7 +140,7 @@ var bufferedOutputToArray = function(bufferedOutput) {
 /**
  * A non-dom-mutating print for use in autograders.
  */
-CodeHSConsole.prototype.quietPrint = function(string) {
+CodeHSConsole.prototype.quietPrint = function (string) {
     if (!this.internalOutputBuffer) {
         this.internalOutputBuffer = '';
     }
@@ -156,14 +150,14 @@ CodeHSConsole.prototype.quietPrint = function(string) {
 /**
  * A non-dom-mutating println for use in autograders.
  */
-CodeHSConsole.prototype.quietPrintln = function(anything) {
+CodeHSConsole.prototype.quietPrintln = function (anything) {
     this.quietPrint(anything + '\n');
 };
 
 /**
  * Gets the internal output.
  */
-CodeHSConsole.prototype.flushQuietOutput = function() {
+CodeHSConsole.prototype.flushQuietOutput = function () {
     if (!this.internalOutputBuffer) {
         this.internalOutputBuffer = '';
     }
@@ -180,7 +174,7 @@ CodeHSConsole.prototype.flushQuietOutput = function() {
  * Get the output from the console.
  * @returns {string}
  */
-CodeHSConsole.getOutput = function() {
+CodeHSConsole.getOutput = function () {
     return $('#console').text();
 };
 
@@ -188,14 +182,14 @@ CodeHSConsole.getOutput = function() {
  * Check if the console exists.
  * Important to check before attempting to select and extract output.
  */
-CodeHSConsole.exists = function() {
+CodeHSConsole.exists = function () {
     return $('#console').exists();
 };
 
 /**
  * Clear the console's text.
  */
-CodeHSConsole.clear = function() {
+CodeHSConsole.clear = function () {
     lines = [];
     $('#console').html('');
     $(TESTER_MESSAGE).addClass('gone');
@@ -206,7 +200,7 @@ CodeHSConsole.clear = function() {
  * @param {string} str - The line to be read.
  * @param {boolean} looping - Unsure. This is a messy method.
  */
-CodeHSConsole.prototype.readLinePrivate = function(str, looping) {
+CodeHSConsole.prototype.readLinePrivate = function (str, looping) {
     if (typeof looping === 'undefined' || !looping) {
         this.print(str);
     }
@@ -217,12 +211,7 @@ CodeHSConsole.prototype.readLinePrivate = function(str, looping) {
         $('#console').css('margin-top', '180px');
         // take max 20 lines, last line is prompt string so we remove and
         // add extra spacing before putting it back on
-        lines = _.takeRight(
-            $('#console')
-                .text()
-                .split('\n'),
-            21
-        );
+        lines = _.takeRight($('#console').text().split('\n'), 21);
 
         lines.pop();
         var text = lines.concat(['', '', str]).join('\n');
@@ -245,7 +234,7 @@ CodeHSConsole.prototype.readLinePrivate = function(str, looping) {
  * becomes accessible in the code.
  * @param {string} code - The code from the editor.
  */
-CodeHSConsole.prototype.runCode = function(code, options) {
+CodeHSConsole.prototype.runCode = function (code, options) {
     options = options || {};
     var lineOffset = options.lineOffset || 0;
     var publicMethodStrings = CodeHSConsole.getNamespaceModifcationString();
@@ -271,7 +260,7 @@ CodeHSConsole.prototype.runCode = function(code, options) {
         var doWhileRegEx = /do\s*\{/gm;
 
         // Inject into while loops
-        code = code.replace(whileLoopRegEx, function(match, p1, offset, string) {
+        code = code.replace(whileLoopRegEx, function (match, p1, offset, string) {
             var lineNumber = string.slice(0, offset).split('\n').length - lineOffset;
             var c =
                 "if(___nloops++>15000){var e = new Error('Your while loop on line " +
@@ -283,7 +272,7 @@ CodeHSConsole.prototype.runCode = function(code, options) {
         });
         // Inject into while loops
         // See comment above for while loops.
-        code = code.replace(forLoopRegEx, function(match, p1, offset, string) {
+        code = code.replace(forLoopRegEx, function (match, p1, offset, string) {
             var lineNumber = string.slice(0, offset).split('\n').length - lineOffset;
             var c =
                 "if(___nloops++>15000){var e = new Error('Your for loop on line " +
@@ -294,7 +283,7 @@ CodeHSConsole.prototype.runCode = function(code, options) {
             return 'var ___nloops=0;for(' + p1 + '){' + c;
         });
         // Inject into do-while loops
-        code = code.replace(doWhileRegEx, function(match, offset, string) {
+        code = code.replace(doWhileRegEx, function (match, offset, string) {
             var lineNumber = string.slice(0, offset).split('\n').length - lineOffset;
             var c =
                 "if(___nloops++>15000){var e = new Error('Your do-while loop on line " +
@@ -319,7 +308,7 @@ CodeHSConsole.prototype.runCode = function(code, options) {
  * Method to test whether the code is requesting user input at all.
  * @param {string} code - The code from the editor
  */
-CodeHSConsole.prototype.hasUserinput = function(code) {
+CodeHSConsole.prototype.hasUserinput = function (code) {
     return code.match(new RegExp('readLine|readInt|readFloat|readBoolean|readNumber'));
 };
 
@@ -328,7 +317,7 @@ CodeHSConsole.prototype.hasUserinput = function(code) {
 /**
  * Clear the console.
  */
-CodeHSConsole.prototype.clear = function() {
+CodeHSConsole.prototype.clear = function () {
     if (arguments.length !== 0) {
         throw new Error('You should not pass any arguments to clear');
     }
@@ -340,7 +329,7 @@ CodeHSConsole.registerPublicMethod('clear');
  * Print a line to the console.
  * @param {string} ln - The string to print.
  */
-CodeHSConsole.prototype.print = function(ln) {
+CodeHSConsole.prototype.print = function (ln) {
     if (arguments.length !== 1) {
         throw new Error('You should pass exactly 1 argument to print');
     }
@@ -366,7 +355,7 @@ CodeHSConsole.registerPublicMethod('print');
  * Print a line to the console.
  * @param {string} ln - The string to print.
  */
-CodeHSConsole.prototype.println = function(ln) {
+CodeHSConsole.prototype.println = function (ln) {
     if (arguments.length === 0) {
         ln = '';
     } else if (arguments.length !== 1) {
@@ -389,7 +378,7 @@ CodeHSConsole.registerPublicMethod('println');
  *    3. The errorMsgType is a string helping us figure out what to print if it is not of the right
  *       type.
  */
-CodeHSConsole.prototype.readNumber = function(str, parseFn, errorMsgType) {
+CodeHSConsole.prototype.readNumber = function (str, parseFn, errorMsgType) {
     var DEFAULT = 0; // If we get into an infinite loop, return DEFAULT.
     var INFINITE_LOOP_CHECK = 100;
 
@@ -427,7 +416,7 @@ CodeHSConsole.registerPublicMethod('readNumber');
  * @param {str} str - A message associated with the modal asking for input.
  * @returns {str} The result of the readLine prompt.
  */
-CodeHSConsole.prototype.readLine = function(str) {
+CodeHSConsole.prototype.readLine = function (str) {
     if (arguments.length !== 1) {
         throw new Error('You should pass exactly 1 argument to readLine');
     }
@@ -441,13 +430,13 @@ CodeHSConsole.registerPublicMethod('readLine');
  * @param {str} str - A message associated with the modal asking for input.
  * @returns {str} The result of the readBoolean prompt.
  */
-CodeHSConsole.prototype.readBoolean = function(str) {
+CodeHSConsole.prototype.readBoolean = function (str) {
     if (arguments.length !== 1) {
         throw new Error('You should pass exactly 1 argument to readBoolean');
     }
     return this.readNumber(
         str,
-        function(x) {
+        function (x) {
             if (x === null) {
                 return NaN;
             }
@@ -460,7 +449,7 @@ CodeHSConsole.prototype.readBoolean = function(str) {
             }
             return NaN;
         },
-        'a boolean (true/false)'
+        'a boolean (true/false)',
     );
 };
 CodeHSConsole.registerPublicMethod('readBoolean');
@@ -470,14 +459,14 @@ CodeHSConsole.registerPublicMethod('readBoolean');
  * @param {str} str - A message associated with the modal asking for input.
  * @returns {str} The result of the readInt prompt.
  */
-CodeHSConsole.prototype.readInt = function(str) {
+CodeHSConsole.prototype.readInt = function (str) {
     if (arguments.length !== 1) {
         throw new Error('You should pass exactly 1 argument to readInt');
     }
 
     return this.readNumber(
         str,
-        function(x) {
+        function (x) {
             var resultInt = parseInt(x);
             var resultFloat = parseFloat(x);
             // Make sure the value when parsed as both an int and a float are the same
@@ -486,7 +475,7 @@ CodeHSConsole.prototype.readInt = function(str) {
             }
             return NaN;
         },
-        'an integer'
+        'an integer',
     );
 };
 CodeHSConsole.registerPublicMethod('readInt');
@@ -495,7 +484,7 @@ CodeHSConsole.registerPublicMethod('readInt');
  * @param {str} str - A message associated with the modal asking for input.
  * @returns {str} The result of the readFloat prompt.
  */
-CodeHSConsole.prototype.readFloat = function(str) {
+CodeHSConsole.prototype.readFloat = function (str) {
     if (arguments.length !== 1) {
         throw new Error('You should pass exactly 1 argument to readFloat');
     }
