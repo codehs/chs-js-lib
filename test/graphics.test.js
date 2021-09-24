@@ -2,11 +2,11 @@ import Graphics from '../src/graphics.js';
 
 /**
  * Simulate a mouse event.
- * @param {string} type - Type of mouse event.
- * @param {object} [config] - Additional settings for the event.
- * @param {number} [config.button]
+ * @param {string} type
+ * @param {object} config
+ * @param {HTMLElement} target
  */
-function simulateEvent(type, config, elm) {
+function simulateEvent(type, config, target) {
     let event;
     try {
         event = new Event(type, { bubbles: true });
@@ -20,7 +20,7 @@ function simulateEvent(type, config, elm) {
         event[prop] = config[prop];
     }
 
-    (elm || canvas).dispatchEvent(event);
+    target.dispatchEvent(event);
 }
 
 describe('Graphics', () => {
@@ -100,7 +100,7 @@ describe('Graphics', () => {
                     g.setTimer(() => {
                         resolve();
                         throw Error('Oops!');
-                    }, 100);
+                    }, 0);
                 }).then(() => {
                     expect(errorSpy).toHaveBeenCalledWith(Error('Oops!'));
                 });
