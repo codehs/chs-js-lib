@@ -36,34 +36,8 @@ export default class CodeHSGraphics {
         GraphicsInstances[graphicsInstanceID++] = this;
     }
 
-    static attachToWindow(graphics, window) {
-        window.add = graphics.add.bind(graphics);
-        window.Audio = graphics.Audio.bind(graphics);
-        window.getWidth = graphics.getWidth.bind(graphics);
-        window.getHeight = graphics.getHeight.bind(graphics);
-        window.mouseClickMethod = graphics.mouseClickMethod.bind(graphics);
-        window.mouseDownMethod = graphics.mouseDownMethod.bind(graphics);
-        window.mouseUpMethod = graphics.mouseUpMethod.bind(graphics);
-        window.mouseMoveMethod = graphics.mouseMoveMethod.bind(graphics);
-        window.stopAllTimers = graphics.stopAllTimers.bind(graphics);
-        window.setMainTimer = graphics.setMainTimer.bind(graphics);
-        window.stopTimer = graphics.stopTimer.bind(graphics);
-        window.setTimer = graphics.setTimer.bind(graphics);
-        window.keyDownMethod = graphics.keyDownMethod.bind(graphics);
-        window.removeAll = graphics.removeAll.bind(graphics);
-        window.setBackgroundColor = graphics.setBackgroundColor.bind(graphics);
-        window.getElementAt = graphics.getElementAt.bind(graphics);
-    }
-
-    static unbindFromWindow(window) {
-        window.add = undefined;
-        window.Audio = undefined;
-        window.Sound = undefined;
-        window.mouseClickMethod = undefined;
-        window.mouseMoveMethod = undefined;
-        window.stopAllTimers = undefined;
-        window.setMainTimer = undefined;
-        window.stopTimer = undefined;
+    configure(options) {
+        this.onError = options.onError || undefined;
     }
 
     /**
@@ -623,13 +597,27 @@ export default class CodeHSGraphics {
         return graphicsUtils.getDistance(x1, y1, x2, y2);
     }
 
+    withErrorHandler(fn) {
+        return (...args) => {
+            try {
+                fn(...args);
+            } catch (e) {
+                if (typeof this.onError === 'function') {
+                    this.onError(e);
+                } else {
+                    throw e;
+                }
+            }
+        };
+    }
+
     /**
      * Set up the graphics instance to prepare for interaction
      */
     setup() {
         var drawingCanvas = this.getCanvas();
 
-        drawingCanvas.onclick = e => {
+        drawingCanvas.onclick = this.withErrorHandler(e => {
             if (this.waitingForClick()) {
                 this.clickCount--;
 
@@ -646,44 +634,44 @@ export default class CodeHSGraphics {
             if (this.clickCallback) {
                 this.clickCallback(e);
             }
-        };
+        });
 
         var mouseDown = false;
 
-        drawingCanvas.onmousemove = e => {
+        drawingCanvas.onmousemove = this.withErrorHandler(e => {
             if (this.moveCallback) {
                 this.moveCallback(e);
             }
             if (mouseDown && this.dragCallback) {
                 this.dragCallback(e);
             }
-        };
+        });
 
-        drawingCanvas.onmousedown = e => {
+        drawingCanvas.onmousedown = this.withErrorHandler(e => {
             mouseDown = true;
             if (this.mouseDownCallback) {
                 this.mouseDownCallback(e);
             }
-        };
+        });
 
-        drawingCanvas.onmouseup = e => {
+        drawingCanvas.onmouseup = this.withErrorHandler(e => {
             mouseDown = false;
             if (this.mouseUpCallback) {
                 this.mouseUpCallback(e);
             }
-        };
+        });
 
         // TOUCH EVENTS!
-        drawingCanvas.ontouchmove = e => {
+        drawingCanvas.ontouchmove = this.withErrorHandler(e => {
             e.preventDefault();
             if (this.dragCallback) {
                 this.dragCallback(e);
             } else if (this.moveCallback) {
                 this.moveCallback(e);
             }
-        };
+        });
 
-        drawingCanvas.ontouchstart = e => {
+        drawingCanvas.ontouchstart = this.withErrorHandler(e => {
             e.preventDefault();
             if (this.mouseDownCallback) {
                 this.mouseDownCallback(e);
@@ -703,14 +691,14 @@ export default class CodeHSGraphics {
                 }
                 return;
             }
-        };
+        });
 
-        drawingCanvas.ontouchend = e => {
+        drawingCanvas.ontouchend = this.withErrorHandler(e => {
             e.preventDefault();
             if (this.mouseUpCallback) {
                 this.mouseUpCallback(e);
             }
-        };
+        });
     }
 
     /**

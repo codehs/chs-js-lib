@@ -29,13 +29,11 @@ export default class Thing {
      */
     setFilled(filled) {
         if (arguments.length !== 1) {
-            throw new Error('You should pass exactly 1 argument to ' + '`setFilled`');
+            throw new Error('You should pass exactly 1 argument to `setFilled`.');
         }
         if (typeof filled !== 'boolean') {
             throw new Error(
-                'Invalid value passed to `' +
-                    'setFilled`. Make sure you are passing a ' +
-                    'boolean value.',
+                'Invalid value passed to `setFilled`. Make sure you are passing a boolean value.'
             );
         }
         this.filled = filled;
@@ -57,15 +55,11 @@ export default class Thing {
      */
     setBorder(hasBorder) {
         if (arguments.length !== 1) {
-            throw new Error(
-                'You should pass exactly 1 argument to <span class=' + '"code">setBorder`',
-            );
+            throw new Error('You should pass exactly 1 argument to `setBorder(hasBorder)`.');
         }
         if (typeof hasBorder !== 'boolean') {
             throw new Error(
-                'Invalid value passed to `' +
-                    'setBorder`. Make sure you are passing a ' +
-                    'boolean value.',
+                'Invalid value passed to `setBorder`. Make sure you are passing a boolean value.'
             );
         }
         this.hasBorder = hasBorder;
@@ -90,28 +84,16 @@ export default class Thing {
      */
     setPosition(x, y) {
         if (arguments.length !== 2) {
-            throw new Error(
-                'You should pass exactly 2 arguments to <span ' + 'class="code">setPosition(x, y)`',
-            );
+            throw new Error('You should pass exactly 2 arguments to `setPosition(x, y)`.');
         }
         if (typeof x !== 'number' || !isFinite(x)) {
             throw new TypeError(
-                'Invalid value for x-coordinate. ' +
-                    'Make sure you are passing finite numbers to <span ' +
-                    'class="code">setPosition(x, y)`. Did you ' +
-                    'forget the parentheses in `getWidth()` ' +
-                    'or `getHeight()`? Or did you perform a ' +
-                    'calculation on a variable that is not a number?',
+                'Invalid value for x-coordinate. Make sure you are passing finite numbers to `setPosition(x, y)`. Did you forget the parentheses in `getWidth()` or `getHeight()`? Or did you perform a calculation on a variable that is not a number?'
             );
         }
         if (typeof y !== 'number' || !isFinite(y)) {
             throw new TypeError(
-                'Invalid value for y-coordinate. ' +
-                    'Make sure you are passing finite numbers to <span ' +
-                    'class="code">setPosition(x, y)`. Did you ' +
-                    'forget the parentheses in `getWidth()` ' +
-                    'or `getHeight()`? Or did you perform a ' +
-                    'calculation on a variable that is not a number?',
+                'Invalid value for y-coordinate. Make sure you are passing finite numbers to `setPosition(x, y)`. Did you forget the parentheses in `getWidth()` or `getHeight()`? Or did you perform a calculation on a variable that is not a number?'
             );
         }
         this.x = x;
@@ -130,16 +112,12 @@ export default class Thing {
     setRotation(degrees, angleUnit) {
         if (arguments.length < 1 || arguments.length > 2) {
             throw new Error(
-                'You should pass 1 or 2 arguments to <span ' +
-                    'class="code">setRotation(degrees, angleUnit)`',
+                'You should pass 1 or 2 arguments to `setRotation(degrees, angleUnit)`.'
             );
         }
         if (typeof degrees !== 'number' || !isFinite(degrees)) {
             throw new TypeError(
-                'Invalid value for degrees. ' +
-                    'Make sure you are passing finite numbers to <span ' +
-                    'class="code">setRotation(degrees, angleUnit)`. Did you ' +
-                    'perform a calculation on a variable that is not a number?',
+                'Invalid value for degrees. Make sure you are passing finite numbers to `setRotation(degrees, angleUnit)`. Did you perform a calculation on a variable that is not a number?'
             );
         }
         if (!angleUnit) {
@@ -147,9 +125,7 @@ export default class Thing {
         }
         if (typeof angleUnit !== 'number' || !isFinite(angleUnit)) {
             throw new TypeError(
-                'Invalid value for `angleUnit' +
-                    '`. Make sure you are passing finite numbers to <span ' +
-                    'class="code">setRotation(degrees, angleUnit)`',
+                'Invalid value for `angleUnit`. Make sure you are passing finite numbers to `setRotation(degrees, angleUnit)`.'
             );
         }
         if (angleUnit == Thing.DEGREES) {
@@ -168,17 +144,11 @@ export default class Thing {
      */
     rotate(degrees, angleUnit) {
         if (arguments.length < 1 || arguments.length > 2) {
-            throw new Error(
-                'You should pass exactly 1 argument to <span ' +
-                    'class="code">rotate(degrees, angleUnit)`',
-            );
+            throw new Error('You should pass exactly 1 argument to `rotate(degrees, angleUnit)`.');
         }
         if (typeof degrees !== 'number' || !isFinite(degrees)) {
             throw new TypeError(
-                'Invalid value for degrees. ' +
-                    'Make sure you are passing finite numbers to <span ' +
-                    'class="code">rotate(degrees, angleUnit)`. Did you perform ' +
-                    'a calculation on a variable that is not a number?',
+                'Invalid value for degrees. Make sure you are passing finite numbers to `rotate(degrees, angleUnit)`. Did you perform a calculation on a variable that is not a number?'
             );
         }
         if (!angleUnit) {
@@ -186,9 +156,7 @@ export default class Thing {
         }
         if (typeof angleUnit !== 'number' || !isFinite(angleUnit)) {
             throw new TypeError(
-                'Invalid value for `angleUnit' +
-                    '`. Make sure you are passing finite numbers to <span ' +
-                    'class="code">rotate(degrees, angleUnit)`',
+                'Invalid value for `angleUnit`. Make sure you are passing finite numbers to `rotate(degrees, angleUnit)`.'
             );
         }
         if (angleUnit == Thing.DEGREES) {
@@ -208,7 +176,7 @@ export default class Thing {
     setColor(color) {
         if (arguments.length !== 1) {
             throw new Error(
-                'You should pass exactly 1 argument to <span ' + 'class="code">setColor`',
+                'You should pass exactly 1 argument to <span ' + 'class="code">setColor`'
             );
         }
         if (color === undefined) {
@@ -235,9 +203,7 @@ export default class Thing {
      */
     setBorderColor(color) {
         if (arguments.length !== 1) {
-            throw new Error(
-                'You should pass exactly 1 argument to <span ' + 'class="code">setBorderColor`',
-            );
+            throw new Error('You should pass exactly 1 argument to `setBorderColor(color)`.');
         }
         if (color === undefined) {
             throw new TypeError('Invalid color.');
@@ -263,15 +229,11 @@ export default class Thing {
      */
     setBorderWidth(width) {
         if (arguments.length !== 1) {
-            throw new Error(
-                'You should pass exactly 1 argument to <span ' + 'class="code">setBorderWidth`',
-            );
+            throw new Error('You should pass exactly 1 argument to `setBorderWidth(width)`.');
         }
         if (typeof width !== 'number' || !isFinite(width)) {
             throw new Error(
-                'Invalid value for border width. Make sure you are ' +
-                    'passing a finite number to `' +
-                    'setBorderWidth`',
+                'Invalid value for border width. Make sure you are passing a finite number to `setBorderWidth(width)`.'
             );
         }
         this.lineWidth = width;
@@ -295,20 +257,16 @@ export default class Thing {
      */
     move(dx, dy) {
         if (arguments.length !== 2) {
-            throw new Error('You should pass exactly 2 arguments to <span ' + 'class="code">move`');
+            throw new Error('You should pass exactly 2 arguments to `move(dx, dy)`.');
         }
         if (typeof dx !== 'number' || !isFinite(dx)) {
             throw new TypeError(
-                'Invalid number passed for `' +
-                    'dx`. Make sure you are passing finite numbers to <span ' +
-                    'class="code">move(dx, dy)`',
+                'Invalid number passed for `dx`. Make sure you are passing finite numbers to `move(dx, dy)`.'
             );
         }
         if (typeof dy !== 'number' || !isFinite(dy)) {
             throw new TypeError(
-                'Invalid number passed for `' +
-                    'dy`. Make sure you are passing finite numbers to <span ' +
-                    'class="code">move(dx, dy)`',
+                'Invalid number passed for `dy`. Make sure you are passing finite numbers to `move(dx, dy)`.'
             );
         }
         this.x += dx;

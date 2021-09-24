@@ -24,24 +24,10 @@ function simulateEvent(type, config, elm) {
 }
 
 describe('Graphics', () => {
-    afterEach(() => {
-        Graphics.unbindFromWindow(window);
-    });
-
     describe('Not window-binding a Graphics instance', () => {
         it("Doesn't attach anything if it's not window-bound", () => {
             const g = new Graphics();
             expect(window.mouseClickMethod).toBeUndefined();
-        });
-    });
-    describe('Window-binding a Graphics instance', () => {
-        it('Attaches its handlers to the window', () => {
-            const g = new Graphics();
-            Graphics.attachToWindow(g, window);
-            const clickSpy = jasmine.createSpy();
-            mouseClickMethod(clickSpy);
-            simulateEvent('click', {}, document.querySelector('#game'));
-            expect(clickSpy).toHaveBeenCalled();
         });
     });
     describe('Mouse events', () => {
@@ -51,6 +37,20 @@ describe('Graphics', () => {
             g.mouseClickMethod(clickSpy);
             simulateEvent('click', {}, document.querySelector('#game'));
             expect(clickSpy).toHaveBeenCalled();
+        });
+    });
+    describe('Configuring error/output handlers', () => {
+        it('Passes errors through the error handler', () => {
+            const g = new Graphics();
+            const errorSpy = jasmine.createSpy();
+            g.configure({
+                onError: errorSpy,
+            });
+            g.mouseClickMethod(e => {
+                throw Error();
+            });
+            simulateEvent('click', {}, document.querySelector('#game'));
+            expect(errorSpy).toHaveBeenCalled();
         });
     });
 });

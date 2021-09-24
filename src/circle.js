@@ -11,17 +11,11 @@ export default class Circle extends Thing {
     constructor(radius) {
         super();
         if (arguments.length !== 1) {
-            throw new Error(
-                'You should pass exactly 1 argument to <span ' + 'class="code">new Circle(radius)`',
-            );
+            throw new Error('You should pass exactly 1 argument to `new Circle(radius)`.');
         }
         if (typeof radius !== 'number' || !isFinite(radius)) {
             throw new TypeError(
-                'You must pass a finite number to <span class=' +
-                    '"code">new Circle(radius)`. Did you forget the ' +
-                    'parentheses in `getWidth()` or <span ' +
-                    'class="code">getHeight()`? Or did you perform a ' +
-                    'calculation on a variable that is not a number?',
+                'You must pass a finite number to `new Circle(radius)`. Did you forget the parentheses in `getWidth()` or `getHeight()`? Or did you perform a calculation on a variable that is not a number?'
             );
         }
 
@@ -83,7 +77,7 @@ export default class Circle extends Thing {
     setRadius(radius) {
         if (arguments.length !== 1) {
             throw new Error(
-                'You should pass exactly 1 argument to <span ' + 'class="code">setRadius(radius)`',
+                'You should pass exactly 1 argument to <span ' + 'class="code">setRadius(radius)`'
             );
         }
         if (typeof radius !== 'number' || !isFinite(radius)) {
@@ -92,7 +86,7 @@ export default class Circle extends Thing {
                     '"code">setRadius(radius)`. Did you forget the ' +
                     'parentheses in `getWidth()` or <span ' +
                     'class="code">getHeight()`? Or did you perform a ' +
-                    'calculation on a variable that is not a number?',
+                    'calculation on a variable that is not a number?'
             );
         }
 

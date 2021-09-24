@@ -5,32 +5,6 @@ const terser = require('gulp-terser');
 const rollup = require('@rollup/stream');
 const source = require('vinyl-source-stream');
 
-// function buildIife() {
-//     return rollup({
-//         input: './entrypoints/chsjs.default.js',
-//         output: {
-//             format: 'iife',
-//             name: 'chsjs',
-//             strict: false,
-//         },
-//     })
-//         .pipe(source('chs.js'))
-//         .pipe(gulp.dest('.'));
-// }
-
-function buildWindowBoundIife() {
-    return rollup({
-        input: './entrypoints/windowattacher.js',
-        output: {
-            format: 'iife',
-            name: 'chsjs',
-            strict: false,
-        },
-    })
-        .pipe(source('windowchs.js'))
-        .pipe(gulp.dest('.'));
-}
-
 function buildModule() {
     return rollup({
         input: './entrypoints/chs.js',
@@ -40,10 +14,10 @@ function buildModule() {
         },
     })
         .pipe(source('chs.mjs'))
-        .pipe(gulp.dest('.'));
+        .pipe(gulp.dest('dist'));
 }
 
-function buildNode() {
+function buildCommonJS() {
     return rollup({
         input: './entrypoints/chs.js',
         output: {
@@ -52,26 +26,7 @@ function buildNode() {
         },
     })
         .pipe(source('chs.js'))
-        .pipe(gulp.dest('.'));
-}
-
-function distIife() {
-    return gulp
-        .src('chs.js')
-        .pipe(terser())
-        .pipe(rename('chsjs.min.js'))
-        .pipe(
-            size({
-                showFiles: true,
-            })
-        )
-        .pipe(
-            size({
-                showFiles: true,
-                gzip: true,
-            })
-        )
-        .pipe(gulp.dest('.'));
+        .pipe(gulp.dest('dist'));
 }
 
 function distModule() {
@@ -90,12 +45,12 @@ function distModule() {
                 gzip: true,
             })
         )
-        .pipe(gulp.dest('.'));
+        .pipe(gulp.dest('dist'));
 }
 
-gulp.task('build', gulp.series(buildNode, buildModule, buildWindowBoundIife));
+gulp.task('build', gulp.series(buildCommonJS, buildModule));
 
-gulp.task('dist', gulp.series('build', distIife, distModule));
+gulp.task('dist', gulp.series('build', distModule));
 
 gulp.task('watch', function () {
     gulp.watch('src/*.js', gulp.series('build', 'dist'));
