@@ -31,7 +31,7 @@ function buildCommonJS() {
 
 function distModule() {
     return gulp
-        .src('chs.mjs')
+        .src('dist/chs.mjs')
         .pipe(terser())
         .pipe(rename('chs.min.mjs'))
         .pipe(
