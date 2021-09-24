@@ -9,8 +9,6 @@
  *
  */
 
-const lines = [];
-
 export default class CodeHSConsole {
     /**
      * Set up an instance of the console library.
@@ -19,6 +17,20 @@ export default class CodeHSConsole {
     constructor() {
         this.internalOutput = [];
         this.internalOutputBuffer = '';
+
+        this.promptHandler = prompt;
+        this.printHandler = console.log;
+    }
+
+    /**
+     * Configure the Console instance, providing methods it invokes
+     * when prompting for input and emitting output.
+     *
+     * @param {Object} options
+     */
+    configure(options) {
+        this.promptHandler = options.prompt || this.promptHandler;
+        this.printHandler = options.print || this.printHandler;
     }
 
     bufferedOutputToArray(bufferedOutput) {
@@ -72,36 +84,29 @@ export default class CodeHSConsole {
         if (typeof looping === 'undefined' || !looping) {
             this.print(str);
         }
-        var console = $('#console');
-        var lines;
-        var result;
-        if (console.length) {
-            $('#console').css('margin-top', '180px');
-            // take max 20 lines, last line is prompt string so we remove and
-            // add extra spacing before putting it back on
-            lines = _.takeRight($('#console').text().split('\n'), 21);
+        return this.promptHandler();
+        // var lines;
+        // var result;
+        // var console = $('#console');
+        // if (console.length) {
+        //     $('#console').css('margin-top', '180px');
+        //     // take max 20 lines, last line is prompt string so we remove and
+        //     // add extra spacing before putting it back on
+        //     lines = _.takeRight($('#console').text().split('\n'), 21);
 
-            lines.pop();
-            var text = lines.concat(['', '', str]).join('\n');
-            result = prompt(text);
+        //     lines.pop();
+        //     var text = lines.concat(['', '', str]).join('\n');
+        //     result = prompt(text);
 
-            $('#console').css('margin-top', '0px');
-        } else {
-            lines = this.internalOutput.slice(-10);
-            result = prompt(lines.join('\n'));
-        }
-        if (typeof looping === 'undefined' || !looping) {
-            this.println(result);
-        }
-        return result;
-    }
-
-    /**
-     * Method to test whether the code is requesting user input at all.
-     * @param {string} code - The code from the editor
-     */
-    hasUserinput(code) {
-        return code.match(new RegExp('readLine|readInt|readFloat|readBoolean|readNumber'));
+        //     $('#console').css('margin-top', '0px');
+        // } else {
+        //     lines = this.internalOutput.slice(-10);
+        //     result = prompt(lines.join('\n'));
+        // }
+        // if (typeof looping === 'undefined' || !looping) {
+        //     this.println(result);
+        // }
+        // return result;
     }
 
     /** ************* PUBLIC METHODS *******************/
@@ -113,7 +118,9 @@ export default class CodeHSConsole {
         if (arguments.length !== 0) {
             throw new Error('You should not pass any arguments to clear');
         }
-        CodeHSConsole.clear();
+        this.internalOutput = [];
+        this.internalOutputBuffer = '';
+        // CodeHSConsole.clear();
     }
 
     /**
@@ -125,20 +132,16 @@ export default class CodeHSConsole {
             throw new Error('You should pass exactly 1 argument to print');
         }
 
-        var console = $('#console');
-        if (console.length) {
-            console.html($('#console').html() + ln);
-            console.scrollTop($('#console')[0].scrollHeight);
-            lines = console.html().split('\n');
-            lines.splice(lines.length - 1, 1);
-        } else {
-            // we must be running outside of the site.
-            // if there's a print attached to the console, use that, otherwise log like normal.
-            this.internalOutput.push(ln);
-            typeof window.console.print === 'function'
-                ? window.console.print(ln)
-                : window.console.log(ln);
-        }
+        // var console = $('#console');
+        // if (console.length) {
+        //     console.html($('#console').html() + ln);
+        //     console.scrollTop($('#console')[0].scrollHeight);
+        //     lines = console.html().split('\n');
+        //     lines.splice(lines.length - 1, 1);
+        // $('#console').scrollTop();
+        // }
+        this.internalOutput.push(ln);
+        this.printHandler(ln);
     }
 
     /**
@@ -152,11 +155,11 @@ export default class CodeHSConsole {
             throw new Error('You should pass exactly 1 argument to println');
         } else {
             this.print(ln + '\n');
-            $('#console').scrollTop();
         }
     }
 
-    /* Read a number from the user using JavaScripts prompt function.
+    /**
+     * Read a number from the user using JavaScripts prompt function.
      * We make sure here to check a few things.
      *
      *    1. If the user checks "Prevent this page from creating additional dialogs," we handle
@@ -279,8 +282,3 @@ export default class CodeHSConsole {
         return this.readNumber(str, parseFloat, 'a float');
     }
 }
-
-module.exports = {
-    CodeHSConsole: CodeHSConsole,
-    PUBLIC_METHODS: PUBLIC_METHODS,
-};

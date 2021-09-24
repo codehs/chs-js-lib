@@ -3,14 +3,12 @@
 
 <head>
     <title>Oval Test</title>
-    <script src="../../../windowchs.js"></script>
 </head>
 
 <body>
     <canvas id="game" width="480" height="400"></canvas>
+    <script src="../../../dist/chs.iife.js"></script>
     <script id="code">
-        const g = new Graphics();
-        Graphics.attachToWindow(g, window);
         const shapes = [];
         const position = { x: 0, y: 0 };
         const points = [

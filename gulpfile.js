@@ -29,6 +29,19 @@ function buildCommonJS() {
         .pipe(gulp.dest('dist'));
 }
 
+function buildIife() {
+    return rollup({
+        input: './entrypoints/windowBinder.js',
+        output: {
+            format: 'iife',
+            name: 'CHSJS',
+            strict: false,
+        },
+    })
+        .pipe(source('chs.iife.js'))
+        .pipe(gulp.dest('dist'));
+}
+
 function distModule() {
     return gulp
         .src('dist/chs.mjs')
@@ -48,7 +61,7 @@ function distModule() {
         .pipe(gulp.dest('dist'));
 }
 
-gulp.task('build', gulp.series(buildCommonJS, buildModule));
+gulp.task('build', gulp.series(buildCommonJS, buildModule, buildIife));
 
 gulp.task('dist', gulp.series('build', distModule));
 
