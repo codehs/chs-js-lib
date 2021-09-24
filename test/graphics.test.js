@@ -31,7 +31,7 @@ describe('Graphics', () => {
     describe('Not window-binding a Graphics instance', () => {
         it("Doesn't attach anything if it's not window-bound", () => {
             const g = new Graphics();
-            expect(mouseClickMethod).toBeUndefined();
+            expect(window.mouseClickMethod).toBeUndefined();
         });
     });
     describe('Window-binding a Graphics instance', () => {

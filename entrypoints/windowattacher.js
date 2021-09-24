@@ -23,4 +23,3 @@ window.Randomizer = Randomizer;
 window.Rectangle = Rectangle;
 window.Sound = Sound;
 window.Text = Text;
-// new Graphics().init();

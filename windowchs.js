@@ -389,27 +389,33 @@
             super();
             if (arguments.length !== 4) {
                 throw new Error(
-                    'You should pass exactly 4 arguments to `new Arc(raduis, startAngle, endAngle, angleUnit)`',
+                    'You should pass exactly 4 arguments to `new Arc(radius, startAngle, endAngle, angleUnit)`'
                 );
             }
-            if (typeof radius !== 'number' || !isFinite(radius)) {
+            if (typeof radius !== 'number' || !isFinite(radius) || isNaN(radius)) {
                 throw new TypeError(
-                    'Invalid value for `radius`. Make sure you are passing finite numbers to `new Arc(raduis, startAngle, endAngle, angleUnit)`',
+                    'Invalid value for `radius`. Make sure you are passing finite numbers to `new Arc(radius, startAngle, endAngle, angleUnit)`'
                 );
             }
-            if (typeof startAngle !== 'number' || !isFinite(startAngle)) {
+            if (typeof startAngle !== 'number' || !isFinite(startAngle) || isNaN(startAngle)) {
                 throw new TypeError(
-                    'Invalid value for `startAngle`. Make sure you are passing finite numbers to `new Arc(raduis, startAngle, endAngle, angleUnit)`',
+                    'Invalid value for `startAngle`. Make sure you are passing finite numbers to `new Arc(radius, startAngle, endAngle, angleUnit)`'
                 );
             }
-            if (typeof endAngle !== 'number' || !isFinite(endAngle)) {
+            if (typeof endAngle !== 'number' || !isFinite(endAngle) || isNaN(endAngle)) {
                 throw new TypeError(
-                    'Invalid value for `endAngle`. Make sure you are passing finite numbers to `new Arc(raduis, startAngle, endAngle, angleUnit)`',
+                    'Invalid value for `endAngle`. Make sure you are passing finite numbers to `new Arc(radius, startAngle, endAngle, angleUnit)`'
                 );
             }
-            if (typeof angleUnit !== 'number' || !isFinite(angleUnit)) {
+            if (
+                typeof angleUnit !== 'number' ||
+                !isFinite(angleUnit) ||
+                isNaN(angleUnit) ||
+                angleUnit > 1 ||
+                angleUnit < 0
+            ) {
                 throw new TypeError(
-                    'Invalid value for `angleUnit`. Make sure you are passing finite numbers to `new Arc(raduis, startAngle, endAngle, angleUnit)`',
+                    'Invalid value for `angleUnit`. Make sure you are passing finite numbers to `new Arc(radius, startAngle, endAngle, angleUnit)`'
                 );
             }
 
@@ -445,7 +451,7 @@
                 this.radius,
                 prepareAngle(this.startAngle),
                 prepareAngle(this.endAngle),
-                this.counterclockwise,
+                this.counterclockwise
             );
             context.lineTo(0, 0);
 
@@ -472,7 +478,7 @@
             }
             if (typeof angle !== 'number' || !isFinite(angle)) {
                 throw new Error(
-                    'Invalid value passed to `setStartAngle`. Make sure you are passing a finite number.',
+                    'Invalid value passed to `setStartAngle`. Make sure you are passing a finite number.'
                 );
             }
             if (this.angleUnit == Arc.DEGREES) {
@@ -493,7 +499,7 @@
             }
             if (typeof angle !== 'number' || !isFinite(angle)) {
                 throw new Error(
-                    'Invalid value passed to `setEndAngle`. Make sure you are passing a finite number.',
+                    'Invalid value passed to `setEndAngle`. Make sure you are passing a finite number.'
                 );
             }
             if (this.angleUnit == Arc.DEGREES) {
@@ -538,7 +544,7 @@
             }
             if (typeof val !== 'boolean') {
                 throw new Error(
-                    'Invalid value passed to `setDirection`. Make sure you are passing a boolean value. `true` for counterclockwise, false for clockwise.',
+                    'Invalid value passed to `setDirection`. Make sure you are passing a boolean value. `true` for counterclockwise, false for clockwise.'
                 );
             }
             this.counterclockwise = val;
@@ -636,35 +642,35 @@
      * Get a random integer between low to high, inclusive.
      * If only one parameter is given, a random integer
      * from (0, low-1) inclusive.
-     * @param {number} low - Lower bound on range of random int.
-     * @param {number} high - Upper bound on range of random int.
+     * @param {number} min - Lower bound on range of random int.
+     * @param {number} max - Upper bound on range of random int.
      * @returns {number} Random number between low and high, inclusive.
      */
-    const nextInt = function (low, high) {
-        if (typeof high == 'undefined') {
-            high = low - 1;
-            low = 0;
+    const nextInt = function (min, max) {
+        if (typeof max == 'undefined') {
+            max = min - 1;
+            min = 0;
         }
 
-        low = Math.floor(low);
+        min = Math.floor(min);
         var r = Math.random();
-        return low + Math.floor(r * (high - low + 1));
+        return min + Math.floor(r * (max - min + 1));
     };
 
     /**
      * Get a random float between low to high, inclusive.
      * If only one parameter is given, a random float
      * from (0, low-1) inclusive.
-     * @param {number} low - Lower bound on range of random int.
-     * @param {number} high - Upper bound on range of random int.
+     * @param {number} min - Lower bound on range of random int.
+     * @param {number} max - Upper bound on range of random int.
      * @returns {number} Random number between low and high, inclusive.
      */
-    const nextFloat = function (low, high) {
-        if (typeof high == 'undefined') {
-            high = low;
-            low = 0;
+    const nextFloat = function (min, max) {
+        if (typeof max == 'undefined') {
+            max = min;
+            min = 0;
         }
-        return low + (high - low) * Math.random();
+        return min + (max - min) * Math.random();
     };
 
     /**
@@ -673,7 +679,9 @@
      */
     const nextHex = function () {
         var val = nextInt(0, 255);
-        if (val < 16) return '0' + val.toString(16);
+        if (val < 16) {
+            return '0' + val.toString(16);
+        }
         return val.toString(16);
     };
 
@@ -1621,13 +1629,11 @@
         }
     }
 
-    // import the npm-hosted editor utils only if the other is not available
-
     const DEFAULT_FRAME_RATE = 40;
     const FULLSCREEN_PADDING = 5;
 
     let GraphicsInstances = {};
-    let graphicsID = 0;
+    let graphicsInstanceID = 0;
     let pressedKeys = [];
 
     class CodeHSGraphics {
@@ -1654,7 +1660,7 @@
             this.fullscreenMode = false;
             this.fpsInterval = 1000 / DEFAULT_FRAME_RATE;
             this.lastDrawTime = Date.now();
-            GraphicsInstances[graphicsID++] = this;
+            GraphicsInstances[graphicsInstanceID++] = this;
         }
 
         static attachToWindow(graphics, window) {
@@ -1692,6 +1698,9 @@
          * @param {Thing} elem - A subclass of Thing to be added to the graphics instance.
          */
         add(elem) {
+            // Need to mutate in case the user is expecting
+            // to be able to reference it.
+            elem.alive = true;
             this.elementPool.push(elem);
             this.elementPoolSize++;
         }
@@ -1879,21 +1888,21 @@
                         ' found. You must ' +
                         'provide a callback function and ' +
                         'a number representing the time delay ' +
-                        'to `setTimer`',
+                        'to `setTimer`'
                 );
             }
             if (typeof fn !== 'function') {
                 throw new TypeError(
                     'Invalid callback function. ' +
                         'Make sure you are passing an actual function to ' +
-                        '`setTimer`.',
+                        '`setTimer`.'
                 );
             }
             if (typeof time !== 'number' || !isFinite(time)) {
                 throw new TypeError(
                     'Invalid value for time delay. ' +
                         'Make sure you are passing a finite number to ' +
-                        '`setTimer` for the delay.',
+                        '`setTimer` for the delay.'
                 );
             }
 
@@ -1973,6 +1982,7 @@
         removeAll() {
             this.stopAllVideo();
             this.elementPool = [];
+            this.elementPoolSize = 0;
         }
 
         /**
@@ -2338,10 +2348,7 @@
          * @param {string} name - The name of the timer.
          */
         setGraphicsTimer(fn, time, data, name) {
-            if (typeof name === 'undefined') {
-                name = fn.name;
-            }
-
+            name = name ?? fn.name;
             this.timers[name] = setInterval(fn, time, data);
 
             this.timersList.push({
@@ -3145,28 +3152,17 @@
             super();
             if (arguments.length !== 2) {
                 throw new Error(
-                    'You should pass exactly 2 arguments to <span ' +
-                        'class="code">new Rectangle(width, height)`',
+                    'You should pass exactly 2 arguments to `new Rectangle(width, height)`.'
                 );
             }
             if (typeof width !== 'number' || !isFinite(width)) {
                 throw new TypeError(
-                    'Invalid value for `width' +
-                        '`. Make sure you are passing finite numbers to <span ' +
-                        'class="code">new Rectangle(width, height)`. Did you ' +
-                        'forget the parentheses in `getWidth()` ' +
-                        'or `getHeight()`? Or did you perform a ' +
-                        'calculation on a variable that is not a number?',
+                    'Invalid value for `width`. Make sure you are passing finite numbers to `new Rectangle(width, height)`. Did you forget the parentheses in `getWidth()` or `getHeight()`? Or did you perform a calculation on a variable that is not a number?'
                 );
             }
             if (typeof height !== 'number' || !isFinite(height)) {
                 throw new TypeError(
-                    'Invalid value for `height' +
-                        '`. Make sure you are passing finite numbers to <span ' +
-                        'class="code">new Rectangle(width, height)`. Did you ' +
-                        'forget the parentheses in `getWidth()` ' +
-                        'or `getHeight()`? Or did you perform a ' +
-                        'calculation on a variable that is not a number?',
+                    'Invalid value for `height`. Make sure you are passing finite numbers to `new Rectangle(width, height)`. Did you forget the parentheses in `getWidth()` or `getHeight()`? Or did you perform a calculation on a variable that is not a number?'
                 );
             }
             this.width = Math.max(0, width);
@@ -3214,29 +3210,16 @@
          */
         setSize(width, height) {
             if (arguments.length !== 2) {
-                throw new Error(
-                    'You should pass exactly 2 arguments to <span ' +
-                        'class="code">setSize(width, height)`',
-                );
+                throw new Error('You should pass exactly 2 arguments to `setSize(width, height)`.');
             }
             if (typeof width !== 'number' || !isFinite(width)) {
                 throw new TypeError(
-                    'Invalid value for `width' +
-                        '`. Make sure you are passing finite numbers to <span ' +
-                        'class="code">setSize(width, height)`. Did you ' +
-                        'forget the parentheses in `getWidth()` ' +
-                        'or `getHeight()`? Or did you perform a ' +
-                        'calculation on a variable that is not a number?',
+                    'Invalid value for `width`. Make sure you are passing finite numbers to `setSize(width, height)`. Did you forget the parentheses in `getWidth()` or `getHeight()`? Or did you perform a calculation on a variable that is not a number?'
                 );
             }
             if (typeof height !== 'number' || !isFinite(height)) {
                 throw new TypeError(
-                    'Invalid value for `height' +
-                        '`. Make sure you are passing finite numbers to <span ' +
-                        'class="code">setSize(width, height)`. Did you ' +
-                        'forget the parentheses in `getWidth()` ' +
-                        'or `getHeight()`? Or did you perform a ' +
-                        'calculation on a variable that is not a number?',
+                    'Invalid value for `height`. Make sure you are passing finite numbers to `setSize(width, height)`. Did you forget the parentheses in `getWidth()` or `getHeight()`? Or did you perform a calculation on a variable that is not a number?'
                 );
             }
             this.width = Math.max(0, width);
@@ -3254,12 +3237,7 @@
             }
             if (typeof width !== 'number' || !isFinite(width)) {
                 throw new TypeError(
-                    'Invalid value for `width' +
-                        '`. Make sure you are passing finite numbers to <span ' +
-                        'class="code">setWidth(width)`. Did you ' +
-                        'forget the parentheses in `getWidth()` ' +
-                        'or `getHeight()`? Or did you perform a ' +
-                        'calculation on a variable that is not a number?',
+                    'Invalid value for `width`. Make sure you are passing finite numbers to `setWidth(width)`. Did you forget the parentheses in `getWidth()` or `getHeight()`? Or did you perform a calculation on a variable that is not a number?'
                 );
             }
             this.width = Math.max(0, width);
@@ -3276,12 +3254,7 @@
             }
             if (typeof height !== 'number' || !isFinite(height)) {
                 throw new TypeError(
-                    'Invalid value for `height' +
-                        '`. Make sure you are passing finite numbers to <span ' +
-                        'class="code">setHeight(height)`. Did you ' +
-                        'forget the parentheses in `getWidth()` ' +
-                        'or `getHeight()`? Or did you perform a ' +
-                        'calculation on a variable that is not a number?',
+                    'Invalid value for `height`. Make sure you are passing finite numbers to `setHeight(height)`. Did you forget the parentheses in `getWidth()` or `getHeight()`? Or did you perform a calculation on a variable that is not a number?'
                 );
             }
             this.height = Math.max(0, height);
@@ -3536,6 +3509,5 @@
     window.Rectangle = Rectangle;
     window.Sound = Sound;
     window.Text = Text;
-    // new Graphics().init();
 
 })();

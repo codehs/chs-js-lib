@@ -6,35 +6,35 @@
  * Get a random integer between low to high, inclusive.
  * If only one parameter is given, a random integer
  * from (0, low-1) inclusive.
- * @param {number} low - Lower bound on range of random int.
- * @param {number} high - Upper bound on range of random int.
+ * @param {number} min - Lower bound on range of random int.
+ * @param {number} max - Upper bound on range of random int.
  * @returns {number} Random number between low and high, inclusive.
  */
-export const nextInt = function (low, high) {
-    if (typeof high == 'undefined') {
-        high = low - 1;
-        low = 0;
+export const nextInt = function (min, max) {
+    if (typeof max == 'undefined') {
+        max = min - 1;
+        min = 0;
     }
 
-    low = Math.floor(low);
+    min = Math.floor(min);
     var r = Math.random();
-    return low + Math.floor(r * (high - low + 1));
+    return min + Math.floor(r * (max - min + 1));
 };
 
 /**
  * Get a random float between low to high, inclusive.
  * If only one parameter is given, a random float
  * from (0, low-1) inclusive.
- * @param {number} low - Lower bound on range of random int.
- * @param {number} high - Upper bound on range of random int.
+ * @param {number} min - Lower bound on range of random int.
+ * @param {number} max - Upper bound on range of random int.
  * @returns {number} Random number between low and high, inclusive.
  */
-export const nextFloat = function (low, high) {
-    if (typeof high == 'undefined') {
-        high = low;
-        low = 0;
+export const nextFloat = function (min, max) {
+    if (typeof max == 'undefined') {
+        max = min;
+        min = 0;
     }
-    return low + (high - low) * Math.random();
+    return min + (max - min) * Math.random();
 };
 
 /**
@@ -43,7 +43,9 @@ export const nextFloat = function (low, high) {
  */
 export const nextHex = function () {
     var val = nextInt(0, 255);
-    if (val < 16) return '0' + val.toString(16);
+    if (val < 16) {
+        return '0' + val.toString(16);
+    }
     return val.toString(16);
 };
 

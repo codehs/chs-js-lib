@@ -25,27 +25,33 @@ export default class Arc extends Thing {
         super();
         if (arguments.length !== 4) {
             throw new Error(
-                'You should pass exactly 4 arguments to `new Arc(raduis, startAngle, endAngle, angleUnit)`',
+                'You should pass exactly 4 arguments to `new Arc(radius, startAngle, endAngle, angleUnit)`'
             );
         }
-        if (typeof radius !== 'number' || !isFinite(radius)) {
+        if (typeof radius !== 'number' || !isFinite(radius) || isNaN(radius)) {
             throw new TypeError(
-                'Invalid value for `radius`. Make sure you are passing finite numbers to `new Arc(raduis, startAngle, endAngle, angleUnit)`',
+                'Invalid value for `radius`. Make sure you are passing finite numbers to `new Arc(radius, startAngle, endAngle, angleUnit)`'
             );
         }
-        if (typeof startAngle !== 'number' || !isFinite(startAngle)) {
+        if (typeof startAngle !== 'number' || !isFinite(startAngle) || isNaN(startAngle)) {
             throw new TypeError(
-                'Invalid value for `startAngle`. Make sure you are passing finite numbers to `new Arc(raduis, startAngle, endAngle, angleUnit)`',
+                'Invalid value for `startAngle`. Make sure you are passing finite numbers to `new Arc(radius, startAngle, endAngle, angleUnit)`'
             );
         }
-        if (typeof endAngle !== 'number' || !isFinite(endAngle)) {
+        if (typeof endAngle !== 'number' || !isFinite(endAngle) || isNaN(endAngle)) {
             throw new TypeError(
-                'Invalid value for `endAngle`. Make sure you are passing finite numbers to `new Arc(raduis, startAngle, endAngle, angleUnit)`',
+                'Invalid value for `endAngle`. Make sure you are passing finite numbers to `new Arc(radius, startAngle, endAngle, angleUnit)`'
             );
         }
-        if (typeof angleUnit !== 'number' || !isFinite(angleUnit)) {
+        if (
+            typeof angleUnit !== 'number' ||
+            !isFinite(angleUnit) ||
+            isNaN(angleUnit) ||
+            angleUnit > 1 ||
+            angleUnit < 0
+        ) {
             throw new TypeError(
-                'Invalid value for `angleUnit`. Make sure you are passing finite numbers to `new Arc(raduis, startAngle, endAngle, angleUnit)`',
+                'Invalid value for `angleUnit`. Make sure you are passing finite numbers to `new Arc(radius, startAngle, endAngle, angleUnit)`'
             );
         }
 
@@ -81,7 +87,7 @@ export default class Arc extends Thing {
             this.radius,
             prepareAngle(this.startAngle),
             prepareAngle(this.endAngle),
-            this.counterclockwise,
+            this.counterclockwise
         );
         context.lineTo(0, 0);
 
@@ -108,7 +114,7 @@ export default class Arc extends Thing {
         }
         if (typeof angle !== 'number' || !isFinite(angle)) {
             throw new Error(
-                'Invalid value passed to `setStartAngle`. Make sure you are passing a finite number.',
+                'Invalid value passed to `setStartAngle`. Make sure you are passing a finite number.'
             );
         }
         if (this.angleUnit == Arc.DEGREES) {
@@ -129,7 +135,7 @@ export default class Arc extends Thing {
         }
         if (typeof angle !== 'number' || !isFinite(angle)) {
             throw new Error(
-                'Invalid value passed to `setEndAngle`. Make sure you are passing a finite number.',
+                'Invalid value passed to `setEndAngle`. Make sure you are passing a finite number.'
             );
         }
         if (this.angleUnit == Arc.DEGREES) {
@@ -174,7 +180,7 @@ export default class Arc extends Thing {
         }
         if (typeof val !== 'boolean') {
             throw new Error(
-                'Invalid value passed to `setDirection`. Make sure you are passing a boolean value. `true` for counterclockwise, false for clockwise.',
+                'Invalid value passed to `setDirection`. Make sure you are passing a boolean value. `true` for counterclockwise, false for clockwise.'
             );
         }
         this.counterclockwise = val;

@@ -5,18 +5,18 @@ const terser = require('gulp-terser');
 const rollup = require('@rollup/stream');
 const source = require('vinyl-source-stream');
 
-function buildIife() {
-    return rollup({
-        input: './entrypoints/chsjs.default.js',
-        output: {
-            format: 'iife',
-            name: 'chsjs',
-            strict: false,
-        },
-    })
-        .pipe(source('chs.js'))
-        .pipe(gulp.dest('.'));
-}
+// function buildIife() {
+//     return rollup({
+//         input: './entrypoints/chsjs.default.js',
+//         output: {
+//             format: 'iife',
+//             name: 'chsjs',
+//             strict: false,
+//         },
+//     })
+//         .pipe(source('chs.js'))
+//         .pipe(gulp.dest('.'));
+// }
 
 function buildWindowBoundIife() {
     return rollup({
@@ -43,6 +43,18 @@ function buildModule() {
         .pipe(gulp.dest('.'));
 }
 
+function buildNode() {
+    return rollup({
+        input: './entrypoints/chs.js',
+        output: {
+            format: 'cjs',
+            strict: false,
+        },
+    })
+        .pipe(source('chs.js'))
+        .pipe(gulp.dest('.'));
+}
+
 function distIife() {
     return gulp
         .src('chs.js')
@@ -51,13 +63,13 @@ function distIife() {
         .pipe(
             size({
                 showFiles: true,
-            }),
+            })
         )
         .pipe(
             size({
                 showFiles: true,
                 gzip: true,
-            }),
+            })
         )
         .pipe(gulp.dest('.'));
 }
@@ -70,18 +82,18 @@ function distModule() {
         .pipe(
             size({
                 showFiles: true,
-            }),
+            })
         )
         .pipe(
             size({
                 showFiles: true,
                 gzip: true,
-            }),
+            })
         )
         .pipe(gulp.dest('.'));
 }
 
-gulp.task('build', gulp.series(buildIife, buildModule, buildWindowBoundIife));
+gulp.task('build', gulp.series(buildNode, buildModule, buildWindowBoundIife));
 
 gulp.task('dist', gulp.series('build', distIife, distModule));
 

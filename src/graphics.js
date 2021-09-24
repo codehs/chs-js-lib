@@ -1,5 +1,3 @@
-// import the npm-hosted editor utils only if the other is not available
-// var editorUtils = require('codehs-js-utils');
 import { getAudioContext } from './audioContext.js';
 import Sound from './sound.js';
 import WebVideo from './webvideo.js';
@@ -8,7 +6,7 @@ const DEFAULT_FRAME_RATE = 40;
 const FULLSCREEN_PADDING = 5;
 
 let GraphicsInstances = {};
-let graphicsID = 0;
+let graphicsInstanceID = 0;
 let pressedKeys = [];
 
 export default class CodeHSGraphics {
@@ -35,7 +33,7 @@ export default class CodeHSGraphics {
         this.fullscreenMode = false;
         this.fpsInterval = 1000 / DEFAULT_FRAME_RATE;
         this.lastDrawTime = Date.now();
-        GraphicsInstances[graphicsID++] = this;
+        GraphicsInstances[graphicsInstanceID++] = this;
     }
 
     static attachToWindow(graphics, window) {
@@ -73,6 +71,9 @@ export default class CodeHSGraphics {
      * @param {Thing} elem - A subclass of Thing to be added to the graphics instance.
      */
     add(elem) {
+        // Need to mutate in case the user is expecting
+        // to be able to reference it.
+        elem.alive = true;
         this.elementPool.push(elem);
         this.elementPoolSize++;
     }
@@ -260,21 +261,21 @@ export default class CodeHSGraphics {
                     ' found. You must ' +
                     'provide a callback function and ' +
                     'a number representing the time delay ' +
-                    'to `setTimer`',
+                    'to `setTimer`'
             );
         }
         if (typeof fn !== 'function') {
             throw new TypeError(
                 'Invalid callback function. ' +
                     'Make sure you are passing an actual function to ' +
-                    '`setTimer`.',
+                    '`setTimer`.'
             );
         }
         if (typeof time !== 'number' || !isFinite(time)) {
             throw new TypeError(
                 'Invalid value for time delay. ' +
                     'Make sure you are passing a finite number to ' +
-                    '`setTimer` for the delay.',
+                    '`setTimer` for the delay.'
             );
         }
 
@@ -354,6 +355,7 @@ export default class CodeHSGraphics {
     removeAll() {
         this.stopAllVideo();
         this.elementPool = [];
+        this.elementPoolSize = 0;
     }
 
     /**
@@ -719,10 +721,7 @@ export default class CodeHSGraphics {
      * @param {string} name - The name of the timer.
      */
     setGraphicsTimer(fn, time, data, name) {
-        if (typeof name === 'undefined') {
-            name = fn.name;
-        }
-
+        name = name ?? fn.name;
         this.timers[name] = setInterval(fn, time, data);
 
         this.timersList.push({
