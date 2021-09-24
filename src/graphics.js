@@ -71,7 +71,7 @@ export default class CodeHSGraphics {
      * @param {function} fn - A callback to be triggered on click events.
      */
     mouseClickMethod(fn) {
-        this.clickCallback = fn;
+        this.clickCallback = this.withErrorHandler(fn);
     }
 
     /**
@@ -79,7 +79,7 @@ export default class CodeHSGraphics {
      * @param {function} fn - A callback to be triggered on mouse move events.
      */
     mouseMoveMethod(fn) {
-        this.moveCallback = fn;
+        this.moveCallback = this.withErrorHandler(fn);
     }
 
     /**
@@ -87,7 +87,7 @@ export default class CodeHSGraphics {
      * @param {function} fn - A callback to be triggered on mouse down.
      */
     mouseDownMethod(fn) {
-        this.mouseDownCallback = fn;
+        this.mouseDownCallback = this.withErrorHandler(fn);
     }
 
     /**
@@ -95,7 +95,7 @@ export default class CodeHSGraphics {
      * @param {function} fn - A callback to be triggered on mouse up events.
      */
     mouseUpMethod(fn) {
-        this.mouseUpCallback = fn;
+        this.mouseUpCallback = this.withErrorHandler(fn);
     }
 
     /**
@@ -103,7 +103,7 @@ export default class CodeHSGraphics {
      * @param {function} fn - A callback to be triggered on drag events.
      */
     mouseDragMethod(fn) {
-        this.dragCallback = fn;
+        this.dragCallback = this.withErrorHandler(fn);
     }
 
     /**
@@ -111,7 +111,7 @@ export default class CodeHSGraphics {
      * @param {function} fn - A callback to be triggered on keydown events.
      */
     keyDownMethod(fn) {
-        this.keyDownCallback = fn;
+        this.keyDownCallback = this.withErrorHandler(fn);
     }
 
     /**
@@ -119,7 +119,7 @@ export default class CodeHSGraphics {
      * @param {function} fn - A callback to be triggered on key up events.
      */
     keyUpMethod(fn) {
-        this.keyUpCallback = fn;
+        this.keyUpCallback = this.withErrorHandler(fn);
     }
 
     /**
@@ -128,7 +128,7 @@ export default class CodeHSGraphics {
      *                        events.
      */
     deviceOrientationMethod(fn) {
-        this.deviceOrientationCallback = fn;
+        this.deviceOrientationCallback = this.withErrorHandler(fn);
     }
 
     /**
@@ -136,7 +136,7 @@ export default class CodeHSGraphics {
      * @param {function} fn - A callback to be triggered device motion events.
      */
     deviceMotionMethod(fn) {
-        this.deviceMotionCallback = fn;
+        this.deviceMotionCallback = this.withErrorHandler(fn);
     }
 
     /**
@@ -267,7 +267,7 @@ export default class CodeHSGraphics {
                 name: name,
             });
         } else {
-            this.setGraphicsTimer(fn, time, data, name);
+            this.setGraphicsTimer(this.withErrorHandler(fn), time, data, name);
         }
     }
 
@@ -600,7 +600,7 @@ export default class CodeHSGraphics {
     withErrorHandler(fn) {
         return (...args) => {
             try {
-                fn(...args);
+                fn?.(...args);
             } catch (e) {
                 if (typeof this.onError === 'function') {
                     this.onError(e);
@@ -617,7 +617,7 @@ export default class CodeHSGraphics {
     setup() {
         var drawingCanvas = this.getCanvas();
 
-        drawingCanvas.onclick = this.withErrorHandler(e => {
+        drawingCanvas.onclick = e => {
             if (this.waitingForClick()) {
                 this.clickCount--;
 
@@ -625,7 +625,11 @@ export default class CodeHSGraphics {
                     var timer = this.delayedTimers[i];
                     timer.clicks--;
                     if (timer.clicks === 0) {
-                        this.setGraphicsTimer(timer.fn, timer.time, timer.data);
+                        this.setGraphicsTimer(
+                            this.withErrorHandler(timer.fn),
+                            timer.time,
+                            timer.data
+                        );
                     }
                 }
                 return;
@@ -634,7 +638,7 @@ export default class CodeHSGraphics {
             if (this.clickCallback) {
                 this.clickCallback(e);
             }
-        });
+        };
 
         var mouseDown = false;
 
@@ -647,31 +651,31 @@ export default class CodeHSGraphics {
             }
         });
 
-        drawingCanvas.onmousedown = this.withErrorHandler(e => {
+        drawingCanvas.onmousedown = e => {
             mouseDown = true;
             if (this.mouseDownCallback) {
                 this.mouseDownCallback(e);
             }
-        });
+        };
 
-        drawingCanvas.onmouseup = this.withErrorHandler(e => {
+        drawingCanvas.onmouseup = e => {
             mouseDown = false;
             if (this.mouseUpCallback) {
                 this.mouseUpCallback(e);
             }
-        });
+        };
 
         // TOUCH EVENTS!
-        drawingCanvas.ontouchmove = this.withErrorHandler(e => {
+        drawingCanvas.ontouchmove = e => {
             e.preventDefault();
             if (this.dragCallback) {
                 this.dragCallback(e);
             } else if (this.moveCallback) {
                 this.moveCallback(e);
             }
-        });
+        };
 
-        drawingCanvas.ontouchstart = this.withErrorHandler(e => {
+        drawingCanvas.ontouchstart = e => {
             e.preventDefault();
             if (this.mouseDownCallback) {
                 this.mouseDownCallback(e);
@@ -691,14 +695,14 @@ export default class CodeHSGraphics {
                 }
                 return;
             }
-        });
+        };
 
-        drawingCanvas.ontouchend = this.withErrorHandler(e => {
+        drawingCanvas.ontouchend = e => {
             e.preventDefault();
             if (this.mouseUpCallback) {
                 this.mouseUpCallback(e);
             }
-        });
+        };
     }
 
     /**

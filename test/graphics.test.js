@@ -40,17 +40,93 @@ describe('Graphics', () => {
         });
     });
     describe('Configuring error/output handlers', () => {
-        it('Passes errors through the error handler', () => {
-            const g = new Graphics();
-            const errorSpy = jasmine.createSpy();
-            g.configure({
-                onError: errorSpy,
+        describe('Passing errors through the error handler', () => {
+            it('Passes error for mouseClickMethod', () => {
+                const g = new Graphics();
+                const errorSpy = jasmine.createSpy();
+                g.configure({
+                    onError: errorSpy,
+                });
+                g.mouseClickMethod(e => {
+                    throw Error('Oops!');
+                });
+                simulateEvent('click', {}, document.querySelector('#game'));
+                expect(errorSpy).toHaveBeenCalledWith(Error('Oops!'));
             });
-            g.mouseClickMethod(e => {
-                throw Error();
+            it('Passes error for mouseDownMethod', () => {
+                const g = new Graphics();
+                const errorSpy = jasmine.createSpy();
+                g.configure({
+                    onError: errorSpy,
+                });
+                g.mouseDownMethod(e => {
+                    throw Error('Oops!');
+                });
+                simulateEvent('mousedown', {}, document.querySelector('#game'));
+                expect(errorSpy).toHaveBeenCalledWith(Error('Oops!'));
             });
-            simulateEvent('click', {}, document.querySelector('#game'));
-            expect(errorSpy).toHaveBeenCalled();
+            it('Passes error for mouseDragMethod', () => {
+                const g = new Graphics();
+                const errorSpy = jasmine.createSpy();
+                g.configure({
+                    onError: errorSpy,
+                });
+                g.mouseDragMethod(e => {
+                    throw Error('Oops!');
+                });
+                simulateEvent('mousedown', {}, document.querySelector('#game'));
+                simulateEvent('mousemove', {}, document.querySelector('#game'));
+                expect(errorSpy).toHaveBeenCalledWith(Error('Oops!'));
+            });
+            it('Passes error for keyDownMethod', () => {
+                const g = new Graphics();
+                const errorSpy = jasmine.createSpy();
+                g.configure({
+                    onError: errorSpy,
+                });
+                g.keyDownMethod(e => {
+                    throw Error('Oops!');
+                });
+                simulateEvent('keydown', {}, document.querySelector('#game'));
+                expect(errorSpy).toHaveBeenCalledWith(Error('Oops!'));
+            });
+            it('Passes error for setTimer', () => {
+                const g = new Graphics();
+                const errorSpy = jasmine.createSpy();
+                g.configure({
+                    onError: errorSpy,
+                });
+                return new Promise(resolve => {
+                    g.setTimer(() => {
+                        resolve();
+                        throw Error('Oops!');
+                    }, 100);
+                }).then(() => {
+                    expect(errorSpy).toHaveBeenCalledWith(Error('Oops!'));
+                });
+            });
+            it('Passes error for delayed timers with waitForClick', async () => {
+                const g = new Graphics();
+                const errorSpy = jasmine.createSpy();
+                g.waitForClick();
+                const timerFired = new Promise(resolve => {
+                    g.setTimer(e => {
+                        resolve();
+                        throw Error('Oops!');
+                    }, 0);
+                });
+                // wait to see if the timer gets called immediately.
+                // if it does, an uncaught error will be thrown, and the 
+                // test will fail.
+                await new Promise(resolve => setTimeout(resolve, 0));
+                g.configure({
+                    onError: errorSpy,
+                });
+                simulateEvent('click', {}, document.querySelector('#game'));
+                return timerFired.then(() => {
+                    expect(errorSpy).toHaveBeenCalledWith(Error('Oops!'));
+                });
+            });
         });
     });
 });
