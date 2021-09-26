@@ -2,6 +2,16 @@ import Console from '../src/console/console.js';
 
 describe('Console', () => {
     describe('Reading input', () => {
+        describe('readLine', () => {
+            it('Returns the input', () => {
+                const c = new Console();
+                // unfortunately we can't spy directly on the window.prompt,
+                // because it is bound within the constructor and therefore is a separate function
+                const promptSpy = spyOn(c, 'promptHandler').and.returnValue('Nice!');
+                expect(c.readLine('Next line? ')).toEqual('Nice!');
+                expect(promptSpy).toHaveBeenCalledOnceWith('Next line? ');
+            });
+        });
         describe('readNumber', () => {
             it('Loops until a number is provided', () => {
                 const inputs = ['one', 'two', 3];
@@ -83,6 +93,13 @@ describe('Console', () => {
                     prompt: window.prompt,
                 });
                 expect(c.readLine('Give me a line: ')).toBe('nice');
+            });
+            it('Defaults to built-in promptHandler', () => {
+                const c = new Console();
+                const promptSpy = spyOn(c, 'promptHandler').and.returnValue('Nice!');
+                c.configure({});
+                expect(c.readLine('Give me a line: ')).toBe('Nice!');
+                expect(promptSpy).toHaveBeenCalledOnceWith('Give me a line: ');
             });
         });
     });

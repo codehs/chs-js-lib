@@ -18,7 +18,7 @@ export default class CodeHSConsole {
         this.internalOutput = [];
         this.internalOutputBuffer = '';
 
-        this.promptHandler = prompt.bind(window);
+        this.promptHandler = window.prompt.bind(window);
         this.printHandler = console.log;
     }
 
