@@ -1,6 +1,7 @@
 export { default as Arc } from '../src/arc.js';
 export { default as Circle } from '../src/circle.js';
 export { default as Color } from '../src/color.js';
+export { default as Console } from '../src/console/console.js';
 export { default as Graphics } from '../src/graphics.js';
 export { default as Keyboard } from '../src/keyboard.js';
 export { default as Line } from '../src/line.js';

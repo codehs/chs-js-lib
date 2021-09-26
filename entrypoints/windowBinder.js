@@ -1,7 +1,7 @@
 import { default as Arc } from '../src/arc.js';
 import { default as Circle } from '../src/circle.js';
 import { default as Color } from '../src/color.js';
-import { default as Console } from '../console/console.js';
+import { default as Console } from '../src/console/console.js';
 import { default as Graphics } from '../src/graphics.js';
 import { default as Keyboard } from '../src/keyboard.js';
 import { default as Line } from '../src/line.js';
@@ -50,3 +50,4 @@ window.getElementAt = GraphicsInstance.getElementAt.bind(GraphicsInstance);
 
 const ConsoleInstance = new Console();
 window.readLine = ConsoleInstance.readLine.bind(ConsoleInstance);
+window.readInt = ConsoleInstance.readInt.bind(ConsoleInstance);

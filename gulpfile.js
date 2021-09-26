@@ -25,7 +25,7 @@ function buildCommonJS() {
             strict: false,
         },
     })
-        .pipe(source('chs.js'))
+        .pipe(source('chs.cjs'))
         .pipe(gulp.dest('dist'));
 }
 

@@ -1,6 +1,50 @@
 import Console from '../src/console/console.js';
 
 describe('Console', () => {
+    describe('Reading input', () => {
+        describe('readNumber', () => {
+            it('Loops until a number is provided', () => {
+                const inputs = ['one', 'two', 3];
+                let i = 0;
+                const c = new Console();
+                const promptSpy = jasmine.createSpy();
+                c.configure({
+                    prompt: (...args) => {
+                        return promptSpy.and.returnValue(inputs[i++])(...args);
+                    },
+                });
+                const int = c.readInt('Give me a number: ');
+                expect(promptSpy).toHaveBeenCalledTimes(3);
+                expect(promptSpy.calls.allArgs()).toEqual([
+                    ['Give me a number: '],
+                    ['That was not an integer. Please try again. Give me a number: '],
+                    ['That was not an integer. Please try again. Give me a number: '],
+                ]);
+                expect(int).toBe(3);
+            });
+        });
+        describe('readBoolean', () => {
+            it('Loops until a boolean is provided', () => {
+                const inputs = ['nope', 'yep', 'yes'];
+                let i = 0;
+                const c = new Console();
+                const promptSpy = jasmine.createSpy();
+                c.configure({
+                    prompt: (...args) => {
+                        return promptSpy.and.returnValue(inputs[i++])(...args);
+                    },
+                });
+                const bool = c.readBoolean('Give me a bool: ');
+                expect(promptSpy).toHaveBeenCalledTimes(3);
+                expect(promptSpy.calls.allArgs()).toEqual([
+                    ['Give me a bool: '],
+                    ['That was not a boolean (true/false). Please try again. Give me a bool: '],
+                    ['That was not a boolean (true/false). Please try again. Give me a bool: '],
+                ]);
+                expect(bool).toBeTrue();
+            });
+        });
+    });
     describe('Configuring prompt/output', () => {
         describe('Configuring prompt', () => {
             it('Allows an async prompt', async () => {
@@ -35,7 +79,8 @@ describe('Console', () => {
                 const c = new Console();
                 spyOn(window, 'prompt').and.returnValue('nice');
                 c.configure({
-                    prompt: prompt,
+                    // native prompt
+                    prompt: window.prompt,
                 });
                 expect(c.readLine('Give me a line: ')).toBe('nice');
             });

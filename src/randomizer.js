@@ -11,7 +11,7 @@
  * @returns {number} Random number between low and high, inclusive.
  */
 export const nextInt = function (min, max) {
-    if (typeof max == 'undefined') {
+    if (max === undefined) {
         max = min - 1;
         min = 0;
     }
@@ -30,7 +30,7 @@ export const nextInt = function (min, max) {
  * @returns {number} Random number between low and high, inclusive.
  */
 export const nextFloat = function (min, max) {
-    if (typeof max == 'undefined') {
+    if (max === undefined) {
         max = min;
         min = 0;
     }
@@ -67,7 +67,7 @@ export const nextColor = function () {
  * @returns {boolean} Result of coin flip skewed toward `probabilityTrue`.
  */
 export const nextBoolean = function (probabilityTrue) {
-    if (typeof probabilityTrue == 'undefined') {
+    if (probabilityTrue === undefined) {
         probabilityTrue = 0.5;
     }
 

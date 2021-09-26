@@ -99,5 +99,13 @@ describe('arc', () => {
             arc.draw(g);
             expect(contextSpy).toHaveBeenCalledWith(0, 0, 0, Math.PI, 0, true);
         });
+        it('Draws borders', () => {
+            const g = new Graphics();
+            const arc = new Arc(0, 180, 0, 0);
+            arc.setBorder(true);
+            const contextBorderSpy = spyOn(g.getContext(), 'stroke');
+            arc.draw(g);
+            expect(contextBorderSpy).toHaveBeenCalledTimes(1);
+        });
     });
 });

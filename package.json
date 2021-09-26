@@ -2,7 +2,7 @@
   "name": "codehs-js",
   "version": "2.0.0",
   "description": "JavaScript graphics library used in CodeHS's platform.",
-  "main": "chs.js",
+  "main": "dist/chs.cjs",
   "module": "chs.mjs",
   "scripts": {
     "test": "karma start --single-run",
@@ -17,7 +17,6 @@
   ],
   "author": "CodeHS",
   "license": "ISC",
-  "dependencies": {},
   "devDependencies": {
     "@rollup/stream": "^2.0.0",
     "babel-eslint": "^10.1.0",
@@ -32,6 +31,7 @@
     "gulp-terser": "^2.0.1",
     "karma": "^6.3.4",
     "karma-chrome-launcher": "^3.1.0",
+    "karma-coverage": "^2.0.3",
     "karma-jasmine": "^4.0.1",
     "karma-mocha-reporter": "^2.2.5",
     "prettier": "^2.4.1",

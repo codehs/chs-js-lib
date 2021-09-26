@@ -13,18 +13,8 @@ module.exports = function (config) {
         // list of files / patterns to load in the browser
         files: [
             { pattern: 'src/**/*.js', type: 'module', included: false },
-            // { pattern: 'test/setup.js', type: 'module' },
-            // { pattern: 'src/*.js', type: 'module', included: false, watched: true },
-            // { pattern: 'test/*.test.js', type: 'module' },
-            // setup
             { pattern: 'test/setup.js', type: 'module' },
-
-            // // assets
-            // { pattern: 'test/imgs/*.*', included: false, served: true },
-            // { pattern: 'test/audio/*.*', included: false, served: true },
-            // { pattern: 'test/data/*.*', included: false, served: true },
             { pattern: 'test/*.test.js', type: 'module' },
-            // { pattern: 'test/integration/*.spec.js', type: 'module' },
         ],
 
         // list of files / patterns to exclude
@@ -32,12 +22,14 @@ module.exports = function (config) {
 
         // preprocess matching files before serving them to the browser
         // available preprocessors: https://www.npmjs.com/search?q=keywords:karma-preprocessor
-        preprocessors: {},
+        preprocessors: {
+            'src/**/*.js': ['coverage'],
+        },
 
         // test results reporter to use
         // possible values: 'dots', 'progress'
         // available reporters: https://www.npmjs.com/search?q=keywords:karma-reporter
-        reporters: ['mocha'],
+        reporters: ['mocha', 'coverage'],
 
         // web server port
         port: 9876,
@@ -63,5 +55,10 @@ module.exports = function (config) {
         // Concurrency level
         // how many browser instances should be started simultaneously
         concurrency: Infinity,
+
+        coverageReporter: {
+            type: 'html',
+            dir: 'coverage/',
+        },
     });
 };

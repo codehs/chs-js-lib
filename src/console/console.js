@@ -18,7 +18,7 @@ export default class CodeHSConsole {
         this.internalOutput = [];
         this.internalOutputBuffer = '';
 
-        this.promptHandler = prompt;
+        this.promptHandler = prompt.bind(window);
         this.printHandler = console.log;
     }
 
@@ -77,36 +77,10 @@ export default class CodeHSConsole {
 
     /**
      * Private method used to read a line.
-     * @param {string} str - The line to be read.
-     * @param {boolean} looping - Unsure. This is a messy method.
+     * @param {string} promptString - The line to be printed before prompting.
      */
-    readLinePrivate(str, looping) {
-        if (typeof looping === 'undefined' || !looping) {
-            this.print(str);
-        }
-        return this.promptHandler();
-        // var lines;
-        // var result;
-        // var console = $('#console');
-        // if (console.length) {
-        //     $('#console').css('margin-top', '180px');
-        //     // take max 20 lines, last line is prompt string so we remove and
-        //     // add extra spacing before putting it back on
-        //     lines = _.takeRight($('#console').text().split('\n'), 21);
-
-        //     lines.pop();
-        //     var text = lines.concat(['', '', str]).join('\n');
-        //     result = prompt(text);
-
-        //     $('#console').css('margin-top', '0px');
-        // } else {
-        //     lines = this.internalOutput.slice(-10);
-        //     result = prompt(lines.join('\n'));
-        // }
-        // if (typeof looping === 'undefined' || !looping) {
-        //     this.println(result);
-        // }
-        // return result;
+    readLinePrivate(promptString) {
+        return this.promptHandler(promptString);
     }
 
     /** ************* PUBLIC METHODS *******************/
@@ -115,12 +89,8 @@ export default class CodeHSConsole {
      * Clear the console.
      */
     clear() {
-        if (arguments.length !== 0) {
-            throw new Error('You should not pass any arguments to clear');
-        }
         this.internalOutput = [];
         this.internalOutputBuffer = '';
-        // CodeHSConsole.clear();
     }
 
     /**
@@ -131,15 +101,6 @@ export default class CodeHSConsole {
         if (arguments.length !== 1) {
             throw new Error('You should pass exactly 1 argument to print');
         }
-
-        // var console = $('#console');
-        // if (console.length) {
-        //     console.html($('#console').html() + ln);
-        //     console.scrollTop($('#console')[0].scrollHeight);
-        //     lines = console.html().split('\n');
-        //     lines.splice(lines.length - 1, 1);
-        // $('#console').scrollTop();
-        // }
         this.internalOutput.push(ln);
         this.printHandler(ln);
     }
@@ -171,15 +132,15 @@ export default class CodeHSConsole {
      *       type.
      */
     readNumber(str, parseFn, errorMsgType) {
-        var DEFAULT = 0; // If we get into an infinite loop, return DEFAULT.
-        var INFINITE_LOOP_CHECK = 100;
+        const DEFAULT = 0; // If we get into an infinite loop, return DEFAULT.
+        const INFINITE_LOOP_CHECK = 100;
 
-        var prompt = str;
-        var looping = false;
-        var loopCount = 0;
+        let prompt = str;
+        let looping = false;
+        let loopCount = 0;
         // eslint-disable-next-line no-constant-condition
         while (true) {
-            var result = this.readLinePrivate(prompt, looping);
+            let result = this.readLinePrivate(prompt, !looping);
             if (result === null) {
                 return null;
             }
@@ -226,15 +187,15 @@ export default class CodeHSConsole {
         }
         return this.readNumber(
             str,
-            function (x) {
-                if (x === null) {
+            line => {
+                if (line === null) {
                     return NaN;
                 }
-                x = x.toLowerCase();
-                if (x == 'true' || x == 'yes') {
+                line = line.toLowerCase();
+                if (line == 'true' || line == 'yes') {
                     return true;
                 }
-                if (x == 'false' || x == 'no') {
+                if (line == 'false' || line == 'no') {
                     return false;
                 }
                 return NaN;

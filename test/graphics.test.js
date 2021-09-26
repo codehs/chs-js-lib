@@ -1,3 +1,4 @@
+import Circle from '../src/circle.js';
 import Graphics from '../src/graphics.js';
 
 /**
@@ -37,6 +38,44 @@ describe('Graphics', () => {
             g.mouseClickMethod(clickSpy);
             simulateEvent('click', {}, document.querySelector('#game'));
             expect(clickSpy).toHaveBeenCalled();
+        });
+        it('Responds to mouse move events', () => {
+            const g = new Graphics();
+            const mouseMoveSpy = jasmine.createSpy();
+            g.mouseMoveMethod(mouseMoveSpy);
+            simulateEvent('mousemove', {}, document.querySelector('#game'));
+            expect(mouseMoveSpy).toHaveBeenCalled();
+        });
+        it('Responds to mouse up events', () => {
+            const g = new Graphics();
+            const mouseUpSpy = jasmine.createSpy();
+            g.mouseUpMethod(mouseUpSpy);
+            simulateEvent('mouseup', {}, document.querySelector('#game'));
+            expect(mouseUpSpy).toHaveBeenCalled();
+        });
+    });
+    describe('Keyboard events', () => {
+        it('Responds to key up events', () => {
+            const g = new Graphics();
+            const keyUpSpy = jasmine.createSpy();
+            g.keyUpMethod(keyUpSpy);
+            simulateEvent('keyup', {}, document.querySelector('#game'));
+            expect(keyUpSpy).toHaveBeenCalled();
+        });
+        it('Responds to key down events', () => {
+            const g = new Graphics();
+            const keyDownSpy = jasmine.createSpy();
+            g.keyDownMethod(keyDownSpy);
+            simulateEvent('keydown', {}, document.querySelector('#game'));
+            expect(keyDownSpy).toHaveBeenCalled();
+        });
+        it('Records key presses for isKeypressed', () => {
+            const g = new Graphics();
+            const keyDownSpy = jasmine.createSpy();
+            g.keyDownMethod(keyDownSpy);
+            simulateEvent('keydown', { keyCode: 45 }, document.querySelector('#game'));
+            expect(g.isKeyPressed(45)).toBeTrue();
+            expect(g.isKeyPressed(12)).toBeFalse();
         });
     });
     describe('Configuring error/output handlers', () => {
@@ -116,7 +155,7 @@ describe('Graphics', () => {
                     }, 0);
                 });
                 // wait to see if the timer gets called immediately.
-                // if it does, an uncaught error will be thrown, and the 
+                // if it does, an uncaught error will be thrown, and the
                 // test will fail.
                 await new Promise(resolve => setTimeout(resolve, 0));
                 g.configure({
@@ -127,6 +166,21 @@ describe('Graphics', () => {
                     expect(errorSpy).toHaveBeenCalledWith(Error('Oops!'));
                 });
             });
+        });
+    });
+    describe('Adding', () => {
+        it('Adds the element to the internal element pool', () => {
+            const g = new Graphics();
+            const c = new Circle(20);
+            g.add(c);
+            expect(g.elementPool[0]).toBe(c);
+            expect(g.elementPoolSize).toEqual(1);
+        });
+        it('Marks the element as alive', () => {
+            const g = new Graphics();
+            const c = new Circle(20);
+            g.add(c);
+            expect(c.alive).toBeTrue();
         });
     });
 });
