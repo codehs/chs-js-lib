@@ -76,17 +76,11 @@ export default class Circle extends Thing {
      */
     setRadius(radius) {
         if (arguments.length !== 1) {
-            throw new Error(
-                'You should pass exactly 1 argument to <span ' + 'class="code">setRadius(radius)`'
-            );
+            throw new Error('You should pass exactly 1 argument to `setRadius(radius)`.');
         }
         if (typeof radius !== 'number' || !isFinite(radius)) {
-            throw new TypeError(
-                'You must pass a finite number to <span class=' +
-                    '"code">setRadius(radius)`. Did you forget the ' +
-                    'parentheses in `getWidth()` or <span ' +
-                    'class="code">getHeight()`? Or did you perform a ' +
-                    'calculation on a variable that is not a number?'
+            throw new Error(
+                'You must pass a finite number to `setRadius(radius)`. Did you forget the parentheses in `getWidth()` or `getHeight()`? Or did you perform a calculation on a variable that is not a number?'
             );
         }
 

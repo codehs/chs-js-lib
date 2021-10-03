@@ -79,6 +79,18 @@ describe('Graphics', () => {
         });
     });
     describe('Configuring error/output handlers', () => {
+        describe('Empty configuration', () => {
+            it('Defaults to throwing', () => {
+                const g = new Graphics();
+                g.configure();
+                g.mouseClickMethod(e => {
+                    throw Error('Oops!');
+                });
+                expect(() => {
+                    g.clickCallback();
+                }).toThrow(Error('Oops!'));
+            });
+        });
         describe('Passing errors through the error handler', () => {
             it('Passes error for mouseClickMethod', () => {
                 const g = new Graphics();

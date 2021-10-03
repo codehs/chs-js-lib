@@ -255,6 +255,15 @@ export const rgbToHex = (r, g, b) => {
     return ((r << 16) | (g << 8) | b).toString(16);
 };
 
+export const hexToRgb = hexString => {
+    hexString = hexString.slice(1);
+    return [
+        parseInt(hexString.slice(0, 2), 16),
+        parseInt(hexString.slice(2, 4), 16),
+        parseInt(hexString.slice(4, 6), 16),
+    ];
+};
+
 export const getColor = (r, g, b) => {
     return '#' + ('000000' + rgbToHex(r, g, b)).slice(-6);
 };

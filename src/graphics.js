@@ -9,7 +9,11 @@ let GraphicsInstances = {};
 let graphicsInstanceID = 0;
 let pressedKeys = [];
 
-export default class CodeHSGraphics {
+/**
+ * Class for interacting with Graphics.
+ * @class
+ */
+class CodeHSGraphics {
     audioElements = [];
     source = null;
     analyser = null;
@@ -26,18 +30,25 @@ export default class CodeHSGraphics {
      *      If none is passed, we'll look for any canvas
      *      tag on the page.
      */
-    constructor(options) {
-        options = { ...options };
+    constructor(options = {}) {
         this.resetAllState();
         this.setCurrentCanvas(options.canvas);
+        this.onError = options.onError || undefined;
         this.fullscreenMode = false;
         this.fpsInterval = 1000 / DEFAULT_FRAME_RATE;
         this.lastDrawTime = Date.now();
         GraphicsInstances[graphicsInstanceID++] = this;
     }
 
-    configure(options) {
+    configure(options = {}) {
         this.onError = options.onError || undefined;
+    }
+
+    /**
+     * Get all living elements..
+     */
+    getElements() {
+        return this.elementPool.filter(element => element.alive);
     }
 
     /**
@@ -877,3 +888,5 @@ if (typeof TouchEvent != 'undefined') {
         return CodeHSGraphics.getTouchCoordinates(this.touches[0]).y;
     };
 }
+
+export default CodeHSGraphics;

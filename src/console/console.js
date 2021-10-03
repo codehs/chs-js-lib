@@ -14,12 +14,10 @@ export default class CodeHSConsole {
      * Set up an instance of the console library.
      * @constructor
      */
-    constructor() {
-        this.internalOutput = [];
-        this.internalOutputBuffer = '';
-
-        this.promptHandler = window.prompt.bind(window);
-        this.printHandler = console.log;
+    constructor(options = {}) {
+        this.onPrompt = options.onPrompt ?? window.prompt.bind(window);
+        this.onPrint = options.onPrint ?? window.console.log.bind(window.console);
+        this.onClear = options.onClear ?? (() => {});
     }
 
     /**
@@ -28,51 +26,10 @@ export default class CodeHSConsole {
      *
      * @param {Object} options
      */
-    configure(options) {
-        this.promptHandler = options.prompt || this.promptHandler;
-        this.printHandler = options.print || this.printHandler;
-    }
-
-    bufferedOutputToArray(bufferedOutput) {
-        var bufferedOutputArray = bufferedOutput.split('\n');
-        // remove the trailing "" that happens if the final element is a \n
-        if (bufferedOutputArray[bufferedOutputArray.length - 1].length === 0) {
-            bufferedOutputArray = bufferedOutputArray.slice(0, -1);
-        }
-        return bufferedOutputArray;
-    }
-
-    /**
-     * A non-dom-mutating print for use in autograders.
-     */
-    quietPrint(string) {
-        if (!this.internalOutputBuffer) {
-            this.internalOutputBuffer = '';
-        }
-        this.internalOutputBuffer += string;
-    }
-
-    /**
-     * A non-dom-mutating println for use in autograders.
-     */
-    quietPrintln(anything) {
-        this.quietPrint(anything + '\n');
-    }
-
-    /**
-     * Gets the internal output.
-     */
-    flushQuietOutput() {
-        if (!this.internalOutputBuffer) {
-            this.internalOutputBuffer = '';
-        }
-        if (!this.internalOutput) {
-            this.internalOutput = [];
-        }
-        var output = this.internalOutput.concat(bufferedOutputToArray(this.internalOutputBuffer));
-        this.internalOutput = [];
-        this.internalOutputBuffer = '';
-        return output;
+    configure(options = {}) {
+        this.onPrompt = options.onPrompt ?? this.onPrompt;
+        this.onPrint = options.onPrint ?? this.onPrint;
+        this.onClear = options.onClear ?? this.onClear;
     }
 
     /**
@@ -80,7 +37,7 @@ export default class CodeHSConsole {
      * @param {string} promptString - The line to be printed before prompting.
      */
     readLinePrivate(promptString) {
-        return this.promptHandler(promptString);
+        return this.onPrompt(promptString);
     }
 
     /** ************* PUBLIC METHODS *******************/
@@ -89,8 +46,7 @@ export default class CodeHSConsole {
      * Clear the console.
      */
     clear() {
-        this.internalOutput = [];
-        this.internalOutputBuffer = '';
+        this.onClear();
     }
 
     /**
@@ -101,8 +57,7 @@ export default class CodeHSConsole {
         if (arguments.length !== 1) {
             throw new Error('You should pass exactly 1 argument to print');
         }
-        this.internalOutput.push(ln);
-        this.printHandler(ln);
+        this.onPrint(ln);
     }
 
     /**
@@ -114,9 +69,9 @@ export default class CodeHSConsole {
             ln = '';
         } else if (arguments.length !== 1) {
             throw new Error('You should pass exactly 1 argument to println');
-        } else {
-            this.print(ln + '\n');
         }
+
+        this.print(ln + '\n');
     }
 
     /**
@@ -192,10 +147,10 @@ export default class CodeHSConsole {
                     return NaN;
                 }
                 line = line.toLowerCase();
-                if (line == 'true' || line == 'yes') {
+                if (line === 'true' || line === 'yes') {
                     return true;
                 }
-                if (line == 'false' || line == 'no') {
+                if (line === 'false' || line === 'no') {
                     return false;
                 }
                 return NaN;
@@ -221,7 +176,7 @@ export default class CodeHSConsole {
                 var resultInt = parseInt(x);
                 var resultFloat = parseFloat(x);
                 // Make sure the value when parsed as both an int and a float are the same
-                if (resultInt == resultFloat) {
+                if (resultInt === resultFloat) {
                     return resultInt;
                 }
                 return NaN;

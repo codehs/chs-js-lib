@@ -66,7 +66,7 @@ export const nextColor = function () {
  * @param {number} probabilityTrue - Skewed probability of true.
  * @returns {boolean} Result of coin flip skewed toward `probabilityTrue`.
  */
-export const nextBoolean = function (probabilityTrue) {
+export const nextBoolean = probabilityTrue => {
     if (probabilityTrue === undefined) {
         probabilityTrue = 0.5;
     }

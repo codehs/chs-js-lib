@@ -10,12 +10,12 @@ export default class Grid {
         }
         if (typeof rows !== 'number' || !isFinite(rows)) {
             throw new TypeError(
-                'Invalid value for `rows`. Make sure you are passing finite numbers to `new Grid(rows, cols)`.',
+                'Invalid value for `rows`. Make sure you are passing finite numbers to `new Grid(rows, cols)`.'
             );
         }
         if (typeof cols !== 'number' || !isFinite(cols)) {
             throw new TypeError(
-                'Invalid value for `cols`. Make sure you are passing finite numbers to `new Grid(rows, cols)`.',
+                'Invalid value for `cols`. Make sure you are passing finite numbers to `new Grid(rows, cols)`.'
             );
         }
 
@@ -23,7 +23,7 @@ export default class Grid {
         cols = Math.max(0, cols);
 
         this.grid = new Array(rows);
-        for (var i = 0; i < rows; i++) {
+        for (let i = 0; i < rows; i++) {
             this.grid[i] = new Array(cols);
         }
     }
@@ -38,11 +38,11 @@ export default class Grid {
         }
         if (!Array.isArray(arr)) {
             throw new Error(
-                'Invalid value passed to `initFromArray`. Make sure you are passing an array.',
+                'Invalid value passed to `initFromArray`. Make sure you are passing an array.'
             );
         }
-        for (var i = 0; i < arr.length; i++) {
-            for (var j = 0; j < arr[0].length; j++) {
+        for (let i = 0; i < arr.length; i++) {
+            for (let j = 0; j < arr[0].length; j++) {
                 if (this.inBounds(i, j)) {
                     this.set(i, j, arr[i][j]);
                 }
@@ -69,17 +69,17 @@ export default class Grid {
                 'Invalid value passed to `init`. You passed a value of type ' +
                     typeof value +
                     '. Make sure you are passing a number, string, object, or ' +
-                    'boolean value.',
+                    'boolean value.'
             );
         }
         if (typeof value === 'number' && !isFinite(value)) {
             throw new TypeError(
-                'Non finite number passed to `init`. If you are passing a number, make sure it is a finite number.',
+                'Non finite number passed to `init`. If you are passing a number, make sure it is a finite number.'
             );
         }
 
-        for (var i = 0; i < this.numRows(); i++) {
-            for (var j = 0; j < this.numCols(); j++) {
+        for (let i = 0; i < this.numRows(); i++) {
+            for (let j = 0; j < this.numCols(); j++) {
                 this.grid[i][j] = value;
             }
         }
@@ -98,12 +98,12 @@ export default class Grid {
         }
         if (typeof row !== 'number' || !isFinite(row)) {
             throw new TypeError(
-                'Invalid value for `row`. Make sure you are passing finite numbers to `get(row, col)`.',
+                'Invalid value for `row`. Make sure you are passing finite numbers to `get(row, col)`.'
             );
         }
         if (typeof col !== 'number' || !isFinite(col)) {
             throw new TypeError(
-                'Invalid value for `col`. Make sure you are passing finite numbers to `get(row, col)`.',
+                'Invalid value for `col`. Make sure you are passing finite numbers to `get(row, col)`.'
             );
         }
         return this.grid[row][col];
@@ -124,14 +124,14 @@ export default class Grid {
             throw new TypeError(
                 'Invalid value for `row`. You passed a value of type ' +
                     typeof row +
-                    '. Make sure you are passing a number.',
+                    '. Make sure you are passing a number.'
             );
         }
         if (typeof col !== 'number' || !isFinite(col)) {
             throw new TypeError(
                 'Invalid value for `col`. You passed a value of type ' +
                     typeof col +
-                    '. Make sure you are passing a number.',
+                    '. Make sure you are passing a number.'
             );
         }
         if (
@@ -143,12 +143,12 @@ export default class Grid {
             throw new TypeError(
                 'Invalid value passed to `set`. You passed a value of type ' +
                     typeof value +
-                    '. Make sure you are passing a number, string, object, or boolean value.',
+                    '. Make sure you are passing a number, string, object, or boolean value.'
             );
         }
         if (typeof value === 'number' && !isFinite(value)) {
             throw new TypeError(
-                'Non finite value passed to `set`. If you are passing a number, make sure it is a finite number.',
+                'Non finite value passed to `set`. If you are passing a number, make sure it is a finite number.'
             );
         }
         this.grid[row][col] = value;
@@ -182,12 +182,12 @@ export default class Grid {
         }
         if (typeof row !== 'number' || !isFinite(row)) {
             throw new TypeError(
-                'Invalid value for `row`. Make sure you are passing finite numbers to `inBounds(row, col)`.',
+                'Invalid value for `row`. Make sure you are passing finite numbers to `inBounds(row, col)`.'
             );
         }
         if (typeof col !== 'number' || !isFinite(col)) {
             throw new TypeError(
-                'Invalid value for `col`. Make sure you are passing finite numbers to `inBounds(row, col)`.',
+                'Invalid value for `col`. Make sure you are passing finite numbers to `inBounds(row, col)`.'
             );
         }
 
@@ -214,10 +214,10 @@ export default class Grid {
      * @returns {array} List representation of the Grid.
      */
     toList() {
-        var list = [];
-        for (var i = 0; i < this.grid.length; i++) {
-            for (var j = 0; j < this.grid[0].length; j++) {
-                var value = this.grid[i][j];
+        let list = [];
+        for (let i = 0; i < this.grid.length; i++) {
+            for (let j = 0; j < this.grid[0].length; j++) {
+                let value = this.grid[i][j];
                 if (value && value !== 0) {
                     list.push([i, j, value]);
                 }
@@ -228,13 +228,13 @@ export default class Grid {
 
     /**
      * Generates a string representation of the Grid.
-     * @returns {string} A representatino of a grid of the format
+     * @returns {string} A representation of a grid of the format
      * "A B C \nD E F \nG H I \n"
      */
     toString() {
-        var result = '';
-        for (var i = 0; i < this.numRows(); i++) {
-            for (var j = 0; j < this.numCols(); j++) {
+        let result = '';
+        for (let i = 0; i < this.numRows(); i++) {
+            for (let j = 0; j < this.numCols(); j++) {
                 result += this.get(i, j) + ' ';
             }
             result += '\n';

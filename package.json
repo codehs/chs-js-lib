@@ -20,12 +20,12 @@
   "devDependencies": {
     "@rollup/stream": "^2.0.0",
     "babel-eslint": "^10.1.0",
-    "babel-jest": "^27.2.1",
     "browserify": "^10.2.4",
     "codehs-console": "1.5.6",
     "codehs-datastructures": "^1.2.0",
     "codehs-graphics": ">=1.13.0",
     "gulp": "^4.0.2",
+    "gulp-jsdoc3": "^3.0.0",
     "gulp-rename": "^2.0.0",
     "gulp-size": "^4.0.1",
     "gulp-terser": "^2.0.1",

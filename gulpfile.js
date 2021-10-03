@@ -4,6 +4,7 @@ const size = require('gulp-size');
 const terser = require('gulp-terser');
 const rollup = require('@rollup/stream');
 const source = require('vinyl-source-stream');
+const jsdoc = require('gulp-jsdoc3');
 
 function buildModule() {
     return rollup({
@@ -29,7 +30,7 @@ function buildCommonJS() {
         .pipe(gulp.dest('dist'));
 }
 
-function buildIife() {
+function buildIIFE() {
     return rollup({
         input: './entrypoints/windowBinder.js',
         output: {
@@ -60,10 +61,32 @@ function distModule() {
         )
         .pipe(gulp.dest('dist'));
 }
+function distIIFE() {
+    return gulp
+        .src('dist/chs.iife.js')
+        .pipe(terser())
+        .pipe(rename('chs.iife.min.mjs'))
+        .pipe(
+            size({
+                showFiles: true,
+            })
+        )
+        .pipe(
+            size({
+                showFiles: true,
+                gzip: true,
+            })
+        )
+        .pipe(gulp.dest('dist'));
+}
 
-gulp.task('build', gulp.series(buildCommonJS, buildModule, buildIife));
+gulp.task('build', gulp.series(buildCommonJS, buildModule, buildIIFE));
 
-gulp.task('dist', gulp.series('build', distModule));
+gulp.task('docs', () => {
+    return gulp.src('src/**/*.js').pipe(jsdoc());
+});
+
+gulp.task('dist', gulp.series('build', distModule, distIIFE));
 
 gulp.task('watch', function () {
     gulp.watch('src/*.js', gulp.series('build', 'dist'));
