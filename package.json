@@ -39,5 +39,8 @@
     "uglify-js": "^2.4.23",
     "vinyl-source-stream": "^2.0.0",
     "watchify": "^3.2.3"
+  },
+  "dependencies": {
+    "docdash": "^1.2.0"
   }
 }

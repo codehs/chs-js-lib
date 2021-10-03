@@ -83,7 +83,14 @@ function distIIFE() {
 gulp.task('build', gulp.series(buildCommonJS, buildModule, buildIIFE));
 
 gulp.task('docs', () => {
-    return gulp.src('src/**/*.js').pipe(jsdoc());
+    return gulp.src('src/**/*.js').pipe(
+        jsdoc({
+            opts: {
+                template: 'node_modules/docdash',
+                destination: 'docs/gen',
+            },
+        })
+    );
 });
 
 gulp.task('dist', gulp.series('build', distModule, distIIFE));
