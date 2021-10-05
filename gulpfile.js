@@ -65,7 +65,7 @@ function distIIFE() {
     return gulp
         .src('dist/chs.iife.js')
         .pipe(terser())
-        .pipe(rename('chs.iife.min.mjs'))
+        .pipe(rename('chs.iife.min.js'))
         .pipe(
             size({
                 showFiles: true,
