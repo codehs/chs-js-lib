@@ -1,6 +1,6 @@
 {
   "name": "chs-js-lib",
-  "version": "0.1.2",
+  "version": "0.1.1",
   "description": "JavaScript graphics library used in CodeHS's platform.",
   "main": "dist/chs.cjs",
   "module": "dist/chs.mjs",
@@ -8,8 +8,7 @@
     "dist/chs.cjs",
     "dist/chs.iife.js",
     "dist/chs.iife.min.js",
-    "dist/chs.js",
-    "dist/chs.min.js",
+    "dist/chs.min.mjs",
     "dist/chs.mjs"
   ],
   "scripts": {
