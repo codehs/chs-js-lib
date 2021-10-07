@@ -36,8 +36,10 @@ export default class CodeHSConsole {
      * Private method used to read a line.
      * @param {string} promptString - The line to be printed before prompting.
      */
-    readLinePrivate(promptString) {
-        return this.onPrompt(promptString);
+    readLinePrivate(promptString, printPrompt) {
+        const input = this.onPrompt(promptString);
+        printPrompt && this.println(promptString);
+        return input;
     }
 
     /** ************* PUBLIC METHODS *******************/
@@ -128,7 +130,7 @@ export default class CodeHSConsole {
             throw new Error('You should pass exactly 1 argument to readLine');
         }
 
-        return this.readLinePrivate(str, false);
+        return this.readLinePrivate(str, true);
     }
 
     /**
