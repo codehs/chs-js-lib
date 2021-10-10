@@ -4,12 +4,21 @@
   <title>Console Test</title>
 </head>
 <body>
-  <canvas id="game" width="480" height="400"></canvas>
-  <script src="../../../dist/chs.iife.js"></script>
   <script id="code" type="module">
+    import {Console} from '../../../dist/chs.mjs';
+    const c = new Console({
+      onPrompt: (message) => {
+        return new Promise((resolve) => {
+          setTimeout(() => {
+            resolve(message);
+          }, 1000);
+        })
+      }
+    });
+
     (async () => {
-        readLine('Give me an x! ');
-        console.log('1');
+        const input = await c.readLine('Echo!');
+        alert(input);
     })();
   </script>
 </body>

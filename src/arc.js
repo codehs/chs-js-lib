@@ -76,7 +76,6 @@ export default class Arc extends Thing {
      */
     draw(graphics) {
         var context = graphics.getContext();
-        // http://stackoverflow.com/questions/17125632/html5-canvas-rotate-object-without-moving-coordinates
         context.save();
         context.beginPath();
         context.translate(this.x, this.y);
