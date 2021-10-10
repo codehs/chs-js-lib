@@ -12,4 +12,5 @@ export { default as Rectangle } from '../src/rectangle.js';
 export { default as Sound } from '../src/sound.js';
 export { default as Stack } from '../src/datastructures/stack.js';
 export { default as Text } from '../src/text.js';
+export { default as WebImage } from '../src/webimage.js';
 export * as Randomizer from '../src/randomizer.js';
