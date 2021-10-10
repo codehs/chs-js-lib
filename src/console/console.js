@@ -10,8 +10,6 @@
  *
  */
 
-const lines = [];
-
 export default class CodeHSConsole {
     /**
      * Initialize the console class, additionally configuring any event handlers.
@@ -27,18 +25,10 @@ export default class CodeHSConsole {
      * is used as a fallback.
      * @param {function} options.onClear Function invoked when clear() is called.
      */
-    constructor() {
-        this.internalOutput = [];
-        this.internalOutputBuffer = '';
-    }
-
-    bufferedOutputToArray(bufferedOutput) {
-        var bufferedOutputArray = bufferedOutput.split('\n');
-        // remove the trailing "" that happens if the final element is a \n
-        if (bufferedOutputArray[bufferedOutputArray.length - 1].length === 0) {
-            bufferedOutputArray = bufferedOutputArray.slice(0, -1);
-        }
-        return bufferedOutputArray;
+    constructor(options = {}) {
+        this.onPrompt = options.onPrompt ?? window.prompt.bind(window);
+        this.onPrint = options.onPrint ?? window.console.log.bind(window.console);
+        this.onClear = options.onClear ?? (() => {});
     }
 
     /**
@@ -56,17 +46,10 @@ export default class CodeHSConsole {
      * is used as a fallback.
      * @param {function} options.onClear Function invoked when clear() is called.
      */
-    flushQuietOutput() {
-        if (!this.internalOutputBuffer) {
-            this.internalOutputBuffer = '';
-        }
-        if (!this.internalOutput) {
-            this.internalOutput = [];
-        }
-        var output = this.internalOutput.concat(bufferedOutputToArray(this.internalOutputBuffer));
-        this.internalOutput = [];
-        this.internalOutputBuffer = '';
-        return output;
+    configure(options = {}) {
+        this.onPrompt = options.onPrompt ?? this.onPrompt;
+        this.onPrint = options.onPrint ?? this.onPrint;
+        this.onClear = options.onClear ?? this.onClear;
     }
 
     /**
@@ -75,50 +58,17 @@ export default class CodeHSConsole {
      * @param {boolean} printPrompt - Whether the prompt should be printed. When readLine and 
      * other methods for getting user input are called, the prompt string is additionally printed.
      */
-    readLinePrivate(str, looping) {
-        if (typeof looping === 'undefined' || !looping) {
-            this.print(str);
-        }
-        var console = $('#console');
-        var lines;
-        var result;
-        if (console.length) {
-            $('#console').css('margin-top', '180px');
-            // take max 20 lines, last line is prompt string so we remove and
-            // add extra spacing before putting it back on
-            lines = _.takeRight($('#console').text().split('\n'), 21);
-
-            lines.pop();
-            var text = lines.concat(['', '', str]).join('\n');
-            result = prompt(text);
-
-            $('#console').css('margin-top', '0px');
-        } else {
-            lines = this.internalOutput.slice(-10);
-            result = prompt(lines.join('\n'));
-        }
-        if (typeof looping === 'undefined' || !looping) {
-            this.println(result);
-        }
-        return result;
-    }
-
-    /**
-     * Method to test whether the code is requesting user input at all.
-     * @param {string} code - The code from the editor
-     */
-    hasUserinput(code) {
-        return code.match(new RegExp('readLine|readInt|readFloat|readBoolean|readNumber'));
+    readLinePrivate(promptString, printPrompt) {
+        const input = this.onPrompt(promptString);
+        printPrompt && this.println(promptString);
+        return input;
     }
 
     /**
      * Clear the console.
      */
     clear() {
-        if (arguments.length !== 0) {
-            throw new Error('You should not pass any arguments to clear');
-        }
-        CodeHSConsole.clear();
+        this.onClear();
     }
 
     /**
@@ -129,21 +79,7 @@ export default class CodeHSConsole {
         if (arguments.length !== 1) {
             throw new Error('You should pass exactly 1 argument to print');
         }
-
-        var console = $('#console');
-        if (console.length) {
-            console.html($('#console').html() + ln);
-            console.scrollTop($('#console')[0].scrollHeight);
-            lines = console.html().split('\n');
-            lines.splice(lines.length - 1, 1);
-        } else {
-            // we must be running outside of the site.
-            // if there's a print attached to the console, use that, otherwise log like normal.
-            this.internalOutput.push(ln);
-            typeof window.console.print === 'function'
-                ? window.console.print(ln)
-                : window.console.log(ln);
-        }
+        this.onPrint(ln);
     }
 
     /**
@@ -155,13 +91,13 @@ export default class CodeHSConsole {
             ln = '';
         } else if (arguments.length !== 1) {
             throw new Error('You should pass exactly 1 argument to println');
-        } else {
-            this.print(ln + '\n');
-            $('#console').scrollTop();
         }
+
+        this.print(ln + '\n');
     }
 
-    /* Read a number from the user using JavaScripts prompt function.
+    /**
+     * Read a number from the user using JavaScripts prompt function.
      * We make sure here to check a few things.
      *
      *    1. If the user checks "Prevent this page from creating additional dialogs," we handle
@@ -182,15 +118,15 @@ export default class CodeHSConsole {
      * @returns {number}
      */
     readNumber(str, parseFn, errorMsgType) {
-        var DEFAULT = 0; // If we get into an infinite loop, return DEFAULT.
-        var INFINITE_LOOP_CHECK = 100;
+        const DEFAULT = 0; // If we get into an infinite loop, return DEFAULT.
+        const INFINITE_LOOP_CHECK = 100;
 
-        var prompt = str;
-        var looping = false;
-        var loopCount = 0;
+        let prompt = str;
+        let looping = false;
+        let loopCount = 0;
         // eslint-disable-next-line no-constant-condition
         while (true) {
-            var result = this.readLinePrivate(prompt, looping);
+            let result = this.readLinePrivate(prompt, !looping);
             if (result === null) {
                 return null;
             }
@@ -222,7 +158,7 @@ export default class CodeHSConsole {
             throw new Error('You should pass exactly 1 argument to readLine');
         }
 
-        return this.readLinePrivate(str, false);
+        return this.readLinePrivate(str, true);
     }
 
     /**
@@ -236,15 +172,15 @@ export default class CodeHSConsole {
         }
         return this.readNumber(
             str,
-            function (x) {
-                if (x === null) {
+            line => {
+                if (line === null) {
                     return NaN;
                 }
-                x = x.toLowerCase();
-                if (x == 'true' || x == 'yes') {
+                line = line.toLowerCase();
+                if (line === 'true' || line === 'yes') {
                     return true;
                 }
-                if (x == 'false' || x == 'no') {
+                if (line === 'false' || line === 'no') {
                     return false;
                 }
                 return NaN;
@@ -270,7 +206,7 @@ export default class CodeHSConsole {
                 var resultInt = parseInt(x);
                 var resultFloat = parseFloat(x);
                 // Make sure the value when parsed as both an int and a float are the same
-                if (resultInt == resultFloat) {
+                if (resultInt === resultFloat) {
                     return resultInt;
                 }
                 return NaN;
@@ -292,8 +228,3 @@ export default class CodeHSConsole {
         return this.readNumber(str, parseFloat, 'a float');
     }
 }
-
-module.exports = {
-    CodeHSConsole: CodeHSConsole,
-    PUBLIC_METHODS: PUBLIC_METHODS,
-};

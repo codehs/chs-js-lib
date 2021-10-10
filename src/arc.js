@@ -56,7 +56,7 @@ export default class Arc extends Thing {
         }
 
         this.radius = radius;
-        this.angleUnit = angleUnit == Arc.DEGREES ? Arc.DEGREES : Arc.RADIANS;
+        this.angleUnit = angleUnit ?? Arc.RADIANS;
 
         this.counterclockwise = Arc.COUNTER_CLOCKWISE;
 
@@ -148,12 +148,11 @@ export default class Arc extends Thing {
      * @return {number} The start angle of the arc.
      */
     getStartAngle() {
-        var angle = this.startAngle;
         if (this.angleUnit == Arc.DEGREES) {
-            angle = radiansToDegrees(this.startAngle);
+            return Math.round(radiansToDegrees(this.startAngle));
+        } else {
+            return this.startAngle;
         }
-
-        return Math.round(angle);
     }
 
     /**
@@ -161,11 +160,11 @@ export default class Arc extends Thing {
      * @return {number} The start angle of the arc.
      */
     getEndAngle() {
-        var angle = this.endAngle;
         if (this.angleUnit == Arc.DEGREES) {
-            angle = radiansToDegrees(this.endAngle);
+            return Math.round(radiansToDegrees(this.endAngle));
+        } else {
+            return this.endAngle;
         }
-        return Math.round(angle);
     }
 
     /**

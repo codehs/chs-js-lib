@@ -1,11 +1,15 @@
 export { default as Arc } from '../src/arc.js';
 export { default as Circle } from '../src/circle.js';
 export { default as Color } from '../src/color.js';
+export { default as Console } from '../src/console/console.js';
 export { default as Graphics } from '../src/graphics.js';
+export { default as Keyboard } from '../src/keyboard.js';
 export { default as Line } from '../src/line.js';
 export { default as Oval } from '../src/oval.js';
 export { default as Polygon } from '../src/polygon.js';
-export * as Randomizer from '../src/randomizer.js';
+export { default as Queue } from '../src/datastructures/queue.js';
 export { default as Rectangle } from '../src/rectangle.js';
 export { default as Sound } from '../src/sound.js';
+export { default as Stack } from '../src/datastructures/stack.js';
 export { default as Text } from '../src/text.js';
+export * as Randomizer from '../src/randomizer.js';

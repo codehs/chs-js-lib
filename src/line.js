@@ -12,7 +12,7 @@ export default class Line extends Thing {
     constructor(x1, y1, x2, y2) {
         super();
         if (arguments.length !== 4) {
-            throw new Error('You should pass exactly 4 argument to `new Line(x1, y1, x2, y2)`.');
+            throw new Error('You should pass exactly 4 arguments to `new Line(x1, y1, x2, y2)`.');
         }
         if (
             typeof x1 !== 'number' ||
@@ -21,13 +21,12 @@ export default class Line extends Thing {
             typeof y2 !== 'number'
         ) {
             throw new TypeError(
-                'You must pass 4 numbers to `new Line(x1, y1, x2, y2)`. Make sure each parameter you are passing is a number.',
+                'You must pass 4 numbers to `new Line(x1, y1, x2, y2)`. Make sure each parameter you are passing is a number.'
             );
         }
         if (!isFinite(x1) || !isFinite(y1) || !isFinite(x2) || !isFinite(y2)) {
             throw new TypeError(
-                'One or more of the values you passed to `new Line(x1, y1, x2, y2)` is an illegal number. Did you forget the parentheses in `getWidth()` or `getHeight()`? Or did you perform a calculation on a variable that is not a ' +
-                    'number?',
+                'One or more of the values you passed to `new Line(x1, y1, x2, y2)` is an illegal number. Did you forget the parentheses in `getWidth()` or `getHeight()`? Or did you perform a calculation on a variable that is not a number?'
             );
         }
         this.x1 = x1;
@@ -131,7 +130,7 @@ export default class Line extends Thing {
         }
         if (typeof width !== 'number' || !isFinite(width)) {
             throw new TypeError(
-                'You must pass a finite number to `setLineWidth(width)`. Did you perform a calculation on a variable that is not a number?',
+                'You must pass a finite number to `setLineWidth(width)`. Did you perform a calculation on a variable that is not a number?'
             );
         }
         this.lineWidth = width;
@@ -150,12 +149,12 @@ export default class Line extends Thing {
         if (typeof x !== 'number' || !isFinite(x)) {
             throw new TypeError(
                 'Invalid value for x-coordinate. ' +
-                    'Make sure you are passing finite numbers to `setStartpoint(x, y)`. Did you forget the parentheses in `getWidth()` or `getHeight()`? Or did you perform a calculation on a variable that is not a number?',
+                    'Make sure you are passing finite numbers to `setStartpoint(x, y)`. Did you forget the parentheses in `getWidth()` or `getHeight()`? Or did you perform a calculation on a variable that is not a number?'
             );
         }
         if (typeof y !== 'number' || !isFinite(y)) {
             throw new TypeError(
-                'Invalid value for y-coordinate. Make sure you are passing finite numbers to `setStartpoint(x, y)`. Did you forget the parentheses in `getWidth()` or `getHeight()`? Or did you perform a calculation on a variable that is not a number?',
+                'Invalid value for y-coordinate. Make sure you are passing finite numbers to `setStartpoint(x, y)`. Did you forget the parentheses in `getWidth()` or `getHeight()`? Or did you perform a calculation on a variable that is not a number?'
             );
         }
 
@@ -175,13 +174,13 @@ export default class Line extends Thing {
         if (typeof x !== 'number' || !isFinite(x)) {
             throw new TypeError(
                 'Invalid value for x-coordinate. ' +
-                    'Make sure you are passing finite numbers to `setPosition(x, y)`. Did you forget the parentheses in `getWidth()` or `getHeight()`? Or did you perform a calculation on a variable that is not a number?',
+                    'Make sure you are passing finite numbers to `setPosition(x, y)`. Did you forget the parentheses in `getWidth()` or `getHeight()`? Or did you perform a calculation on a variable that is not a number?'
             );
         }
         if (typeof y !== 'number' || !isFinite(y)) {
             throw new TypeError(
                 'Invalid value for y-coordinate. ' +
-                    'Make sure you are passing finite numbers to `setPosition(x, y)`. Did you forget the parentheses in `getWidth()` or `getHeight()`? Or did you perform a calculation on a variable that is not a number?',
+                    'Make sure you are passing finite numbers to `setPosition(x, y)`. Did you forget the parentheses in `getWidth()` or `getHeight()`? Or did you perform a calculation on a variable that is not a number?'
             );
         }
         this.x1 = x;
@@ -201,13 +200,13 @@ export default class Line extends Thing {
         if (typeof x !== 'number' || !isFinite(x)) {
             throw new TypeError(
                 'Invalid value for x-coordinate. ' +
-                    'Make sure you are passing finite numbers to `setEndpoint(x, y)`. Did you forget the parentheses in `getWidth()` or `getHeight()`? Or did you perform a calculation on a variable that is not a number?',
+                    'Make sure you are passing finite numbers to `setEndpoint(x, y)`. Did you forget the parentheses in `getWidth()` or `getHeight()`? Or did you perform a calculation on a variable that is not a number?'
             );
         }
         if (typeof y !== 'number' || !isFinite(y)) {
             throw new TypeError(
                 'Invalid value for y-coordinate. ' +
-                    'Make sure you are passing finite numbers to `setEndpoint(x, y)`. Did you forget the parentheses in `getWidth()` or `getHeight()`? Or did you perform a calculation on a variable that is not a number?',
+                    'Make sure you are passing finite numbers to `setEndpoint(x, y)`. Did you forget the parentheses in `getWidth()` or `getHeight()`? Or did you perform a calculation on a variable that is not a number?'
             );
         }
         this.x2 = x;
@@ -226,12 +225,12 @@ export default class Line extends Thing {
         }
         if (typeof dx !== 'number' || !isFinite(dx)) {
             throw new TypeError(
-                'Invalid number passed for `dx`. Make sure you are passing finite numbers to `move(dx, dy)`.',
+                'Invalid number passed for `dx`. Make sure you are passing finite numbers to `move(dx, dy)`.'
             );
         }
         if (typeof dy !== 'number' || !isFinite(dy)) {
             throw new TypeError(
-                'Invalid number passed for `dy`. Make sure you are passing finite numbers to `move(dx, dy)`.',
+                'Invalid number passed for `dy`. Make sure you are passing finite numbers to `move(dx, dy)`.'
             );
         }
         this.x1 += dx;
