@@ -1,11 +1,12 @@
 /* Console
- * =====================
+ *
  * A console represents a text console that allows the user to print, println,
  * and read an integer using readInt, and read a float using readFloat. These
  * functions pop up prompt dialogs and make sure that the results are actually
  * of the desired type.
  *
  * @author  Jeremy Keeshin    July 9, 2012
+ * @author  Andy Bayer        Fall 2021
  *
  */
 
@@ -13,8 +14,18 @@ const lines = [];
 
 export default class CodeHSConsole {
     /**
-     * Set up an instance of the console library.
+     * Initialize the console class, additionally configuring any event handlers.
      * @constructor
+     * @param {function} options.onPrompt Function invoked when asking for user input.
+     * This function is invoked with the string of the prompt, i.e. readInt('give me an int!').
+     * The result of invoking onPrompt will be subjected to parsing functions for confirming
+     * it's an appropriate data type (a float, in the case of readFloat, for example). If
+     * onPrompt is undefined, window.prompt is used as a fallback.
+     * @param {function} options.onPrint Function invoked when printing.
+     * This function is invoked with any output, either in the case of explicit calls to `print`
+     * or `println` or internal calls within the library. If onPrint is undefined, console.log
+     * is used as a fallback.
+     * @param {function} options.onClear Function invoked when clear() is called.
      */
     constructor() {
         this.internalOutput = [];
@@ -31,24 +42,19 @@ export default class CodeHSConsole {
     }
 
     /**
-     * A non-dom-mutating print for use in autograders.
-     */
-    quietPrint(string) {
-        if (!this.internalOutputBuffer) {
-            this.internalOutputBuffer = '';
-        }
-        this.internalOutputBuffer += string;
-    }
-
-    /**
-     * A non-dom-mutating println for use in autograders.
-     */
-    quietPrintln(anything) {
-        this.quietPrint(anything + '\n');
-    }
-
-    /**
-     * Gets the internal output.
+     * Configure the Console instance, providing methods it invokes
+     * when prompting for input and emitting output.
+     *
+     * @param {function} options.onPrompt Function invoked when asking for user input.
+     * This function is invoked with the string of the prompt, i.e. readInt('give me an int!').
+     * The result of invoking onPrompt will be subjected to parsing functions for confirming
+     * it's an appropriate data type (a float, in the case of readFloat, for example). If
+     * onPrompt is undefined, window.prompt is used as a fallback.
+     * @param {function} options.onPrint Function invoked when printing.
+     * This function is invoked with any output, either in the case of explicit calls to `print`
+     * or `println` or internal calls within the library. If onPrint is undefined, console.log
+     * is used as a fallback.
+     * @param {function} options.onClear Function invoked when clear() is called.
      */
     flushQuietOutput() {
         if (!this.internalOutputBuffer) {
@@ -65,8 +71,9 @@ export default class CodeHSConsole {
 
     /**
      * Private method used to read a line.
-     * @param {string} str - The line to be read.
-     * @param {boolean} looping - Unsure. This is a messy method.
+     * @param {string} promptString - The line to be printed before prompting.
+     * @param {boolean} printPrompt - Whether the prompt should be printed. When readLine and 
+     * other methods for getting user input are called, the prompt string is additionally printed.
      */
     readLinePrivate(str, looping) {
         if (typeof looping === 'undefined' || !looping) {
@@ -103,8 +110,6 @@ export default class CodeHSConsole {
     hasUserinput(code) {
         return code.match(new RegExp('readLine|readInt|readFloat|readBoolean|readNumber'));
     }
-
-    /** ************* PUBLIC METHODS *******************/
 
     /**
      * Clear the console.
@@ -166,6 +171,15 @@ export default class CodeHSConsole {
      *       which actually does not even allow floats, even they they can properly be parsed as ints.
      *    3. The errorMsgType is a string helping us figure out what to print if it is not of the right
      *       type.
+     * @param {string} str - The prompt string
+     * @param {function} parseFn - A function to parse the user input to determine if it satisfies
+     * the expected datatype. If the return value of parseFn satisfies `!isNaN`, the value is 
+     * returned. If the result is null, the prompt will repeat until satisfied, or 100 prompts have
+     * occurred.
+     * @param {string} errorMsgType - A strinng to include in the error message to the user explaining
+     * why a given input was rejected. For example, the errorMsgType "an integer," would result in
+     * printing "That was not an integer. Please try again." if parseFn failed.
+     * @returns {number}
      */
     readNumber(str, parseFn, errorMsgType) {
         var DEFAULT = 0; // If we get into an infinite loop, return DEFAULT.
@@ -182,7 +196,6 @@ export default class CodeHSConsole {
             }
             result = parseFn(result);
 
-            // Then it was okay.
             if (!isNaN(result)) {
                 return result;
             }
