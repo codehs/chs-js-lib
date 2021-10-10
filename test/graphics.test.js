@@ -10,7 +10,7 @@ import Graphics from '../src/graphics.js';
 function simulateEvent(type, config, target) {
     let event;
     try {
-        event = new Event(type, { bubbles: true });
+        event = new MouseEvent(type, { bubbles: true });
     } catch (e) {
         event = document.createEvent('Event');
         event.initEvent(type, true, false);
@@ -52,6 +52,20 @@ describe('Graphics', () => {
             g.mouseUpMethod(mouseUpSpy);
             simulateEvent('mouseup', {}, document.querySelector('#game'));
             expect(mouseUpSpy).toHaveBeenCalled();
+        });
+        it('Translates x and y coordinates', () => {
+            const g = new Graphics();
+            const mouseSpy = jasmine.createSpy();
+            g.mouseUpMethod(e => {
+                mouseSpy(e.getX(), e.getY());
+            });
+            // TODO: better tests for this.
+            // clientX and clientY are readonly properties.
+            simulateEvent('mouseup', {}, document.querySelector('#game'));
+            expect(mouseSpy).toHaveBeenCalledWith(-8, -8);
+            document.querySelector('#game').style.top = '50px';
+            simulateEvent('mouseup', {}, document.querySelector('#game'));
+            expect(mouseSpy).toHaveBeenCalledWith(-8, -8);
         });
     });
     describe('Keyboard events', () => {
@@ -193,6 +207,106 @@ describe('Graphics', () => {
             const c = new Circle(20);
             g.add(c);
             expect(c.alive).toBeTrue();
+        });
+    });
+    describe('setBackgroundColor', () => {
+        it('Causes drawBackground to be invoked in redraw()', () => {
+            const g = new Graphics();
+            g.setBackgroundColor('red');
+            const rectSpy = spyOn(g.getContext(), 'rect');
+            const fillStyleSpy = spyOnProperty(
+                g.getContext(),
+                'fillStyle',
+                'set'
+            ).and.callThrough();
+            g.redraw();
+            expect(rectSpy).toHaveBeenCalledWith(0, 0, g.getWidth(), g.getHeight());
+            expect(fillStyleSpy).toHaveBeenCalledWith('red');
+        });
+    });
+    describe('Timers', () => {
+        describe('setTimer', () => {
+            describe('Errors', () => {
+                it('Errors for < 2 arguments', () => {
+                    const g = new Graphics();
+                    expect(() => {
+                        g.setTimer(() => {});
+                    }).toThrow(
+                        Error(
+                            '2 parameters required for `setTimer`, 1 found. You must provide a callback function and a number representing the time delay to `setTimer`.'
+                        )
+                    );
+                });
+                it("Errors for a fn that's not a function", () => {
+                    const g = new Graphics();
+                    expect(() => {
+                        g.setTimer('asd', 'asd');
+                    }).toThrow(
+                        TypeError(
+                            'Invalid callback function. Make sure you are passing an actual function to `setTimer`.'
+                        )
+                    );
+                });
+                it('Errors for non-numeric intervals', () => {
+                    const g = new Graphics();
+                    expect(() => {
+                        g.setTimer(() => {}, 'asd');
+                    }).toThrow(
+                        TypeError(
+                            'Invalid value for time delay. Make sure you are passing a finite number to `setTimer` for the delay.'
+                        )
+                    );
+                    expect(() => {
+                        g.setTimer(() => {}, Infinity);
+                    }).toThrow(
+                        TypeError(
+                            'Invalid value for time delay. Make sure you are passing a finite number to `setTimer` for the delay.'
+                        )
+                    );
+                });
+            });
+            describe('Setting a timer', () => {
+                it('Invokes the function after the interval', () => {
+                    const g = new Graphics();
+                    let invocations = 3;
+                    return new Promise((resolve, reject) => {
+                        const timedFunction = () => {
+                            invocations--;
+                            if (invocations === 0) {
+                                g.stopTimer(timedFunction);
+                                resolve();
+                            }
+                        };
+                        g.setTimer(timedFunction, 0);
+                    }).then(() => {
+                        expect(invocations).toBe(0);
+                    });
+                });
+            });
+            describe('Stopping a timer', () => {
+                it('Can be stopped by fn.name or identity', () => {
+                    const g = new Graphics();
+                    const timerFn = jasmine.createSpy();
+                    g.setTimer(timerFn, 0);
+                    g.stopTimer(timerFn);
+                    expect(timerFn).not.toHaveBeenCalled();
+                    const namedTimerFn = () => {};
+                    const namedTimerSpy = jasmine.createSpy();
+                    g.setTimer(timerFn, 0);
+                    g.stopTimer('namedTimerFn');
+                    expect(namedTimerSpy).not.toHaveBeenCalled();
+                });
+                it('stopAllTimers stops all timers', () => {
+                    const g = new Graphics();
+                    const timerOne = jasmine.createSpy();
+                    const timerTwo = jasmine.createSpy();
+                    g.setTimer(timerOne, 0);
+                    g.setTimer(timerTwo, 0);
+                    g.stopAllTimers();
+                    expect(timerOne).not.toHaveBeenCalled();
+                    expect(timerTwo).not.toHaveBeenCalled();
+                });
+            });
         });
     });
 });

@@ -246,7 +246,7 @@ class CodeHSGraphics {
                     ' found. You must ' +
                     'provide a callback function and ' +
                     'a number representing the time delay ' +
-                    'to `setTimer`'
+                    'to `setTimer`.'
             );
         }
         if (typeof fn !== 'function') {
@@ -820,7 +820,7 @@ if (window.DeviceMotionEvent) {
 // Same for MouseEvent or TouchEvent given the event and target
 // Method based on: http://stackoverflow.com/questions/55677/how-do-i-get-the-coordinates-of-a-mouse-click-on-a-canvas-element
 
-CodeHSGraphics.getBaseCoordinates = function (e, target) {
+CodeHSGraphics.getBaseCoordinates = (e, target) => {
     var x;
     var y;
     if (e.pageX || e.pageY) {
@@ -838,7 +838,7 @@ CodeHSGraphics.getBaseCoordinates = function (e, target) {
     return { x: x, y: y };
 };
 
-CodeHSGraphics.getMouseCoordinates = function (e) {
+CodeHSGraphics.getMouseCoordinates = (e) => {
     var baseCoordinates = CodeHSGraphics.getBaseCoordinates(e, e.currentTarget);
     var x = baseCoordinates.x;
     var y = baseCoordinates.y;
@@ -850,7 +850,7 @@ CodeHSGraphics.getMouseCoordinates = function (e) {
     return { x: x, y: y };
 };
 
-CodeHSGraphics.getTouchCoordinates = function (e) {
+CodeHSGraphics.getTouchCoordinates = (e) => {
     var baseCoordinates = CodeHSGraphics.getBaseCoordinates(e, e.target);
     var x = baseCoordinates.x;
     var y = baseCoordinates.y;
@@ -858,9 +858,10 @@ CodeHSGraphics.getTouchCoordinates = function (e) {
     // canvas almost always gets scaled down for mobile screens, need to figure
     // out the x and y in terms of the unscaled canvas size in pixels otherwise
     // touch coordinates are off
-    var screenCanvasWidth = $('#game').width();
-    var fullCanvasWidth = $('#game').attr('width');
-    var ratio = fullCanvasWidth / screenCanvasWidth;
+    const canvas = e.target;
+    const screenCanvasWidth = canvas.width();
+    const fullCanvasWidth = canvas.attr('width');
+    const ratio = fullCanvasWidth / screenCanvasWidth;
     x = x * ratio;
     y = y * ratio;
 
