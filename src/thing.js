@@ -19,6 +19,20 @@ export default class Thing {
         this.filled = true;
         this.hasBorder = false;
         this.rotation = 0;
+        this.__layer = 1;
+    }
+
+    /**
+     * Sets the layer of the Thing and marks the sortInvalidated flag
+     * so any Graphics instances drawing it know to re-sort.
+     */
+    set layer(newLayer) {
+        this.__sortInvalidated = true;
+        this.__layer = newLayer;
+    }
+
+    get layer() {
+        return this.__layer;
     }
 
     /**
