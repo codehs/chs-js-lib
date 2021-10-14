@@ -541,6 +541,10 @@ class CodeHSGraphics {
         for (let i = this.elementPoolSize; i--; ) {
             elem = this.elementPool[i];
 
+            if (elem.__sortInvalidated) {
+                sortPool = true;
+                elem.__sortInvalidated = false;
+            }
             if (!elem.alive) {
                 sortPool = true;
                 this.elementPoolSize--;
@@ -549,8 +553,10 @@ class CodeHSGraphics {
             }
         }
         // sort all dead elements to the end of the pool
+        // and all elements with lower layer before elements
+        // with higher layer
         if (sortPool) {
-            this.elementPool.sort((a, b) => b.alive - a.alive);
+            this.elementPool.sort((a, b) => b.alive - a.alive || a.layer - b.layer);
         }
     }
 

@@ -440,5 +440,3 @@ export default class WebImage extends Thing {
         this.setPixel(x, y, ALPHA, val);
     }
 }
-
-module.exports = WebImage;
