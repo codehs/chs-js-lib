@@ -4,7 +4,7 @@ import { getDistance } from './graphics-utils.js';
 
 /**
  * @class Circle
- * @augments Thing
+ * @extends Thing
  * @param {number} radius - Desired radius
  */
 export default class Circle extends Thing {
