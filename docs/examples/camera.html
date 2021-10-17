@@ -308,7 +308,7 @@
             // player.x += dx;
         })
         setTimer(update, 4);
-        mouseMoveMethod(function(e, worldX, worldY) {
+        __graphics__.mouseMoveMethod(function(e, worldX, worldY) {
             player.targetX = worldX;
         });
         keyDownMethod(function(e) {
@@ -331,8 +331,8 @@
 
     var Camera = (function() {
         function Camera(x, y, worldWidth, worldHeight, following) {
-            const context = g.getContext();
-            const canvas = g.getCanvas();
+            const context = __graphics__.getContext();
+            const canvas = __graphics__.getCanvas();
 
             this.x = x || 0;
             this.y = y || 0;
@@ -352,7 +352,7 @@
             document.body.appendChild(hiddenCanvas);
             const hiddenContext = hiddenCanvas.getContext("2d");
 
-            g.redraw = () => {
+            __graphics__.redraw = () => {
                 if (this.followed !== null) {
                     if (this.followed.x - this.x > canvas.width - this.xDeadzone) {
                         this.destX =
@@ -402,13 +402,13 @@
                 );
                 hiddenContext.moveTo(-this.x, -this.y);
                 let element;
-                g.drawBackground();
-                g.currentCanvas = hiddenCanvas;
-                for (var i = 0; i < g.elementPool.length; i++) {
-                    element = g.elementPool[i];
-                    g.elementPool[i].draw(g);
+                __graphics__.drawBackground();
+                __graphics__.currentCanvas = hiddenCanvas;
+                for (var i = 0; i < __graphics__.elementPool.length; i++) {
+                    element = __graphics__.elementPool[i];
+                    __graphics__.elementPool[i].draw(__graphics__);
                 }
-                g.currentCanvas = canvas;
+                __graphics__.currentCanvas = canvas;
 
                 const sourceX = this.x;
                 const sourceY = this.y;
@@ -441,19 +441,19 @@
 
             // override the default onmousedown methods to add world coordinates
             // to event handlers
-            g.mouseDownMethod = callback => {
+            __graphics__.mouseDownMethod = callback => {
                 g.mouseDownCallback = e => {
                     callback(e, e.getX() + this.x, e.getY() + this.y);
                 };
             };
 
-            g.mouseMoveMethod = callback => {
-                g.moveCallback = e => {
+            __graphics__.mouseMoveMethod = callback => {
+                __graphics__.moveCallback = e => {
                     callback(e, e.getX() + this.x, e.getY() + this.y);
                 };
             };
 
-            g.mouseUpMethod = callback => {
+            __graphics__.mouseUpMethod = callback => {
                 g.mouseUpCallback = e => {
                     callback(e, e.getX() + this.x, e.getY() + this.y);
                 };

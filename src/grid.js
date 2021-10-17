@@ -1,9 +1,14 @@
+/** @module Grid */
+
 /**
- * @class Grid
- * @param {rows} rows - Number of rows in the grid.
- * @param {cols} cols - Number of cols in the grid.
+ * A grid is a two-dimensional array .
  */
-export default class Grid {
+class Grid {
+    /**
+     * Constructs a grid. 
+     * @param {number} rows 
+     * @param {number} cols 
+     */
     constructor(rows, cols) {
         if (arguments.length !== 2) {
             throw new Error('You should pass exactly 2 arguments to `new Grid(rows, cols)`');
@@ -52,25 +57,12 @@ export default class Grid {
 
     /**
      * Initializes the contents of the grid with `value`.
-     * @param {number|string|object|boolean} value - The value to be inserted in all
+     * @param {any} value - The value to be inserted in all
      * positions of the grid.
      */
     init(value) {
         if (arguments.length !== 1) {
             throw new Error('You should pass exactly 1 argument to `init`.');
-        }
-        if (
-            typeof value !== 'boolean' &&
-            typeof value !== 'number' &&
-            typeof value !== 'string' &&
-            typeof value !== 'object'
-        ) {
-            throw new TypeError(
-                'Invalid value passed to `init`. You passed a value of type ' +
-                    typeof value +
-                    '. Make sure you are passing a number, string, object, or ' +
-                    'boolean value.'
-            );
         }
         if (typeof value === 'number' && !isFinite(value)) {
             throw new TypeError(
@@ -89,7 +81,7 @@ export default class Grid {
      * Gets the object stored at the requested row and column.
      * @param {number} row - The row of the desired object.
      * @param {number} col - The col of the desired object.
-     * @returns {number|string|object|boolean} The value stored in the grid
+     * @returns {any} The value stored in the grid
      * at that position.
      */
     get(row, col) {
@@ -113,7 +105,7 @@ export default class Grid {
      * Sets an object at the requested row and column.
      * @param {number} row - The row of the destination of the object.
      * @param {number} col - The column of the destination of the object.
-     * @param {number|string|object|boolean} value - The value to be stored at
+     * @param {any} value - The value to be stored at
      * the specified location in the grid
      */
     set(row, col, value) {
@@ -242,3 +234,5 @@ export default class Grid {
         return result;
     }
 }
+
+export default Grid;
