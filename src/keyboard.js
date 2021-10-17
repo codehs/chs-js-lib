@@ -1,4 +1,8 @@
-// Constants for key values.
+/** @module Keyboard */
+// TODO: make this a class for JSdoc purposes
+// and consistency within the lib
+
+/** Constants for key values. */
 const Keyboard = {
     LEFT: 37,
     UP: 38,
@@ -19,32 +23,7 @@ const Keyboard = {
     SELECT: 93,
 };
 
-/**
- * Get the keyboard code for a numeric digit.
- * @param {number} digit - The number value to be converted to key code.
- * @returns {number} Key code corresponding to digit.
- * Usage: var code3 = Keyboard.digit(3);
- */
-Keyboard.digit = function (dig) {
-    dig = dig % 10;
-    return dig + 48;
-};
-
-/**
- * Get the keyboard code for a character.
- * @param {string} letter - The letter to be converted to key code.
- * @returns {number} Key code corresponding to letter.
- * Usage: var aCode = Keyboard.letter("a");
- * Only to be used with single-character strings.
- */
-Keyboard.letter = function (letter) {
-    if (letter.length !== 1) {
-        return -1;
-    }
-    return letter.toUpperCase().charCodeAt(0);
-};
-
-// Constants for keys not used to edit.
+/** Modifiers and keys that don't produce or change input. */
 Keyboard.nonEditingKeys = [
     Keyboard.LEFT,
     Keyboard.RIGHT,
@@ -62,9 +41,38 @@ Keyboard.nonEditingKeys = [
 ];
 
 /**
+ * Get the keyboard code for a numeric digit.
+ * @example
+ * const code3 = Keyboard.digit(3);
+ * @param {number} digit - The number value to be converted to key code.
+ * @return {number} Key code corresponding to digit.
+ */
+Keyboard.digit = function (dig) {
+    dig = dig % 10;
+    return dig + 48;
+};
+
+/**
+ * Get the keyboard code for a character.
+ * Only to be used with single-character strings.
+ * @example
+ * const aCode = Keyboard.letter("a");
+ * 
+ * @param {string} letter - The letter to be converted to key code.
+ * @return {number} Key code corresponding to letter.
+ */
+Keyboard.letter = function (letter) {
+    if (letter.length !== 1) {
+        return -1;
+    }
+    return letter.toUpperCase().charCodeAt(0);
+};
+
+/**
  * Check if a key is an editing key.
+ * 
  * @param {number} keyCode - Key code corresponding to key pressed.
- * @returns {boolean} Whether or not the key is an editing key.
+ * @return {boolean} Whether or not the key is an editing key.
  */
 Keyboard.isEditingKey = function (keyCode) {
     return Keyboard.nonEditingKeys.indexOf(keyCode) === -1;
