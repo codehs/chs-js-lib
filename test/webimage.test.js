@@ -1,15 +1,18 @@
 import WebImage from '../src/webimage.js';
 import Graphics from '../src/graphics.js';
 
-// a 90x90 image with R, G, and B vertical stripes of 30px width
+// a 90x90 image with R, G, and B vertical stripes of 30px width, i.e.
+/**
+ * +--+--+--+
+ * |rr|gg|bb|
+ * |rr|gg|bb|
+ * |rr|gg|bb|
+ * +--+--+--+
+ */
 const RGBURL = 'https://codehs.com/uploads/4cd36a1bacbd8cdd22cf75947f4caea8';
 
 describe('WebImage', () => {
     describe('Displaying images from URL', () => {
-        const wi = new WebImage(RGBURL);
-        const g = new Graphics();
-        g.add(wi);
-
         it('Invokes a callback when loaded', () => {
             const wi = new WebImage(RGBURL);
             return new Promise((resolve, reject) => {
