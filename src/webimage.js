@@ -23,7 +23,7 @@ export default class WebImage extends Thing {
         super();
         if (typeof filename !== 'string') {
             throw new TypeError(
-                'You must pass a string to `' + "new WebImage(filename)` that has the image's URL."
+                `You must pass a string to \`new WebImage(filename)\` that has the image\'s URL. Received type ${typeof filename}`
             );
         }
 
@@ -47,13 +47,13 @@ export default class WebImage extends Thing {
     setImage(filename) {
         if (typeof filename !== 'string') {
             throw new TypeError(
-                'You must pass a string to `' + "new WebImage(filename)` that has the image's URL."
+                `You must pass a string to \`setImage(filename)\` that has the image\'s URL. Received type ${typeof filename}`
             );
         }
 
         this._loaded = false;
         this.image = new Image();
-        this.image.crossOrigin = 'Anonymous';
+        this.image.crossOrigin = true;
         this.image.src = filename;
         this.filename = filename;
         this.width = NOT_LOADED;
@@ -153,30 +153,13 @@ export default class WebImage extends Thing {
      */
     setSize(width, height) {
         if (arguments.length !== 2) {
-            throw new Error(
-                'You should pass exactly 2 arguments to <span ' +
-                    'class="code">setSize(width, height)`'
-            );
+            throw new Error('You should pass exactly 2 arguments to `setSize(width, height)`.');
         }
         if (typeof width !== 'number' || !isFinite(width)) {
-            throw new TypeError(
-                'Invalid value for `width' +
-                    '`. Make sure you are passing finite numbers to <span ' +
-                    'class="code">setSize(width, height)`. Did you ' +
-                    'forget the parentheses in `getWidth()` ' +
-                    'or `getHeight()`? Or did you perform a ' +
-                    'calculation on a variable that is not a number?'
-            );
+            throw new TypeError(`Invalid value for \`width\`. Received type ${typeof width}`);
         }
         if (typeof height !== 'number' || !isFinite(height)) {
-            throw new TypeError(
-                'Invalid value for `height' +
-                    '`. Make sure you are passing finite numbers to <span ' +
-                    'class="code">setSize(width, height)`. Did you ' +
-                    'forget the parentheses in `getWidth()` ' +
-                    'or `getHeight()`? Or did you perform a ' +
-                    'calculation on a variable that is not a number?'
-            );
+            throw new TypeError(`Invalid value for \`height\`. Received type ${typeof height}`);
         }
         this.width = Math.max(0, width);
         this.height = Math.max(0, height);
@@ -196,11 +179,10 @@ export default class WebImage extends Thing {
      */
     getPixel(x, y) {
         if (this.data === NOT_LOADED || x > this.width || x < 0 || y > this.height || y < 0) {
-            var noPixel = [UNDEFINED, UNDEFINED, UNDEFINED, UNDEFINED];
-            return noPixel;
+            return [UNDEFINED, UNDEFINED, UNDEFINED, UNDEFINED];
         } else {
-            var index = NUM_CHANNELS * (y * this.width + x);
-            var pixel = [
+            const index = NUM_CHANNELS * (y * this.width + x);
+            const pixel = [
                 this.data.data[index + RED],
                 this.data.data[index + GREEN],
                 this.data.data[index + BLUE],
@@ -267,14 +249,8 @@ export default class WebImage extends Thing {
     setPixel(x, y, component, val) {
         if (this.data !== NOT_LOADED && !(x < 0 || y < 0 || x > this.width || y > this.height)) {
             // Update the pixel value
-            var index = NUM_CHANNELS * (y * this.width + x);
+            const index = NUM_CHANNELS * (y * this.width + x);
             this.data.data[index + component] = val;
-
-            // Now that we have modified the image data, we need to display
-            // the image based on the underlying image data rather than the
-            // image url
-            this.displayFromData = true;
-            this.dirtyHiddenCanvas = true;
         }
     }
 
@@ -338,8 +314,8 @@ export default class WebImage extends Thing {
      * const img = new Webimage('www.whatever.com');
      * img.setImageData(imageData);
      * add(img);
-     * 
-     * @param {ImageData} imageData 
+     *
+     * @param {ImageData} imageData
      */
     setImageData(imageData) {
         this.data = imageData;
