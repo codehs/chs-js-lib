@@ -24,7 +24,7 @@ describe('Randomizer', () => {
     });
     describe('nextHex', () => {
         it('Always returns a valid 0-255 hex', () => {
-            expect(parseInt(Randomizer.nextHex(), 16)).toBeLessThan(255);
+            expect(parseInt(Randomizer.nextHex(), 16)).toBeLessThanOrEqual(255);
         });
     });
     describe('nextColor', () => {
