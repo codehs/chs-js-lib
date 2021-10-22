@@ -33,6 +33,7 @@ window.WebImage = WebImage;
 window.Randomizer = Randomizer;
 
 const GraphicsInstance = new Graphics();
+window.__graphics__ = GraphicsInstance;
 window.add = GraphicsInstance.add.bind(GraphicsInstance);
 window.Audio = GraphicsInstance.Audio.bind(GraphicsInstance);
 window.getWidth = GraphicsInstance.getWidth.bind(GraphicsInstance);
@@ -47,6 +48,7 @@ window.stopTimer = GraphicsInstance.stopTimer.bind(GraphicsInstance);
 window.setTimer = GraphicsInstance.setTimer.bind(GraphicsInstance);
 window.keyDownMethod = GraphicsInstance.keyDownMethod.bind(GraphicsInstance);
 window.removeAll = GraphicsInstance.removeAll.bind(GraphicsInstance);
+window.remove = GraphicsInstance.remove.bind(GraphicsInstance);
 window.setBackgroundColor = GraphicsInstance.setBackgroundColor.bind(GraphicsInstance);
 window.getElementAt = GraphicsInstance.getElementAt.bind(GraphicsInstance);
 

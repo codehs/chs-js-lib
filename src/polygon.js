@@ -1,15 +1,34 @@
 import Thing from './thing.js';
 
+/** @module Polygon */
+
 /**
- * @class Polygon
- * @augments Thing
+ * A polygon is a shape with any number of points, and will
+ * be drawn as a continuous shape contained by those points.
+ * @extends Thing
  */
-export default class Polygon extends Thing {
+class Polygon extends Thing {
+    /**
+     * Constructs a new Polygon.
+     * The Polygon constructor takes no arguments, and only prepares a Polygon to have points
+     * added later with {@link addPoint}.
+     * @constructor
+     */
     constructor() {
         super();
         if (arguments.length !== 0) {
             throw new Error('You should pass exactly 0 arguments to `new Polygon()`');
         }
+        /**
+         * An array of points in the Polygon.
+         * @example
+         * const p = new Polygon();
+         * for (let i = 0; i < p.points.length; i++) {
+         *     println(p.points[i]);
+         * }
+         * @type {Array.<{x: number, y: number}>}
+         * @public
+         */
         this.points = [];
         this.width = 0; // max x-distance of points in the polygon
         this.height = 0; // max y-distance of points in the polygon
@@ -17,7 +36,7 @@ export default class Polygon extends Thing {
 
     /**
      * Draws the polygon in the canvas.
-     *
+     * @private
      * @param {CodeHSGraphics} graphics - Instance of the Graphics module.
      */
     draw(graphics) {
@@ -40,23 +59,31 @@ export default class Polygon extends Thing {
     }
 
     /**
-     * Checks if the passed point is contained in the polygon.
+     * Checks if the coordinates are contained in the Polygon.
+     * @example
+     * const p = new Polygon();
+     * p.addPoint(10, 10);
+     * p.addPoint(20, 10);
+     * p.addPoint(15, 15);
+     * if (p.containsPoint(12, 12)) {
+     *     p.setColor(Color.RED);
+     * }
      *
      * @param {number} x - The x coordinate of the point being tested.
      * @param {number} y - The y coordinate of the point being tested.
-     * @returns {boolean} Whether the passed point is contained in the polygon.
+     * @returns {boolean}
      */
     containsPoint(x, y) {
         // https://www.eecs.umich.edu/courses/eecs380/HANDOUTS/PROJ2/InsidePoly.html
         // solution 3 from above
-        var previousOrientation = -1;
-        var x1, x2, y1, y2;
-        for (var i = 0; i < this.points.length; i++) {
+        let previousOrientation = -1;
+        let x1, x2, y1, y2;
+        for (let i = 0; i < this.points.length; i++) {
             x1 = this.points[i].x;
             y1 = this.points[i].y;
             x2 = this.points[(i + 1) % this.points.length].x;
             y2 = this.points[(i + 1) % this.points.length].y;
-            var orientation = (y - y1) * (x2 - x1) - (x - x1) * (y2 - y1) <= 0;
+            let orientation = (y - y1) * (x2 - x1) - (x - x1) * (y2 - y1) <= 0;
             if (previousOrientation < 0) {
                 previousOrientation = orientation;
             } else {
@@ -69,7 +96,13 @@ export default class Polygon extends Thing {
     }
 
     /**
-     * Gets the width of the rectangle.
+     * Gets the width of the Polygon.
+     * The width is the greatest distance between two points in the Polygon along the x axis.
+     * @example
+     * const p = new Polygon();
+     * p.addPoint(0, 50);
+     * p.addPoint(200, 30);
+     * p.getWidth() === 200;
      *
      * @returns {number} Width of the rectangle.
      */
@@ -78,9 +111,16 @@ export default class Polygon extends Thing {
     }
 
     /**
-     * Gets the height of the rectangle.
+     * Gets the width of the Polygon.
+     * The width is the greatest distance between two points in the Polygon along the x axis.
+     * @example
+     * const p = new Polygon();
+     * p.addPoint(50, 0);
+     * p.addPoint(30, 100);
+     * p.addPoint(10, 200);
+     * p.getHeight() === 200;
      *
-     * @returns {number} Height of the rectangle.
+     * @returns {number} height of the rectangle.
      */
     getHeight() {
         return this.height;
@@ -88,7 +128,12 @@ export default class Polygon extends Thing {
 
     /**
      * Adds a vertex to the polygon.
-     *
+     * This also updates the width and height of the Polygon, expanding the width and height
+     * to the maximum distance between two points along the x and y axes, respectively.
+     * @example
+     * const p = new Polygon();
+     * p.addPoint(10, 10);
+     * 
      * @param {number} x - The x coordinate of the desired new vertex.
      * @param {number} y - The y coordinate of the desired new vertex.
      */
@@ -120,6 +165,12 @@ export default class Polygon extends Thing {
 
     /**
      * Moves the entire polygon.
+     * This shifts each vertex in the Polygon by dx, dy.
+     * @example
+     * const p = new Polygon();
+     * p.addPoint(20, 20);
+     * p.move(10, 10);
+     * p.points[0] === {x: 30, y: 30};
      *
      * @param {number} dx - The change in x coordinate of all starting and ending points.
      * @param {number} dy - The change in y coordinate of all starting and ending points.
@@ -145,3 +196,5 @@ export default class Polygon extends Thing {
         }
     }
 }
+
+export default Polygon;

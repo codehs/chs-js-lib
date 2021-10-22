@@ -1,29 +1,34 @@
-/** * @namespace Arc
- */
-
 import Thing from './thing.js';
 import { getDistance } from './graphics-utils.js';
 
-/** * Arc class. TODO docs
+/** @module Arc */
+
+/** 
+ * An arc is a continuous slice of a circle described by the position of its center, its radius,
+ * and the angles it is drawn between
+ * @extends Thing
  */
-export default class Arc extends Thing {
+class Arc extends Thing {
     static COUNTER_CLOCKWISE = true;
     static CLOCKWISE = false;
     static DEGREES = 0;
     static RADIANS = 1;
 
+    radius;
+
     /**
-     * @class Arc
-     * @augments Thing
+     * @constructor
+     * @example
+     * const a = new Arc(30, 0, 90, 0);
+     * 
      * @param {number} radius - Desired radius of the arc.
      * @param {number} startAngle - Start angle of the arc.
      * @param {number} endAngle - End angle of the arc.
-     * @param {number} angleUnit - Integer representing unit.
-     * Degrees ===0, Radians ===1
+     * @param {number} angleUnit - Integer representing unit: Degrees:0, Radians:1
      */
     constructor(radius, startAngle, endAngle, angleUnit) {
         super();
-        if (arguments.length !== 4) {
+        if (arguments.length !== 4) {kkk
             throw new Error(
                 'You should pass exactly 4 arguments to `new Arc(radius, startAngle, endAngle, angleUnit)`'
             );
@@ -55,6 +60,11 @@ export default class Arc extends Thing {
             );
         }
 
+        /**
+         * The radius of the arc
+         * @member
+         * @type {number}
+         */
         this.radius = radius;
         this.angleUnit = angleUnit ?? Arc.RADIANS;
 
@@ -72,6 +82,7 @@ export default class Arc extends Thing {
     /**
      * Draws the arc in the canvas.
      *
+     * @private
      * @param {CodeHSGraphics} graphics - Instance of the CodeHSGraphics module.
      */
     draw(graphics) {
@@ -105,6 +116,10 @@ export default class Arc extends Thing {
      * Sets the starting angle of the arc.
      * Note: All angles are stored in radians, so we must first convert
      * to radians (if the unit is degrees) before storing the new angle.
+     * @example
+     * const a = new Arc(30, 0, 180, 0);
+     * a.setStartAngle(90);
+     * a.startAngle === Math.PI / 2;
      * @param {number} angle - The desired start angle of the arc.
      */
     setStartAngle(angle) {
@@ -126,6 +141,10 @@ export default class Arc extends Thing {
      * Sets the ending angle of the arc.
      * Note: All angles are stored in radians, so we must first convert
      * to radians (if the unit is degrees) before storing the new angle.
+     * @example
+     * const a = new Arc(30, 0, 180, 0);
+     * a.setEndAngle(90);
+     * a.endAngle === Math.PI / 2;
      * @param {number} angle - The desired end angle of the arc.
      */
     setEndAngle(angle) {
@@ -145,7 +164,7 @@ export default class Arc extends Thing {
 
     /**
      * Gets the starting angle of the arc.
-     * @return {number} The start angle of the arc.
+     * @return {number}
      */
     getStartAngle() {
         if (this.angleUnit == Arc.DEGREES) {
@@ -156,8 +175,8 @@ export default class Arc extends Thing {
     }
 
     /**
-     * Gets the starting angle of the arc.
-     * @return {number} The start angle of the arc.
+     * Gets the end angle of the arc.
+     * @return {number}
      */
     getEndAngle() {
         if (this.angleUnit == Arc.DEGREES) {
@@ -185,8 +204,7 @@ export default class Arc extends Thing {
     }
 
     /**
-     * Checks if a given point is contained within the arc. We always fill the arc
-     * so it is technically a segment of the circle
+     * Checks if a given point is contained within the arc. 
      *
      * @param {number} x - x coordinate of the point being tested.
      * @param {number} y - y coordinate of the point being tested.
@@ -226,9 +244,10 @@ export default class Arc extends Thing {
 }
 
 /**
- * Prepares an angle to be drawn.
+ * Converts an angle to counterclockwise to match how HTML5 canvas draws angles.
+ * TODO: Any math people know how we can do this without converting to degrees?
  *
- * @memberof Arc
+ * @private
  * @param {number} angle - The angle to be prepared.
  * @return {number} The prepared angle.
  */
@@ -249,7 +268,7 @@ export const prepareAngle = function (angle) {
 /**
  * Helper to convert degrees to radians.
  *
- * @memberof Arc
+ * @private
  * @param {number} angleInDegrees - The angle represented as degrees.
  * @return {number} The angle represented as radians.
  */
@@ -260,10 +279,12 @@ export const degreesToRadians = function (angleInDegrees) {
 /**
  * Helper to convert radians to degrees.
  *
- * @memberof Arc
+ * @private
  * @param {number} angleInRadians - The angle represented as radians.
  * @return {number} The angle represented as degrees.
  */
 export const radiansToDegrees = function (angleInRadians) {
     return (angleInRadians / Math.PI) * 180;
 };
+
+export default Arc;
