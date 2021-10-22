@@ -62,7 +62,7 @@ describe('WebImage', () => {
         });
     });
     describe('setImageData', () => {
-        it('Allows replacing the entire underliny imagedata for the next draw', () => {
+        it('Allows replacing the entire underlying imagedata for the next draw', () => {
             const img = new WebImage('www.codehs.com/doesnt-matter.gif');
             const imageData = new ImageData(new Uint8ClampedArray([0, 0, 255, 255]), 1, 1);
             const g = new Graphics();
@@ -72,6 +72,27 @@ describe('WebImage', () => {
             const context = g.getContext();
             const topLeftPixel = context.getImageData(0, 0, 1, 1);
             expect(topLeftPixel.data).toEqual(new Uint8ClampedArray([0, 0, 255, 255]));
+        });
+    });
+
+    describe('rotation', () => {
+        it('Rotates the ImageData drawn to the canvas', () => {
+            const img = new WebImage(RGBURL);
+            const g = new Graphics();
+            g.add(img);
+            return new Promise((resolve, reject) => {
+                img.loaded(() => {
+                    g.redraw();
+                    const context = g.getContext();
+                    let topLeftPixel = context.getImageData(0, 0, 1, 1);
+                    expect(topLeftPixel.data).toEqual(new Uint8ClampedArray([255, 0, 0, 255]));
+                    img.setRotation(180);
+                    g.redraw();
+                    topLeftPixel = context.getImageData(0, 0, 1, 1);
+                    expect(topLeftPixel.data).toEqual(new Uint8ClampedArray([0, 0, 255, 255]));
+                    resolve();
+                });
+            });
         });
     });
 });

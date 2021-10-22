@@ -51,7 +51,8 @@ export default class WebImage extends Thing {
             );
         }
 
-        this._loaded = false;
+        this._hiddenCanvas = document.createElement('canvas');
+
         this.image = new Image();
         this.image.crossOrigin = true;
         this.image.src = filename;
@@ -84,19 +85,22 @@ export default class WebImage extends Thing {
      * @param {CodeHSGraphics} __graphics__ - Instance of the __graphics__ module.
      */
     draw(__graphics__) {
-        this.checkDimensions();
-        const context = __graphics__.getContext('2d');
-        context.save();
-
-        // Scale and translate
-        // X scale, X scew, Y scew, Y scale, X position, Y position
-        context.setTransform(1, 0, 0, 1, this.x + this.width / 2, this.y + this.height / 2);
-        context.rotate(this.rotation);
-
         if (this.data === NOT_LOADED) {
             return;
         }
-        context.putImageData(this.data, this.x, this.y);
+        const context = __graphics__.getContext('2d');
+        context.save();
+        // Scale and translate
+        // X scale, X skew, Y scew, Y scale, X position, Y position
+        context.setTransform(1, 0, 0, 1, this.x + this.width / 2, this.y + this.height / 2);
+        context.rotate(this.rotation);
+        context.drawImage(
+            this._hiddenCanvas,
+            -this.width / 2,
+            -this.height / 2,
+            this.width,
+            this.height
+        );
         context.restore();
     }
 
@@ -106,10 +110,9 @@ export default class WebImage extends Thing {
      */
     loadPixelData() {
         if (this.data === NOT_LOADED) {
-            const hiddenCanvas = document.createElement('canvas');
-            hiddenCanvas.width = this.width;
-            hiddenCanvas.height = this.height;
-            const context = hiddenCanvas.getContext('2d');
+            this._hiddenCanvas.width = this.width;
+            this._hiddenCanvas.height = this.height;
+            const context = this._hiddenCanvas.getContext('2d');
             context.drawImage(this.image, 0, 0, this.width, this.height);
             this.data = context.getImageData(0, 0, this.width, this.height);
         }
@@ -251,6 +254,7 @@ export default class WebImage extends Thing {
             // Update the pixel value
             const index = NUM_CHANNELS * (y * this.width + x);
             this.data.data[index + component] = val;
+            this.updateHiddenCanvas();
         }
     }
 
@@ -318,6 +322,21 @@ export default class WebImage extends Thing {
      * @param {ImageData} imageData
      */
     setImageData(imageData) {
+        this.image = null;
         this.data = imageData;
+        this.width = imageData.width;
+        this.height = imageData.height;
+        this.updateHiddenCanvas();
+    }
+
+    /**
+     * Update the hidden canvas with the instance's current data.
+     * This is automatically called after operations that modify ImageData.
+     */
+    updateHiddenCanvas() {
+        this._hiddenCanvas.width = this.width;
+        this._hiddenCanvas.height = this.height;
+        const context = this._hiddenCanvas.getContext('2d');
+        context.putImageData(this.data, 0, 0);
     }
 }
