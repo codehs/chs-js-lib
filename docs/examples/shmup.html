@@ -292,7 +292,7 @@ const scrollingImage = EZ.makeComponent(
 
                     webImage.setImageData(imageData);
                     webImage.layer = 0;
-                    // add(webImage);
+                    add(webImage);
                     resolve({
                         image: webImage,
                         timer,
@@ -698,7 +698,7 @@ setInterval(() => {
         }),
         breakable()
     );
-    console.log(__graphics__.elementPoolSize);
+    console.log(__graphics__.elementPool.length);
 }, 500);
 
 setTimeout(() => {

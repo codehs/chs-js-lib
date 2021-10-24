@@ -347,7 +347,7 @@ class CodeHSGraphics {
         if (elem instanceof WebVideo) {
             elem.stop();
         }
-        elem.alive = false;
+        this.elementPool.splice(this.elementPool.indexOf(elem), 1);
     }
 
     /**
@@ -541,17 +541,13 @@ class CodeHSGraphics {
                 sortPool = true;
                 elem.__sortInvalidated = false;
             }
-            if (!elem.alive) {
-                sortPool = true;
-            } else {
-                elem.draw(this);
-            }
+            elem.draw(this);
         }
         // sort all dead elements to the end of the pool
         // and all elements with lower layer before elements
         // with higher layer
         if (sortPool) {
-            this.elementPool.sort((a, b) => b.alive - a.alive || a.layer - b.layer);
+            this.elementPool.sort((a, b) => a.layer - b.layer);
         }
     }
 
