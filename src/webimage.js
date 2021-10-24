@@ -89,13 +89,7 @@ export default class WebImage extends Thing {
             return;
         }
         super.draw(graphics, context => {
-            context.drawImage(
-                this._hiddenCanvas,
-                -this.width / 2,
-                -this.height / 2,
-                this.width,
-                this.height
-            );
+            context.drawImage(this._hiddenCanvas, 0, 0, this.width, this.height);
         });
     }
 

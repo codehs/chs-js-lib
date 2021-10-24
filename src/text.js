@@ -20,7 +20,13 @@ export default class Text extends Thing {
         super();
         if (arguments.length < 1) {
             throw new Error(
+<<<<<<< HEAD
                 'You should pass at least one argument to `new Text(label, font)`. `label` is a required parameter.'
+=======
+                'You should pass at least one argument to <span ' +
+                    'class="code">new Text(label, font)`. `' +
+                    'label` is a required parameter.'
+>>>>>>> b955086 (Support for opacity)
             );
         }
         if (typeof label !== 'string' && typeof label !== 'number') {
@@ -64,6 +70,7 @@ export default class Text extends Thing {
      * @param {CodeHSGraphics} graphics - Instance of the graphics module.
      */
     draw(graphics) {
+<<<<<<< HEAD
         var context = graphics.getContext();
         this.context = context;
         // http://stackoverflow.com/questions/17125632/html5-canvas-rotate-object-without-moving-coordinates
@@ -94,6 +101,15 @@ export default class Text extends Thing {
         context.closePath();
         context.fill();
         context.restore();
+=======
+        super.draw(graphics, context => {
+            context.beginPath();
+            context.font = this.font;
+            this.resetDimensions(context);
+            context.fillText(this.label, 0, 0);
+            context.closePath();
+        });
+>>>>>>> b955086 (Support for opacity)
     }
 
     /**
@@ -104,7 +120,13 @@ export default class Text extends Thing {
      */
     setFont(font) {
         if (arguments.length !== 1) {
+<<<<<<< HEAD
             throw new Error('You should pass exactly 1 argument to `setFont`');
+=======
+            throw new Error(
+                'You should pass exactly 1 argument to <span ' + 'class="code">setFont`'
+            );
+>>>>>>> b955086 (Support for opacity)
         }
         if (typeof font !== 'string') {
             throw new TypeError(
@@ -124,7 +146,13 @@ export default class Text extends Thing {
      */
     setLabel(label) {
         if (arguments.length !== 1) {
+<<<<<<< HEAD
             throw new Error('You should pass exactly 1 argument to `setLabel`');
+=======
+            throw new Error(
+                'You should pass exactly 1 argument to <span ' + 'class="code">setLabel`'
+            );
+>>>>>>> b955086 (Support for opacity)
         }
         if (typeof label !== 'string' && typeof label !== 'number') {
             throw new TypeError(

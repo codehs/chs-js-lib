@@ -42,7 +42,7 @@ class Circle extends Thing {
     draw(graphics) {
         super.draw(graphics, context => {
             context.beginPath();
-            context.arc(this.x, this.y, this.radius, 0, Math.PI * 2, true);
+            context.arc(-this.radius / 2, -this.radius / 2, this.radius, 0, Math.PI * 2, true);
             context.closePath();
         });
     }

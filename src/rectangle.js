@@ -36,9 +36,7 @@ export default class Rectangle extends Thing {
     draw(graphics) {
         super.draw(graphics, context => {
             context.beginPath();
-            // Note: after transforming [0,0] is visually [x,y]
-            // so the rect needs to be offset accordingly when drawn
-            context.rect(-this.width / 2, -this.height / 2, this.width, this.height);
+            context.rect(0, 0, this.width, this.height);
             context.closePath();
         });
     }
