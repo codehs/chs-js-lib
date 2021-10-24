@@ -9,9 +9,10 @@ describe('Thing', () => {
             const t2 = new Thing();
             g.add(t2);
             g.add(t1);
-            t2.layer = 2;
+            t1.layer = 2;
             expect(g.elementPool.indexOf(t2)).toBe(0);
             g.redraw();
+            expect(g.elementPool.indexOf(t1)).toBe(0);
             expect(g.elementPool.indexOf(t2)).toBe(1);
         });
     });

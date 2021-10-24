@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Test</title>
+</head>
+<body>
+    <canvas width="500" height="500"></canvas>
+    <script src="../../dist/chs.iife.js"></script>
+<script>    
+const EZ = (() => {
+    let _entityID = 0;
+    let _systemID = 0;
+    const _components = {};
+    const _entities = {};
+    const _filterCache = {};
+    const _invalidationDependencies = {};
+
+    const makeComponent = (
+        name,
+        builder,
+        cleanup,
+    ) => {
+        const _c = (...a) => {
+            return {
+                component: builder?.(...a),
+                name,
+                cleanup,
+            };
+        };
+        _c._name = name;
+        return _c;
+    };
+
+    const makeSystem = (
+        updateFn,
+        ...filters
+    ) => {
+        const filterHash = filters.map(f => f._name).sort().join(',');
+        _filterCache[filterHash] = {
+            entities: {},
+            valid: false,
+        };
+        filters.forEach(({ _name }) => {
+            _invalidationDependencies[_name] = (_invalidationDependencies[_name] ?? []).concat(filterHash);
+        });
+        const update = (dt) => {
+            let entities;
+            if (_filterCache[filterHash].valid) {
+                entities = _filterCache[filterHash].entities;
+            } else {
+                entities = _entitiesForComponents(...filters);
+                _filterCache[filterHash].entities = entities;
+                _filterCache[filterHash].valid = true;
+            }
+
+            if (Object.keys(entities).length > 0) {
+                updateFn(dt, entities);
+            }
+        };
+
+        _systems.push({ update });
+        return update;
+    };
+
+    const input = makeComponent("input", () => {
+        // this is bending the rules of ECS, since it puts logic in the
+        // component. JS doesnt allow you to get the position of
+        // the mouse unless you're tracking it, so here we are.
+        let mouseX;
+        let mouseY;
+        document.addEventListener("mousemove", (e) => {
+            mouseX = e.offsetX;
+            mouseY = e.offsetY;
+        });
+        let pressedKeys = [];
+        window.onkeydown = (e) => {
+            let index = pressedKeys.indexOf(e.keyCode);
+            if (index === -1) {
+                pressedKeys.push(e.keyCode);
+            }
+        };
+        window.onkeyup = (e) => {
+            let index = pressedKeys.indexOf(e.keyCode);
+            if (index !== -1) {
+                pressedKeys.splice(index, 1);
+            }
+        };
+        return {
+            keyboard: {
+                pressedKeys,
+            },
+            mouse: {
+                x: mouseX,
+                y: mouseY,
+            },
+        };
+    });
+
+    const _systems = [];
+
+    function _entitiesForComponents(...filters) {
+        const extractedEntities = Object.entries(_entities).reduce(
+            (matchingEntities, [entityID, { components }]) => {
+                let match = true;
+                const extractedEntity = filters.reduce((entity, filter) => {
+                    if (Object.keys(components).indexOf(filter._name) < 0) {
+                        if (!filter.optional) {
+                            match = false;
+                        }
+                        return entity;
+                    } else {
+                        return Object.assign({}, entity, {
+                            [filter._name]: components[filter._name].component,
+                        });
+                    }
+                }, {});
+                if (!match) {
+                    return matchingEntities;
+                }
+                return Object.assign(matchingEntities, {
+                    [entityID]: extractedEntity,
+                });
+            },
+            {}
+        );
+        return extractedEntities;
+    }
+
+    const optional = (component) => {
+        return { ...component, optional: true };
+    };
+
+    const _registerComponent = (
+        component,
+        entityID,
+    ) => {
+        if (component.name in _components) {
+            _components[component.name] =
+                _components[component.name].concat(component);
+        } else {
+            _components[component.name] = [component];
+        }
+        if (!(entityID in _entities)) {
+            _entities[entityID] = {
+                components: {},
+            };
+        }
+        _entities[entityID].components[component.name] = component;
+        invalidateFilterCacheForComponentNames([component.name]);
+    };
+
+    const _deregisterComponent = (
+        c,
+        entityID
+    ) => {
+        let component;
+        if (typeof c === 'string') {
+            component = _entities[entityID].components[c];
+        } else {
+            component = _entities[entityID].components[c.name];
+        }
+        if (component) {
+            component.cleanup && component.cleanup(component.component);
+            delete _entities[entityID].components[component.name];
+            invalidateFilterCacheForComponentNames([c]);
+        }
+    };
+
+    const _hasComponent = (component, eid) => {
+        return eid in _entities && component.name in _entities[eid]?.components;
+    };
+
+    const _getComponent = (component, eid) => {
+        return eid in _entities && _entities[eid]?.components[component.name]?.component;
+    };
+
+    const _registerSystem = (system) => {
+        _systems.push(system);
+    };
+
+    const invalidateFilterCacheForComponentNames = (componentNames) => {
+        componentNames.forEach(name => {
+            _invalidationDependencies[name]?.forEach(filter => {
+                _filterCache[filter].valid = false;
+            })
+        });
+    };
+
+    const add = (...components) => {
+        const id = _entityID++;
+        components.forEach((component) => {
+            _registerComponent(component, id);
+        });
+        invalidateFilterCacheForComponentNames(components.map(c => c.name));
+        return id;
+    };
+
+    const remove = (eid) => {
+        const components = _entities[eid].components;
+        for (const c in components) {
+            _deregisterComponent(c, eid);
+            invalidateFilterCacheForComponentNames([c.name]);
+        }
+        delete _entities[eid];
+    };
+
+    return {
+        add,
+        remove,
+        makeComponent,
+        registerSystem: _registerSystem,
+        addComponent: _registerComponent,
+        hasComponent: _hasComponent,
+        getComponent: _getComponent,
+        removeComponent: _deregisterComponent,
+        input,
+        optional,
+        makeSystem,
+        runSystems: (dt) => {
+            _systems.forEach((system) => {
+                system.update(dt);
+            });
+        }
+    };
+})();
+
+
+clearInterval(__graphics__.shouldUpdate = false);
+
+// components
+const playerControlled = EZ.makeComponent("PlayerControlled", () => { });
+const position = EZ.makeComponent(
+    "position",
+    ({ x, y }) => {
+        return { x, y };
+    }
+);
+
+const shape = EZ.makeComponent(
+    "shape",
+    (shape, color) => {
+        shape.layer = 1;
+        color && shape.setColor(color);
+        window.add(shape);
+        return shape;
+    },
+    (shape) => {
+        __graphics__.remove(shape);
+    }
+);
+
+const velocity = EZ.makeComponent(
+    "velocity",
+    ({ dx, dy }) => {
+        return { dx, dy };
+    }
+);
+
+const shooting = EZ.makeComponent("shooting", (timer, vx, vy) => {
+    return {
+        cooldown: timer,
+        timer: 0,
+        vx,
+        vy
+    };
+});
+
+const drag = EZ.makeComponent("drag", (coefficient) => {
+    return { coefficient };
+});
+
+const scrollingImage = EZ.makeComponent(
+    "scrollingImage",
+    (asset, timer) => {
+        const img = new Image();
+        img.setAttribute("crossOrigin", "anonymous");
+        return new Promise(
+            (resolve, reject) => {
+                img.onload = () => {
+                    const webImage = new WebImage("");
+                    webImage.width = getWidth();
+                    webImage.height = getHeight();
+                    webImage.setPosition(0, 0);
+
+                    const canvas = document.createElement('canvas');
+                    canvas.width = getWidth();
+                    canvas.height = getHeight();
+                    const context = canvas.getContext('2d');
+                    context.imageSmoothingEnabled = false;
+                    context.drawImage(img, 0, 0, getWidth(), getHeight());
+                    const imageData = context.getImageData(0, 0, getWidth(), getHeight());
+
+                    webImage.setImageData(imageData);
+                    webImage.layer = 0;
+                    add(webImage);
+                    resolve({
+                        image: webImage,
+                        timer,
+                        ttr: timer,
+                    });
+                };
+                img.src = asset;
+            }
+        );
+    }
+);
+
+const shadow = EZ.makeComponent(
+    "shadow",
+    (shape) => {
+        const shadow = shape;
+        const oldDraw = shadow.draw;
+        shadow.draw = function (__graphics__) {
+            var context = __graphics__.getContext();
+            context.save();
+            context.globalAlpha = 0.1;
+            oldDraw.call(shadow, __graphics__);
+            context.restore();
+        };
+        shadow.layer = 2;
+        add(shadow);
+        return shadow;
+    },
+    (shadow) => {
+        __graphics__.remove(shadow);
+    }
+);
+
+const sinusoidalMovement = EZ.makeComponent(
+    "sinusoidalMovement",
+    ({
+        x,
+        y,
+        amplitude,
+        phaseShift,
+    }) => {
+        return { initialX: x, initialY: y, amplitude, phaseShift };
+    }
+);
+
+const breakable = EZ.makeComponent("breakable", () => { });
+
+const breaks = EZ.makeComponent("breaks", () => { });
+
+const aabb = EZ.makeComponent("aabb", ({ x, y, w, h }) => {
+    return { x, y, w, h };
+});
+
+const colliding = EZ.makeComponent("colliding", (collider) => collider);
+
+const textNode = EZ.makeComponent("textNode", (text, x, y) => {
+    // @ts-ignore
+    debugger;
+    const CHSText = Text;
+    const node = new CHSText(text);
+    node.setColor(Color.WHITE);
+    node.layer = 2;
+    node.setPosition(x, y);
+    add(node);
+    return node;
+});
+
+const fpsObserver = EZ.makeComponent("fpsObserver", () => { });
+
+// end components
+
+// systems
+const MovementSystem = EZ.makeSystem(
+    (dt, entities) => {
+        debugger;
+        Object.entries(entities).forEach(
+            ([eid, { position, velocity, aabb }]) => {
+                position.x += dt * velocity.dx;
+                position.y += dt * velocity.dy;
+                if (aabb) {
+                    aabb.x = position.x;
+                    aabb.y = position.y;
+                }
+            }
+        );
+    },
+    position,
+    velocity,
+    EZ.optional(aabb)
+);
+
+const SinusoidalMovementSystem = EZ.makeSystem(
+    (dt, entities) => {
+        for (let eid in entities) {
+            const component = entities[eid];
+            const sinm = component.sinusoidalMovement;
+            const y =
+                component.position.y - sinm.initialY;
+            component.position.x =
+                sinm.initialX +
+                Math.sin(y / 100 + sinm.phaseShift) * sinm.amplitude;
+        }
+    },
+    position,
+    sinusoidalMovement
+);
+
+const PlayerInputSystem = EZ.makeSystem(
+    (dt, entities) => {
+        Object.entries(entities).forEach(
+            ([eid, { velocity, input, shooting: shootingComponent }]) => {
+                if (
+                    input.keyboard.pressedKeys.indexOf(Keyboard.UP) > -1
+                ) {
+                    velocity.dy -= 0.8;
+                }
+                if (
+                    input.keyboard.pressedKeys.indexOf(Keyboard.LEFT) >
+                    -1
+                ) {
+                    velocity.dx -= 0.8;
+                }
+                if (
+                    input.keyboard.pressedKeys.indexOf(Keyboard.RIGHT) >
+                    -1
+                ) {
+                    velocity.dx += 0.8;
+                }
+                if (
+                    input.keyboard.pressedKeys.indexOf(Keyboard.DOWN) >
+                    -1
+                ) {
+                    velocity.dy += 0.8;
+                }
+                if (
+                    input.keyboard.pressedKeys.indexOf(Keyboard.SPACE) >
+                    -1
+                ) {
+                    if (!shootingComponent) {
+                        EZ.addComponent(shooting(50, 0, -4), parseInt(eid));
+                    }
+                } else {
+                    EZ.removeComponent("shooting", parseInt(eid));
+                }
+            }
+        );
+    },
+    playerControlled,
+    position,
+    velocity,
+    EZ.input,
+    EZ.optional(shooting)
+);
+
+const DragSystem = EZ.makeSystem(
+    (dt, entities) => {
+        Object.entries(entities).forEach(([eid, { drag, velocity }]) => {
+            velocity.dx *= drag.coefficient;
+            velocity.dy *= drag.coefficient;
+        });
+    },
+    drag,
+    velocity
+);
+
+const ShootingSystem = EZ.makeSystem(
+    (dt, entities) => {
+        Object.entries(entities).forEach(
+            ([eid, { shooting, position: entityPosition }]) => {
+                if (shooting.timer <= 0) {
+                    EZ.add(
+                        position({ ...entityPosition }),
+                        velocity({ dx: shooting.vx, dy: shooting.vy }),
+                        shape(new Circle(10), Color.RED),
+                        aabb({
+                            ...entityPosition,
+                            w: 20,
+                            h: 20,
+                        }),
+                        breaks(),
+                        breakable()
+                    );
+                    shooting.timer = shooting.cooldown;
+                }
+                shooting.timer -= dt;
+            }
+        );
+    },
+    shooting,
+    position
+);
+
+// const BreakingSystem = EZ.makeSystem(
+//     (dt, entities) => {
+//         const breakables = Object.entries(entities)
+//             .filter(([_, c]) => "breakable" in c)
+//             .reduce((acc, [eid, component]) => {
+//                 acc[eid] = component;
+//                 return acc;
+//             }, {});
+//         for (let breakableEntity in breakables) {
+//             const collider = breakables[breakableEntity].colliding;
+//             if (EZ.hasComponent(breaks, collider)) {
+//                 // println('what');
+//                 EZ.remove(parseInt(breakableEntity));
+//                 if (EZ.hasComponent(breakable, collider)) {
+//                     EZ.remove(parseInt(collider));
+//                 }
+//             }
+//         }
+//     },
+//     EZ.optional(breaks),
+//     EZ.optional(breakable),
+//     colliding
+// );
+
+const BGSystem = EZ.makeSystem((dt, entities) => {
+    Object.entries(entities).forEach(([eid, { scrollingImage }]) => {
+        scrollingImage.then(({ image }) => {
+            const PPF = 2;
+            const imageContext = image._hiddenCanvas.getContext("2d");
+            // TODO: support this less hacky...?
+            const existingImageData = imageContext.getImageData(
+                0,
+                0,
+                image.width,
+                image.height
+            );
+            const lastRow = imageContext.getImageData(
+                0,
+                image.height - PPF,
+                image.width,
+                PPF
+            );
+            // puts everything from the second row down on the bottom
+            imageContext.putImageData(existingImageData, 0, PPF);
+            // put the bottom row onto the top
+            imageContext.putImageData(lastRow, 0, 0, 0, 0, image.width, PPF);
+            image.data = imageContext.getImageData(
+                0,
+                0,
+                image.width,
+                image.height
+            );
+        });
+    });
+}, scrollingImage);
+
+const RenderSystem = EZ.makeSystem(
+    (dt, entities) => {
+        Object.entries(entities)
+            .forEach(([eid, { position, shape }]) => {
+                shape.setPosition(position.x, position.y);
+                if (
+                    position.x < 0 ||
+                    position.x > getWidth() ||
+                    position.y < 0 ||
+                    position.y > getHeight()
+                ) {
+                    EZ.remove(parseInt(eid));
+                }
+            });
+        __graphics__.redraw();
+    },
+    position,
+    shape
+);
+
+const ShadowSystem = EZ.makeSystem(
+    (dt, entities) => {
+        Object.entries(entities).forEach(([eid, { position, shadow }]) => {
+            shadow.setPosition(position.x - 20, position.y + 30);
+        });
+    },
+    position,
+    shadow
+);
+
+const intersects = (aabb1, aabb2) => {
+    const aminx = aabb1.x;
+    const amaxx = aabb1.x + aabb1.w;
+    const aminy = aabb1.y;
+    const amaxy = aabb1.y + aabb1.h;
+    const bminx = aabb2.x;
+    const bmaxx = aabb2.x + aabb2.w;
+    const bminy = aabb2.y;
+    const bmaxy = aabb2.y + aabb2.h;
+    return aminx <= bmaxx && amaxx >= bminx && aminy <= bmaxy && amaxy >= bminy;
+};
+
+const CollisionSystem = EZ.makeSystem(
+    (dt, entities) => {
+        for (let e1 in entities) {
+            for (let e2 in entities) {
+                if (e1 === e2) {
+                    continue;
+                }
+                const aabb1 = entities[e1].aabb;
+                const aabb2 = entities[e2].aabb;
+                if (intersects(aabb1, aabb2)) {
+                    EZ.addComponent(colliding(e2), parseInt(e1));
+                    EZ.addComponent(colliding(e1), parseInt(e2));
+                } else if (EZ.hasComponent(colliding, parseInt(e1))) {
+                    EZ.removeComponent(colliding, parseInt(e1));
+                }
+            }
+        }
+    },
+    aabb,
+    position
+);
+
+const FPSObserverSystem = EZ.makeSystem(
+    (dt, entities) => {
+        const fps = 100 / dt;
+        Object.entries(entities).forEach(([_, {textNode}]) => {
+            textNode.setText(Math.floor(fps).toString())
+        });
+    },
+    textNode,
+    fpsObserver
+);
+
+// end systems
+
+const bg = EZ.add(
+    // scrollingImage("https://codehs.com/uploads/16f33814b27afdf319915cd157ef6663", 2000),
+    // scrollingImage("https://codehs.com/uploads/7bffe6720c66968ea0c4fc4615d8a3e1", 2000),
+    scrollingImage(
+        "https://codehs.com/uploads/e9468e0db52247f93d2104a8602d7087",
+        2000
+    ),
+    position({ x: 0, y: 0 })
+);
+
+const player = EZ.add(
+    EZ.input(),
+    playerControlled(),
+    drag(0.7),
+    shape(new Rectangle(20, 20)),
+    position({
+        x: getWidth() / 2,
+        y: getHeight() / 2,
+    }),
+    aabb({
+        x: getWidth() / 2,
+        y: getHeight() / 2,
+        w: 20,
+        h: 20,
+    }),
+    velocity({ dx: 0, dy: 0 }),
+    shadow(new Rectangle(20, 20))
+);
+
+const fpsCounter = EZ.add(
+    textNode('0', getWidth() - 50, getHeight() - 50),
+    fpsObserver(),
+);
+
+setInterval(() => {
+    const x = getWidth() / 2;
+    EZ.add(
+        shape(new Rectangle(20, 20)),
+        aabb({
+            x: x,
+            y: 0,
+            w: 20,
+            h: 20,
+        }),
+        position({
+            x: x,
+            y: 0,
+        }),
+        velocity({ dx: 0, dy: .6 }),
+        shadow(new Rectangle(20, 20)),
+        sinusoidalMovement({
+            x: x,
+            y: 0,
+            amplitude: getWidth() / 2,
+            phaseShift: Math.PI,
+        }),
+        breakable()
+    );
+    EZ.add(
+        shape(new Rectangle(20, 20)),
+        aabb({
+            x: x,
+            y: 0,
+            w: 20,
+            h: 20,
+        }),
+        position({
+            x: x,
+            y: 0,
+        }),
+        velocity({ dx: 0, dy: .6 }),
+        shadow(new Rectangle(20, 20)),
+        sinusoidalMovement({
+            x: x,
+            y: 0,
+            amplitude: getWidth() / 2,
+            phaseShift: 0,
+        }),
+        breakable()
+    );
+    console.log(__graphics__.elementPool.length);
+}, 500);
+
+setTimeout(() => {
+    setInterval(() => {
+        const x = 0;
+        const y = 0;
+        EZ.add(
+            shape(new Rectangle(30, 30)),
+            aabb({
+                x: x,
+                y: y,
+                w: 30,
+                h: 30,
+            }),
+            position({
+                x: 0,
+                y: 0,
+            }),
+            velocity({ dx: 1, dy: 1 }),
+            shadow(new Rectangle(30, 30)),
+            breakable(),
+        );
+        EZ.add(
+            shape(new Rectangle(30, 30)),
+            aabb({
+                x: getWidth(),
+                y: 0,
+                w: 30,
+                h: 30,
+            }),
+            position({
+                x: getWidth(),
+                y: 0,
+            }),
+            velocity({ dx: -1, dy: 1 }),
+            shadow(new Rectangle(30, 30)),
+            breakable(),
+        );
+    }, 1000);
+}, 3000);
+
+console.log("Arrows to move, space to shoot");
+console.log("(Click the canvas to focus it)");
+
+const _initialTime = Date.now();
+let _then = _initialTime;
+const _fps = 60;
+const _fpsInterval = 1000 / _fps;
+const _tick = () => {
+    requestAnimationFrame(_tick);
+    const now = Date.now();
+    const elapsed = now - _then;
+    if (elapsed > _fpsInterval) {
+        _then = now - (elapsed % _fpsInterval);
+        EZ.runSystems(elapsed / 10);
+    }
+};
+requestAnimationFrame(_tick);
+</script>
+</body>
+</html>
