@@ -9,66 +9,25 @@ const GREEN = 1;
 const BLUE = 2;
 const ALPHA = 3;
 
-// Keep track of cross origin WebImage URLs that have already been loaded
-// so we can take advantage of loading cross origin images from the browser cache
-const cachedCrossOriginURLs = {};
-
 /**
  * @constructor
  * @augments Thing
  * @param {string} filename - Filepath to the image
  */
 export default class WebImage extends Thing {
+    /**
+     * @constructor
+     * @param {string} filename
+     */
     constructor(filename) {
+        super();
         if (typeof filename !== 'string') {
             throw new TypeError(
-                'You must pass a string to `' + "new WebImage(filename)` that has the image's URL.",
+                `You must pass a string to \`new WebImage(filename)\` that has the image\'s URL. Received type ${typeof filename}`
             );
         }
 
-        this.image = new Image();
-        // If the image is from a different origin, we need to request the image using
-        // crossOrigin 'Anonymous', which allows WebImage to treat the image as
-        // same origin and manipulate pixel data
-        // https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/crossorigin
-        var urlParser = document.createElement('a');
-        urlParser.href = filename;
-        var src = filename;
-        if (urlParser.origin != window.location.origin) {
-            this.image.crossOrigin = 'Anonymous';
-
-            // If we've loaded this cross origin URL before, keep using the same URL
-            if (cachedCrossOriginURLs.hasOwnProperty(filename)) {
-                src = cachedCrossOriginURLs[filename];
-            } else {
-                // Otherwise we need to avoid the browser cache
-                // Browser may have the image cached without the proper
-                // Access-Control-Allow-Origin header on the resource
-                // Ensure that we initiate a new crossOrigin 'anonymous' request for this
-                // image, rather than pulling from browser cache, by making filename unique
-                // We'll keep using this unique filename next time
-                src = filename + '?time=' + Date.now();
-                cachedCrossOriginURLs[filename] = src;
-            }
-        }
-        this.imageLoaded = false;
-        this.image.src = src;
-        this.filename = filename;
-        this.width = NOT_LOADED;
-        this.height = NOT_LOADED;
-        this.image.onload = () => {
-            this.imageLoaded = true;
-            this.checkDimensions();
-            this.loadPixelData();
-            if (this.loadfn) {
-                this.loadfn();
-            }
-        };
-        this.set = 0;
-
-        this.displayFromData = false;
-        this.dirtyHiddenCanvas = false;
-        this.data = NOT_LOADED;
+        this.setImage(filename);
     }
 
     /**
@@ -88,60 +47,33 @@ export default class WebImage extends Thing {
     setImage(filename) {
         if (typeof filename !== 'string') {
             throw new TypeError(
-                'You must pass a string to `' + "new WebImage(filename)` that has the image's URL.",
+                `You must pass a string to \`setImage(filename)\` that has the image\'s URL. Received type ${typeof filename}`
             );
         }
 
-        this.image = new Image();
-        // If the image is from a different origin, we need to request the image using
-        // crossOrigin 'Anonymous', which allows WebImage to treat the image as
-        // same origin and manipulate pixel data
-        // https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/crossorigin
-        var urlParser = document.createElement('a');
-        urlParser.href = filename;
-        var src = filename;
-        if (urlParser.origin != window.location.origin) {
-            this.image.crossOrigin = 'Anonymous';
+        this._hiddenCanvas = document.createElement('canvas');
 
-            // If we've loaded this cross origin URL before, keep using the same URL
-            if (cachedCrossOriginURLs.hasOwnProperty(filename)) {
-                src = cachedCrossOriginURLs[filename];
-            } else {
-                // Otherwise we need to avoid the browser cache
-                // Browser may have the image cached without the proper
-                // Access-Control-Allow-Origin header on the resource
-                // Ensure that we initiate a new crossOrigin 'anonymous' request for this
-                // image, rather than pulling from browser cache, by making filename unique
-                // We'll keep using this unique filename next time
-                src = filename + '?time=' + Date.now();
-                cachedCrossOriginURLs[filename] = src;
-            }
-        }
-        this.imageLoaded = false;
-        this.image.src = src;
+        this.image = new Image();
+        this.image.crossOrigin = true;
+        this.image.src = filename;
         this.filename = filename;
         this.width = NOT_LOADED;
         this.height = NOT_LOADED;
+        this.data = NOT_LOADED;
         this.image.onload = () => {
-            this.imageLoaded = true;
             this.checkDimensions();
             this.loadPixelData();
             if (this.loadfn) {
                 this.loadfn();
             }
         };
-        this.set = 0;
-
-        this.displayFromData = false;
-        this.dirtyHiddenCanvas = false;
-        this.data = NOT_LOADED;
     }
 
     /**
      * Reinforce the dimensions of the WebImage based on the image it displays.
      */
     checkDimensions() {
-        if (this.width == NOT_LOADED && this.imageLoaded) {
+        if (this.data === NOT_LOADED) {
             this.width = this.image.width;
             this.height = this.image.height;
         }
@@ -153,49 +85,23 @@ export default class WebImage extends Thing {
      * @param {CodeHSGraphics} __graphics__ - Instance of the __graphics__ module.
      */
     draw(__graphics__) {
-        this.checkDimensions();
-        var context = __graphics__.getContext('2d');
-
+        if (this.data === NOT_LOADED) {
+            return;
+        }
+        const context = __graphics__.getContext('2d');
+        context.save();
         // Scale and translate
-        // X scale, X scew, Y scew, Y scale, X position, Y position
+        // X scale, X skew, Y scew, Y scale, X position, Y position
         context.setTransform(1, 0, 0, 1, this.x + this.width / 2, this.y + this.height / 2);
         context.rotate(this.rotation);
-
-        // If we should be displaying the underlying pixel data, display that
-        // Otherwise display the image
-        var elemToDraw = this.image;
-        if (this.displayFromData && this.data !== NOT_LOADED && this.hiddenCanvas) {
-            // Update the in memory canvas with the latest pixel data if necessary
-            if (this.dirtyHiddenCanvas) {
-                var ctx = this.hiddenCanvas.getContext('2d');
-                ctx.clearRect(0, 0, this.hiddenCanvas.width, this.hiddenCanvas.height);
-                ctx.putImageData(this.data, 0, 0);
-                this.dirtyHiddenCanvas = false;
-            }
-            elemToDraw = this.hiddenCanvas;
-        }
-
-        try {
-            context.drawImage(
-                elemToDraw,
-                -this.width / 2,
-                -this.height / 2,
-                this.width,
-                this.height,
-            );
-        } catch (err) {
-            throw new TypeError(
-                'Unable to create a WebImage from `' +
-                    this.filename +
-                    '` ' +
-                    'Make sure you have a valid image URL. ' +
-                    'Hint: You can use More > Upload to upload your image and create a valid image URL.',
-            );
-        } finally {
-            // Reset transformation matrix
-            // X scale, X scew, Y scew, Y scale, X position, Y position
-            context.setTransform(1, 0, 0, 1, 0, 0);
-        }
+        context.drawImage(
+            this._hiddenCanvas,
+            -this.width / 2,
+            -this.height / 2,
+            this.width,
+            this.height
+        );
+        context.restore();
     }
 
     /**
@@ -203,28 +109,12 @@ export default class WebImage extends Thing {
      * Read more at https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/getImageData
      */
     loadPixelData() {
-        if (this.data === NOT_LOADED && this.imageLoaded) {
-            try {
-                // get the ImageData for this image
-                this.hiddenCanvas = document.createElement('canvas');
-                this.hiddenCanvas.width = this.width;
-                this.hiddenCanvas.height = this.height;
-                var ctx = this.hiddenCanvas.getContext('2d');
-                ctx.drawImage(this.image, 0, 0, this.width, this.height);
-                this.data = ctx.getImageData(0, 0, this.width, this.height);
-                this.dirtyHiddenCanvas = false;
-            } catch (err) {
-                // NOTE: This should never happen now that we request images using
-                // image.crossOrigin = 'Anonymous'
-                // If the image was loaded, that means the external domain gave us CORS
-                // access to the image and the browser will treat it as if it is same origin,
-                // meaning we should be allowed to call 'getImageData'
-                //
-                // Just in case 'getImageData' fails,
-                // Fail silently so we can still display the image from cross origin,
-                // we just don't access the underlying image data
-                this.data = NOT_LOADED;
-            }
+        if (this.data === NOT_LOADED) {
+            this._hiddenCanvas.width = this.width;
+            this._hiddenCanvas.height = this.height;
+            const context = this._hiddenCanvas.getContext('2d');
+            context.drawImage(this.image, 0, 0, this.width, this.height);
+            this.data = context.getImageData(0, 0, this.width, this.height);
         }
         return this.data;
     }
@@ -266,30 +156,13 @@ export default class WebImage extends Thing {
      */
     setSize(width, height) {
         if (arguments.length !== 2) {
-            throw new Error(
-                'You should pass exactly 2 arguments to <span ' +
-                    'class="code">setSize(width, height)`',
-            );
+            throw new Error('You should pass exactly 2 arguments to `setSize(width, height)`.');
         }
         if (typeof width !== 'number' || !isFinite(width)) {
-            throw new TypeError(
-                'Invalid value for `width' +
-                    '`. Make sure you are passing finite numbers to <span ' +
-                    'class="code">setSize(width, height)`. Did you ' +
-                    'forget the parentheses in `getWidth()` ' +
-                    'or `getHeight()`? Or did you perform a ' +
-                    'calculation on a variable that is not a number?',
-            );
+            throw new TypeError(`Invalid value for \`width\`. Received type ${typeof width}`);
         }
         if (typeof height !== 'number' || !isFinite(height)) {
-            throw new TypeError(
-                'Invalid value for `height' +
-                    '`. Make sure you are passing finite numbers to <span ' +
-                    'class="code">setSize(width, height)`. Did you ' +
-                    'forget the parentheses in `getWidth()` ' +
-                    'or `getHeight()`? Or did you perform a ' +
-                    'calculation on a variable that is not a number?',
-            );
+            throw new TypeError(`Invalid value for \`height\`. Received type ${typeof height}`);
         }
         this.width = Math.max(0, width);
         this.height = Math.max(0, height);
@@ -309,11 +182,10 @@ export default class WebImage extends Thing {
      */
     getPixel(x, y) {
         if (this.data === NOT_LOADED || x > this.width || x < 0 || y > this.height || y < 0) {
-            var noPixel = [UNDEFINED, UNDEFINED, UNDEFINED, UNDEFINED];
-            return noPixel;
+            return [UNDEFINED, UNDEFINED, UNDEFINED, UNDEFINED];
         } else {
-            var index = NUM_CHANNELS * (y * this.width + x);
-            var pixel = [
+            const index = NUM_CHANNELS * (y * this.width + x);
+            const pixel = [
                 this.data.data[index + RED],
                 this.data.data[index + GREEN],
                 this.data.data[index + BLUE],
@@ -380,14 +252,9 @@ export default class WebImage extends Thing {
     setPixel(x, y, component, val) {
         if (this.data !== NOT_LOADED && !(x < 0 || y < 0 || x > this.width || y > this.height)) {
             // Update the pixel value
-            var index = NUM_CHANNELS * (y * this.width + x);
+            const index = NUM_CHANNELS * (y * this.width + x);
             this.data.data[index + component] = val;
-
-            // Now that we have modified the image data, we need to display
-            // the image based on the underlying image data rather than the
-            // image url
-            this.displayFromData = true;
-            this.dirtyHiddenCanvas = true;
+            this.updateHiddenCanvas();
         }
     }
 
@@ -438,5 +305,38 @@ export default class WebImage extends Thing {
      */
     setAlpha(x, y, val) {
         this.setPixel(x, y, ALPHA, val);
+    }
+
+    /**
+     * Replace the underlying ImageData of the WebImage with an instance of the ImageData class.
+     * @example
+     * const imageData = new ImageData(
+     *   new UInt8ClampedArray([255, 0, 0, 255]),
+     *   1,
+     *   1
+     * );
+     * const img = new Webimage('www.whatever.com');
+     * img.setImageData(imageData);
+     * add(img);
+     *
+     * @param {ImageData} imageData
+     */
+    setImageData(imageData) {
+        this.image = null;
+        this.data = imageData;
+        this.width = imageData.width;
+        this.height = imageData.height;
+        this.updateHiddenCanvas();
+    }
+
+    /**
+     * Update the hidden canvas with the instance's current data.
+     * This is automatically called after operations that modify ImageData.
+     */
+    updateHiddenCanvas() {
+        this._hiddenCanvas.width = this.width;
+        this._hiddenCanvas.height = this.height;
+        const context = this._hiddenCanvas.getContext('2d');
+        context.putImageData(this.data, 0, 0);
     }
 }
