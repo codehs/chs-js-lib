@@ -51,6 +51,8 @@ window.removeAll = GraphicsInstance.removeAll.bind(GraphicsInstance);
 window.remove = GraphicsInstance.remove.bind(GraphicsInstance);
 window.setBackgroundColor = GraphicsInstance.setBackgroundColor.bind(GraphicsInstance);
 window.getElementAt = GraphicsInstance.getElementAt.bind(GraphicsInstance);
+window.setFullscreen = GraphicsInstance.setFullscreen.bind(GraphicsInstance);
+window.setSize = GraphicsInstance.setSize.bind(GraphicsInstance);
 
 const ConsoleInstance = new Console();
 window.readLine = ConsoleInstance.readLine.bind(ConsoleInstance);
