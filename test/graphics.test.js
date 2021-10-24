@@ -200,11 +200,15 @@ describe('Graphics', () => {
             g.add(c);
             expect(g.elementPool[0]).toBe(c);
         });
-        it('Marks the element as alive', () => {
+    });
+    describe('Removing', () => {
+        it('Removes the element from the internal element pool', () => {
             const g = new Graphics();
             const c = new Circle(20);
             g.add(c);
-            expect(c.alive).toBeTrue();
+            expect(g.elementPool[0]).toBe(c);
+            g.remove(c);
+            expect(g.elementPool.length).toBe(0);
         });
     });
     describe('setBackgroundColor', () => {
