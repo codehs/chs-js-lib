@@ -123,7 +123,6 @@ export default class Text extends Thing {
             );
         }
         this.label = label;
-        this.resetDimensions();
     }
 
     /**
@@ -145,7 +144,6 @@ export default class Text extends Thing {
             );
         }
         this.label = label;
-        this.resetDimensions();
     }
 
     /**
