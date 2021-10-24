@@ -605,16 +605,16 @@ const CollisionSystem = EZ.makeSystem(
     position
 );
 
-// const FPSObserverSystem = EZ.makeSystem(
-//     (dt, entities) => {
-//         const fps = 100 / dt;
-//         Object.entries(entities).forEach(([_, {textNode}]) => {
-//             textNode.setText(Math.floor(fps).toString())
-//         });
-//     },
-//     textNode,
-//     fpsObserver
-// );
+const FPSObserverSystem = EZ.makeSystem(
+    (dt, entities) => {
+        const fps = 100 / dt;
+        Object.entries(entities).forEach(([_, {textNode}]) => {
+            textNode.setText(Math.floor(fps).toString())
+        });
+    },
+    textNode,
+    fpsObserver
+);
 
 // end systems
 
