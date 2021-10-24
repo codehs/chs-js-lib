@@ -547,7 +547,7 @@ class CodeHSGraphics {
         // and all elements with lower layer before elements
         // with higher layer
         if (sortPool) {
-            this.elementPool.sort((a, b) => a.layer - b.layer);
+            this.elementPool.sort((a, b) => b.__layer - a.__layer);
         }
     }
 

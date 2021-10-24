@@ -15,7 +15,7 @@ export default class Text extends Thing {
             throw new Error(
                 'You should pass at least one argument to <span ' +
                     'class="code">new Text(label, font)`. `' +
-                    'label` is a required parameter.',
+                    'label` is a required parameter.'
             );
         }
         if (typeof label !== 'string' && typeof label !== 'number') {
@@ -23,7 +23,7 @@ export default class Text extends Thing {
                 'Invalid value for `label' +
                     '`. You passed a value of type ' +
                     typeof label +
-                    ' but a string or number is required.',
+                    ' but a string or number is required.'
             );
         }
 
@@ -34,7 +34,7 @@ export default class Text extends Thing {
                 'Invalid value for `font' +
                     '`. You passed a value of type ' +
                     typeof label +
-                    ' but a string is required.',
+                    ' but a string is required.'
             );
         }
 
@@ -93,20 +93,16 @@ export default class Text extends Thing {
      */
     setFont(font) {
         if (arguments.length !== 1) {
-            throw new Error(
-                'You should pass exactly 1 argument to <span ' + 'class="code">setFont`',
-            );
+            throw new Error('You should pass exactly 1 argument to `setFont`');
         }
         if (typeof font !== 'string') {
             throw new TypeError(
-                'Invalid value passed to <span class=' +
-                    '"code">setFont`. You passed a value of type ' +
+                'Invalid value passed to `setFont`. You passed a value of type ' +
                     typeof label +
-                    ', but a string is required.',
+                    ', but a string is required.'
             );
         }
         this.font = font;
-        this.resetDimensions();
     }
 
     /**
@@ -117,16 +113,13 @@ export default class Text extends Thing {
      */
     setLabel(label) {
         if (arguments.length !== 1) {
-            throw new Error(
-                'You should pass exactly 1 argument to <span ' + 'class="code">setLabel`',
-            );
+            throw new Error('You should pass exactly 1 argument to `setLabel`');
         }
         if (typeof label !== 'string' && typeof label !== 'number') {
             throw new TypeError(
-                'Invalid value passed to <span class=' +
-                    '"code">setLabel`. You passed a value of type ' +
+                'Invalid value passed to `setLabel`. You passed a value of type ' +
                     typeof label +
-                    ', but a string or number is required.',
+                    ', but a string or number is required.'
             );
         }
         this.label = label;
@@ -142,16 +135,13 @@ export default class Text extends Thing {
      */
     setText(label) {
         if (arguments.length !== 1) {
-            throw new Error(
-                'You should pass exactly 1 argument to <span ' + 'class="code">setText`',
-            );
+            throw new Error('You should pass exactly 1 argument to `setText`');
         }
         if (typeof label !== 'string' && typeof label !== 'number') {
             throw new TypeError(
-                'Invalid value passed to <span class=' +
-                    '"code">setText`. You passed a value of type ' +
+                'Invalid value passed to `setText`. You passed a value of type ' +
                     typeof label +
-                    ', but a string or number is required.',
+                    ', but a string or number is required.'
             );
         }
         this.label = label;
