@@ -1,6 +1,5 @@
 import Circle from '../src/circle.js';
 import Graphics from '../src/graphics.js';
-
 /**
  * Simulate a mouse event.
  * @param {string} type
@@ -200,7 +199,6 @@ describe('Graphics', () => {
             const c = new Circle(20);
             g.add(c);
             expect(g.elementPool[0]).toBe(c);
-            expect(g.elementPoolSize).toEqual(1);
         });
         it('Marks the element as alive', () => {
             const g = new Graphics();

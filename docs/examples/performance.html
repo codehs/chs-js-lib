@@ -1,0 +1,26 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Test</title>
+</head>
+<body>
+  <canvas id="game" width="480" height="400"></canvas>
+  <script src="../../dist/chs.iife.js"></script>
+  <script id="code">
+    const g = new Graphics();
+    g.shouldUpdate = false;
+    const now = performance.now();
+    const elements = []
+    for (let i = 0; i < 100000; i++) {
+        const c = new Circle(5);
+        elements.push(c);
+        g.add(c);
+    }
+    for (let i = 100000; i--;) {
+        g.remove(elements[i]);
+    }
+    console.log(performance.now() - now);
+  </script>
+</body>
+</html>
