@@ -89,6 +89,15 @@ export default class Thing {
     }
 
     /**
+     * Set the opacity of the Thing.
+     *  
+     * @param {number} opacity 
+     */
+    setOpacity(opacity) {
+        this.opacity = opacity;
+    }
+
+    /**
      * Sets the position of a Thing.
      * Throws an error if there are fewer than 2 params or if
      * they are not numbers.
@@ -317,8 +326,11 @@ export default class Thing {
             context.lineWidth = this.lineWidth;
         }
         context.fillStyle = this.color.toString();
-        context.translate(this.x + (this.width ?? 0) / 2, this.y + (this.height ?? 0) / 2);
+        context.globalAlpha = this.opacity;
+        context.translate(this.x, this.y);
+        context.translate(this.width / 2, this.height / 2);
         context.rotate(this.rotation);
+        context.translate(-this.width / 2, -this.height / 2);
         subclassDraw?.(context);
         if (this.hasBorder) {
             context.stroke();

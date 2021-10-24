@@ -19,7 +19,7 @@ export default class WebVideo extends Thing {
         if (typeof filename !== 'string') {
             throw new TypeError(
                 'You must pass a string to `' +
-                    "new WebVideo(filename)` that has the video's location.",
+                    "new WebVideo(filename)` that has the video's location."
             );
         }
 
@@ -61,29 +61,21 @@ export default class WebVideo extends Thing {
     /**
      * Draws the WebVideo in the canvas.
      *
-     * @param {CodeHSGraphics} __graphics__ - Instance of the __graphics__ module.
+     * @param {CodeHSGraphics} graphics - Instance of the CodeHSGraphics module.
      */
-    draw(__graphics__) {
-        if (this.browserSupportsVideo) {
-            var context = __graphics__.getContext('2d');
-
-            // Scale and translate
-            // X scale, X scew, Y scew, Y scale, X position, Y position
-            context.setTransform(1, 0, 0, 1, this.x + this.width / 2, this.y + this.height / 2);
-            context.rotate(this.rotation);
-
+    draw(graphics) {
+        if (!this.browserSupportsVideo) {
+            return;
+        }
+        super.draw(graphics, context => {
             context.drawImage(
                 this.video,
                 -this.width / 2,
                 -this.height / 2,
                 this.width,
-                this.height,
+                this.height
             );
-
-            // Reset transformation matrix
-            // X scale, X scew, Y scew, Y scale, X position, Y position
-            context.setTransform(1, 0, 0, 1, 0, 0);
-        }
+        });
     }
 
     /**

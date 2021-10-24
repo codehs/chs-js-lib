@@ -45,7 +45,7 @@ describe('Circle', () => {
             circle.setPosition(30, 20);
             const contextSpy = spyOn(g.getContext(), 'arc');
             circle.draw(g);
-            expect(contextSpy).toHaveBeenCalledOnceWith(30, 20, 50, 0, Math.PI * 2, true);
+            expect(contextSpy).toHaveBeenCalledOnceWith(-25, -25, 50, 0, Math.PI * 2, true);
         });
         it('Applies the appropriate fillStyle', () => {
             const g = new Graphics();
