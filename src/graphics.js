@@ -1,5 +1,6 @@
 import { getAudioContext } from './audioContext.js';
 import Sound from './sound.js';
+import Thing from './thing.js';
 import WebVideo from './webvideo.js';
 
 const DEFAULT_FRAME_RATE = 40;
@@ -19,7 +20,6 @@ class CodeHSGraphics {
     analyser = null;
     dataArray = null;
     elementPool = [];
-    elementPoolSize = 0;
 
     /**
      * Set up an instance of the graphics library.
@@ -56,15 +56,12 @@ class CodeHSGraphics {
      * @param {Thing} elem - A subclass of Thing to be added to the graphics instance.
      */
     add(elem) {
-        // Need to mutate in case the user is expecting
-        // to be able to reference it.
         elem.alive = true;
         this.elementPool.push(elem);
-        this.elementPoolSize++;
     }
 
     Audio(url) {
-        var audioElem = new window.Audio(url);
+        const audioElem = new window.Audio(url);
         audioElem.crossOrigin = 'anonymous';
         this.audioElements.push(audioElem);
         return audioElem;
@@ -197,7 +194,7 @@ class CodeHSGraphics {
      * @returns {float} The width of the canvas.
      */
     getWidth() {
-        var canvas = this.getCanvas();
+        const canvas = this.getCanvas();
         return parseFloat(canvas.getAttribute('width'));
     }
 
@@ -206,7 +203,7 @@ class CodeHSGraphics {
      * @returns {float} The height of the canvas.
      */
     getHeight() {
-        var canvas = this.getCanvas();
+        const canvas = this.getCanvas();
         return parseFloat(canvas.getAttribute('height'));
     }
 
@@ -216,7 +213,7 @@ class CodeHSGraphics {
      * note 'fn' may also be the name of the function.
      */
     stopTimer(fn) {
-        var key = typeof fn === 'function' ? fn.name : fn;
+        const key = typeof fn === 'function' ? fn.name : fn;
         clearInterval(this.timers[key]);
     }
 
@@ -224,7 +221,7 @@ class CodeHSGraphics {
      * Stop all timers.
      */
     stopAllTimers() {
-        for (var i = 1; i < 99999; i++) {
+        for (let i = 1; i < 99999; i++) {
             window.clearInterval(i);
         }
         this.setMainTimer();
@@ -306,7 +303,7 @@ class CodeHSGraphics {
      * @returns {Thing|null} The object at the point (x, y), if there is one (else null).
      */
     getElementAt(x, y) {
-        for (var i = this.elementPoolSize - 1; i--; ) {
+        for (let i = this.elementPool.length; i--; ) {
             if (this.elementPool[i].alive && this.elementPool[i].containsPoint(x, y, this)) {
                 return this.elementPool[i];
             }
@@ -321,7 +318,7 @@ class CodeHSGraphics {
      * @returns {boolean}
      */
     elementExistsWithParameters(params) {
-        for (let i = this.elementPoolSize - 1; i >= 0; i--) {
+        for (let i = this.elementPool.length; i--; ) {
             const elem = this.elementPool[i];
             const checkedParams = Object.entries(params).map(([name, value]) => {
                 return value === elem[name];
@@ -340,7 +337,6 @@ class CodeHSGraphics {
     removeAll() {
         this.stopAllVideo();
         this.elementPool = [];
-        this.elementPoolSize = 0;
     }
 
     /**
@@ -397,7 +393,7 @@ class CodeHSGraphics {
     }
 
     stopAllVideo() {
-        for (var i = this.elementPoolSize; i--; ) {
+        for (var i = this.elementPool.length; i--; ) {
             if (this.elementPool[i] instanceof WebVideo) {
                 this.elementPool[i].stop();
             }
@@ -538,7 +534,7 @@ class CodeHSGraphics {
         this.drawBackground();
         let elem;
         let sortPool;
-        for (let i = this.elementPoolSize; i--; ) {
+        for (let i = this.elementPool.length; i--; ) {
             elem = this.elementPool[i];
 
             if (elem.__sortInvalidated) {
@@ -547,7 +543,6 @@ class CodeHSGraphics {
             }
             if (!elem.alive) {
                 sortPool = true;
-                this.elementPoolSize--;
             } else {
                 elem.draw(this);
             }
@@ -844,7 +839,7 @@ CodeHSGraphics.getBaseCoordinates = (e, target) => {
     return { x: x, y: y };
 };
 
-CodeHSGraphics.getMouseCoordinates = (e) => {
+CodeHSGraphics.getMouseCoordinates = e => {
     var baseCoordinates = CodeHSGraphics.getBaseCoordinates(e, e.currentTarget);
     var x = baseCoordinates.x;
     var y = baseCoordinates.y;
@@ -856,7 +851,7 @@ CodeHSGraphics.getMouseCoordinates = (e) => {
     return { x: x, y: y };
 };
 
-CodeHSGraphics.getTouchCoordinates = (e) => {
+CodeHSGraphics.getTouchCoordinates = e => {
     var baseCoordinates = CodeHSGraphics.getBaseCoordinates(e, e.target);
     var x = baseCoordinates.x;
     var y = baseCoordinates.y;
