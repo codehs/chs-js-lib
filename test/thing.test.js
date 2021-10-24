@@ -17,6 +17,18 @@ describe('Thing', () => {
         });
     });
     describe('Opacity', () => {
-        
-    })
+        it('Changing the opacity updates globalAlpha', () => {
+            const g = new Graphics();
+            const t = new Thing();
+            t.setOpacity(0.5);
+            g.add(t);
+            const globalAlphaSpy = spyOnProperty(
+                g.getContext(),
+                'globalAlpha',
+                'set'
+            ).and.callThrough();
+            g.redraw();
+            expect(globalAlphaSpy).toHaveBeenCalledOnceWith(0.5);
+        });
+    });
 });
