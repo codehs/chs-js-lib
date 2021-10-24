@@ -306,9 +306,26 @@ export default class Thing {
     }
 
     /**
-     * This function is overridden in subclasses of Thing.
+     * This function is invoked by subclassed, and exists to add
+     * common, shared functionality all classes share.
      */
-    draw() {}
+    draw(graphics, subclassDraw) {
+        const context = graphics.getContext();
+        context.save();
+        if (this.hasBorder) {
+            context.strokeStyle = this.stroke.toString();
+            context.lineWidth = this.lineWidth;
+        }
+        context.fillStyle = this.color.toString();
+        context.translate(this.x + (this.width ?? 0) / 2, this.y + (this.height ?? 0) / 2);
+        context.rotate(this.rotation);
+        subclassDraw?.(context);
+        if (this.hasBorder) {
+            context.stroke();
+        }
+        context.fill();
+        context.restore();
+    }
 
     /**
      * Check if a given point is within the Thing.

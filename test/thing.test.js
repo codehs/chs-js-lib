@@ -16,4 +16,7 @@ describe('Thing', () => {
             expect(g.elementPool.indexOf(t2)).toBe(1);
         });
     });
+    describe('Opacity', () => {
+        
+    })
 });

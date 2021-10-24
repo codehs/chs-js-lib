@@ -34,6 +34,7 @@ export default class Line extends Thing {
         this.x2 = x2;
         this.y2 = y2;
         this.lineWidth = 2;
+        this.hasBorder = true;
     }
 
     /**
@@ -66,18 +67,13 @@ export default class Line extends Thing {
      * @param {CodeHSGraphics} graphics - Instance of the __graphics__ module.
      */
     draw(graphics) {
-        var context = graphics.getContext();
-        context.save();
-        context.fillStyle = this.color.toString();
-        context.beginPath();
-        context.strokeStyle = this.stroke.toString();
-        context.lineWidth = this.lineWidth;
-        var rotatedPoints = getRotatedPoints(this.x1, this.y1, this.x2, this.y2, this.rotation);
-        context.moveTo(rotatedPoints[0], rotatedPoints[1]);
-        context.lineTo(rotatedPoints[2], rotatedPoints[3]);
-        context.closePath();
-        context.stroke();
-        context.restore();
+        super.draw(graphics, context => {
+            var rotatedPoints = getRotatedPoints(this.x1, this.y1, this.x2, this.y2, this.rotation);
+            context.beginPath();
+            context.moveTo(rotatedPoints[0], rotatedPoints[1]);
+            context.lineTo(rotatedPoints[2], rotatedPoints[3]);
+            context.closePath();
+        });
     }
 
     /**
