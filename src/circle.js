@@ -11,11 +11,11 @@ import { getDistance } from './graphics-utils.js';
 class Circle extends Thing {
     /**
      * Constructs a new circle.
-     * @constructor 
+     * @constructor
      * @example
      * const c = new Circle(20);
-     * 
-     * @param {number} radius 
+     *
+     * @param {number} radius
      */
     constructor(radius) {
         super();
@@ -35,31 +35,21 @@ class Circle extends Thing {
 
     /**
      * Draws the circle in the canvas.
-     * 
-     * @private 
+     *
+     * @private
      * @param {CodeHSGraphics} graphics - Instance of the Graphics module.
      */
     draw(graphics) {
-        var context = graphics.getContext();
-        context.beginPath();
-
-        if (this.hasBorder) {
-            context.strokeStyle = this.stroke.toString();
-            context.lineWidth = this.lineWidth;
-        }
-        context.fillStyle = this.color.toString();
-        context.arc(this.x, this.y, this.radius, 0, Math.PI * 2, true);
-        context.closePath();
-
-        if (this.hasBorder) {
-            context.stroke();
-        }
-        context.fill();
+        super.draw(graphics, context => {
+            context.beginPath();
+            context.arc(this.x, this.y, this.radius, 0, Math.PI * 2, true);
+            context.closePath();
+        });
     }
 
     /**
      * Gets the radius of the circle
-     * 
+     *
      * @example
      * const c = new Circle(20);
      * c.getRadius === 20;
@@ -71,7 +61,7 @@ class Circle extends Thing {
 
     /**
      * Gets the height (diamter) of the circle.
-     * 
+     *
      * @example
      * const c = new Circle(20);
      * c.getHeight === 40;
@@ -83,7 +73,7 @@ class Circle extends Thing {
 
     /**
      * Gets the width (diamter) of the circle.
-     * 
+     *
      * @example
      * const c = new Circle(20);
      * c.getHeight === 40;
@@ -95,7 +85,7 @@ class Circle extends Thing {
 
     /**
      * Sets the radius of the circle.
-     * 
+     *
      * @example
      * const c = new Circle(20);
      * c.setRadius(1);
@@ -117,7 +107,7 @@ class Circle extends Thing {
 
     /**
      * Checks if the passed point is contained in the circle.
-     * 
+     *
      * @example
      * const c = new Circle(20);
      * c.setPosition(0, 0);
