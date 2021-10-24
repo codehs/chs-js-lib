@@ -7,6 +7,14 @@
   <canvas id="game" width="480" height="400"></canvas>
   <script src="../../../../dist/chs.iife.js"></script>
   <script id="code">
+      setBackgroundColor(Color.BLACK);
+
+      const text = new Text('~~Opacity~~');
+      text.setPosition(getWidth() / 2, getHeight() / 2);
+      text.setColor(Color.WHITE);
+      add(text);
+      text.layer = 0;
+      text.setOpacity(0.6);
       let rectangles = [];
       let colors = [
           '#F72585',
