@@ -275,7 +275,7 @@ class CodeHSGraphics {
                 name: name,
             });
         } else {
-            this.setGraphicsTimer(this.withErrorHandler(fn), time, data, name);
+            this.setGraphicsTimer(this.withErrorHandler(fn), time, data, name ?? fn.name);
         }
     }
 
