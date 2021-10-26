@@ -2,14 +2,21 @@ import Thing from './thing.js';
 
 /**
  * @class Text
- * @augments Thing
- * @param {string|number} label - The words of the text.
- * @param {string} font - String of the desired font of the text.
  */
 export default class Text extends Thing {
     static defaultContext = null;
 
-    constructor(label, font) {
+    /**
+     *
+     * @param {string|number} label
+     * @param {string} font
+     * @param {{vertical: 'top'|'center'|'bottom', horizontal: 'left'|'center'|'right'}} alignment
+     */
+    constructor(
+        label,
+        font = '20pt Arial',
+        alignment = { vertical: 'bottom', horizontal: 'left' }
+    ) {
         super();
         if (arguments.length < 1) {
             throw new Error(
@@ -27,8 +34,6 @@ export default class Text extends Thing {
             );
         }
 
-        font = font === undefined ? '20pt Arial' : font;
-
         if (typeof font !== 'string') {
             throw new TypeError(
                 'Invalid value for `font' +
@@ -40,24 +45,16 @@ export default class Text extends Thing {
 
         this.label = label;
         this.font = font;
-    }
-
-    /**
-     * Define a default context for the text.
-     * Text objects need access to some 2d graphics context to compute
-     * height and width. This might be done before a draw call.
-     *
-     * @param {CodeHSGraphics} __graphics__ - Instance of the graphics module.
-     */
-
-    static giveDefaultContext(__graphics__) {
-        Text.defaultContext = __graphics__.getContext();
+        this.alignment = alignment;
+        this.resetDimensions();
     }
 
     /**
      * Reset the dimensions of the text to the size in the context.
      */
-    resetDimensions(context) {
+    resetDimensions() {
+        const canvas = document.createElement('canvas');
+        const context = canvas.getContext('2d');
         context.font = this.font;
         this.width = context.measureText(this.label).width;
         this.height = context.measureText('m').width * 1.2; /* No height provided */
@@ -76,8 +73,24 @@ export default class Text extends Thing {
         context.fillStyle = this.color.toString();
         context.beginPath();
         context.font = this.font;
-        this.resetDimensions(context);
-        context.translate(this.x, this.y);
+        this.resetDimensions();
+        let xOffset = 0;
+        if (this.alignment.horizontal === 'left') {
+            xOffset = 0;
+        } else if (this.alignment.horizontal === 'center') {
+            xOffset = -this.width / 2;
+        } else {
+            xOffset = -this.width;
+        }
+        let yOffset = 0;
+        if (this.alignment.vertical === 'top') {
+            yOffset = this.height;
+        } else if (this.alignment.vertical === 'center') {
+            yOffset = this.height / 2;
+        } else {
+            yOffset = 0;
+        }
+        context.translate(this.x + xOffset, this.y + yOffset);
         context.rotate(this.rotation);
         context.fillText(this.label, 0, 0);
         context.closePath();
@@ -182,6 +195,15 @@ export default class Text extends Thing {
      */
     getHeight() {
         return this.height;
+    }
+
+    /**
+     * Update the alignment of the text.
+     * 
+     * @param {{vertical: 'top'|'center'|'bottom', horizontal: 'left'|'center'|'right'}} alignment
+     */
+    setAlignment(alignment) {
+        this.alignment = alignment;
     }
 
     /**
