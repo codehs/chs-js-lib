@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Text Test</title>
+  <style>
+    canvas {
+      border: 1px solid black;
+    }
+  </style>
+</head>
+<body>
+  <script type="module">
+    import {Graphics, Line, Text} from '../../../../dist/chs.mjs';
+    const g1 = new Graphics({canvas: '#c1'});
+    var t = new Text("Bottom/Left");
+    g1.add(t);
+    t.setPosition(g1.getWidth() / 2, g1.getHeight() / 2);
+
+    const g2 = new Graphics({canvas: '#c2'});
+    var t = new Text("Left/Top");
+    t.setAlignment({horizontal: 'left', vertical: 'top'});
+    g2.add(t);
+    t.setPosition(g2.getWidth() / 2, g2.getHeight() / 2);
+
+    const g3 = new Graphics({canvas: '#c3'});
+    var t = new Text("Right/Top");
+    t.setAlignment({horizontal: 'right', vertical: 'top'});
+    g3.add(t);
+    t.setPosition(g3.getWidth() / 2, g3.getHeight() / 2);
+  </script>
+  <canvas id="c1" width="200" height="200"></canvas>
+  <canvas id="c2" width="200" height="200"></canvas>
+  <canvas id="c3" width="200" height="200"></canvas>
+</body>
+</html>
