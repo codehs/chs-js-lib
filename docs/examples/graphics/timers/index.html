@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Text Test</title>
+</head>
+<body>
+  <canvas id="game" width="480" height="400"></canvas>
+  <script src="../../../../dist/chs.iife.js"></script>
+  <script id="code">
+    const draw = () => {
+      var c = new Circle(20);
+      c.setPosition(
+        Math.random() * getWidth(),
+        Math.random() * getHeight()
+      );
+      add(c);
+    }
+    setTimer(draw, 20);
+    mouseClickMethod(() => {
+      stopTimer(draw);
+    })
+  </script>
+</body>
+</html>
