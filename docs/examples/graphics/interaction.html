@@ -1,0 +1,32 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Interaction Test</title>
+  <style>
+    canvas {
+        border: 1px solid black;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="game" width="480" height="400"></canvas>
+  <script src="../../../../dist/chs.iife.js"></script>
+  <script id="code">
+    var label;
+
+    /* This program displays the x and y
+    * coordinates in a label on the screen
+    * and updates when the mouse moves */
+    label = new Text('Hello!');
+    label.setPosition(0, label.getHeight());
+    add(label);
+        
+    mouseMoveMethod(onMouseMove);   
+
+    function onMouseMove(moveEvent) {
+        label.setText('(' + moveEvent.getX() + ", " + moveEvent.getY() + ')');
+    }
+  </script>
+</body>
+</html>
