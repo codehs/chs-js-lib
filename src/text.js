@@ -20,9 +20,7 @@ export default class Text extends Thing {
         super();
         if (arguments.length < 1) {
             throw new Error(
-                'You should pass at least one argument to <span ' +
-                    'class="code">new Text(label, font)`. `' +
-                    'label` is a required parameter.'
+                'You should pass at least one argument to `new Text(label, font)`. `label` is a required parameter.'
             );
         }
         if (typeof label !== 'string' && typeof label !== 'number') {
@@ -199,7 +197,7 @@ export default class Text extends Thing {
 
     /**
      * Update the alignment of the text.
-     * 
+     *
      * @param {{vertical: 'top'|'center'|'bottom', horizontal: 'left'|'center'|'right'}} alignment
      */
     setAlignment(alignment) {
