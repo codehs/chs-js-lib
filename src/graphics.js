@@ -532,7 +532,7 @@ class CodeHSGraphics {
         this.drawBackground();
         let elem;
         let sortPool;
-        for (let i = this.elementPool.length; i--; ) {
+        for (let i = 0; i < this.elementPool.length; i++) {
             elem = this.elementPool[i];
 
             if (elem.__sortInvalidated) {
