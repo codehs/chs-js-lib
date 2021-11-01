@@ -28,7 +28,7 @@ class Arc extends Thing {
      */
     constructor(radius, startAngle, endAngle, angleUnit) {
         super();
-        if (arguments.length !== 4) {kkk
+        if (arguments.length !== 4) {
             throw new Error(
                 'You should pass exactly 4 arguments to `new Arc(radius, startAngle, endAngle, angleUnit)`'
             );
