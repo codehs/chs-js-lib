@@ -80,6 +80,17 @@ describe('Circle', () => {
             expect(strokeStyleSpy).toHaveBeenCalledOnceWith(Color.RED);
             expect(lineWidthSpy).toHaveBeenCalledOnceWith(123);
         });
+        it("Colors pixels at the circle's position", () => {
+            const g = new Graphics();
+            const circle = new Circle(2);
+            circle.setColor(Color.RED);
+            const context = g.getContext();
+            circle.setPosition(20, 20);
+            g.add(circle);
+            g.redraw();
+            const pixel = context.getImageData(20, 20, 1, 1);
+            expect(pixel.data).toEqual(new Uint8ClampedArray([255, 0, 0, 255]));
+        });
     });
     it('getRadius returns radius', () => {
         expect(new Circle(123).getRadius()).toBe(123);
