@@ -15,7 +15,8 @@
     "test": "karma start --single-run",
     "test:watch": "karma start",
     "build": "gulp build",
-    "dist": "gulp dist"
+    "dist": "gulp dist",
+    "docs": "gulp docs"
   },
   "keywords": [
     "javacsript",
