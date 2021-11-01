@@ -33,16 +33,10 @@ describe('Text', () => {
             expect(canvasTranslateSpy).toHaveBeenCalledWith(0, 0);
             t.setAlignment({ horizontal: 'center', vertical: 'center' });
             g.redraw();
-            expect(canvasTranslateSpy).toHaveBeenCalledWith(
-                -t.getWidth() / 2,
-                t.getHeight() / 2
-            );
+            expect(canvasTranslateSpy).toHaveBeenCalledWith(-t.getWidth() / 2, t.getHeight() / 2);
             t.setPosition(10, 10);
             g.redraw();
-            expect(canvasTranslateSpy).toHaveBeenCalledWith(
-                10 - t.getWidth() / 2,
-                10 + t.getHeight() / 2
-            );
+            expect(canvasTranslateSpy).toHaveBeenCalledWith(t.getWidth() / 2, t.getHeight() / 2);
         });
     });
 });
