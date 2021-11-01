@@ -44,18 +44,16 @@ class Polygon extends Thing {
             return;
         }
 
-        var context = graphics.getContext();
-        context.fillStyle = this.color.toString();
-        context.beginPath();
-
-        var first = this.points[0];
-        context.moveTo(first.x, first.y);
-        for (var i = 1; i < this.points.length; i++) {
-            var cur = this.points[i];
-            context.lineTo(cur.x, cur.y);
-        }
-        context.closePath();
-        context.fill();
+        super.draw(graphics, context => {
+            context.beginPath();
+            const first = this.points[0];
+            context.moveTo(first.x, first.y);
+            for (let i = 1; i < this.points.length; i++) {
+                const cur = this.points[i];
+                context.lineTo(cur.x, cur.y);
+            }
+            context.closePath();
+        });
     }
 
     /**
@@ -133,7 +131,7 @@ class Polygon extends Thing {
      * @example
      * const p = new Polygon();
      * p.addPoint(10, 10);
-     * 
+     *
      * @param {number} x - The x coordinate of the desired new vertex.
      * @param {number} y - The y coordinate of the desired new vertex.
      */
@@ -143,12 +141,12 @@ class Polygon extends Thing {
         }
         if (typeof x !== 'number' || !isFinite(x)) {
             throw new TypeError(
-                'Invalid value for x-coordinate. Make sure you are passing finite numbers to `addPoint(x, y)`.',
+                'Invalid value for x-coordinate. Make sure you are passing finite numbers to `addPoint(x, y)`.'
             );
         }
         if (typeof y !== 'number' || !isFinite(y)) {
             throw new TypeError(
-                'Invalid value for y-coordinate. Make sure you are passing finite numbers to `addPoint(x, y)`.',
+                'Invalid value for y-coordinate. Make sure you are passing finite numbers to `addPoint(x, y)`.'
             );
         }
 
@@ -181,12 +179,12 @@ class Polygon extends Thing {
         }
         if (typeof dx !== 'number' || !isFinite(dx)) {
             throw new TypeError(
-                'Invalid number passed for `dx`. Make sure you are passing finite numbers to `move(dx, dy)`.',
+                'Invalid number passed for `dx`. Make sure you are passing finite numbers to `move(dx, dy)`.'
             );
         }
         if (typeof dy !== 'number' || !isFinite(dy)) {
             throw new TypeError(
-                'Invalid number passed for `dy`. Make sure you are passing finite numbers to `move(dx, dy)`.',
+                'Invalid number passed for `dy`. Make sure you are passing finite numbers to `move(dx, dy)`.'
             );
         }
 

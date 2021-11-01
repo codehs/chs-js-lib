@@ -89,6 +89,15 @@ export default class Thing {
     }
 
     /**
+     * Set the opacity of the Thing.
+     *  
+     * @param {number} opacity 
+     */
+    setOpacity(opacity) {
+        this.opacity = opacity;
+    }
+
+    /**
      * Sets the position of a Thing.
      * Throws an error if there are fewer than 2 params or if
      * they are not numbers.
@@ -306,9 +315,29 @@ export default class Thing {
     }
 
     /**
-     * This function is overridden in subclasses of Thing.
+     * This function is invoked by subclassed, and exists to add
+     * common, shared functionality all classes share.
      */
-    draw() {}
+    draw(graphics, subclassDraw) {
+        const context = graphics.getContext();
+        context.save();
+        if (this.hasBorder) {
+            context.strokeStyle = this.stroke.toString();
+            context.lineWidth = this.lineWidth;
+        }
+        context.fillStyle = this.color.toString();
+        context.globalAlpha = this.opacity;
+        context.translate(this.x, this.y);
+        context.translate(this.width / 2, this.height / 2);
+        context.rotate(this.rotation);
+        context.translate(-this.width / 2, -this.height / 2);
+        subclassDraw?.(context);
+        if (this.hasBorder) {
+            context.stroke();
+        }
+        context.fill();
+        context.restore();
+    }
 
     /**
      * Check if a given point is within the Thing.

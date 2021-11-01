@@ -33,32 +33,12 @@ export default class Rectangle extends Thing {
      *
      * @param {CodeHSGraphics} __graphics__ - Instance of the __graphics__ module.
      */
-    draw(__graphics__) {
-        var context = __graphics__.getContext();
-
-        // http://stackoverflow.com/questions/17125632/html5-canvas-rotate-object-without-moving-coordinates
-        context.save();
-        context.fillStyle = this.color.toString();
-
-        if (this.hasBorder) {
-            context.lineWidth = this.lineWidth;
-            context.strokeStyle = this.stroke.toString();
-        }
-
-        context.beginPath();
-        context.translate(this.x + this.width / 2, this.y + this.height / 2);
-        context.rotate(this.rotation);
-        // Note: after transforming [0,0] is visually [x,y]
-        // so the rect needs to be offset accordingly when drawn
-        context.rect(-this.width / 2, -this.height / 2, this.width, this.height);
-        context.closePath();
-
-        if (this.hasBorder) {
-            context.stroke();
-        }
-
-        context.fill();
-        context.restore();
+    draw(graphics) {
+        super.draw(graphics, context => {
+            context.beginPath();
+            context.rect(0, 0, this.width, this.height);
+            context.closePath();
+        });
     }
 
     /**

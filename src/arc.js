@@ -3,7 +3,7 @@ import { getDistance } from './graphics-utils.js';
 
 /** @module Arc */
 
-/** 
+/**
  * An arc is a continuous slice of a circle described by the position of its center, its radius,
  * and the angles it is drawn between
  * @extends Thing
@@ -20,7 +20,7 @@ class Arc extends Thing {
      * @constructor
      * @example
      * const a = new Arc(30, 0, 90, 0);
-     * 
+     *
      * @param {number} radius - Desired radius of the arc.
      * @param {number} startAngle - Start angle of the arc.
      * @param {number} endAngle - End angle of the arc.
@@ -86,30 +86,19 @@ class Arc extends Thing {
      * @param {CodeHSGraphics} graphics - Instance of the CodeHSGraphics module.
      */
     draw(graphics) {
-        var context = graphics.getContext();
-        context.save();
-        context.beginPath();
-        context.translate(this.x, this.y);
-        context.rotate(this.rotation);
-        context.arc(
-            0,
-            0,
-            this.radius,
-            prepareAngle(this.startAngle),
-            prepareAngle(this.endAngle),
-            this.counterclockwise
-        );
-        context.lineTo(0, 0);
-
-        if (this.hasBorder) {
-            context.lineWidth = this.lineWidth;
-            context.strokeStyle = this.stroke.toString();
-            context.stroke();
-        }
-
-        context.fillStyle = this.color.toString();
-        context.fill();
-        context.restore();
+        super.draw(graphics, context => {
+            context.beginPath();
+            context.arc(
+                0,
+                0,
+                this.radius,
+                prepareAngle(this.startAngle),
+                prepareAngle(this.endAngle),
+                this.counterclockwise
+            );
+            context.lineTo(0, 0);
+            context.closePath();
+        });
     }
 
     /**
@@ -204,7 +193,7 @@ class Arc extends Thing {
     }
 
     /**
-     * Checks if a given point is contained within the arc. 
+     * Checks if a given point is contained within the arc.
      *
      * @param {number} x - x coordinate of the point being tested.
      * @param {number} y - y coordinate of the point being tested.

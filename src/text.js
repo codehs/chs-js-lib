@@ -64,36 +64,30 @@ export default class Text extends Thing {
      * @param {CodeHSGraphics} graphics - Instance of the graphics module.
      */
     draw(graphics) {
-        var context = graphics.getContext();
-        this.context = context;
-        // http://stackoverflow.com/questions/17125632/html5-canvas-rotate-object-without-moving-coordinates
-        context.save();
-        context.fillStyle = this.color.toString();
-        context.beginPath();
-        context.font = this.font;
-        this.resetDimensions();
-        let xOffset = 0;
-        if (this.alignment.horizontal === 'left') {
-            xOffset = 0;
-        } else if (this.alignment.horizontal === 'center') {
-            xOffset = -this.width / 2;
-        } else {
-            xOffset = -this.width;
-        }
-        let yOffset = 0;
-        if (this.alignment.vertical === 'top') {
-            yOffset = this.height;
-        } else if (this.alignment.vertical === 'center') {
-            yOffset = this.height / 2;
-        } else {
-            yOffset = 0;
-        }
-        context.translate(this.x + xOffset, this.y + yOffset);
-        context.rotate(this.rotation);
-        context.fillText(this.label, 0, 0);
-        context.closePath();
-        context.fill();
-        context.restore();
+        super.draw(graphics, context => {
+            context.beginPath();
+            context.font = this.font;
+            this.resetDimensions();
+            let xOffset = 0;
+            if (this.alignment.horizontal === 'left') {
+                xOffset = 0;
+            } else if (this.alignment.horizontal === 'center') {
+                xOffset = -this.width / 2;
+            } else {
+                xOffset = -this.width;
+            }
+            let yOffset = 0;
+            if (this.alignment.vertical === 'top') {
+                yOffset = this.height;
+            } else if (this.alignment.vertical === 'center') {
+                yOffset = this.height / 2;
+            } else {
+                yOffset = 0;
+            }
+            context.translate(xOffset, yOffset);
+            context.fillText(this.label, 0, 0);
+            context.closePath();
+        });
     }
 
     /**

@@ -84,24 +84,13 @@ export default class WebImage extends Thing {
      *
      * @param {CodeHSGraphics} __graphics__ - Instance of the __graphics__ module.
      */
-    draw(__graphics__) {
+    draw(graphics) {
         if (this.data === NOT_LOADED) {
             return;
         }
-        const context = __graphics__.getContext('2d');
-        context.save();
-        // Scale and translate
-        // X scale, X skew, Y scew, Y scale, X position, Y position
-        context.setTransform(1, 0, 0, 1, this.x + this.width / 2, this.y + this.height / 2);
-        context.rotate(this.rotation);
-        context.drawImage(
-            this._hiddenCanvas,
-            -this.width / 2,
-            -this.height / 2,
-            this.width,
-            this.height
-        );
-        context.restore();
+        super.draw(graphics, context => {
+            context.drawImage(this._hiddenCanvas, 0, 0, this.width, this.height);
+        });
     }
 
     /**
