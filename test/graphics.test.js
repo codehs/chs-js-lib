@@ -1,15 +1,21 @@
 import Circle from '../src/circle.js';
 import Graphics from '../src/graphics.js';
+
 /**
  * Simulate a mouse event.
  * @param {string} type
  * @param {object} config
  * @param {HTMLElement} target
+ * @param {boolean} touch
  */
-function simulateEvent(type, config, target) {
+function simulateEvent(type, config, target, touch = false) {
     let event;
     try {
-        event = new MouseEvent(type, { bubbles: true });
+        if (touch) {
+            event = new TouchEvent(type, { bubbles: true });
+        } else {
+            event = new MouseEvent(type, { bubbles: true });
+        }
     } catch (e) {
         event = document.createEvent('Event');
         event.initEvent(type, true, false);
@@ -66,6 +72,19 @@ describe('Graphics', () => {
             simulateEvent('mouseup', {}, document.querySelector('#game'));
             expect(mouseSpy).toHaveBeenCalledWith(-8, -8);
         });
+        // TODO: is it possible to test this?
+        // I'm unable to mock a Touch
+        // it('Translates x and y coordinates for touches', () => {
+        //     const g = new Graphics();
+        //     const mouseSpy = jasmine.createSpy();
+        //     g.mouseDownMethod(e => {
+        //         mouseSpy(e.getX(), e.getY());
+        //     });
+        //     simulateEvent('touchstart', {}, document.querySelector('canvas'), true);
+        //     expect(mouseSpy).toHaveBeenCalledWith(-8, -8);
+        //     document.querySelector('#game').style.top = '50px';
+        //     expect(mouseSpy).toHaveBeenCalledWith(-8, -8);
+        // });
     });
     describe('Keyboard events', () => {
         it('Responds to key up events', () => {

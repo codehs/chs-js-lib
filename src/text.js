@@ -2,20 +2,25 @@ import Thing from './thing.js';
 
 /**
  * @class Text
- * @augments Thing
- * @param {string|number} label - The words of the text.
- * @param {string} font - String of the desired font of the text.
  */
 export default class Text extends Thing {
     static defaultContext = null;
 
-    constructor(label, font) {
+    /**
+     *
+     * @param {string|number} label
+     * @param {string} font
+     * @param {{vertical: 'top'|'center'|'bottom', horizontal: 'left'|'center'|'right'}} alignment
+     */
+    constructor(
+        label,
+        font = '20pt Arial',
+        alignment = { vertical: 'bottom', horizontal: 'left' }
+    ) {
         super();
         if (arguments.length < 1) {
             throw new Error(
-                'You should pass at least one argument to <span ' +
-                    'class="code">new Text(label, font)`. `' +
-                    'label` is a required parameter.'
+                'You should pass at least one argument to `new Text(label, font)`. `label` is a required parameter.'
             );
         }
         if (typeof label !== 'string' && typeof label !== 'number') {
@@ -26,8 +31,6 @@ export default class Text extends Thing {
                     ' but a string or number is required.'
             );
         }
-
-        font = font === undefined ? '20pt Arial' : font;
 
         if (typeof font !== 'string') {
             throw new TypeError(
@@ -40,24 +43,16 @@ export default class Text extends Thing {
 
         this.label = label;
         this.font = font;
-    }
-
-    /**
-     * Define a default context for the text.
-     * Text objects need access to some 2d graphics context to compute
-     * height and width. This might be done before a draw call.
-     *
-     * @param {CodeHSGraphics} __graphics__ - Instance of the graphics module.
-     */
-
-    static giveDefaultContext(__graphics__) {
-        Text.defaultContext = __graphics__.getContext();
+        this.alignment = alignment;
+        this.resetDimensions();
     }
 
     /**
      * Reset the dimensions of the text to the size in the context.
      */
-    resetDimensions(context) {
+    resetDimensions() {
+        const canvas = document.createElement('canvas');
+        const context = canvas.getContext('2d');
         context.font = this.font;
         this.width = context.measureText(this.label).width;
         this.height = context.measureText('m').width * 1.2; /* No height provided */
@@ -72,7 +67,24 @@ export default class Text extends Thing {
         super.draw(graphics, context => {
             context.beginPath();
             context.font = this.font;
-            this.resetDimensions(context);
+            this.resetDimensions();
+            let xOffset = 0;
+            if (this.alignment.horizontal === 'left') {
+                xOffset = 0;
+            } else if (this.alignment.horizontal === 'center') {
+                xOffset = -this.width / 2;
+            } else {
+                xOffset = -this.width;
+            }
+            let yOffset = 0;
+            if (this.alignment.vertical === 'top') {
+                yOffset = this.height;
+            } else if (this.alignment.vertical === 'center') {
+                yOffset = this.height / 2;
+            } else {
+                yOffset = 0;
+            }
+            context.translate(xOffset, yOffset);
             context.fillText(this.label, 0, 0);
             context.closePath();
         });
@@ -175,6 +187,15 @@ export default class Text extends Thing {
      */
     getHeight() {
         return this.height;
+    }
+
+    /**
+     * Update the alignment of the text.
+     *
+     * @param {{vertical: 'top'|'center'|'bottom', horizontal: 'left'|'center'|'right'}} alignment
+     */
+    setAlignment(alignment) {
+        this.alignment = alignment;
     }
 
     /**

@@ -275,7 +275,7 @@ class CodeHSGraphics {
                 name: name,
             });
         } else {
-            this.setGraphicsTimer(this.withErrorHandler(fn), time, data, name);
+            this.setGraphicsTimer(this.withErrorHandler(fn), time, data, name ?? fn.name);
         }
     }
 
@@ -360,10 +360,8 @@ class CodeHSGraphics {
         var canvas = this.getCanvas();
         canvas.width = w;
         canvas.height = h;
-        $(canvas).css({
-            'max-height': h,
-            'max-width': w,
-        });
+        canvas.style['max-height'] = h;
+        canvas.style['max-width'] = w;
     }
 
     /**
@@ -534,7 +532,7 @@ class CodeHSGraphics {
         this.drawBackground();
         let elem;
         let sortPool;
-        for (let i = this.elementPool.length; i--; ) {
+        for (let i = 0; i < this.elementPool.length; i++) {
             elem = this.elementPool[i];
 
             if (elem.__sortInvalidated) {
@@ -673,7 +671,6 @@ class CodeHSGraphics {
             }
         };
 
-        // TOUCH EVENTS!
         drawingCanvas.ontouchmove = e => {
             e.preventDefault();
             if (this.dragCallback) {
@@ -813,78 +810,29 @@ if (window.DeviceMotionEvent) {
 }
 
 /* Mouse and Touch Event Helpers */
-
-// Same for MouseEvent or TouchEvent given the event and target
-// Method based on: http://stackoverflow.com/questions/55677/how-do-i-get-the-coordinates-of-a-mouse-click-on-a-canvas-element
-
-CodeHSGraphics.getBaseCoordinates = (e, target) => {
-    var x;
-    var y;
-    if (e.pageX || e.pageY) {
-        x = e.pageX;
-        y = e.pageY;
-    } else {
-        x = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
-        y = e.clientY + document.body.scrollTop + document.documentElement.scrollTop;
-    }
-
-    var offset = target.getBoundingClientRect();
-    x -= offset.left;
-    y -= offset.top;
-
-    return { x: x, y: y };
-};
-
-CodeHSGraphics.getMouseCoordinates = e => {
-    var baseCoordinates = CodeHSGraphics.getBaseCoordinates(e, e.currentTarget);
-    var x = baseCoordinates.x;
-    var y = baseCoordinates.y;
-
-    // at zoom levels != 100%, x and y are floats.
-    x = Math.round(x);
-    y = Math.round(y);
-
-    return { x: x, y: y };
-};
-
-CodeHSGraphics.getTouchCoordinates = e => {
-    var baseCoordinates = CodeHSGraphics.getBaseCoordinates(e, e.target);
-    var x = baseCoordinates.x;
-    var y = baseCoordinates.y;
-
-    // canvas almost always gets scaled down for mobile screens, need to figure
-    // out the x and y in terms of the unscaled canvas size in pixels otherwise
-    // touch coordinates are off
+const calculateCoordinates = e => {
     const canvas = e.target;
-    const screenCanvasWidth = canvas.width();
-    const fullCanvasWidth = canvas.attr('width');
-    const ratio = fullCanvasWidth / screenCanvasWidth;
-    x = x * ratio;
-    y = y * ratio;
-
-    // at zoom levels != 100%, x and y are floats.
-    x = Math.round(x);
-    y = Math.round(y);
-
-    return { x: x, y: y };
+    const rect = canvas.getBoundingClientRect();
+    return {
+        x: Math.round(((e.clientX - rect.left) * canvas.width) / canvas.clientWidth),
+        y: Math.round(((e.clientY - rect.top) * canvas.height) / canvas.clientHeight),
+    };
 };
 
 MouseEvent.prototype.getX = function () {
-    return CodeHSGraphics.getMouseCoordinates(this).x;
+    return calculateCoordinates(this).x;
 };
 
 MouseEvent.prototype.getY = function () {
-    return CodeHSGraphics.getMouseCoordinates(this).y;
+    return calculateCoordinates(this).y;
 };
 
-if (typeof TouchEvent != 'undefined') {
-    TouchEvent.prototype.getX = function () {
-        return CodeHSGraphics.getTouchCoordinates(this.touches[0]).x;
-    };
+TouchEvent.prototype.getX = function () {
+    return calculateCoordinates(this.touches[0]).x;
+};
 
-    TouchEvent.prototype.getY = function () {
-        return CodeHSGraphics.getTouchCoordinates(this.touches[0]).y;
-    };
-}
+TouchEvent.prototype.getY = function () {
+    return calculateCoordinates(this.touches[0]).y;
+};
 
 export default CodeHSGraphics;
