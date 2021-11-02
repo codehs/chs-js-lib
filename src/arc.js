@@ -89,7 +89,6 @@ class Arc extends Thing {
     draw(graphics) {
         super.draw(graphics, context => {
             context.beginPath();
-            context.translate(this.radius / 2, this.radius / 2);
             context.arc(
                 0,
                 0,
