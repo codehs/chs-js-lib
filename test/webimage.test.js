@@ -43,6 +43,30 @@ describe('WebImage', () => {
         });
     });
 
+    describe('Width and Height', () => {
+        it('Loads width and height from image', () => {
+            const wi = new WebImage(RGBURL);
+            return new Promise((resolve, reject) => {
+                wi.loaded(() => {
+                    expect(wi.width).toEqual(90);
+                    expect(wi.height).toEqual(90);
+                    resolve();
+                });
+            });
+        });
+        it('Yields to specific width and height overrides', () => {
+            const wi = new WebImage(RGBURL);
+            wi.setSize(123, 123);
+            return new Promise((resolve, reject) => {
+                wi.loaded(() => {
+                    expect(wi.width).toEqual(123);
+                    expect(wi.height).toEqual(123);
+                    resolve();
+                });
+            });
+        });
+    });
+
     describe('setPixel', () => {
         it('Modifies the existing ImageData of a loaded image', () => {
             const wi = new WebImage(RGBURL);
@@ -56,6 +80,27 @@ describe('WebImage', () => {
                     const topLeftPixel = context.getImageData(0, 0, 1, 1);
                     const pixelData = topLeftPixel.data;
                     expect(pixelData).toEqual(new Uint8ClampedArray([255, 123, 0, 255]));
+                    resolve();
+                });
+            });
+        });
+        it('Updates the internal __dataOutOfSync', () => {
+            const wi = new WebImage(RGBURL);
+            const g = new Graphics();
+            g.add(wi);
+            return new Promise((resolve, reject) => {
+                wi.loaded(() => {
+                    wi.setPixel(0, 0, 1, 123);
+                    expect(wi.__dataOutOfSync).toBeTrue();
+                    const hiddenCanvas = wi.__hiddenCanvas;
+                    let hiddenContext = hiddenCanvas.getContext('2d');
+                    let modifiedPixel = hiddenContext.getImageData(0, 0, 1, 1);
+                    expect(modifiedPixel.data).toEqual(new Uint8ClampedArray([255, 0, 0, 255]));
+                    g.redraw();
+                    expect(wi.__dataOutOfSync).toBeFalse();
+                    hiddenContext = hiddenCanvas.getContext('2d');
+                    modifiedPixel = hiddenContext.getImageData(0, 0, 1, 1);
+                    expect(modifiedPixel.data).toEqual(new Uint8ClampedArray([255, 123, 0, 255]));
                     resolve();
                 });
             });

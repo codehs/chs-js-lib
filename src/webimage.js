@@ -28,6 +28,10 @@ export default class WebImage extends Thing {
         }
 
         this.setImage(filename);
+        // used to indicate that the internal .data is out of sync with
+        // the __hiddenCanvas. when out of sync, the __hiddenCanvas must be
+        // updated before drawing
+        this.__dataOutOfSync = false;
     }
 
     /**
@@ -51,14 +55,14 @@ export default class WebImage extends Thing {
             );
         }
 
-        this._hiddenCanvas = document.createElement('canvas');
+        this.__hiddenCanvas = document.createElement('canvas');
 
         this.image = new Image();
         this.image.crossOrigin = true;
         this.image.src = filename;
         this.filename = filename;
-        this.width = NOT_LOADED;
-        this.height = NOT_LOADED;
+        this.width = null;
+        this.height = null;
         this.data = NOT_LOADED;
         this.image.onload = () => {
             this.checkDimensions();
@@ -73,7 +77,7 @@ export default class WebImage extends Thing {
      * Reinforce the dimensions of the WebImage based on the image it displays.
      */
     checkDimensions() {
-        if (this.data === NOT_LOADED) {
+        if (this.width === null || this.height === null) {
             this.width = this.image.width;
             this.height = this.image.height;
         }
@@ -88,8 +92,11 @@ export default class WebImage extends Thing {
         if (this.data === NOT_LOADED) {
             return;
         }
+        if (this.__dataOutOfSync) {
+            this.updateHiddenCanvas();
+        }
         super.draw(graphics, context => {
-            context.drawImage(this._hiddenCanvas, 0, 0, this.width, this.height);
+            context.drawImage(this.__hiddenCanvas, 0, 0, this.width, this.height);
         });
     }
 
@@ -99,11 +106,12 @@ export default class WebImage extends Thing {
      */
     loadPixelData() {
         if (this.data === NOT_LOADED) {
-            this._hiddenCanvas.width = this.width;
-            this._hiddenCanvas.height = this.height;
-            const context = this._hiddenCanvas.getContext('2d');
+            this.__hiddenCanvas.width = this.width;
+            this.__hiddenCanvas.height = this.height;
+            const context = this.__hiddenCanvas.getContext('2d');
             context.drawImage(this.image, 0, 0, this.width, this.height);
             this.data = context.getImageData(0, 0, this.width, this.height);
+            this.__dataOutOfSync = false;
         }
         return this.data;
     }
@@ -243,7 +251,7 @@ export default class WebImage extends Thing {
             // Update the pixel value
             const index = NUM_CHANNELS * (y * this.width + x);
             this.data.data[index + component] = val;
-            this.updateHiddenCanvas();
+            this.__dataOutOfSync = true;
         }
     }
 
@@ -315,7 +323,7 @@ export default class WebImage extends Thing {
         this.data = imageData;
         this.width = imageData.width;
         this.height = imageData.height;
-        this.updateHiddenCanvas();
+        this.__dataOutOfSync = true;
     }
 
     /**
@@ -323,9 +331,10 @@ export default class WebImage extends Thing {
      * This is automatically called after operations that modify ImageData.
      */
     updateHiddenCanvas() {
-        this._hiddenCanvas.width = this.width;
-        this._hiddenCanvas.height = this.height;
-        const context = this._hiddenCanvas.getContext('2d');
+        this.__hiddenCanvas.width = this.width;
+        this.__hiddenCanvas.height = this.height;
+        const context = this.__hiddenCanvas.getContext('2d');
+        this.__dataOutOfSync = false;
         context.putImageData(this.data, 0, 0);
     }
 }

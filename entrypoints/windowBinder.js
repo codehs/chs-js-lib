@@ -40,6 +40,7 @@ window.getWidth = GraphicsInstance.getWidth.bind(GraphicsInstance);
 window.getHeight = GraphicsInstance.getHeight.bind(GraphicsInstance);
 window.mouseClickMethod = GraphicsInstance.mouseClickMethod.bind(GraphicsInstance);
 window.mouseDownMethod = GraphicsInstance.mouseDownMethod.bind(GraphicsInstance);
+window.mouseDragMethod = GraphicsInstance.mouseDragMethod.bind(GraphicsInstance);
 window.mouseUpMethod = GraphicsInstance.mouseUpMethod.bind(GraphicsInstance);
 window.mouseMoveMethod = GraphicsInstance.mouseMoveMethod.bind(GraphicsInstance);
 window.stopAllTimers = GraphicsInstance.stopAllTimers.bind(GraphicsInstance);
