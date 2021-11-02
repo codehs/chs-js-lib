@@ -6,6 +6,8 @@ import Thing from './thing.js';
 export default class Text extends Thing {
     static defaultContext = null;
 
+    type = 'Text';
+
     /**
      *
      * @param {string|number} label

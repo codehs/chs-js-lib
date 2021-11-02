@@ -55,7 +55,7 @@ export default class CodeHSConsole {
     /**
      * Private method used to read a line.
      * @param {string} promptString - The line to be printed before prompting.
-     * @param {boolean} printPrompt - Whether the prompt should be printed. When readLine and 
+     * @param {boolean} printPrompt - Whether the prompt should be printed. When readLine and
      * other methods for getting user input are called, the prompt string is additionally printed.
      */
     readLinePrivate(promptString, printPrompt) {
@@ -109,7 +109,7 @@ export default class CodeHSConsole {
      *       type.
      * @param {string} str - The prompt string
      * @param {function} parseFn - A function to parse the user input to determine if it satisfies
-     * the expected datatype. If the return value of parseFn satisfies `!isNaN`, the value is 
+     * the expected datatype. If the return value of parseFn satisfies `!isNaN`, the value is
      * returned. If the result is null, the prompt will repeat until satisfied, or 100 prompts have
      * occurred.
      * @param {string} errorMsgType - A strinng to include in the error message to the user explaining

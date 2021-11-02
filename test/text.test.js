@@ -21,6 +21,9 @@ describe('Text', () => {
                     horizontal: 'center',
                 });
             });
+            it('Creates a text with .type', () => {
+                expect(new Text('Hello').type).toEqual('Text');
+            });
         });
     });
     describe('Alignment', () => {

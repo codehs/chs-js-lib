@@ -2,6 +2,11 @@ import Polygon from '../src/polygon.js';
 import Graphics from '../src/graphics.js';
 
 describe('Polygon', () => {
+    describe('The polygon constructor', () => {
+        it('Creates a polygon with .type', () => {
+            expect(new Polygon().type).toEqual('Polygon');
+        });
+    });
     describe('getWidth()', () => {
         it('Returns the maximum width between any two points in the x axis', () => {
             const p = new Polygon();

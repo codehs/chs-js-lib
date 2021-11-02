@@ -8,6 +8,8 @@ import Thing from './thing.js';
  * @extends Thing
  */
 class Polygon extends Thing {
+    type = 'Polygon';
+
     /**
      * Constructs a new Polygon.
      * The Polygon constructor takes no arguments, and only prepares a Polygon to have points

@@ -7,6 +7,8 @@ import Thing from './thing.js';
  * @param {number} height - Desired height of resulting rectangle.
  */
 export default class Rectangle extends Thing {
+    type = 'Rectangle';
+
     constructor(width, height) {
         super();
         if (arguments.length !== 2) {

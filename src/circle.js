@@ -9,6 +9,8 @@ import { getDistance } from './graphics-utils.js';
  * @extends Thing
  */
 class Circle extends Thing {
+    type = 'Circle';
+
     /**
      * Constructs a new circle.
      * @constructor

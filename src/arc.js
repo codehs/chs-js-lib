@@ -14,6 +14,7 @@ class Arc extends Thing {
     static DEGREES = 0;
     static RADIANS = 1;
 
+    type = 'Arc';
     radius;
 
     /**

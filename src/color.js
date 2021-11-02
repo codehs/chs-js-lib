@@ -33,12 +33,14 @@ export default class Color {
     static purple = '#9B30FF';
     static PURPLE = '#9B30FF';
 
+    type = 'Color';
+
     /**
      * Construct a new color.
-     *  
-     * @param {number} r 
-     * @param {number} g 
-     * @param {number} b 
+     *
+     * @param {number} r
+     * @param {number} g
+     * @param {number} b
      */
     constructor(r, g, b) {
         this.r = r;
@@ -48,7 +50,7 @@ export default class Color {
 
     /**
      * Generate a hex representation of the color.
-     * 
+     *
      * @returns {string}
      */
     toString() {
@@ -231,7 +233,7 @@ export default class Color {
 
     /**
      * Gets the hex string (#RRGGBB) for a color name.
-     *  
+     *
      * @param {string} colorString - Name of color ('red', 'purple', etc.)
      * @returns {string} Hex string #RRGGBB
      */
@@ -265,7 +267,7 @@ export const rgbToHex = (r, g, b) => {
 
 /**
  * Get an [r, g, b] array from a hex string.
- *  
+ *
  * @param {string} hexString - Hex string (#RRGGBB)
  * @returns {Array.<number>} An array of [r, g, b]
  */
@@ -280,16 +282,15 @@ export const hexToRgb = hexString => {
 
 /**
  * Get a hex string (#RRGGBB) from r, g, b components.
- * 
- * @param {number} r 
- * @param {number} g 
- * @param {number} b 
+ *
+ * @param {number} r
+ * @param {number} g
+ * @param {number} b
  * @returns {string} - Hex color (#RRGGBB)
  */
 export const getColor = (r, g, b) => {
     return '#' + ('000000' + rgbToHex(r, g, b)).slice(-6);
 };
-
 
 /**
  * Converts an HSL (?) representation to RGB.

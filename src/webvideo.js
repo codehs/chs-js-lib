@@ -15,6 +15,8 @@ const WEBCAM_INDICATOR = 'WEBCAM';
 export default class WebVideo extends Thing {
     static WEBCAM = WEBCAM_INDICATOR;
 
+    type = 'WebVideo';
+
     constructor(filename) {
         if (typeof filename !== 'string') {
             throw new TypeError(

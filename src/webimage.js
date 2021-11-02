@@ -15,6 +15,7 @@ const ALPHA = 3;
  * @param {string} filename - Filepath to the image
  */
 export default class WebImage extends Thing {
+    type = 'WebImage';
     /**
      * @constructor
      * @param {string} filename
@@ -104,8 +105,8 @@ export default class WebImage extends Thing {
                 this.__hiddenCanvas,
                 0,
                 0,
-                this.width * this.width / this.data.width,
-                this.height * this.height / this.data.height
+                (this.width * this.width) / this.data.width,
+                (this.height * this.height) / this.data.height
             );
         });
     }

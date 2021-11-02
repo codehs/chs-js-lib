@@ -2,6 +2,11 @@ import Graphics from '../src/graphics.js';
 import Thing from '../src/thing.js';
 
 describe('Thing', () => {
+    describe('The Thing constructor', () => [
+        it('Creates a thing with .type', () => {
+            expect(new Thing().type).toEqual('Thing');
+        }),
+    ]);
     describe('Layering', () => {
         it('Changing layer forces a re-sort', () => {
             const g = new Graphics();
