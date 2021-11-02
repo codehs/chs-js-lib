@@ -122,7 +122,7 @@ describe('arc', () => {
             const context = g.getContext();
             const pixel = context.getImageData(0, 0, 1, 1);
             expect(pixel.data).toEqual(new Uint8ClampedArray([255, 0, 0, 255]));
-        })
+        });
     });
 
     describe('setStartAngle', () => {
