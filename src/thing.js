@@ -22,6 +22,7 @@ export default class Thing {
         this.hasBorder = false;
         this.rotation = 0;
         this.__layer = 1;
+        this.focused = false;
     }
 
     /**
@@ -327,6 +328,10 @@ export default class Thing {
             context.strokeStyle = this.stroke.toString();
             context.lineWidth = this.lineWidth;
         }
+        if (this.focused) { 
+            context.shadowColor = '#0066ff';
+            context.shadowBlur = 20;
+        }
         context.fillStyle = this.color.toString();
         context.globalAlpha = this.opacity;
         context.translate(this.x, this.y);
@@ -339,6 +344,27 @@ export default class Thing {
         }
         context.fill();
         context.restore();
+    }
+
+    /**
+     * Focuses the element for use with screen readers.
+     */
+    focus() {
+        this.focused = true;
+    }
+
+    /**
+     * Unfocuses the element for use with screen readers.
+     */
+    unfocus() {
+        this.focused = false;
+    }
+
+    /**
+     * Describes the element for use with screen readers.
+     */
+    describe() {
+        return `A ${this.type} at ${this.x}, ${this.y}. Colored: ${this.color}`;
     }
 
     /**

@@ -58,6 +58,34 @@ class CodeHSGraphics {
     add(elem) {
         elem.alive = true;
         this.elementPool.push(elem);
+        this.createAccessibleDOMElement(elem);
+    }
+
+    /**
+     * Creates a hidden DOM element that can be navigated with a screen reader. 
+     * @param {Thing} elem 
+     */
+    createAccessibleDOMElement(elem) {
+        const button = document.createElement('button');
+        // https://webaim.org/techniques/css/invisiblecontent/
+        button.style = 'position: absolute; width: 1px; height: 1px; overflow: hidden;';
+        button.textContent = elem.describe();
+
+        button.onfocus = () => {
+            elem.focus();
+        };
+        button.onblur = () => {
+            elem.unfocus();
+        };
+        button.onkeydown = e => {
+            if (e.code === 'Space') {
+                const event = new Event('mousedown');
+                event.getX = () => elem.x;
+                event.getY = () => elem.y;
+                this.getCanvas().dispatchEvent(event);
+            }
+        };
+        document.body.appendChild(button);
     }
 
     Audio(url) {

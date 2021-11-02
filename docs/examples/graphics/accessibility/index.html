@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Accessibility</title>
+</head>
+<body>
+  <canvas id="game" width="480" height="400"></canvas>
+  <script src="../../../../dist/chs.iife.js"></script>
+  <script id="code">
+      let rectangles = [];
+      let colors = [
+          '#F72585',
+          '#B5179E',
+          '#7209B7',
+          '#560bad',
+          '#480ca8',
+      ]
+      for (let i = 0; i < 5; i++) {
+          const rect = new Rectangle(getWidth() / 5, 100);
+          rect.setColor(colors[i]);
+          rect.setPosition(i * (5 + getWidth() / 5), 0);
+          add(rect);
+          rectangles.push(rect);
+      }
+      mouseDownMethod((e) => {
+          console.log(`${e.getX()}, ${e.getY()}`)
+          const rect = getElementAt(e.getX(), e.getY());
+          rect.setColor( '#4cc9f0') += 1;
+          const c = new Circle(5);
+          c.setColor(Color.RED);
+          c.setPosition(e.getX(), e.getY());
+          c.layer = 90;
+          add(c);
+      });
+  </script>
+</body>
+</html>
