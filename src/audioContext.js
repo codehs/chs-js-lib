@@ -22,14 +22,14 @@ export function getAudioContext() {
             return new contextClass();
         } catch (e) {
             console.log(
-                'Too many AudioContexts are in use. Please close all browser windows and retry.',
+                'Too many AudioContexts are in use. Please close all browser windows and retry.'
             );
             return 0;
         }
     } else {
         // Web Audio API is not available
         console.log(
-            'Web Audio is not supported in this browser. Please use the most up to date version of Chrome, Firefox, or Safari.',
+            'Web Audio is not supported in this browser. Please use the most up to date version of Chrome, Firefox, or Safari.'
         );
         return 0;
     }

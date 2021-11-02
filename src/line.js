@@ -9,6 +9,8 @@ import Thing from './thing.js';
  * @param {number} y2 - y coordinate of end point of line.
  */
 export default class Line extends Thing {
+    type = 'Line';
+
     constructor(x1, y1, x2, y2) {
         super();
         if (arguments.length !== 4) {

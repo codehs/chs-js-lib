@@ -12,6 +12,11 @@ import Graphics from '../src/graphics.js';
 const RGBURL = 'https://codehs.com/uploads/4cd36a1bacbd8cdd22cf75947f4caea8';
 
 describe('WebImage', () => {
+    describe('The WebImage constructor', () => {
+        it('Creates a WebImage with .type', () => {
+            expect(new WebImage(RGBURL).type).toEqual('WebImage');
+        });
+    });
     describe('Displaying images from URL', () => {
         it('Invokes a callback when loaded', () => {
             const wi = new WebImage(RGBURL);

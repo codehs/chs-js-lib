@@ -4,10 +4,12 @@
  * A grid is a two-dimensional array .
  */
 class Grid {
+    type = 'Grid';
+
     /**
-     * Constructs a grid. 
-     * @param {number} rows 
-     * @param {number} cols 
+     * Constructs a grid.
+     * @param {number} rows
+     * @param {number} cols
      */
     constructor(rows, cols) {
         if (arguments.length !== 2) {

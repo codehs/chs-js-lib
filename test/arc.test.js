@@ -92,6 +92,9 @@ describe('arc', () => {
         it('Defaults to counterclockwise', () => {
             expect(new Arc(0, 0, 0, 0).counterclockwise).toBe(true);
         });
+        it('Creates an arc with .type', () => {
+            expect(new Arc(0, 0, 0, 0).type).toEqual('Arc');
+        });
     });
 
     describe('Drawing arcs', () => {

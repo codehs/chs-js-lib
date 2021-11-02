@@ -13,6 +13,8 @@ import Thing from './thing.js';
  * @param {number} height - Desired height of the Oval
  */
 export default class Oval extends Thing {
+    type = 'Oval';
+
     constructor(width, height) {
         super();
         if (arguments.length !== 2) {

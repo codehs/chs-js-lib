@@ -37,6 +37,9 @@ describe('Circle', () => {
         it('Defaults to lineWidth 3', () => {
             expect(new Circle(0).lineWidth).toBe(3);
         });
+        it('Creates a circle with a .type', () => {
+            expect(new Circle(1).type).toEqual('Circle');
+        });
     });
     describe('Drawing circles', () => {
         it('Invokes context.arc', () => {

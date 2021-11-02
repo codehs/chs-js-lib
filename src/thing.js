@@ -6,6 +6,8 @@ export default class Thing {
     static DEGREES = 0;
     static RADIANS = 1;
 
+    type = 'Thing';
+
     /**
      * Constructs a new Thing.
      */
@@ -90,8 +92,8 @@ export default class Thing {
 
     /**
      * Set the opacity of the Thing.
-     *  
-     * @param {number} opacity 
+     *
+     * @param {number} opacity
      */
     setOpacity(opacity) {
         this.opacity = opacity;

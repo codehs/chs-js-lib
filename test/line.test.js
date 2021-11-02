@@ -39,6 +39,9 @@ describe('Line', () => {
             expect(line.x2).toEqual(3);
             expect(line.y2).toEqual(4);
         });
+        it('Creates a line with .type', () => {
+            expect(new Line(0, 0, 0, 0).type).toEqual('Line');
+        });
     });
 
     describe('setColor and getColor', () => {

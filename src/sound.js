@@ -20,6 +20,8 @@
 export default class Sound {
     static soundElements = [];
 
+    type = 'Sound';
+
     constructor(frequency, oscillatorType) {
         if (window.Tone && window.Tone.supported) {
             this.frequency = frequency || 440;

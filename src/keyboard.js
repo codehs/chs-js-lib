@@ -57,7 +57,7 @@ Keyboard.digit = function (dig) {
  * Only to be used with single-character strings.
  * @example
  * const aCode = Keyboard.letter("a");
- * 
+ *
  * @param {string} letter - The letter to be converted to key code.
  * @return {number} Key code corresponding to letter.
  */
@@ -70,7 +70,7 @@ Keyboard.letter = function (letter) {
 
 /**
  * Check if a key is an editing key.
- * 
+ *
  * @param {number} keyCode - Key code corresponding to key pressed.
  * @return {boolean} Whether or not the key is an editing key.
  */
