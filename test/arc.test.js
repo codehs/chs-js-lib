@@ -113,6 +113,16 @@ describe('arc', () => {
             arc.draw(g);
             expect(contextBorderSpy).toHaveBeenCalledTimes(1);
         });
+        it('Positions properly', () => {
+            const g = new Graphics();
+            const a = new Arc(30, -90, 0, 0);
+            a.setColor('red');
+            g.add(a);
+            g.redraw();
+            const context = g.getContext();
+            const pixel = context.getImageData(0, 0, 1, 1);
+            expect(pixel.data).toEqual(new Uint8ClampedArray([255, 0, 0, 255]));
+        })
     });
 
     describe('setStartAngle', () => {
