@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Sprite Rotation</title>
+    </head>
+</html>
+<body>
+    <canvas id="game" width="480" height="400"></canvas>
+    <script id="code" type="module">
+        import {Graphics, WebImage} from '../../../../dist/chs.mjs';
+        const RGBURL = 'https://codehs.com/uploads/4cd36a1bacbd8cdd22cf75947f4caea8';
+        const img = new WebImage(RGBURL);
+        const g = new Graphics();
+        g.shouldUpdate = false;
+        g.add(img);
+        img.loaded(() => {
+            img.setPixel(0, 0, 0, 0);
+            g.redraw();
+            const context = g.getContext();
+            const topLeftPixel = context.getImageData(0, 0, 1, 1);
+            console.log(topLeftPixel)
+        });
+    </script>
+</body>

@@ -31,7 +31,7 @@ export default class WebImage extends Thing {
         // used to indicate that the internal .data is out of sync with
         // the __hiddenCanvas. when out of sync, the __hiddenCanvas must be
         // updated before drawing
-        this.__dataOutOfSync = false;
+        this.__hiddenCanvasOutOfSync = false;
     }
 
     /**
@@ -92,11 +92,21 @@ export default class WebImage extends Thing {
         if (this.data === NOT_LOADED) {
             return;
         }
-        if (this.__dataOutOfSync) {
+        if (this.__hiddenCanvasOutOfSync) {
             this.updateHiddenCanvas();
         }
         super.draw(graphics, context => {
-            context.drawImage(this.__hiddenCanvas, 0, 0, this.width, this.height);
+            // the __hiddenCanvas contains the ImageData, sized as it originally was.
+            // in order to perform scaling, the destination width and height are
+            // currentWidth * (currentWidth / originalWidth),
+            // meaning the current size times the amount the size has changed
+            context.drawImage(
+                this.__hiddenCanvas,
+                0,
+                0,
+                this.width * this.width / this.data.width,
+                this.height * this.height / this.data.height
+            );
         });
     }
 
@@ -111,7 +121,7 @@ export default class WebImage extends Thing {
             const context = this.__hiddenCanvas.getContext('2d');
             context.drawImage(this.image, 0, 0, this.width, this.height);
             this.data = context.getImageData(0, 0, this.width, this.height);
-            this.__dataOutOfSync = false;
+            this.__hiddenCanvasOutOfSync = false;
         }
         return this.data;
     }
@@ -163,6 +173,7 @@ export default class WebImage extends Thing {
         }
         this.width = Math.max(0, width);
         this.height = Math.max(0, height);
+        this.__hiddenCanvasOutOfSync = true;
     }
 
     /* Get and set pixel functions */
@@ -251,7 +262,7 @@ export default class WebImage extends Thing {
             // Update the pixel value
             const index = NUM_CHANNELS * (y * this.width + x);
             this.data.data[index + component] = val;
-            this.__dataOutOfSync = true;
+            this.__hiddenCanvasOutOfSync = true;
         }
     }
 
@@ -323,7 +334,7 @@ export default class WebImage extends Thing {
         this.data = imageData;
         this.width = imageData.width;
         this.height = imageData.height;
-        this.__dataOutOfSync = true;
+        this.__hiddenCanvasOutOfSync = true;
     }
 
     /**
@@ -334,7 +345,7 @@ export default class WebImage extends Thing {
         this.__hiddenCanvas.width = this.width;
         this.__hiddenCanvas.height = this.height;
         const context = this.__hiddenCanvas.getContext('2d');
-        this.__dataOutOfSync = false;
         context.putImageData(this.data, 0, 0);
+        this.__hiddenCanvasOutOfSync = false;
     }
 }
