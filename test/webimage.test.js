@@ -65,39 +65,53 @@ describe('WebImage', () => {
                 });
             });
         });
+        it('Marks the canvas as out of sync after changing dimension', () => {
+            const wi = new WebImage(RGBURL);
+            const g = new Graphics();
+            g.add(wi);
+            wi.setSize(123, 123);
+            expect(wi.__hiddenCanvasOutOfSync).toBeTrue();
+            g.redraw();
+            expect(wi.__hiddenCanvasOutOfSync).toBeTrue();
+            wi.loaded(() => {
+                g.redraw();
+                expect(wi.__hiddenCanvasOutOfSync).toBeFalse();
+            });
+        });
     });
 
     describe('setPixel', () => {
         it('Modifies the existing ImageData of a loaded image', () => {
             const wi = new WebImage(RGBURL);
             const g = new Graphics();
+            g.shouldUpdate = false;
             g.add(wi);
             return new Promise((resolve, reject) => {
                 wi.loaded(() => {
-                    wi.setPixel(0, 0, 1, 123);
+                    wi.setPixel(0, 0, 0, 0);
                     g.redraw();
                     const context = g.getContext();
                     const topLeftPixel = context.getImageData(0, 0, 1, 1);
                     const pixelData = topLeftPixel.data;
-                    expect(pixelData).toEqual(new Uint8ClampedArray([255, 123, 0, 255]));
+                    expect(pixelData).toEqual(new Uint8ClampedArray([0, 0, 0, 255]));
                     resolve();
                 });
             });
         });
-        it('Updates the internal __dataOutOfSync', () => {
+        it('Updates the internal __hidenCanvasOutOfSync', () => {
             const wi = new WebImage(RGBURL);
             const g = new Graphics();
             g.add(wi);
             return new Promise((resolve, reject) => {
                 wi.loaded(() => {
                     wi.setPixel(0, 0, 1, 123);
-                    expect(wi.__dataOutOfSync).toBeTrue();
+                    expect(wi.__hiddenCanvasOutOfSync).toBeTrue();
                     const hiddenCanvas = wi.__hiddenCanvas;
                     let hiddenContext = hiddenCanvas.getContext('2d');
                     let modifiedPixel = hiddenContext.getImageData(0, 0, 1, 1);
                     expect(modifiedPixel.data).toEqual(new Uint8ClampedArray([255, 0, 0, 255]));
                     g.redraw();
-                    expect(wi.__dataOutOfSync).toBeFalse();
+                    expect(wi.__hiddenCanvasOutOfSync).toBeFalse();
                     hiddenContext = hiddenCanvas.getContext('2d');
                     modifiedPixel = hiddenContext.getImageData(0, 0, 1, 1);
                     expect(modifiedPixel.data).toEqual(new Uint8ClampedArray([255, 123, 0, 255]));
@@ -119,11 +133,11 @@ describe('WebImage', () => {
             expect(topLeftPixel.data).toEqual(new Uint8ClampedArray([0, 0, 255, 255]));
         });
     });
-
     describe('rotation', () => {
         it('Rotates the ImageData drawn to the canvas', () => {
             const img = new WebImage(RGBURL);
             const g = new Graphics();
+            g.shouldUpdate = false;
             g.add(img);
             return new Promise((resolve, reject) => {
                 img.loaded(() => {

@@ -15,14 +15,12 @@
         function start(){
             started = true;
             // Try adding and filtering images
-            for(var i = 0; i < 10; i++) {
-                var crossOrigin = new WebImage("https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/Bl%C3%BCten_1.jpg/800px-Bl%C3%BCten_1.jpg");
-                crossOrigin.rotate(45);
-                crossOrigin.setSize(100, 100);
-                crossOrigin.setPosition(100, 100);
-                add(crossOrigin);
-                allImages.push(crossOrigin);
-            }
+            var crossOrigin = new WebImage("https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/Bl%C3%BCten_1.jpg/800px-Bl%C3%BCten_1.jpg");
+            crossOrigin.rotate(45);
+            crossOrigin.setSize(100, 100);
+            crossOrigin.setPosition(100, 100);
+            add(crossOrigin);
+            allImages.push(crossOrigin);
 
             mouseDownMethod(grabImage);
             mouseDragMethod(moveImage);
@@ -55,11 +53,11 @@
         }
 
         function dropImage(e){
-            if(grabbedImage && grabbedImage.type == "WebImage"){
+            if(grabbedImage && grabbedImage instanceof WebImage){
                 filter(grabbedImage);
                 grabbedImage.setSize(grabbedImage.getWidth() + 10, grabbedImage.getHeight() + 10);
             }
-            else if (grabbedImage && grabbedImage.type == "Rectangle") {
+            else if (grabbedImage && grabbedImage instanceof Rectangle) {
                 grabbedImage.setWidth(grabbedImage.getWidth() - 10);
                 grabbedImage.setHeight(grabbedImage.getHeight() + 10);
             }
