@@ -7,30 +7,29 @@
   <canvas id="game" width="480" height="400"></canvas>
   <script src="../../../../dist/chs.iife.js"></script>
   <script id="code">
-      let rectangles = [];
       let colors = [
           '#F72585',
           '#B5179E',
           '#7209B7',
           '#560bad',
-          '#480ca8',
       ]
-      for (let i = 0; i < 5; i++) {
-          const rect = new Rectangle(getWidth() / 5, 100);
-          rect.setColor(colors[i]);
-          rect.setPosition(i * (5 + getWidth() / 5), 0);
-          add(rect);
-          rectangles.push(rect);
+      for (let i = 0; i < 4; i++) {
+          if (i % 2 == 0) {
+            const circle = new Circle(getWidth() / 10);
+            circle.setColor(colors[i]);
+            circle.setPosition(i * (5 + getWidth() / 5) + getWidth() / 10, getWidth() / 10);
+            add(circle);
+          } else {
+            const rect = new Rectangle(getWidth() / 5, 100);
+            rect.setColor(colors[i]);
+            rect.setPosition(i * (5 + getWidth() / 5), 0);
+            add(rect);
+          }
       }
       mouseDownMethod((e) => {
           console.log(`${e.getX()}, ${e.getY()}`)
-          const rect = getElementAt(e.getX(), e.getY());
-          rect.setColor( '#4cc9f0') += 1;
-          const c = new Circle(5);
-          c.setColor(Color.RED);
-          c.setPosition(e.getX(), e.getY());
-          c.layer = 90;
-          add(c);
+          const el = getElementAt(e.getX(), e.getY());
+          el.setColor('#4cc9f0');
       });
   </script>
 </body>
