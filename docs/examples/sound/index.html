@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Test</title>
+</head>
+<body>
+    <canvas width="500" height="500"></canvas>
+    <script src="../../../dist/chs.iife.js"></script>
+    <script>
+        mouseDownMethod(() => {
+            console.log('asdf');
+            // Construct a new Sound with a given note and sound wave type
+            var sound = new Sound("C4", "sine");
+
+            // Set the volume (in decibels)
+            sound.setVolume(2);
+
+            // Add a vibrato effect at 0 capacity
+            sound.setEffect("vibrato", 0);
+
+            // Play the sound for 3 seconds
+            sound.playFor(3);
+        });
+    </script>
+</body>
+</html>

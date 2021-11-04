@@ -5,6 +5,7 @@ const terser = require('gulp-terser');
 const rollup = require('@rollup/stream');
 const source = require('vinyl-source-stream');
 const jsdoc = require('gulp-jsdoc3');
+const resolve = require('@rollup/plugin-node-resolve').nodeResolve;
 
 function buildModule() {
     return rollup({
@@ -13,6 +14,7 @@ function buildModule() {
             format: 'es',
             strict: false,
         },
+        plugins: [resolve()],
     })
         .pipe(source('chs.mjs'))
         .pipe(gulp.dest('dist'));
@@ -25,6 +27,7 @@ function buildCommonJS() {
             format: 'cjs',
             strict: false,
         },
+        plugins: [resolve()],
     })
         .pipe(source('chs.cjs'))
         .pipe(gulp.dest('dist'));
@@ -38,6 +41,7 @@ function buildIIFE() {
             name: 'CHSJS',
             strict: false,
         },
+        plugins: [resolve()],
     })
         .pipe(source('chs.iife.js'))
         .pipe(gulp.dest('dist'));

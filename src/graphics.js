@@ -148,39 +148,6 @@ class CodeHSGraphics {
     }
 
     /**
-     * Assign a function as a callback for when audio data changes for audio
-     * being played in a graphics program.
-     * @param {object} tag - Audio element playing sound to analyze
-     * @param {function} fn - A callback to be triggered on audio data change.
-     */
-    audioChangeMethod(tag, fn) {
-        // get new audio context and create analyser
-        this.audioCtx = getAudioContext();
-        // IE browser exit gracefully
-        if (!this.audioCtx) {
-            return;
-        }
-        this.analyser = audioCtx.createAnalyser();
-        // set fft -- used to set the number of slices we break our frequency range
-        // in to.
-        this.analyser.fftSize = 128;
-        // gt bugger length and create a new array in that size
-        var bufferLength = this.analyser.frequencyBinCount;
-        this.dataArray = new Uint8Array(bufferLength);
-        // create media source from student's audio tag
-        this.source = audioCtx.createMediaElementSource(tag);
-        // should allow cors
-        this.source.crossOrigin = 'anonymous';
-        // connect analyzer to sound
-        this.source.connect(this.analyser);
-        // create gain node and connect to sound (makes speaker output possuble)
-        var gainNode = this.audioCtx.createGain();
-        this.source.connect(gainNode);
-        gainNode.connect(this.audioCtx.destination);
-        this.setGraphicsTimer(this.updateAudio.bind(this), DEFAULT_FRAME_RATE, null, 'updateAudio');
-    }
-
-    /**
      * Check if a key is currently pressed
      * @param {integer} keyCode - Key code of key being checked.
      * @returns {boolean} Whether or not that key is being pressed.

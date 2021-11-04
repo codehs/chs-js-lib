@@ -1,43 +1,54 @@
-/* IMPORTANT NOTE:
- * In the case that ToneJS is not supported or not on the window, we make all
- * corresponding Sound functions no-ops so that student code is still able to run.
- */
+import {
+    MembraneSynth,
+    MetalSynth,
+    Synth,
+    Distortion,
+    Chebyshev,
+    Freeverb,
+    Tremolo,
+    Vibrato,
+    setContext,
+    getContext,
+    context,
+    start,
+} from 'tone';
+import { getAudioContext } from './audioContext';
 
-/** * Construct a new Sound.
- * Optionally set the frequency and the oscillator type.
- *
- * @param frequency - Either a number (Hertz) or note ("C#4" for middle C Sharp)
- * @param oscillatorType {string} - several options
- * basic types: "sine", "triangle", "square", "sawtooth"
- * any basic type can be prefixed with "fat", "am" or "fm", ie "fatsawtooth"
- * any basic type can be suffixed with a number ie "4" for the number of partials
- *     ie "square4"
- * special types: "pwm", "pulse"
- * drum instrument: "drum"
- * cymbal instrument: "metal"
- * https://tonejs.github.io/docs/13.8.25/OmniOscillator
- */
 export default class Sound {
     static soundElements = [];
 
     type = 'Sound';
 
+    /**
+     * Construct a new Sound.
+     * Optionally set the frequency and the oscillator type.
+     *
+     * @param frequency - Either a number (Hertz) or note ("C#4" for middle C Sharp)
+     * @param oscillatorType {string} - several options
+     * basic types: "sine", "triangle", "square", "sawtooth"
+     * any basic type can be prefixed with "fat", "am" or "fm", ie "fatsawtooth"
+     * any basic type can be suffixed with a number ie "4" for the number of partials
+     *     ie "square4"
+     * special types: "pwm", "pulse"
+     * drum instrument: "drum"
+     * cymbal instrument: "metal"
+     * https://tonejs.github.io/docs/13.8.25/OmniOscillator
+     */
     constructor(frequency, oscillatorType) {
-        if (window.Tone && window.Tone.supported) {
-            this.frequency = frequency || 440;
-            this.oscillatorType = oscillatorType || 'fatsawtooth';
-            this.volume = 1;
-            if (this.oscillatorType == 'drum') {
-                this.synth = new window.Tone.MembraneSynth().toMaster();
-            } else if (this.oscillatorType == 'metal') {
-                this.synth = new window.Tone.MetalSynth().toMaster();
-            } else {
-                this.synth = new window.Tone.Synth({
-                    oscillator: { type: this.oscillatorType },
-                }).toMaster();
-            }
-            this.setFrequency(this.frequency);
+        !getContext() && setContext(getAudioContext());
+        this.volume = 1;
+        this.frequency = frequency || 440;
+        this.oscillatorType = oscillatorType || 'fatsawtooth';
+        if (this.oscillatorType === 'drum') {
+            this.synth = new MembraneSynth().toDestination();
+        } else if (this.oscillatorType === 'metal') {
+            this.synth = new MetalSynth().toDestination();
+        } else {
+            this.synth = new Synth({
+                oscillator: { type: this.oscillatorType },
+            }).toDestination();
         }
+        this.setFrequency(this.frequency);
         Sound.soundElements.push(this);
     }
 
@@ -54,14 +65,8 @@ export default class Sound {
      * @param frequency - Either a number (Hertz) or note ("C#4" for middle C Sharp)
      */
     setFrequency(frequency) {
-        if (window.Tone && window.Tone.supported) {
-            this.frequency = frequency;
-            if (this.getOscillatorType() == 'metal') {
-                this.synth.frequency.value = frequency;
-            } else {
-                this.synth.oscillator.frequency.value = frequency;
-            }
-        }
+        this.frequency = frequency;
+        this.synth.frequency.value = frequency;
     }
 
     /**
@@ -70,10 +75,8 @@ export default class Sound {
      * @param {float} - the volume in decibels
      */
     setVolume(volume) {
-        if (window.Tone && window.Tone.supported) {
-            this.volume = volume;
-            this.synth.volume.value = volume;
-        }
+        this.volume = volume;
+        this.synth.volume.value = volume;
     }
 
     /**
@@ -82,9 +85,7 @@ export default class Sound {
      * @returns The Sound's frequency
      */
     getFrequency() {
-        if (window.Tone && window.Tone.supported) {
-            return this.frequency;
-        }
+        return this.frequency;
     }
 
     /**
@@ -93,12 +94,10 @@ export default class Sound {
      * @returns the volume
      */
     getVolume() {
-        if (window.Tone && window.Tone.supported) {
-            return this.volume;
-        }
+        return this.volume;
     }
 
-    /**     *
+    /**
      * Set the Sound's oscillator type
      *
      * @param oscillatorType {string} - several options
@@ -112,31 +111,29 @@ export default class Sound {
      * https://tonejs.github.io/docs/13.8.25/OmniOscillator
      */
     setOscillatorType(oscillatorType) {
-        if (window.Tone && window.Tone.supported) {
-            var originalOscillatorType = this.getOscillatorType();
-            if (oscillatorType == originalOscillatorType) {
-                return;
-            }
-
-            this.oscillatorType = oscillatorType;
-            if (oscillatorType == 'drum') {
-                this.disconnect();
-                this.synth = new window.Tone.MembraneSynth().toMaster();
-                this.setFrequency(this.getFrequency());
-            } else if (oscillatorType == 'metal') {
-                this.disconnect();
-                this.synth = new window.Tone.MetalSynth().toMaster();
-                this.setFrequency(this.getFrequency());
-            } else if (originalOscillatorType == 'drum' || originalOscillatorType == 'metal') {
-                this.disconnect();
-                this.synth = new window.Tone.Synth({
-                    oscillator: { type: oscillatorType },
-                }).toMaster();
-                this.setFrequency(this.frequency);
-            } else {
-                this.synth.oscillator.type = oscillatorType;
-            }
+        if (oscillatorType === this.getOscillatorType()) {
+            return;
         }
+
+        if (oscillatorType === 'drum') {
+            this.disconnect();
+            this.synth = new MembraneSynth().toDestination();
+            this.setFrequency(this.getFrequency());
+        } else if (oscillatorType === 'metal') {
+            this.disconnect();
+            this.synth = new MetalSynth().toDestination();
+            this.setFrequency(this.getFrequency());
+        } else if (this.getOscillatorType() === 'drum' || this.getOscillatorType() === 'metal') {
+            this.disconnect();
+            this.synth = new Synth({
+                oscillator: { type: oscillatorType },
+            }).toDestination();
+            this.setFrequency(this.frequency);
+        } else {
+            this.synth;
+            this.synth.oscillator.type = oscillatorType;
+        }
+        this.oscillatorType = oscillatorType;
     }
 
     /**     *
@@ -145,21 +142,17 @@ export default class Sound {
      * @return a String representing the oscillator type
      */
     getOscillatorType() {
-        if (window.Tone && window.Tone.supported) {
-            return this.oscillatorType;
-        }
+        return this.oscillatorType;
     }
 
     /**
      * Play the sound indefinitely
      */
     play() {
-        if (window.Tone && window.Tone.supported) {
-            if (this.getOscillatorType() == 'metal') {
-                this.synth.triggerAttack();
-            } else {
-                this.synth.triggerAttack(this.getFrequency());
-            }
+        if (this.getOscillatorType() === 'metal') {
+            this.synth.triggerAttack();
+        } else {
+            this.synth.triggerAttack(this.getFrequency());
         }
     }
 
@@ -178,12 +171,10 @@ export default class Sound {
      *     "8n." for dotted eighth note
      */
     playFor(duration) {
-        if (window.Tone && window.Tone.supported) {
-            if (this.getOscillatorType() == 'metal') {
-                this.synth.triggerAttackRelease(duration);
-            } else {
-                this.synth.triggerAttackRelease(this.getFrequency(), duration);
-            }
+        if (this.getOscillatorType() === 'metal') {
+            this.synth.triggerAttackRelease(duration);
+        } else {
+            this.synth.triggerAttackRelease(this.getFrequency(), duration);
         }
     }
 
@@ -191,9 +182,7 @@ export default class Sound {
      * Stop playing the sound immediately.
      */
     stop() {
-        if (window.Tone && window.Tone.supported) {
-            this.synth.triggerRelease();
-        }
+        this.synth.triggerRelease();
     }
 
     /**
@@ -203,9 +192,7 @@ export default class Sound {
      * sounds that are playing when the "STOP" button is pressed in the editor.
      */
     disconnect() {
-        if (window.Tone && window.Tone.supported) {
-            this.synth.disconnect();
-        }
+        this.synth.disconnect();
     }
 
     /**
@@ -216,34 +203,32 @@ export default class Sound {
      *                              effect applies
      */
     setEffect(effectName, effectValue) {
-        if (window.Tone && window.Tone.supported) {
-            switch (effectName) {
-                case 'distortion':
-                    var distortion = new window.Tone.Distortion(effectValue).toMaster();
-                    this.synth.connect(distortion);
-                    return;
-                case 'chebyshev':
-                    var chebyshev = new window.Tone.Chebyshev(effectValue * 100).toMaster();
-                    this.synth.connect(chebyshev);
-                    return;
-                case 'reverb':
-                    var reverb = new window.Tone.Freeverb().toMaster();
-                    reverb.wet.value = effectValue;
-                    this.synth.connect(reverb);
-                    return;
-                case 'tremolo':
-                    var tremolo = new window.Tone.Tremolo().toMaster().start();
-                    tremolo.wet.value = effectValue;
-                    this.synth.connect(tremolo);
-                    return;
-                case 'vibrato':
-                    var vibrato = new window.Tone.Vibrato().toMaster();
-                    vibrato.wet.value = effectValue;
-                    this.synth.connect(vibrato);
-                    return;
-                default:
-                    return;
-            }
+        switch (effectName) {
+            case 'distortion':
+                var distortion = new Distortion(effectValue).toDestination();
+                this.synth.connect(distortion);
+                return;
+            case 'chebyshev':
+                var chebyshev = new Chebyshev(effectValue * 100).toDestination();
+                this.synth.connect(chebyshev);
+                return;
+            case 'reverb':
+                var reverb = new Freeverb().toDestination();
+                reverb.wet.value = effectValue;
+                this.synth.connect(reverb);
+                return;
+            case 'tremolo':
+                var tremolo = new Tremolo().toDestination().start();
+                tremolo.wet.value = effectValue;
+                this.synth.connect(tremolo);
+                return;
+            case 'vibrato':
+                var vibrato = new Vibrato().toDestination();
+                vibrato.wet.value = effectValue;
+                this.synth.connect(vibrato);
+                return;
+            default:
+                return;
         }
     }
 }
