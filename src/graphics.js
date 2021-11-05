@@ -15,10 +15,7 @@ let pressedKeys = [];
  * @class
  */
 class CodeHSGraphics {
-    audioElements = [];
-    source = null;
-    analyser = null;
-    dataArray = null;
+    audioElementPool = [];
     elementPool = [];
 
     /**
@@ -58,13 +55,6 @@ class CodeHSGraphics {
     add(elem) {
         elem.alive = true;
         this.elementPool.push(elem);
-    }
-
-    Audio(url) {
-        const audioElem = new window.Audio(url);
-        audioElem.crossOrigin = 'anonymous';
-        this.audioElements.push(audioElem);
-        return audioElem;
     }
 
     /**
@@ -145,6 +135,39 @@ class CodeHSGraphics {
      */
     deviceMotionMethod(fn) {
         this.deviceMotionCallback = this.withErrorHandler(fn);
+    }
+
+    /**
+     * Assign a function as a callback for when audio data changes for audio
+     * being played in a graphics program.
+     * @param {object} mediaElement - Audio element playing sound to analyze
+     * @param {function} fn - A callback to be triggered on audio data change.
+     */
+    audioChangeMethod(mediaElement, fn) {
+        const audioContext = this.getAudioContext();
+        if (!audioContext) {
+            return;
+        }
+        const analyser = audioContext.createAnalyser();
+        analyser.fftSize = 128;
+        const source = audioContext.createMediaElementSource(mediaElement);
+        source.crossOrigin = 'anonymous';
+        source.connect(analyser);
+        const gainNode = audioContext.createGain();
+        source.connect(gainNode);
+        gainNode.connect(audioContext.destination);
+        const bufferLength = analyser.frequencyBinCount;
+        const dataArray = new Uint8Array(bufferLength);
+        this.audioChangeCallback = this.withErrorHandler(fn);
+        this.__setTimer(
+            () => {
+                analyser.getByteFrequencyData(dataArray);
+                this.audioChangeCallback(dataArray);
+            },
+            DEFAULT_FRAME_RATE,
+            null,
+            'updateAudio'
+        );
     }
 
     /**
@@ -242,7 +265,7 @@ class CodeHSGraphics {
                 name: name,
             });
         } else {
-            this.setGraphicsTimer(this.withErrorHandler(fn), time, data, name ?? fn.name);
+            this.__setTimer(this.withErrorHandler(fn), time, data, name ?? fn.name);
         }
     }
 
@@ -351,7 +374,7 @@ class CodeHSGraphics {
     }
 
     stopAllAudio() {
-        this.audioElements.forEach(function (audio) {
+        this.audioElementPool.forEach(audio => {
             audio.pause();
         });
         Sound.stopSounds();
@@ -371,8 +394,7 @@ class CodeHSGraphics {
     resetAllState() {
         this.backgroundColor = null;
         this.elementPool = [];
-        this.audioElements = [];
-        this.soundElements = [];
+        this.audioElementPool = [];
         this.clickCallback = null;
         this.moveCallback = null;
         this.mouseDownCallback = null;
@@ -383,12 +405,7 @@ class CodeHSGraphics {
         this.deviceOrientationCallback = null;
         this.deviceMotionCallback = null;
         this.audioChangeCallback = null;
-
-        // if audio source exists, disconnect it
-        if (this.source) {
-            this.source.disconnect();
-            this.source = 0;
-        }
+        this.audioContext?.close();
 
         // A fast hash from timer key to timer interval #
         this.timers = {};
@@ -398,12 +415,6 @@ class CodeHSGraphics {
 
         this.clickCount = 0;
         this.delayedTimers = [];
-
-        // if audio context exists, close it and reset audioCtx
-        if (this.audioCtx) {
-            this.audioCtx.close();
-            this.audioCtx = 0;
-        }
 
         this.fullscreenMode = false;
     }
@@ -481,14 +492,16 @@ class CodeHSGraphics {
      * @returns {context} The 2D graphics context.
      */
     getContext() {
-        var drawingCanvas = this.getCanvas();
-        // Check the element is in the DOM and the browser supports canvas
-        if (drawingCanvas && drawingCanvas.getContext) {
-            // Initaliase a 2-dimensional drawing context
-            var context = drawingCanvas.getContext('2d');
-            return context;
+        return this.getCanvas()?.getContext?.('2d') ?? null;
+    }
+
+    getAudioContext() {
+        if (this.audioContext) {
+            return this.audioContext;
         }
-        return null;
+
+        this.audioContext = getAudioContext();
+        return this.audioContext;
     }
 
     /**
@@ -598,11 +611,7 @@ class CodeHSGraphics {
                     var timer = this.delayedTimers[i];
                     timer.clicks--;
                     if (timer.clicks === 0) {
-                        this.setGraphicsTimer(
-                            this.withErrorHandler(timer.fn),
-                            timer.time,
-                            timer.data
-                        );
+                        this.__setTimer(this.withErrorHandler(timer.fn), timer.time, timer.data);
                     }
                 }
                 return;
@@ -662,7 +671,7 @@ class CodeHSGraphics {
                     var timer = this.delayedTimers[i];
                     timer.clicks--;
                     if (timer.clicks === 0) {
-                        this.setGraphicsTimer(timer.fn, timer.time, timer.data);
+                        this.__setTimer(timer.fn, timer.time, timer.data);
                     }
                 }
                 return;
@@ -678,13 +687,14 @@ class CodeHSGraphics {
     }
 
     /**
-     * Set a graphics timer.
+     * Set a timer timer.
+     * @private
      * @param {function} fn - The function to be executed on the timer.
      * @param {number} time - The time interval for the function.
      * @param {object} data - Any arguments to be passed into `fn`.
      * @param {string} name - The name of the timer.
      */
-    setGraphicsTimer(fn, time, data, name) {
+    __setTimer(fn, time, data, name) {
         name = name ?? fn.name;
         this.timers[name] = setInterval(fn, time, data);
 
@@ -697,26 +707,6 @@ class CodeHSGraphics {
     }
 
     /** AUDIO EVENTS **/
-
-    /**
-     * This function is called on a timer. Calls the student's audioChangeCallback
-     * function and passes it the most recent audio data.
-     */
-    updateAudio() {
-        this.analyser.getByteFrequencyData(dataArray);
-        if (this.audioChangeCallback) {
-            /* this is the one strange thing. Up above, we set analyser.fftSize. That
-             * determines how many 'buckets' we split our file into (fft size / 2).
-             * For some reason, the top 16 'buckets' were always coming out 0, so we
-             * used .slice() to cut out the last 18 items out of the array. In the
-             * future, if you want to experiment with different FFT sizes, it will
-             * be necessary to adjust this slice call (the size of the array will
-             * definitely change, and number of empty indexes will probably change).
-             */
-            var numBuckets = 46;
-            this.audioChangeCallback(dataArray.slice(0, numBuckets));
-        }
-    }
 }
 
 /** KEY EVENTS ****/
@@ -744,7 +734,7 @@ window.onkeyup = function (e) {
 };
 
 /** RESIZE EVENT ****/
-var resizeTimeout;
+let resizeTimeout;
 window.onresize = function (e) {
     // https://developer.mozilla.org/en-US/docs/Web/Events/resize
     // Throttle the resize event handler since it fires at such a rapid rate

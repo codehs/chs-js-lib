@@ -1,16 +1,14 @@
 import {
+    Chebyshev,
+    Distortion,
+    Freeverb,
+    getContext,
     MembraneSynth,
     MetalSynth,
+    setContext,
     Synth,
-    Distortion,
-    Chebyshev,
-    Freeverb,
     Tremolo,
     Vibrato,
-    setContext,
-    getContext,
-    context,
-    start,
 } from 'tone';
 import { getAudioContext } from './audioContext';
 
