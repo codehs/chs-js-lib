@@ -1,5 +1,5 @@
 import * as Randomizer from '../src/randomizer.js';
-import Color, { hexToRgb } from '../src/color.js';
+import Color, { hexToRgb } from '../src/graphics/color.js';
 
 describe('Randomizer', () => {
     describe('nextInt', () => {

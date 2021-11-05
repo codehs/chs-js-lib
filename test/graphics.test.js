@@ -1,5 +1,5 @@
-import Circle from '../src/circle.js';
-import Graphics from '../src/graphics.js';
+import Circle from '../src/graphics/circle.js';
+import Graphics from '../src/graphics/index.js';
 
 /**
  * Simulate a mouse event.
@@ -32,7 +32,7 @@ function simulateEvent(type, config, target, touch = false) {
 describe('Graphics', () => {
     describe('Not window-binding a Graphics instance', () => {
         it("Doesn't attach anything if it's not window-bound", () => {
-            const g = new Graphics();
+            new Graphics();
             expect(window.mouseClickMethod).toBeUndefined();
         });
     });

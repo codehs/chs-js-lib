@@ -1,9 +1,7 @@
-import { getAudioContext } from './audioContext.js';
-import Sound from './sound.js';
+import Manager, { DEFAULT_UPDATE_INTERVAL } from '../manager.js';
 import Thing from './thing.js';
 import WebVideo from './webvideo.js';
 
-const DEFAULT_FRAME_RATE = 40;
 const FULLSCREEN_PADDING = 5;
 
 let GraphicsInstances = {};
@@ -14,7 +12,7 @@ let pressedKeys = [];
  * Class for interacting with Graphics.
  * @class
  */
-class CodeHSGraphics {
+class GraphicsManager extends Manager {
     audioElementPool = [];
     elementPool = [];
 
@@ -28,11 +26,12 @@ class CodeHSGraphics {
      *      tag on the page.
      */
     constructor(options = {}) {
+        super(options);
         this.resetAllState();
         this.setCurrentCanvas(options.canvas);
         this.onError = options.onError || undefined;
         this.fullscreenMode = false;
-        this.fpsInterval = 1000 / DEFAULT_FRAME_RATE;
+        this.fpsInterval = 1000 / DEFAULT_UPDATE_INTERVAL;
         this.lastDrawTime = Date.now();
         GraphicsInstances[graphicsInstanceID++] = this;
     }
@@ -138,39 +137,6 @@ class CodeHSGraphics {
     }
 
     /**
-     * Assign a function as a callback for when audio data changes for audio
-     * being played in a graphics program.
-     * @param {object} mediaElement - Audio element playing sound to analyze
-     * @param {function} fn - A callback to be triggered on audio data change.
-     */
-    audioChangeMethod(mediaElement, fn) {
-        const audioContext = this.getAudioContext();
-        if (!audioContext) {
-            return;
-        }
-        const analyser = audioContext.createAnalyser();
-        analyser.fftSize = 128;
-        const source = audioContext.createMediaElementSource(mediaElement);
-        source.crossOrigin = 'anonymous';
-        source.connect(analyser);
-        const gainNode = audioContext.createGain();
-        source.connect(gainNode);
-        gainNode.connect(audioContext.destination);
-        const bufferLength = analyser.frequencyBinCount;
-        const dataArray = new Uint8Array(bufferLength);
-        this.audioChangeCallback = this.withErrorHandler(fn);
-        this.__setTimer(
-            () => {
-                analyser.getByteFrequencyData(dataArray);
-                this.audioChangeCallback(dataArray);
-            },
-            DEFAULT_FRAME_RATE,
-            null,
-            'updateAudio'
-        );
-    }
-
-    /**
      * Check if a key is currently pressed
      * @param {integer} keyCode - Key code of key being checked.
      * @returns {boolean} Whether or not that key is being pressed.
@@ -265,7 +231,7 @@ class CodeHSGraphics {
                 name: name,
             });
         } else {
-            this.__setTimer(this.withErrorHandler(fn), time, data, name ?? fn.name);
+            super.setTimer(this.withErrorHandler(fn), time, data, name ?? fn.name);
         }
     }
 
@@ -373,13 +339,6 @@ class CodeHSGraphics {
         }
     }
 
-    stopAllAudio() {
-        this.audioElementPool.forEach(audio => {
-            audio.pause();
-        });
-        Sound.stopSounds();
-    }
-
     stopAllVideo() {
         for (var i = this.elementPool.length; i--; ) {
             if (this.elementPool[i] instanceof WebVideo) {
@@ -394,7 +353,6 @@ class CodeHSGraphics {
     resetAllState() {
         this.backgroundColor = null;
         this.elementPool = [];
-        this.audioElementPool = [];
         this.clickCallback = null;
         this.moveCallback = null;
         this.mouseDownCallback = null;
@@ -404,8 +362,6 @@ class CodeHSGraphics {
         this.keyUpCallback = null;
         this.deviceOrientationCallback = null;
         this.deviceMotionCallback = null;
-        this.audioChangeCallback = null;
-        this.audioContext?.close();
 
         // A fast hash from timer key to timer interval #
         this.timers = {};
@@ -423,7 +379,6 @@ class CodeHSGraphics {
      * Reset all timers to 0 and clear timers and canvas.
      */
     fullReset() {
-        this.stopAllAudio();
         this.stopAllVideo();
         this.resetAllTimers();
         this.resetAllState();
@@ -493,15 +448,6 @@ class CodeHSGraphics {
      */
     getContext() {
         return this.getCanvas()?.getContext?.('2d') ?? null;
-    }
-
-    getAudioContext() {
-        if (this.audioContext) {
-            return this.audioContext;
-        }
-
-        this.audioContext = getAudioContext();
-        return this.audioContext;
     }
 
     /**
@@ -583,20 +529,6 @@ class CodeHSGraphics {
         return graphicsUtils.getDistance(x1, y1, x2, y2);
     }
 
-    withErrorHandler(fn) {
-        return (...args) => {
-            try {
-                fn?.(...args);
-            } catch (e) {
-                if (typeof this.onError === 'function') {
-                    this.onError(e);
-                } else {
-                    throw e;
-                }
-            }
-        };
-    }
-
     /**
      * Set up the graphics instance to prepare for interaction
      */
@@ -611,7 +543,7 @@ class CodeHSGraphics {
                     var timer = this.delayedTimers[i];
                     timer.clicks--;
                     if (timer.clicks === 0) {
-                        this.__setTimer(this.withErrorHandler(timer.fn), timer.time, timer.data);
+                        this.setTimer(this.withErrorHandler(timer.fn), timer.time, timer.data);
                     }
                 }
                 return;
@@ -671,7 +603,7 @@ class CodeHSGraphics {
                     var timer = this.delayedTimers[i];
                     timer.clicks--;
                     if (timer.clicks === 0) {
-                        this.__setTimer(timer.fn, timer.time, timer.data);
+                        this.setTimer(timer.fn, timer.time, timer.data);
                     }
                 }
                 return;
@@ -685,28 +617,6 @@ class CodeHSGraphics {
             }
         };
     }
-
-    /**
-     * Set a timer timer.
-     * @private
-     * @param {function} fn - The function to be executed on the timer.
-     * @param {number} time - The time interval for the function.
-     * @param {object} data - Any arguments to be passed into `fn`.
-     * @param {string} name - The name of the timer.
-     */
-    __setTimer(fn, time, data, name) {
-        name = name ?? fn.name;
-        this.timers[name] = setInterval(fn, time, data);
-
-        this.timersList.push({
-            name: name,
-            fn: fn,
-            data: data,
-            time: time,
-        });
-    }
-
-    /** AUDIO EVENTS **/
 }
 
 /** KEY EVENTS ****/
@@ -745,7 +655,7 @@ window.onresize = function (e) {
             Object.entries(GraphicsInstances).forEach(([id, instance]) => {
                 instance.setFullscreen?.();
             });
-        }, DEFAULT_FRAME_RATE);
+        }, DEFAULT_UPDATE_INTERVAL);
     }
 };
 
@@ -792,4 +702,4 @@ TouchEvent.prototype.getY = function () {
     return calculateCoordinates(this.touches[0]).y;
 };
 
-export default CodeHSGraphics;
+export default GraphicsManager;

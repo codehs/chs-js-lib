@@ -10,19 +10,16 @@ import {
     Tremolo,
     Vibrato,
 } from 'tone';
-import { getAudioContext } from './audioContext';
 
 export default class Sound {
-    static soundElements = [];
-
     type = 'Sound';
 
     /**
      * Construct a new Sound.
      * Optionally set the frequency and the oscillator type.
      *
-     * @param frequency - Either a number (Hertz) or note ("C#4" for middle C Sharp)
-     * @param oscillatorType {string} - several options
+     * @param {number|string} frequency - Either a number (Hertz) or note ("C#4" for middle C Sharp)
+     * @param {string} oscillatorType - several options
      * basic types: "sine", "triangle", "square", "sawtooth"
      * any basic type can be prefixed with "fat", "am" or "fm", ie "fatsawtooth"
      * any basic type can be suffixed with a number ie "4" for the number of partials
@@ -31,9 +28,10 @@ export default class Sound {
      * drum instrument: "drum"
      * cymbal instrument: "metal"
      * https://tonejs.github.io/docs/13.8.25/OmniOscillator
+     * @param {AudioContext} - context
      */
-    constructor(frequency, oscillatorType) {
-        !getContext() && setContext(getAudioContext());
+    constructor(frequency, oscillatorType, context) {
+        setContext(context);
         this.volume = 1;
         this.frequency = frequency || 440;
         this.oscillatorType = oscillatorType || 'fatsawtooth';
@@ -47,14 +45,6 @@ export default class Sound {
             }).toDestination();
         }
         this.setFrequency(this.frequency);
-        Sound.soundElements.push(this);
-    }
-
-    static stopSounds() {
-        Sound.soundElements.forEach(sound => {
-            sound.stop();
-            sound.disconnect();
-        });
     }
 
     /**
@@ -98,7 +88,7 @@ export default class Sound {
     /**
      * Set the Sound's oscillator type
      *
-     * @param oscillatorType {string} - several options
+     * @param {string} oscillatorType - several options
      * basic types: "sine", "triangle", "square", "sawtooth"
      * any basic type can be prefixed with "fat", "am" or "fm", ie "fatsawtooth"
      * any basic type can be suffixed with a number ie "4" for the number of partials
@@ -134,7 +124,7 @@ export default class Sound {
         this.oscillatorType = oscillatorType;
     }
 
-    /**     *
+    /**
      * Get the Sound's oscillator type
      *
      * @return a String representing the oscillator type
@@ -196,8 +186,8 @@ export default class Sound {
     /**
      * Add an effect to this sound
      *
-     * @param effectName {String} - the name of the prepackaged effect, ie "reverb"
-     * @param effectValue {float} - value from 0 to 1 defining how heavily the
+     * @param {String} effectName - the name of the prepackaged effect, ie "reverb"
+     * @param {float} effectValue - value from 0 to 1 defining how heavily the
      *                              effect applies
      */
     setEffect(effectName, effectValue) {

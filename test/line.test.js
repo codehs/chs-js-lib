@@ -1,5 +1,5 @@
-import Graphics from '../src/graphics.js';
-import Line from '../src/line.js';
+import Graphics from '../src/graphics/index.js';
+import Line from '../src/graphics/line.js';
 
 describe('Line', () => {
     describe('The line constructor', () => {
