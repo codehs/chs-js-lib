@@ -18,6 +18,7 @@ export default class WebVideo extends Thing {
     type = 'WebVideo';
 
     constructor(filename) {
+        super();
         if (typeof filename !== 'string') {
             throw new TypeError(
                 'You must pass a string to `' +
@@ -70,13 +71,7 @@ export default class WebVideo extends Thing {
             return;
         }
         super.draw(graphics, context => {
-            context.drawImage(
-                this.video,
-                -this.width / 2,
-                -this.height / 2,
-                this.width,
-                this.height
-            );
+            context.drawImage(this.video, 0, 0, this.width, this.height);
         });
     }
 

@@ -12,6 +12,7 @@ import { default as Rectangle } from '../src/rectangle.js';
 import { default as Sound } from '../src/sound.js';
 import { default as Stack } from '../src/datastructures/stack.js';
 import { default as Text } from '../src/text.js';
+import { default as WebVideo } from '../src/webvideo.js';
 import { default as WebImage } from '../src/webimage.js';
 import * as Randomizer from '../src/randomizer.js';
 
@@ -29,6 +30,7 @@ window.Rectangle = Rectangle;
 window.Sound = Sound;
 window.Stack = Stack;
 window.Text = Text;
+window.WebVideo = WebVideo;
 window.WebImage = WebImage;
 window.Randomizer = Randomizer;
 
