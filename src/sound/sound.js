@@ -2,7 +2,6 @@ import {
     Chebyshev,
     Distortion,
     Freeverb,
-    getContext,
     MembraneSynth,
     MetalSynth,
     setContext,
@@ -10,6 +9,7 @@ import {
     Tremolo,
     Vibrato,
 } from 'tone';
+import { getAudioContext } from './audioContext';
 
 export default class Sound {
     type = 'Sound';
@@ -30,8 +30,8 @@ export default class Sound {
      * https://tonejs.github.io/docs/13.8.25/OmniOscillator
      * @param {AudioContext} - context
      */
-    constructor(frequency, oscillatorType, context) {
-        setContext(context);
+    constructor(frequency, oscillatorType) {
+        setContext(getAudioContext());
         this.volume = 1;
         this.frequency = frequency || 440;
         this.oscillatorType = oscillatorType || 'fatsawtooth';

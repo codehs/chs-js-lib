@@ -7,12 +7,15 @@
     <canvas width="500" height="500"></canvas>
     <script src="../../../dist/chs.iife.js"></script>
     <script>
+        const instructions = new Text('Press to start', '15pt Arial', {vertical: 'center', horizontal: 'center'});
+        instructions.setPosition(getWidth() / 2, getHeight() / 2);
+        add(instructions);
         mouseDownMethod(() => {
+            remove(instructions);
             start();
         })
         const GAP = 2;
         const WIDTH = getWidth();
-        const BASE_Y = 2 * getHeight() / 3;
         const MAX_COLOR_VAL = 255;
 
         const start = () => {
@@ -49,7 +52,7 @@
 
                 // Make the bar
                 var bar = new Rectangle(barWidth, barHeight);
-                bar.setPosition(GAP + (barWidth + GAP) * i, BASE_Y - barHeight);
+                bar.setPosition(GAP + (barWidth + GAP) * i, getHeight() - barHeight);
 
                 /*
                 * The color can be expressed as three values RGB for red, green, blue.
