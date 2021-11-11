@@ -207,11 +207,6 @@ class GraphicsManager extends Manager {
             );
         }
 
-        // Safety, set a min frequency
-        if (isNaN(time) || time < 15) {
-            time = 15;
-        }
-
         if (this.waitingForClick()) {
             this.delayedTimers.push({
                 fn: fn,

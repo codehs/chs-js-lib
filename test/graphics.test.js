@@ -201,7 +201,7 @@ describe('Graphics', () => {
                 // wait to see if the timer gets called immediately.
                 // if it does, an uncaught error will be thrown, and the
                 // test will fail.
-                await new Promise(resolve => setTimeout(resolve, 0));
+                await new Promise(resolve => requestAnimationFrame(resolve));
                 g.configure({
                     onError: errorSpy,
                 });
@@ -305,7 +305,7 @@ describe('Graphics', () => {
                 });
             });
             describe('Stopping a timer', () => {
-                it('Can be stopped by fn.name or identity', () => {
+                it('Can be stopped by identity', () => {
                     const g = new Graphics();
                     const timerFn = jasmine.createSpy();
                     g.setTimer(timerFn, 0);
@@ -317,15 +317,19 @@ describe('Graphics', () => {
                         });
                     });
                 });
-                it('Can be stopped by identity', () => {
+                it('Can be stopped by name', () => {
                     const g = new Graphics();
-                    const namedTimerSpy = jasmine.createSpy();
-                    g.setTimer(namedTimerSpy, 0);
-                    g.stopTimer('namedTimerSpy');
+                    const spy = jasmine.createSpy();
+                    g.setTimer(spy, 0);
                     return new Promise(resolve => {
                         requestAnimationFrame(() => {
-                            expect(namedTimerSpy).not.toHaveBeenCalled();
-                            resolve();
+                            expect(spy).toHaveBeenCalled();
+                            // all jasmine spies are named 'wrap'
+                            g.stopTimer('wrap');
+                            requestAnimationFrame(() => {
+                                expect(spy).toHaveBeenCalledTimes(1);
+                                resolve();
+                            });
                         });
                     });
                 });
