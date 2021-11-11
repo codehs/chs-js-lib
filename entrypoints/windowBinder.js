@@ -1,21 +1,22 @@
-import { default as Arc } from '../src/graphics/arc.js';
-import { default as Audio } from '../src/sound/audio.js';
-import { default as Circle } from '../src/graphics/circle.js';
-import { default as Color } from '../src/graphics/color.js';
 import { default as Console } from '../src/console/index.js';
 import { default as Queue } from '../src/datastructures/queue.js';
 import { default as Stack } from '../src/datastructures/stack.js';
+import { default as Arc } from '../src/graphics/arc.js';
+import { default as Circle } from '../src/graphics/circle.js';
+import { default as Color } from '../src/graphics/color.js';
 import { default as GraphicsManager } from '../src/graphics/index.js';
-import { default as AudioManager } from '../src/sound/index.js';
 import { default as Keyboard } from '../src/graphics/keyboard.js';
 import { default as Line } from '../src/graphics/line.js';
 import { default as Oval } from '../src/graphics/oval.js';
 import { default as Polygon } from '../src/graphics/polygon.js';
-import * as Randomizer from '../src/randomizer.js';
 import { default as Rectangle } from '../src/graphics/rectangle.js';
-import { default as Sound } from '../src/sound/sound.js';
 import { default as Text } from '../src/graphics/text.js';
 import { default as WebImage } from '../src/graphics/webimage.js';
+import { default as WebVideo } from '../src/graphics/webvideo.js';
+import * as Randomizer from '../src/randomizer.js';
+import { default as Audio } from '../src/sound/audio.js';
+import { default as AudioManager } from '../src/sound/index.js';
+import { default as Sound } from '../src/sound/sound.js';
 
 window.Arc = Arc;
 window.Audio = Audio;
@@ -32,6 +33,7 @@ window.Rectangle = Rectangle;
 window.Sound = Sound;
 window.Stack = Stack;
 window.Text = Text;
+window.WebVideo = WebVideo;
 window.WebImage = WebImage;
 window.Randomizer = Randomizer;
 
