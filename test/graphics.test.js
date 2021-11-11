@@ -310,22 +310,39 @@ describe('Graphics', () => {
                     const timerFn = jasmine.createSpy();
                     g.setTimer(timerFn, 0);
                     g.stopTimer(timerFn);
-                    expect(timerFn).not.toHaveBeenCalled();
-                    const namedTimerFn = () => {};
+                    return new Promise(resolve => {
+                        requestAnimationFrame(() => {
+                            expect(timerFn).not.toHaveBeenCalled();
+                            resolve();
+                        });
+                    });
+                });
+                it('Can be stopped by identity', () => {
+                    const g = new Graphics();
                     const namedTimerSpy = jasmine.createSpy();
-                    g.setTimer(timerFn, 0);
-                    g.stopTimer('namedTimerFn');
-                    expect(namedTimerSpy).not.toHaveBeenCalled();
+                    g.setTimer(namedTimerSpy, 0);
+                    g.stopTimer('namedTimerSpy');
+                    return new Promise(resolve => {
+                        requestAnimationFrame(() => {
+                            expect(namedTimerSpy).not.toHaveBeenCalled();
+                            resolve();
+                        });
+                    });
                 });
                 it('stopAllTimers stops all timers', () => {
                     const g = new Graphics();
                     const timerOne = jasmine.createSpy();
                     const timerTwo = jasmine.createSpy();
-                    g.setTimer(timerOne, 0);
-                    g.setTimer(timerTwo, 0);
+                    g.setTimer(timerOne, 0, {}, 'one');
+                    g.setTimer(timerTwo, 0, {}, 'two');
                     g.stopAllTimers();
-                    expect(timerOne).not.toHaveBeenCalled();
-                    expect(timerTwo).not.toHaveBeenCalled();
+                    return new Promise((resolve, reject) => {
+                        requestAnimationFrame(() => {
+                            expect(timerOne).not.toHaveBeenCalled();
+                            expect(timerTwo).not.toHaveBeenCalled();
+                            resolve();
+                        });
+                    });
                 });
             });
         });

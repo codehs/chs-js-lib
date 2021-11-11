@@ -13,7 +13,6 @@ let pressedKeys = [];
  * @class
  */
 class GraphicsManager extends Manager {
-    audioElementPool = [];
     elementPool = [];
 
     /**
@@ -164,22 +163,13 @@ class GraphicsManager extends Manager {
     }
 
     /**
-     * Remove a timer associated with a function.
-     * @param {function} fn - Function whose timer is removed.
-     * note 'fn' may also be the name of the function.
-     */
-    stopTimer(fn) {
-        const key = typeof fn === 'function' ? fn.name : fn;
-        clearInterval(this.timers[key]);
-    }
-
-    /**
      * Stop all timers.
      */
     stopAllTimers() {
         for (let i = 1; i < 99999; i++) {
             window.clearInterval(i);
         }
+        super.stopAllTimers();
         this.setMainTimer();
     }
 
