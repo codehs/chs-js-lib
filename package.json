@@ -14,8 +14,9 @@
   "scripts": {
     "test": "karma start --single-run",
     "test:watch": "karma start",
-    "build": "gulp build",
-    "dist": "gulp dist",
+    "build": "node build.js",
+    "dist": "node dist.js",
+    "docs": "jsdoc src/**/*.js --template node_modules/docdash --destination docs/gen",
     "prepare": "husky install"
   },
   "keywords": [
@@ -26,28 +27,17 @@
   "author": "CodeHS",
   "license": "ISC",
   "devDependencies": {
-    "@rollup/plugin-node-resolve": "^13.0.6",
-    "@rollup/stream": "^2.0.0",
-    "babel-eslint": "^10.1.0",
-    "browserify": "^10.2.4",
     "docdash": "^1.2.0",
-    "gulp": "^4.0.2",
-    "gulp-jsdoc3": "^3.0.0",
-    "gulp-rename": "^2.0.0",
-    "gulp-size": "^4.0.1",
-    "gulp-terser": "^2.0.1",
+    "esbuild": "^0.13.13",
     "husky": "^7.0.4",
+    "jsdoc": "^3.6.7",
     "karma": "^6.3.4",
     "karma-chrome-launcher": "^3.1.0",
     "karma-coverage": "^2.0.3",
     "karma-jasmine": "^4.0.1",
     "karma-mocha-reporter": "^2.2.5",
     "lint-staged": "^11.2.6",
-    "prettier": "^2.4.1",
-    "rollup": "^2.57.0",
-    "uglify-js": "^2.4.23",
-    "vinyl-source-stream": "^2.0.0",
-    "watchify": "^3.2.3"
+    "prettier": "^2.4.1"
   },
   "dependencies": {
     "tone": "^14.7.77"
