@@ -10,7 +10,7 @@ let configs = [
         ...defaultConfig,
         entryPoints: ['./entrypoints/chs.js'],
         outfile: './dist/chs.mjs',
-        format: 'cjs',
+        format: 'esm',
     },
     {
         ...defaultConfig,
@@ -27,7 +27,7 @@ if (dist) {
             ...defaultConfig,
             entryPoints: ['./entrypoints/chs.js'],
             outfile: './dist/chs.min.mjs',
-            format: 'cjs',
+            format: 'esm',
             minify: true,
         },
         {
