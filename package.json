@@ -15,7 +15,7 @@
     "test": "karma start --single-run",
     "test:watch": "karma start",
     "build": "node build.js",
-    "dist": "node dist.js",
+    "dist": "node build.js dist",
     "docs": "jsdoc src/**/*.js --template node_modules/docdash --destination docs/gen",
     "prepare": "husky install"
   },
