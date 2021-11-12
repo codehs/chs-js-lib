@@ -1,4 +1,4 @@
-import Console from '../src/console/console.js';
+import Console from '../src/console/index.js';
 
 describe('Console', () => {
     describe('The constructor', () => {

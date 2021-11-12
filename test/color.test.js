@@ -1,4 +1,4 @@
-import Color from '../src/color.js';
+import Color from '../src/graphics/color.js';
 
 describe('Color', () => {
     describe('Constructor', () => {

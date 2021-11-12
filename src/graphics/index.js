@@ -1,9 +1,7 @@
-import { getAudioContext } from './audioContext.js';
-import Sound from './sound.js';
+import Manager, { DEFAULT_UPDATE_INTERVAL } from '../manager.js';
 import Thing from './thing.js';
 import WebVideo from './webvideo.js';
 
-const DEFAULT_FRAME_RATE = 40;
 const FULLSCREEN_PADDING = 5;
 
 let GraphicsInstances = {};
@@ -14,11 +12,7 @@ let pressedKeys = [];
  * Class for interacting with Graphics.
  * @class
  */
-class CodeHSGraphics {
-    audioElements = [];
-    source = null;
-    analyser = null;
-    dataArray = null;
+class GraphicsManager extends Manager {
     elementPool = [];
 
     /**
@@ -31,11 +25,12 @@ class CodeHSGraphics {
      *      tag on the page.
      */
     constructor(options = {}) {
+        super(options);
         this.resetAllState();
         this.setCurrentCanvas(options.canvas);
         this.onError = options.onError || undefined;
         this.fullscreenMode = false;
-        this.fpsInterval = 1000 / DEFAULT_FRAME_RATE;
+        this.fpsInterval = 1000 / DEFAULT_UPDATE_INTERVAL;
         this.lastDrawTime = Date.now();
         GraphicsInstances[graphicsInstanceID++] = this;
     }
@@ -86,13 +81,6 @@ class CodeHSGraphics {
             }
         };
         document.body.appendChild(button);
-    }
-
-    Audio(url) {
-        const audioElem = new window.Audio(url);
-        audioElem.crossOrigin = 'anonymous';
-        this.audioElements.push(audioElem);
-        return audioElem;
     }
 
     /**
@@ -176,39 +164,6 @@ class CodeHSGraphics {
     }
 
     /**
-     * Assign a function as a callback for when audio data changes for audio
-     * being played in a graphics program.
-     * @param {object} tag - Audio element playing sound to analyze
-     * @param {function} fn - A callback to be triggered on audio data change.
-     */
-    audioChangeMethod(tag, fn) {
-        // get new audio context and create analyser
-        this.audioCtx = getAudioContext();
-        // IE browser exit gracefully
-        if (!this.audioCtx) {
-            return;
-        }
-        this.analyser = audioCtx.createAnalyser();
-        // set fft -- used to set the number of slices we break our frequency range
-        // in to.
-        this.analyser.fftSize = 128;
-        // gt bugger length and create a new array in that size
-        var bufferLength = this.analyser.frequencyBinCount;
-        this.dataArray = new Uint8Array(bufferLength);
-        // create media source from student's audio tag
-        this.source = audioCtx.createMediaElementSource(tag);
-        // should allow cors
-        this.source.crossOrigin = 'anonymous';
-        // connect analyzer to sound
-        this.source.connect(this.analyser);
-        // create gain node and connect to sound (makes speaker output possuble)
-        var gainNode = this.audioCtx.createGain();
-        this.source.connect(gainNode);
-        gainNode.connect(this.audioCtx.destination);
-        this.setGraphicsTimer(this.updateAudio.bind(this), DEFAULT_FRAME_RATE, null, 'updateAudio');
-    }
-
-    /**
      * Check if a key is currently pressed
      * @param {integer} keyCode - Key code of key being checked.
      * @returns {boolean} Whether or not that key is being pressed.
@@ -236,22 +191,13 @@ class CodeHSGraphics {
     }
 
     /**
-     * Remove a timer associated with a function.
-     * @param {function} fn - Function whose timer is removed.
-     * note 'fn' may also be the name of the function.
-     */
-    stopTimer(fn) {
-        const key = typeof fn === 'function' ? fn.name : fn;
-        clearInterval(this.timers[key]);
-    }
-
-    /**
      * Stop all timers.
      */
     stopAllTimers() {
         for (let i = 1; i < 99999; i++) {
             window.clearInterval(i);
         }
+        super.stopAllTimers();
         this.setMainTimer();
     }
 
@@ -289,11 +235,6 @@ class CodeHSGraphics {
             );
         }
 
-        // Safety, set a min frequency
-        if (isNaN(time) || time < 15) {
-            time = 15;
-        }
-
         if (this.waitingForClick()) {
             this.delayedTimers.push({
                 fn: fn,
@@ -303,7 +244,7 @@ class CodeHSGraphics {
                 name: name,
             });
         } else {
-            this.setGraphicsTimer(this.withErrorHandler(fn), time, data, name ?? fn.name);
+            super.setTimer(this.withErrorHandler(fn), time, data, name ?? fn.name);
         }
     }
 
@@ -411,13 +352,6 @@ class CodeHSGraphics {
         }
     }
 
-    stopAllAudio() {
-        this.audioElements.forEach(function (audio) {
-            audio.pause();
-        });
-        Sound.stopSounds();
-    }
-
     stopAllVideo() {
         for (var i = this.elementPool.length; i--; ) {
             if (this.elementPool[i] instanceof WebVideo) {
@@ -432,8 +366,6 @@ class CodeHSGraphics {
     resetAllState() {
         this.backgroundColor = null;
         this.elementPool = [];
-        this.audioElements = [];
-        this.soundElements = [];
         this.clickCallback = null;
         this.moveCallback = null;
         this.mouseDownCallback = null;
@@ -443,13 +375,6 @@ class CodeHSGraphics {
         this.keyUpCallback = null;
         this.deviceOrientationCallback = null;
         this.deviceMotionCallback = null;
-        this.audioChangeCallback = null;
-
-        // if audio source exists, disconnect it
-        if (this.source) {
-            this.source.disconnect();
-            this.source = 0;
-        }
 
         // A fast hash from timer key to timer interval #
         this.timers = {};
@@ -460,12 +385,6 @@ class CodeHSGraphics {
         this.clickCount = 0;
         this.delayedTimers = [];
 
-        // if audio context exists, close it and reset audioCtx
-        if (this.audioCtx) {
-            this.audioCtx.close();
-            this.audioCtx = 0;
-        }
-
         this.fullscreenMode = false;
     }
 
@@ -473,7 +392,6 @@ class CodeHSGraphics {
      * Reset all timers to 0 and clear timers and canvas.
      */
     fullReset() {
-        this.stopAllAudio();
         this.stopAllVideo();
         this.resetAllTimers();
         this.resetAllState();
@@ -542,14 +460,7 @@ class CodeHSGraphics {
      * @returns {context} The 2D graphics context.
      */
     getContext() {
-        var drawingCanvas = this.getCanvas();
-        // Check the element is in the DOM and the browser supports canvas
-        if (drawingCanvas && drawingCanvas.getContext) {
-            // Initaliase a 2-dimensional drawing context
-            var context = drawingCanvas.getContext('2d');
-            return context;
-        }
-        return null;
+        return this.getCanvas()?.getContext?.('2d') ?? null;
     }
 
     /**
@@ -631,20 +542,6 @@ class CodeHSGraphics {
         return graphicsUtils.getDistance(x1, y1, x2, y2);
     }
 
-    withErrorHandler(fn) {
-        return (...args) => {
-            try {
-                fn?.(...args);
-            } catch (e) {
-                if (typeof this.onError === 'function') {
-                    this.onError(e);
-                } else {
-                    throw e;
-                }
-            }
-        };
-    }
-
     /**
      * Set up the graphics instance to prepare for interaction
      */
@@ -659,11 +556,7 @@ class CodeHSGraphics {
                     var timer = this.delayedTimers[i];
                     timer.clicks--;
                     if (timer.clicks === 0) {
-                        this.setGraphicsTimer(
-                            this.withErrorHandler(timer.fn),
-                            timer.time,
-                            timer.data
-                        );
+                        this.setTimer(this.withErrorHandler(timer.fn), timer.time, timer.data);
                     }
                 }
                 return;
@@ -723,7 +616,7 @@ class CodeHSGraphics {
                     var timer = this.delayedTimers[i];
                     timer.clicks--;
                     if (timer.clicks === 0) {
-                        this.setGraphicsTimer(timer.fn, timer.time, timer.data);
+                        this.setTimer(timer.fn, timer.time, timer.data);
                     }
                 }
                 return;
@@ -736,47 +629,6 @@ class CodeHSGraphics {
                 this.mouseUpCallback(e);
             }
         };
-    }
-
-    /**
-     * Set a graphics timer.
-     * @param {function} fn - The function to be executed on the timer.
-     * @param {number} time - The time interval for the function.
-     * @param {object} data - Any arguments to be passed into `fn`.
-     * @param {string} name - The name of the timer.
-     */
-    setGraphicsTimer(fn, time, data, name) {
-        name = name ?? fn.name;
-        this.timers[name] = setInterval(fn, time, data);
-
-        this.timersList.push({
-            name: name,
-            fn: fn,
-            data: data,
-            time: time,
-        });
-    }
-
-    /** AUDIO EVENTS **/
-
-    /**
-     * This function is called on a timer. Calls the student's audioChangeCallback
-     * function and passes it the most recent audio data.
-     */
-    updateAudio() {
-        this.analyser.getByteFrequencyData(dataArray);
-        if (this.audioChangeCallback) {
-            /* this is the one strange thing. Up above, we set analyser.fftSize. That
-             * determines how many 'buckets' we split our file into (fft size / 2).
-             * For some reason, the top 16 'buckets' were always coming out 0, so we
-             * used .slice() to cut out the last 18 items out of the array. In the
-             * future, if you want to experiment with different FFT sizes, it will
-             * be necessary to adjust this slice call (the size of the array will
-             * definitely change, and number of empty indexes will probably change).
-             */
-            var numBuckets = 46;
-            this.audioChangeCallback(dataArray.slice(0, numBuckets));
-        }
     }
 }
 
@@ -805,7 +657,7 @@ window.onkeyup = function (e) {
 };
 
 /** RESIZE EVENT ****/
-var resizeTimeout;
+let resizeTimeout;
 window.onresize = function (e) {
     // https://developer.mozilla.org/en-US/docs/Web/Events/resize
     // Throttle the resize event handler since it fires at such a rapid rate
@@ -816,7 +668,7 @@ window.onresize = function (e) {
             Object.entries(GraphicsInstances).forEach(([id, instance]) => {
                 instance.setFullscreen?.();
             });
-        }, DEFAULT_FRAME_RATE);
+        }, DEFAULT_UPDATE_INTERVAL);
     }
 };
 
@@ -863,4 +715,4 @@ TouchEvent.prototype.getY = function () {
     return calculateCoordinates(this.touches[0]).y;
 };
 
-export default CodeHSGraphics;
+export default GraphicsManager;

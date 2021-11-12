@@ -1,5 +1,4 @@
-import Polygon from '../src/polygon.js';
-import Graphics from '../src/graphics.js';
+import Polygon from '../src/graphics/polygon.js';
 
 describe('Polygon', () => {
     describe('The polygon constructor', () => {
