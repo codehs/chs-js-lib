@@ -1,5 +1,5 @@
-import WebImage from '../src/webimage.js';
-import Graphics from '../src/graphics.js';
+import WebImage from '../src/graphics/webimage.js';
+import Graphics from '../src/graphics/index.js';
 
 // a 90x90 image with R, G, and B vertical stripes of 30px width, i.e.
 /**

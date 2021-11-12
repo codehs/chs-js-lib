@@ -1,5 +1,5 @@
-import Text from '../src/text.js';
-import Graphics from '../src/graphics.js';
+import Text from '../src/graphics/text.js';
+import Graphics from '../src/graphics/index.js';
 
 describe('Text', () => {
     describe('The Text constructor', () => {

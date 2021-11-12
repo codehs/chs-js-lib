@@ -1,5 +1,5 @@
-import Graphics from '../src/graphics.js';
-import Thing from '../src/thing.js';
+import Graphics from '../src/graphics/index.js';
+import Thing from '../src/graphics/thing.js';
 
 describe('Thing', () => {
     describe('The Thing constructor', () => [

@@ -1,6 +1,6 @@
-import Circle from '../src/circle.js';
-import Color from '../src/color.js';
-import Graphics from '../src/graphics.js';
+import Circle from '../src/graphics/circle.js';
+import Color from '../src/graphics/color.js';
+import Graphics from '../src/graphics/index.js';
 
 describe('Circle', () => {
     describe('The circle constructor', () => {

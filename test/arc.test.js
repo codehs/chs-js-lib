@@ -1,5 +1,5 @@
-import Graphics from '../src/graphics.js';
-import Arc from '../src/arc.js';
+import Graphics from '../src/graphics/index.js';
+import Arc from '../src/graphics/arc.js';
 
 describe('arc', () => {
     describe('Arc constructor', () => {

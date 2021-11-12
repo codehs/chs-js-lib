@@ -1,5 +1,5 @@
-import Circle from '../src/circle.js';
-import Graphics from '../src/graphics.js';
+import Circle from '../src/graphics/circle.js';
+import Graphics from '../src/graphics/index.js';
 
 /**
  * Simulate a mouse event.
@@ -32,7 +32,7 @@ function simulateEvent(type, config, target, touch = false) {
 describe('Graphics', () => {
     describe('Not window-binding a Graphics instance', () => {
         it("Doesn't attach anything if it's not window-bound", () => {
-            const g = new Graphics();
+            new Graphics();
             expect(window.mouseClickMethod).toBeUndefined();
         });
     });
@@ -201,7 +201,7 @@ describe('Graphics', () => {
                 // wait to see if the timer gets called immediately.
                 // if it does, an uncaught error will be thrown, and the
                 // test will fail.
-                await new Promise(resolve => setTimeout(resolve, 0));
+                await new Promise(resolve => requestAnimationFrame(resolve));
                 g.configure({
                     onError: errorSpy,
                 });
@@ -305,27 +305,48 @@ describe('Graphics', () => {
                 });
             });
             describe('Stopping a timer', () => {
-                it('Can be stopped by fn.name or identity', () => {
+                it('Can be stopped by identity', () => {
                     const g = new Graphics();
                     const timerFn = jasmine.createSpy();
                     g.setTimer(timerFn, 0);
                     g.stopTimer(timerFn);
-                    expect(timerFn).not.toHaveBeenCalled();
-                    const namedTimerFn = () => {};
-                    const namedTimerSpy = jasmine.createSpy();
-                    g.setTimer(timerFn, 0);
-                    g.stopTimer('namedTimerFn');
-                    expect(namedTimerSpy).not.toHaveBeenCalled();
+                    return new Promise(resolve => {
+                        requestAnimationFrame(() => {
+                            expect(timerFn).not.toHaveBeenCalled();
+                            resolve();
+                        });
+                    });
+                });
+                it('Can be stopped by name', () => {
+                    const g = new Graphics();
+                    const spy = jasmine.createSpy();
+                    g.setTimer(spy, 0);
+                    return new Promise(resolve => {
+                        requestAnimationFrame(() => {
+                            expect(spy).toHaveBeenCalled();
+                            // all jasmine spies are named 'wrap'
+                            g.stopTimer('wrap');
+                            requestAnimationFrame(() => {
+                                expect(spy).toHaveBeenCalledTimes(1);
+                                resolve();
+                            });
+                        });
+                    });
                 });
                 it('stopAllTimers stops all timers', () => {
                     const g = new Graphics();
                     const timerOne = jasmine.createSpy();
                     const timerTwo = jasmine.createSpy();
-                    g.setTimer(timerOne, 0);
-                    g.setTimer(timerTwo, 0);
+                    g.setTimer(timerOne, 0, {}, 'one');
+                    g.setTimer(timerTwo, 0, {}, 'two');
                     g.stopAllTimers();
-                    expect(timerOne).not.toHaveBeenCalled();
-                    expect(timerTwo).not.toHaveBeenCalled();
+                    return new Promise((resolve, reject) => {
+                        requestAnimationFrame(() => {
+                            expect(timerOne).not.toHaveBeenCalled();
+                            expect(timerTwo).not.toHaveBeenCalled();
+                            resolve();
+                        });
+                    });
                 });
             });
         });

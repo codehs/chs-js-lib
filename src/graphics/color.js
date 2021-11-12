@@ -1,6 +1,6 @@
 /** @module Color */
 
-import * as Randomizer from './randomizer.js';
+import * as Randomizer from '../randomizer.js';
 
 /**
  * @class Color
