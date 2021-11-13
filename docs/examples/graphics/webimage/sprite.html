@@ -8,8 +8,9 @@
     <canvas id="game" width="480" height="400"></canvas>
     <script src="../../../../dist/chs.iife.js"></script>
     <script id="code">
-    class Sprite {
+    class Sprite extends Thing {
         constructor (options) {
+            super();
             options = {
                 spriteSheetURL: 'https://codehs.com/uploads/72e9b6f60ac412f32a2fd3a955990c3b',
                 spriteWidth: 13,
@@ -113,6 +114,14 @@
         
         draw() {
             this.activeFrame.draw.apply(this.activeFrame, arguments);
+        }
+        
+        focus() {
+            this.frames.forEach(f => f.focus());
+        }
+
+        unfocus() {
+            this.frames.forEach(f => f.unfocus());
         }
 
         setPosition(x, y) {
@@ -232,5 +241,46 @@
             sprite.move(velocity, 0);
         }, 10);
     };
+    
+    const sprite2 = new Sprite({
+        spriteSheetURL: 'https://codehs.com/uploads/72e9b6f60ac412f32a2fd3a955990c3b',
+        nRows: 2,
+        nCols: 3,
+        spriteWidth: 13,
+        spriteHeight: 14,
+        borderWidth: 1,
+        spacingWidth: 1,
+        x: 0,
+        y: getHeight() - 60
+    });
+
+    sprite2.onReady(function() {
+        add(sprite2);
+        sprite2.addAnimation({
+            name: 'walkright',
+            frameIndices: [0,1,2,1]
+        });
+        sprite2.addAnimation({
+            name: 'walkleft',
+            frameIndices: [3,4,5,4]
+        });
+        
+        let velocity = 1;
+        sprite2.animate('walkright');
+        
+        setInterval(function() {
+            if (sprite2.activeFrame.x +
+                sprite2.activeFrame.width >= getWidth()
+            ) {
+                velocity = -1;
+                sprite2.animate('walkleft', true);
+            }
+            if (sprite2.activeFrame.x <= 0) {
+                velocity = 1;
+                sprite2.animate('walkright', true);
+            }
+            sprite2.move(velocity, 0);
+        }, 10);
+    });
     </script>
 </body>

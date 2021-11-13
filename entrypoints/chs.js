@@ -11,6 +11,7 @@ export { default as Oval } from '../src/graphics/oval.js';
 export { default as Polygon } from '../src/graphics/polygon.js';
 export { default as Rectangle } from '../src/graphics/rectangle.js';
 export { default as Text } from '../src/graphics/text.js';
+export { default as Thing } from '../src/graphics/thing.js';
 export { default as WebImage } from '../src/graphics/webimage.js';
 export { default as WebVideo } from '../src/graphics/webvideo.js';
 export * as Randomizer from '../src/randomizer.js';
