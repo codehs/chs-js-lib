@@ -141,7 +141,7 @@ class GraphicsManager extends Manager {
             elem.unfocus();
         };
         button.onkeydown = e => {
-            if (e.code === 'Space') {
+            if (e.code === 'Space' && !e.repeat) {
                 const event = new Event('mousedown');
                 event.getX = () => elem.x;
                 event.getY = () => elem.y;

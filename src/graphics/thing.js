@@ -328,7 +328,7 @@ export default class Thing {
             context.strokeStyle = this.stroke.toString();
             context.lineWidth = this.lineWidth;
         }
-        if (this.focused) { 
+        if (this.focused) {
             context.shadowColor = '#0066ff';
             context.shadowBlur = 20;
         }
@@ -364,7 +364,7 @@ export default class Thing {
      * Describes the element for use with screen readers.
      */
     describe() {
-        return `A ${this.type} at ${this.x}, ${this.y}. Colored: ${this.color}`;
+        return `A ${this.type} at ${this.x}, ${this.y}. Colored: ${this.color}.`;
     }
 
     /**

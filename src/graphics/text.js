@@ -94,6 +94,10 @@ export default class Text extends Thing {
         });
     }
 
+    describe() {
+        return super.describe() + this.label;
+    }
+
     /**
      * Set the font of the text.
      * Re-calculates the dimensions of the font after font change.
