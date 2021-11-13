@@ -11,7 +11,7 @@ beforeEach(() => {
 });
 
 afterEach(() => {
-    document.querySelectorAll('canvas').forEach(canvas => canvas.remove());
+    document.body.innerHTML = '';
 });
 
 setup();

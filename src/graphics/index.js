@@ -3,10 +3,10 @@ import Thing from './thing.js';
 import WebVideo from './webvideo.js';
 
 const FULLSCREEN_PADDING = 5;
-const KEYBOARD_NAVIGATION_DOM_ELEMENT_STYLE =
+export const KEYBOARD_NAVIGATION_DOM_ELEMENT_STYLE =
     'position: absolute; width: 1px; height: 1px; overflow: hidden;';
 
-const HIDDEN_KEYBOARD_NAVIGATION_DOM_ELEMENT_STYLE =
+export const HIDDEN_KEYBOARD_NAVIGATION_DOM_ELEMENT_STYLE =
     KEYBOARD_NAVIGATION_DOM_ELEMENT_STYLE + 'display: none;';
 
 /**
@@ -46,7 +46,59 @@ class GraphicsManager extends Manager {
         this.fpsInterval = 1000 / DEFAULT_UPDATE_INTERVAL;
         this.lastDrawTime = Date.now();
         this.userNavigatingWithKeyboard = false;
+        this.addEventListeners();
         GraphicsInstances[graphicsInstanceID++] = this;
+    }
+
+    addEventListeners() {
+        window.addEventListener('keydown', e => {
+            const index = pressedKeys.indexOf(e.keyCode);
+            if (index === -1) {
+                pressedKeys.push(e.keyCode);
+            }
+
+            if (e.key === 'Tab') {
+                this.userNavigatingWithKeyboard = true;
+                this.showKeyboardNavigationDOMElements();
+            }
+
+            this.keyDownCallback?.(e);
+            return true;
+        });
+
+        window.addEventListener('keyup', e => {
+            const index = pressedKeys.indexOf(e.keyCode);
+            if (index !== -1) {
+                pressedKeys.splice(index, 1);
+            }
+            this.keyUpCallback?.(e);
+        });
+
+        let resizeTimeout;
+        window.addEventListener('resize', e => {
+            // https://developer.mozilla.org/en-US/docs/Web/Events/resize
+            // Throttle the resize event handler since it fires at such a rapid rate
+            // Only respond to the resize event if there's not already a response queued up
+            if (!resizeTimeout) {
+                resizeTimeout = setTimeout(function () {
+                    resizeTimeout = null;
+                    this.setFullscreen?.();
+                }, DEFAULT_UPDATE_INTERVAL);
+            }
+        });
+
+        /** MOBILE DEVICE EVENTS ****/
+        if (window.DeviceOrientationEvent) {
+            window.addEventListener('orientationchange', e => {
+                this.deviceOrientationCallback?.(e);
+            });
+        }
+
+        if (window.DeviceMotionEvent) {
+            window.addEventListener('devicemotion', e => {
+                this.deviceMotionCallback?.(e);
+            });
+        }
     }
 
     configure(options = {}) {
@@ -693,67 +745,6 @@ class GraphicsManager extends Manager {
             }
         };
     }
-}
-
-/** KEY EVENTS ****/
-window.onkeydown = function (e) {
-    const index = pressedKeys.indexOf(e.keyCode);
-    if (index === -1) {
-        pressedKeys.push(e.keyCode);
-    }
-
-    Object.entries(GraphicsInstances).forEach(([id, instance]) => {
-        if (e.key === 'Tab') {
-            instance.userNavigatingWithKeyboard = true;
-            instance.showKeyboardNavigationDOMElements();
-        }
-        instance.keyDownCallback?.(e);
-    });
-
-    return true;
-};
-
-window.onkeyup = function (e) {
-    var index = pressedKeys.indexOf(e.keyCode);
-    if (index !== -1) {
-        pressedKeys.splice(index, 1);
-    }
-    Object.entries(GraphicsInstances).forEach(([id, instance]) => {
-        instance.keyUpCallback?.(e);
-    });
-};
-
-/** RESIZE EVENT ****/
-let resizeTimeout;
-window.onresize = function (e) {
-    // https://developer.mozilla.org/en-US/docs/Web/Events/resize
-    // Throttle the resize event handler since it fires at such a rapid rate
-    // Only respond to the resize event if there's not already a response queued up
-    if (!resizeTimeout) {
-        resizeTimeout = setTimeout(function () {
-            resizeTimeout = null;
-            Object.entries(GraphicsInstances).forEach(([id, instance]) => {
-                instance.setFullscreen?.();
-            });
-        }, DEFAULT_UPDATE_INTERVAL);
-    }
-};
-
-/** MOBILE DEVICE EVENTS ****/
-if (window.DeviceOrientationEvent) {
-    window.ondeviceorientation = function (e) {
-        Object.entries(GraphicsInstances).forEach(([id, instance]) => {
-            instance.deviceOrientationCallback?.(e);
-        });
-    };
-}
-
-if (window.DeviceMotionEvent) {
-    window.ondevicemotion = function (e) {
-        Object.entries(GraphicsInstances).forEach(([id, instance]) => {
-            instance.deviceMotionCallback?.(e);
-        });
-    };
 }
 
 /* Mouse and Touch Event Helpers */
