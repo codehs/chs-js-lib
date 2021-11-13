@@ -9,13 +9,6 @@ export const KEYBOARD_NAVIGATION_DOM_ELEMENT_STYLE =
 export const HIDDEN_KEYBOARD_NAVIGATION_DOM_ELEMENT_STYLE =
     KEYBOARD_NAVIGATION_DOM_ELEMENT_STYLE + 'display: none;';
 
-/**
- * Whether the user is using the keyboard to navigate the page.
- * This is used to toggle whether the hidden DOM elements used for keyboard
- * navigation should show up.
- * @private
- * @type {boolean}
- */
 let GraphicsInstances = {};
 let graphicsInstanceID = 0;
 let pressedKeys = [];
@@ -45,6 +38,13 @@ class GraphicsManager extends Manager {
         this.fullscreenMode = false;
         this.fpsInterval = 1000 / DEFAULT_UPDATE_INTERVAL;
         this.lastDrawTime = Date.now();
+        /**
+         * Whether the user is using the keyboard to navigate the page.
+         * This is used to toggle whether the hidden DOM elements used for keyboard
+         * navigation should show up.
+         * @private
+         * @type {boolean}
+         */
         this.userNavigatingWithKeyboard = false;
         this.addEventListeners();
         GraphicsInstances[graphicsInstanceID++] = this;
