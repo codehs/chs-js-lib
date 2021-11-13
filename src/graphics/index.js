@@ -160,6 +160,11 @@ class GraphicsManager extends Manager {
         this.accessibleDOMElements.push(button);
     }
 
+    exitKeyboardNavigation() {
+        this.userNavigatingWithKeyboard = false;
+        this.hideKeyboardNavigationDOMElements();
+    }
+
     showKeyboardNavigationDOMElements() {
         this.accessibleDOMElements.forEach(
             element => (element.style = KEYBOARD_NAVIGATION_DOM_ELEMENT_STYLE)
@@ -662,8 +667,7 @@ class GraphicsManager extends Manager {
 
         drawingCanvas.onmousemove = this.withErrorHandler(e => {
             if (this.userNavigatingWithKeyboard) {
-                this.userNavigatingWithKeyboard = false;
-                this.hideKeyboardNavigationDOMElements();
+                this.exitKeyboardNavigation();
             }
             if (this.moveCallback) {
                 this.moveCallback(e);
@@ -675,8 +679,7 @@ class GraphicsManager extends Manager {
 
         drawingCanvas.onmousedown = e => {
             if (this.userNavigatingWithKeyboard) {
-                this.userNavigatingWithKeyboard = false;
-                this.hideKeyboardNavigationDOMElements();
+                this.exitKeyboardNavigation();
             }
             mouseDown = true;
             if (this.mouseDownCallback) {
@@ -686,8 +689,7 @@ class GraphicsManager extends Manager {
 
         drawingCanvas.onmouseup = e => {
             if (this.userNavigatingWithKeyboard) {
-                this.userNavigatingWithKeyboard = false;
-                this.hideKeyboardNavigationDOMElements();
+                this.exitKeyboardNavigation();
             }
             mouseDown = false;
             if (this.mouseUpCallback) {
@@ -697,8 +699,7 @@ class GraphicsManager extends Manager {
 
         drawingCanvas.ontouchmove = e => {
             if (this.userNavigatingWithKeyboard) {
-                this.userNavigatingWithKeyboard = false;
-                this.hideKeyboardNavigationDOMElements();
+                this.exitKeyboardNavigation();
             }
             e.preventDefault();
             if (this.dragCallback) {
@@ -710,8 +711,7 @@ class GraphicsManager extends Manager {
 
         drawingCanvas.ontouchstart = e => {
             if (this.userNavigatingWithKeyboard) {
-                this.userNavigatingWithKeyboard = false;
-                this.hideKeyboardNavigationDOMElements();
+                this.exitKeyboardNavigation();
             }
             e.preventDefault();
             if (this.mouseDownCallback) {
@@ -736,8 +736,7 @@ class GraphicsManager extends Manager {
 
         drawingCanvas.ontouchend = e => {
             if (this.userNavigatingWithKeyboard) {
-                this.userNavigatingWithKeyboard = false;
-                this.hideKeyboardNavigationDOMElements();
+                this.exitKeyboardNavigation();
             }
             e.preventDefault();
             if (this.mouseUpCallback) {
