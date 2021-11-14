@@ -40,4 +40,13 @@ describe('Randomizer', () => {
             expect([true, false]).toContain(bool);
         });
     });
+    describe('Perlin', () => {
+        it("Maps nearby values to similar y values (it's continuous)", () => {
+            for (let i = 0; i < 100; i += 0.1) {
+                const x1 = i;
+                const x2 = i + 0.1;
+                expect(Randomizer.noise(x2) - Randomizer.noise(x1)).toBeLessThan(0.2);
+            }
+        });
+    });
 });
