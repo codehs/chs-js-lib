@@ -381,7 +381,7 @@ class GraphicsManager extends Manager {
     /**
      * Return the current canvas we are using. If there is no
      * canvas on the page this will return null.
-     * @returns {object} The current canvas.
+     * @returns {HTMLCanvasElement} The current canvas.
      */
     getCanvas() {
         return this.currentCanvas;
@@ -429,7 +429,7 @@ class GraphicsManager extends Manager {
     /**
      * Return the 2D graphics context for this graphics
      * object, or null if none exists.
-     * @returns {context} The 2D graphics context.
+     * @returns {CanvasRenderingContext2D} The 2D graphics context.
      */
     getContext() {
         return this.getCanvas()?.getContext?.('2d') ?? null;
@@ -443,6 +443,7 @@ class GraphicsManager extends Manager {
         this.drawBackground();
         let elem;
         let sortPool;
+        const context = this.getContext();
         for (let i = 0; i < this.elementPool.length; i++) {
             elem = this.elementPool[i];
 
@@ -450,7 +451,7 @@ class GraphicsManager extends Manager {
                 sortPool = true;
                 elem.__sortInvalidated = false;
             }
-            elem.draw(this);
+            elem.draw(context);
         }
         // sort all dead elements to the end of the pool
         // and all elements with lower layer before elements

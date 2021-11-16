@@ -38,15 +38,16 @@ class Polygon extends Thing {
 
     /**
      * Draws the polygon in the canvas.
+     *
      * @private
-     * @param {CodeHSGraphics} graphics - Instance of the Graphics module.
+     * @param {CanvasRenderingContext2D} context - Context to draw on.
      */
-    draw(graphics) {
+    draw(context) {
         if (this.points.length === 0) {
             return;
         }
 
-        super.draw(graphics, context => {
+        super.draw(context, () => {
             context.beginPath();
             const first = this.points[0];
             context.moveTo(first.x, first.y);

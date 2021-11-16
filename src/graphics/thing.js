@@ -319,9 +319,10 @@ export default class Thing {
     /**
      * This function is invoked by subclassed, and exists to add
      * common, shared functionality all classes share.
+     * @param {CanvasRenderingContext2D} context
+     * @param {function} subclassDraw
      */
-    draw(graphics, subclassDraw) {
-        const context = graphics.getContext();
+    draw(context, subclassDraw) {
         context.save();
         if (this.hasBorder) {
             context.strokeStyle = this.stroke.toString();
@@ -333,7 +334,7 @@ export default class Thing {
         context.translate(this.width / 2, this.height / 2);
         context.rotate(this.rotation);
         context.translate(-this.width / 2, -this.height / 2);
-        subclassDraw?.(context);
+        subclassDraw?.();
         if (this.hasBorder) {
             context.stroke();
         }

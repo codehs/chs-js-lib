@@ -39,10 +39,10 @@ class Circle extends Thing {
      * Draws the circle in the canvas.
      *
      * @private
-     * @param {CodeHSGraphics} graphics - Instance of the Graphics module.
+     * @param {CanvasRenderingContext2D} context - Context to draw on.
      */
-    draw(graphics) {
-        super.draw(graphics, context => {
+    draw(context) {
+        super.draw(context, () => {
             context.beginPath();
             context.translate(this.radius / 2, this.radius / 2);
             context.arc(-this.radius / 2, -this.radius / 2, this.radius, 0, Math.PI * 2, true);

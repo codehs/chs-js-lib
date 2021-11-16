@@ -84,10 +84,10 @@ class Arc extends Thing {
      * Draws the arc in the canvas.
      *
      * @private
-     * @param {CodeHSGraphics} graphics - Instance of the CodeHSGraphics module.
+     * @param {CanvasRenderingContext2D} context - Context to draw on.
      */
-    draw(graphics) {
-        super.draw(graphics, context => {
+    draw(context) {
+        super.draw(context, () => {
             context.beginPath();
             context.arc(
                 0,

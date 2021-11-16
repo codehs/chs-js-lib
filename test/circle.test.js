@@ -44,14 +44,17 @@ describe('Circle', () => {
     describe('Drawing circles', () => {
         it('Invokes context.arc', () => {
             const g = new Graphics();
+            g.shouldUpdate = false;
             const circle = new Circle(50);
             circle.setPosition(30, 20);
             const contextSpy = spyOn(g.getContext(), 'arc');
-            circle.draw(g);
+            g.add(circle);
+            g.redraw();
             expect(contextSpy).toHaveBeenCalledOnceWith(-25, -25, 50, 0, Math.PI * 2, true);
         });
         it('Applies the appropriate fillStyle', () => {
             const g = new Graphics();
+            g.shouldUpdate = false;
             const circle = new Circle(30);
             circle.setPosition(30, 20);
             circle.setColor(Color.BLUE);
@@ -60,11 +63,13 @@ describe('Circle', () => {
                 'fillStyle',
                 'set'
             ).and.callThrough();
-            circle.draw(g);
+            g.add(circle);
+            g.redraw();
             expect(fillStyleSpy).toHaveBeenCalledOnceWith(Color.BLUE);
         });
         it('Applies the appropriate border strokestyle and width, and invokes .stroke()', () => {
             const g = new Graphics();
+            g.shouldUpdate = false;
             const circle = new Circle(30);
             circle.setPosition(30, 20);
             circle.setBorderColor(Color.RED);
@@ -79,12 +84,14 @@ describe('Circle', () => {
                 'lineWidth',
                 'set'
             ).and.callThrough();
-            circle.draw(g);
+            g.add(circle);
+            g.redraw();
             expect(strokeStyleSpy).toHaveBeenCalledOnceWith(Color.RED);
             expect(lineWidthSpy).toHaveBeenCalledOnceWith(123);
         });
         it("Colors pixels at the circle's position", () => {
             const g = new Graphics();
+            g.shouldUpdate = false;
             const circle = new Circle(2);
             circle.setColor(Color.RED);
             const context = g.getContext();

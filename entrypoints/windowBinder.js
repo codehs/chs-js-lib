@@ -17,6 +17,7 @@ import * as Randomizer from '../src/randomizer.js';
 import { default as Audio } from '../src/sound/audio.js';
 import { default as AudioManager } from '../src/sound/index.js';
 import { default as Sound } from '../src/sound/sound.js';
+import { default as Group } from '../src/graphics/group.js';
 
 window.Arc = Arc;
 window.Audio = Audio;
@@ -24,6 +25,7 @@ window.Circle = Circle;
 window.Color = Color;
 window.Console = Console;
 window.Graphics = GraphicsManager;
+window.Group = Group;
 window.Keyboard = Keyboard;
 window.Line = Line;
 window.Oval = Oval;

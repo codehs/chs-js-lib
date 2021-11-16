@@ -4,6 +4,7 @@ export { default as Stack } from '../src/datastructures/stack.js';
 export { default as Arc } from '../src/graphics/arc.js';
 export { default as Circle } from '../src/graphics/circle.js';
 export { default as Color } from '../src/graphics/color.js';
+export { default as Group } from '../src/graphics/group.js';
 export { default as Graphics } from '../src/graphics/index.js';
 export { default as Keyboard } from '../src/graphics/keyboard.js';
 export { default as Line } from '../src/graphics/line.js';

@@ -64,13 +64,13 @@ export default class WebVideo extends Thing {
     /**
      * Draws the WebVideo in the canvas.
      *
-     * @param {CodeHSGraphics} graphics - Instance of the CodeHSGraphics module.
+     * @param {CanvasRenderingContext2D} context - Context to draw on.
      */
-    draw(graphics) {
+    draw(context) {
         if (!this.browserSupportsVideo) {
             return;
         }
-        super.draw(graphics, context => {
+        super.draw(context, () => {
             context.drawImage(this.video, 0, 0, this.width, this.height);
         });
     }

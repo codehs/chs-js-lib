@@ -38,10 +38,11 @@ export default class Oval extends Thing {
      * adapted from http://stackoverflow.com/questions/2172798/
      * how-to-draw-an-oval-in-html5-canvas
      *
-     * @param {CodeHSGraphics} graphics - Instance of the Graphics module.
+     * @private
+     * @param {CanvasRenderingContext2D} context - Context to draw on.
      */
-    draw(graphics) {
-        super.draw(graphics, context => {
+    draw(context) {
+        super.draw(context, () => {
             var w = this.width;
             var h = this.height;
             var x = -w / 2;

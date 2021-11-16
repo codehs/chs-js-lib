@@ -61,12 +61,13 @@ export default class Text extends Thing {
     }
 
     /**
-     * Draw the text in the current context.
+     * Draws the text in the canvas.
      *
-     * @param {CodeHSGraphics} graphics - Instance of the graphics module.
+     * @private
+     * @param {CanvasRenderingContext2D} context - Context to draw on.
      */
-    draw(graphics) {
-        super.draw(graphics, context => {
+    draw(context) {
+        super.draw(context, () => {
             context.beginPath();
             context.beginPath();
             context.font = this.font;

@@ -87,16 +87,16 @@ export default class WebImage extends Thing {
     /**
      * Draws the WebImage in the canvas.
      *
-     * @param {CodeHSGraphics} __graphics__ - Instance of the __graphics__ module.
+     * @param {CanvasRenderingContext2D} context - Context to be drawn on.
      */
-    draw(graphics) {
+    draw(context) {
         if (this.data === NOT_LOADED) {
             return;
         }
         if (this.__hiddenCanvasOutOfSync) {
             this.updateHiddenCanvas();
         }
-        super.draw(graphics, context => {
+        super.draw(context, () => {
             // the __hiddenCanvas contains the ImageData, sized as it originally was.
             // in order to perform scaling, the destination width and height are
             // currentWidth * (currentWidth / originalWidth),

@@ -100,21 +100,26 @@ describe('arc', () => {
     describe('Drawing arcs', () => {
         it('Calls context.arc with the appropriate args', () => {
             const g = new Graphics();
+            g.shouldUpdate = false;
             const arc = new Arc(0, 180, 0, 0);
+            g.add(arc);
             const contextSpy = spyOn(g.getContext(), 'arc');
-            arc.draw(g);
+            g.redraw();
             expect(contextSpy).toHaveBeenCalledWith(0, 0, 0, Math.PI, 0, true);
         });
         it('Draws borders', () => {
             const g = new Graphics();
+            g.shouldUpdate = false;
             const arc = new Arc(0, 180, 0, 0);
+            g.add(arc);
             arc.setBorder(true);
             const contextBorderSpy = spyOn(g.getContext(), 'stroke');
-            arc.draw(g);
+            g.redraw();
             expect(contextBorderSpy).toHaveBeenCalledTimes(1);
         });
         it('Positions properly', () => {
             const g = new Graphics();
+            g.shouldUpdate = false;
             const a = new Arc(30, -90, 0, 0);
             a.setColor('red');
             g.add(a);

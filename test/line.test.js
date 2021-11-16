@@ -65,6 +65,7 @@ describe('Line', () => {
     describe('Drawing', () => {
         it('Applies the appropriate strokeStyle', () => {
             const g = new Graphics();
+            g.shouldUpdate = false;
             const line = new Line(1, 2, 3, 4);
             line.setColor('blue');
             line.setBorderColor('red');
@@ -78,15 +79,18 @@ describe('Line', () => {
                 'strokeStyle',
                 'set'
             ).and.callThrough();
-            line.draw(g);
+            g.add(line);
+            g.redraw();
             expect(fillStyleSpy).toHaveBeenCalledOnceWith('#000000');
             expect(strokeStyleSpy).toHaveBeenCalledOnceWith('red');
         });
         it('Invokes stroke', () => {
             const g = new Graphics();
+            g.shouldUpdate = false;
             const line = new Line(1, 2, 3, 4);
             const strokeSpy = spyOn(g.getContext(), 'stroke').and.callThrough();
-            line.draw(g);
+            g.add(line);
+            g.redraw();
             expect(strokeSpy).toHaveBeenCalledTimes(1);
         });
         it('Applies the appropriate lineWidth', () => {
@@ -98,7 +102,8 @@ describe('Line', () => {
                 'lineWidth',
                 'set'
             ).and.callThrough();
-            line.draw(g);
+            g.add(line);
+            g.redraw();
             expect(lineWidthSpy).toHaveBeenCalledOnceWith(111);
         });
         it('Applies the appropriate rotation around the midpoint', () => {
@@ -107,7 +112,8 @@ describe('Line', () => {
             line.setRotation(-90);
             const moveToSpy = spyOn(g.getContext(), 'moveTo').and.callThrough();
             const lineToSpy = spyOn(g.getContext(), 'lineTo').and.callThrough();
-            line.draw(g);
+            g.add(line);
+            g.redraw();
             expect(moveToSpy).toHaveBeenCalledOnceWith(0, 200);
             expect(lineToSpy).toHaveBeenCalledOnceWith(200, 0);
         });

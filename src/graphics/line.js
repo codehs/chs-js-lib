@@ -66,10 +66,11 @@ export default class Line extends Thing {
     /**
      * Draws the line in the canvas.
      *
-     * @param {CodeHSGraphics} graphics - Instance of the __graphics__ module.
+     * @private
+     * @param {CanvasRenderingContext2D} context - Context to draw on.
      */
-    draw(graphics) {
-        super.draw(graphics, context => {
+    draw(context) {
+        super.draw(context, () => {
             var rotatedPoints = getRotatedPoints(this.x1, this.y1, this.x2, this.y2, this.rotation);
             context.beginPath();
             context.moveTo(rotatedPoints[0], rotatedPoints[1]);
