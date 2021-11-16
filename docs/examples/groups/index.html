@@ -78,8 +78,10 @@ var PUPIL_COLOR = Color.blue;
     opaqueSquare.setPosition(0, getHeight()/2);
     add(opaqueSquare);
     add(g);
-    
-    
+
+    setTimer(() => {
+      g.move((1 - Math.random() * 2) * 4, (1 - Math.random() * 2) * 10)
+    }, 50);
 })();
 
   </script>
