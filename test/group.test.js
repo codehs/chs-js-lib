@@ -61,4 +61,7 @@ describe('Groups', () => {
             expect(topLeftPixel.data).toEqual(new Uint8ClampedArray([0, 0, 0, 128]));
         });
     });
+    describe('Rotation', () => {
+        it('Should ');
+    });
 });

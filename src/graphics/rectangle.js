@@ -82,6 +82,7 @@ export default class Rectangle extends Thing {
                 'Invalid value for `width`. Make sure you are passing finite numbers to `setWidth(width)`. Did you forget the parentheses in `getWidth()` or `getHeight()`? Or did you perform a calculation on a variable that is not a number?'
             );
         }
+        this.__groupBoundsInvalidated = true;
         this.width = Math.max(0, width);
     }
 

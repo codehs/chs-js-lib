@@ -97,8 +97,15 @@ export default class Group extends Thing {
         this.__hiddenContext.clearRect(0, 0, window.innerWidth, window.innerHeight);
         this.__hiddenContext.save();
         this.elements.forEach(element => {
+            if (element.__groupBoundsInvalidated) {
+                this.__boundsInvalidated = true;
+                element.__sizeInvalidated = false;
+            }
             element.draw(this.__hiddenContext);
         });
+        if (this.__boundsInvalidated) {
+            this.calculateSize();
+        }
         this.__hiddenContext.restore();
         context.save();
         context.globalAlpha = this.opacity;
@@ -117,4 +124,10 @@ export default class Group extends Thing {
     containsPoint(x, y) {
         return this.elements.some(e => e.containsPoint(x - this.x, y - this.y));
     }
+
+    /**
+     * Recalculates the size of the group.
+     * @private
+     */
+    calculateSize() {}
 }
