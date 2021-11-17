@@ -58,6 +58,7 @@ window.removeAll = GraphicsInstance.removeAll.bind(GraphicsInstance);
 window.remove = GraphicsInstance.remove.bind(GraphicsInstance);
 window.setBackgroundColor = GraphicsInstance.setBackgroundColor.bind(GraphicsInstance);
 window.getElementAt = GraphicsInstance.getElementAt.bind(GraphicsInstance);
+window.getElementsAt = GraphicsInstance.getElementsAt.bind(GraphicsInstance);
 window.setFullscreen = GraphicsInstance.setFullscreen.bind(GraphicsInstance);
 window.setSize = GraphicsInstance.setSize.bind(GraphicsInstance);
 

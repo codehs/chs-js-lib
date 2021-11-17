@@ -1,6 +1,8 @@
 import Manager, { DEFAULT_UPDATE_INTERVAL } from '../manager.js';
 import Thing from './thing.js';
 import WebVideo from './webvideo.js';
+import Group from './group.js';
+import group from './group.js';
 
 const FULLSCREEN_PADDING = 5;
 
@@ -245,11 +247,17 @@ class GraphicsManager extends Manager {
      */
     getElementAt(x, y) {
         for (let i = this.elementPool.length; i--; ) {
-            if (this.elementPool[i].alive && this.elementPool[i].containsPoint(x, y, this)) {
+            if (this.elementPool[i].alive && this.elementPool[i].containsPoint(x, y)) {
                 return this.elementPool[i];
             }
         }
         return null;
+    }
+
+    getElementsAt(x, y) {
+        return this.elementPool.filter(e => {
+            return e.alive && e.containsPoint(x, y);
+        });
     }
 
     /**

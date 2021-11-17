@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Group Rotation Test</title>
+</head>
+<body>
+  <canvas id="game" width="480" height="400"></canvas>
+  <script src="../../../dist/chs.iife.js"></script>
+  <script id="code">
+  const rules = new Text(
+    'Drag and drop toppings onto the pizza.',
+    '12pt Arial',
+    {vertical: 'top', horizontal: 'center'}
+  );
+  rules.setColor(Color.WHITE);
+  rules.setPosition(getWidth() / 2, 0);
+  add(rules);
+
+  setBackgroundColor('#363534');
+  
+  const pepperoniColor = '#c41b00';
+  const pepperoniStack = new Circle(25);
+  pepperoniStack.setPosition(25 + 4, getHeight() - 25 - 4);
+  pepperoniStack.setColor(pepperoniColor);
+  add(pepperoniStack);
+
+  const cheeseColor = '#e8e3df';
+  const cheeseStack = new Circle(40);
+  cheeseStack.setPosition(40 + 4, getHeight() - 50 - 4 - pepperoniStack.radius - 4);
+  cheeseStack.setColor(cheeseColor);
+  add(cheeseStack);
+  
+  const pizzaGroup = new Group();
+  pizzaGroup.setPosition(getWidth() / 2, getHeight() / 2);
+
+  const pizzaDough = new Circle(getWidth() / 3);
+  pizzaDough.setColor('#b88456');
+  pizzaGroup.add(pizzaDough);
+
+  const pepperoni = new Circle(30);
+  pepperoni.setPosition(0, -getHeight() / 3);
+  pepperoni.setColor(pepperoniColor);
+  pizzaGroup.add(pepperoni);
+
+  pizzaGroup.setPosition(getWidth() / 2, getHeight() / 2);
+
+  add(pizzaGroup);
+
+  let rotation = 0;
+  setTimer(() => {
+    pizzaGroup.setRotation(rotation+=5);
+  }, 50);
+  </script>
+</body>
+</html>

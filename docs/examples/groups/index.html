@@ -27,51 +27,17 @@ var PUPIL_COLOR = Color.blue;
 
 /* This program draws ghosts on the canvas. */
 (function start(){
-    var centerX = getWidth()/2;
-    var centerY = getHeight()/2;
-    
-    var circle = new Circle(HEAD_RADIUS);
-    circle.setPosition(centerX, centerY);
-    circle.setColor(BODY_COLOR);
-    g.add(circle);
-    
-    var body = new Rectangle(BODY_WIDTH, BODY_HEIGHT);
-    body.setPosition(centerX - BODY_WIDTH / 2, centerY);
-    body.setColor(BODY_COLOR);
-    g.add(body);
+    const g = new Group();
 
-// Students may or may not use a loop to create the feet of the ghost.
-// They will return to this challenge after learning more about control
-// structures, at which point, a loop should be used here.
-    for (var foot = 0; foot < NUM_FEET; foot++){
-        var circle = new Circle(FOOT_RADIUS);
-        var footCenterX = centerX - BODY_WIDTH / 2 + FOOT_RADIUS;
-        var footCenterY = centerY + BODY_HEIGHT;
-        circle.setPosition(footCenterX + 2 * foot * FOOT_RADIUS, footCenterY);
-        circle.setColor(BODY_COLOR);
-        g.add(circle);
-    }
-    
-    var circle = new Circle(EYE_RADIUS);
-    circle.setPosition(centerX - EYE_OFFSET, centerY);
-    circle.setColor(EYE_COLOR);
-    g.add(circle);
-    
-    var circle = new Circle(EYE_RADIUS);
-    circle.setPosition(centerX + EYE_OFFSET, centerY);
-    circle.setColor(EYE_COLOR);
-    g.add(circle);
-    
-    var circle = new Circle(PUPIL_RADIUS);
-    circle.setPosition(centerX - PUPIL_LEFT_OFFSET, centerY);
-    circle.setColor(PUPIL_COLOR);
-    g.add(circle);
-    
-    var circle = new Circle(PUPIL_RADIUS);
-    circle.setPosition(centerX + PUPIL_RIGHT_OFFSET, centerY);
-    circle.setColor(PUPIL_COLOR);
-    g.add(circle);
+    const rect = new Rectangle(200, 200);
+    rect.setPosition(getWidth() / 2 - 100, getHeight() / 2 - 100);
+    rect.setColor(Color.RED);
+    g.add(rect);
 
+    const circle = new Circle(50);
+    circle.setPosition(getWidth() / 2, getHeight() / 2);
+    circle.setColor(Color.BLUE);
+    g.add(circle);
 
     g.setOpacity(0.5);
     const opaqueSquare = new Rectangle(getWidth(), 50);
