@@ -8,8 +8,9 @@ import Graphics from '../src/graphics/index.js';
  * |rr|gg|bb|
  * |rr|gg|bb|
  * +--+--+--+
+ * @type {string}
  */
-const RGBURL = 'https://codehs.com/uploads/4cd36a1bacbd8cdd22cf75947f4caea8';
+export const RGBURL = 'https://codehs.com/uploads/4cd36a1bacbd8cdd22cf75947f4caea8';
 
 describe('WebImage', () => {
     describe('The WebImage constructor', () => {

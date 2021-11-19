@@ -5,6 +5,7 @@
 export default class Thing {
     static DEGREES = 0;
     static RADIANS = 1;
+    static thingID = 0;
 
     type = 'Thing';
     anchor = { horizontal: 0, vertical: 0 };
@@ -13,6 +14,12 @@ export default class Thing {
      * Constructs a new Thing.
      */
     constructor() {
+        /**
+         * Unique identifier for a Thing.
+         * @type {number}
+         * @private
+         */
+        this.__id = Thing.thingID++;
         this.alive = true;
         this.x = 0;
         this.y = 0;
@@ -44,11 +51,18 @@ export default class Thing {
          */
         this.__sortInvalidated = true;
         /**
-         * Whether the AABB should show.
+         * Used to record when this element's bounds are invalidated,
+         * so that when needed, they can be recalculated.
          * @type {boolean}
          * @private
          */
-        this.__debugAABB = false;
+        this.__boundsInvalidated = true;
+        this.bounds = {
+            top: null,
+            bottom: null,
+            left: null,
+            right: null,
+        };
     }
 
     /**
@@ -66,7 +80,7 @@ export default class Thing {
 
     set width(width) {
         this._width = width;
-        this.__updateBounds();
+        this.__invalidateBounds();
     }
 
     get width() {
@@ -75,16 +89,34 @@ export default class Thing {
 
     set height(height) {
         this._height = height;
-        this.__updateBounds();
+        this.__invalidateBounds();
     }
 
     get height() {
         return this._height;
     }
 
+    /**
+     * Gets the x position of the Thing.
+     *
+     * @return {number} The x position of the Thing.
+     */
+    getX() {
+        return this.x;
+    }
+
+    /**
+     * Gets the y position of the Thing.
+     *
+     * @return {number} The y position of the Thing.
+     */
+    getY() {
+        return this.y;
+    }
+
     set x(x) {
         this._x = x;
-        this.__updateBounds();
+        this.__invalidateBounds();
     }
 
     get x() {
@@ -93,7 +125,7 @@ export default class Thing {
 
     set y(y) {
         this._y = y;
-        this.__updateBounds();
+        this.__invalidateBounds();
     }
 
     get y() {
@@ -362,24 +394,6 @@ export default class Thing {
     }
 
     /**
-     * Gets the x position of the Thing.
-     *
-     * @return {number} The x position of the Thing.
-     */
-    getX() {
-        return this.x;
-    }
-
-    /**
-     * Gets the y position of the Thing.
-     *
-     * @return {number} The y position of the Thing.
-     */
-    getY() {
-        return this.y;
-    }
-
-    /**
      * This function is invoked by subclassed, and exists to add
      * common, shared functionality all classes share.
      * @param {CanvasRenderingContext2D} context
@@ -408,18 +422,6 @@ export default class Thing {
         if (anchorX || anchorY) {
             context.translate(anchorX, anchorY);
         }
-        if (this.__debugAABB) {
-            context.save();
-            context.strokeStyle = 'red';
-            context.rect(
-                this.bounds.left,
-                this.bounds.top,
-                this.bounds.right - this.bounds.left,
-                this.bounds.bottom - this.bounds.top
-            );
-            context.stroke();
-            context.restore();
-        }
         subclassDraw?.();
         if (this.hasBorder) {
             context.stroke();
@@ -440,8 +442,31 @@ export default class Thing {
         return false;
     }
 
+    /**
+     * Sets the Anchor for the object.
+     * @param {{vertical: number, horizontal: number}} anchor
+     */
     setAnchor(anchor) {
         this.anchor = anchor;
+        this.__invalidateBounds();
+    }
+
+    /**
+     * Get the elements bounds.
+     * @returns {{top: number, bottom: number, left: number, right: number}}
+     */
+    getBounds() {
+        if (this.__boundsInvalidated) {
+            this.__updateBounds();
+        }
+        return this.bounds;
+    }
+
+    /**
+     * Mark this element's bounds as invalidated.
+     */
+    __invalidateBounds() {
+        this.__boundsInvalidated = true;
     }
 
     /**
@@ -454,11 +479,12 @@ export default class Thing {
         const top = this.y - this.anchor.vertical * this.height;
         const bottom = this.y + (1 - this.anchor.vertical) * this.height;
         this.bounds = {
-            left: left,
-            right: right,
-            top: top,
-            bottom: bottom,
+            left,
+            right,
+            top,
+            bottom,
         };
         this.__lastCalculatedBoundsID++;
+        this.__boundsInvalidated = false;
     }
 }

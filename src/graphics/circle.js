@@ -123,7 +123,7 @@ class Circle extends Thing {
 
     set radius(radius) {
         this._radius = radius;
-        super.__updateBounds();
+        super.__invalidateBounds();
     }
 
     /**

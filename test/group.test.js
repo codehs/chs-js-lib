@@ -2,6 +2,8 @@ import Circle from '../src/graphics/circle.js';
 import Rectangle from '../src/graphics/rectangle.js';
 import Group from '../src/graphics/group.js';
 import Graphics from '../src/graphics/index.js';
+import WebImage from '../src/graphics/webimage.js';
+import { RGBURL } from './webimage.test.js';
 
 describe('Groups', () => {
     describe('Constructing a group', () => {
@@ -62,6 +64,68 @@ describe('Groups', () => {
         });
     });
     describe('Rotation', () => {
-        it('Should ');
+        const img = new WebImage(RGBURL);
+
+        beforeAll(done => {
+            img.loaded(() => {
+                done();
+            });
+        });
+
+        it('Should rotate the entire content of the group', () => {
+            const g = new Group();
+            const gfx = new Graphics();
+            gfx.shouldUpdate = false;
+            g.add(img);
+            g.rotate(180);
+            gfx.add(g);
+            gfx.redraw();
+            const topLeftPixel = gfx.getContext().getImageData(0, 0, 1, 1);
+            expect(topLeftPixel.data).toEqual(new Uint8ClampedArray([0, 0, 255, 255]));
+        });
+        it('Should rotate the entire content of the group around its center', () => {
+            const g = new Group();
+            const gfx = new Graphics();
+            gfx.shouldUpdate = false;
+            g.add(img);
+            g.rotate(180);
+            const chartreuseRect = new Rectangle(90, 90);
+            chartreuseRect.setColor('chartreuse');
+            chartreuseRect.setPosition(90, 90);
+            g.add(chartreuseRect);
+            gfx.add(g);
+            gfx.redraw();
+            const topLeftPixel = gfx.getContext().getImageData(0, 0, 1, 1);
+            expect(topLeftPixel.data).toEqual(new Uint8ClampedArray([127, 255, 0, 255]));
+        });
+    });
+    describe('Bounds calculations', () => {
+        it('Should update bounds whenever an element is added/removed', () => {
+            const g = new Group();
+            g.add(new Circle(10));
+            console.log(g.getBounds());
+            expect(g.getBounds()).toEqual({
+                top: -10,
+                left: -10,
+                right: 10,
+                bottom: 10,
+            });
+            const rect = new Rectangle(5, 5);
+            rect.setPosition(10, 10);
+            g.add(rect);
+            expect(g.getBounds()).toEqual({
+                top: -10,
+                left: -10,
+                right: 15,
+                bottom: 15,
+            });
+            g.remove(rect);
+            expect(g.getBounds()).toEqual({
+                top: -10,
+                left: -10,
+                right: 10,
+                bottom: 10,
+            });
+        });
     });
 });

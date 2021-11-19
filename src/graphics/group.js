@@ -25,13 +25,12 @@ export default class Group extends Thing {
          * @type {HTMLCanvasElement}
          */
         this.__hiddenCanvas = document.createElement('canvas');
-        this.__hiddenCanvas.width = window.innerWidth;
-        this.__hiddenCanvas.height = window.innerHeight;
-        this.__hiddenCanvas.style.display = 'none';
+        this.__hiddenCanvas.width = this.width;
+        this.__hiddenCanvas.height = this.height;
+        //this.__hiddenCanvas.style.display = 'none';
         document.body.appendChild(this.__hiddenCanvas);
         this.__hiddenContext = this.__hiddenCanvas.getContext('2d');
         this.__lastRecordedBounds = {};
-        this.calculateSize(true);
     }
 
     /**
@@ -51,8 +50,8 @@ export default class Group extends Thing {
      * @param {Thing} element
      */
     add(element) {
-        this.__lastRecordedBounds[element] = element.__lastCalculatedBoundsID;
         this.elements.push(element);
+        this.__invalidateBounds();
     }
 
     /**
@@ -65,6 +64,7 @@ export default class Group extends Thing {
             return;
         }
         this.elements.splice(i, 1);
+        this.__invalidateBounds();
     }
 
     /**
@@ -75,7 +75,16 @@ export default class Group extends Thing {
     move(dx, dy) {
         this.elements.forEach(element => {
             element.move(dx, dy);
+            // as a performance optimization, pre-empt the recalculation that would result from the
+            // elemenents being moved, and instead update the bounds directly after this.
+            this.__lastRecordedBounds[element.__id]++;
         });
+        this.bounds = {
+            top: this.bounds.top + dx,
+            left: this.bounds.left + dx,
+            right: this.bounds.right + dx,
+            bottom: this.bounds.bottom + dx,
+        };
     }
 
     /**
@@ -95,36 +104,38 @@ export default class Group extends Thing {
      * @param {CanvasRenderingContext2D} context
      */
     draw(context) {
-        this.__hiddenContext.clearRect(0, 0, window.innerWidth, window.innerHeight);
-        this.__hiddenContext.save();
-
-        const w = this.bounds.right - this.bounds.left;
-        const h = this.bounds.bottom - this.bounds.top;
-        this.__hiddenContext.translate(this.bounds.left + w / 2, this.bounds.top + h / 2);
-        this.__hiddenContext.rotate(this.rotation);
-        this.__hiddenContext.translate(-(this.bounds.left + w / 2), -(this.bounds.top + h / 2));
-
-        if (this.__debugAABB) {
-            this.__hiddenContext.save();
-            this.__hiddenContext.strokeStyle = 'red';
-            this.__hiddenContext.strokeRect(this.bounds.left, this.bounds.top, w, h);
-            this.__hiddenContext.restore();
+        const bounds = this.getBounds();
+        const width = bounds.right - bounds.left;
+        const height = bounds.bottom - bounds.top;
+        if (!width || !height) {
+            return;
         }
-
+        this.__hiddenContext.clearRect(0, 0, width, height);
+        // translate the hidden context so that the group is drawn
+        // in tehe top left corner.
+        // this means that only the bounding box surrounding the top
+        // left corner needs to be drawn to the destination canvas
+        this.__hiddenContext.translate(-bounds.left, -bounds.top);
         this.elements.forEach(element => {
-            if (element.__lastCalculatedBoundsID > this.__lastRecordedBounds[element]) {
+            if (element.__lastCalculatedBoundsID > this.__lastRecordedBounds[element.__id]) {
                 this.__boundsInvalidated = true;
             }
             element.draw(this.__hiddenContext);
         });
+        this.__hiddenContext.translate(bounds.left, bounds.top);
 
-        if (this.__boundsInvalidated) {
-            this.calculateSize();
-        }
-        this.__hiddenContext.restore();
         context.save();
+
         context.globalAlpha = this.opacity;
-        context.drawImage(this.__hiddenCanvas, 0, 0, window.innerWidth, window.innerHeight);
+        context.translate(bounds.left, bounds.top);
+
+        // rotate the context around the center of the group
+        context.translate(width / 2, height / 2);
+        context.rotate(this.rotation);
+        context.translate(-width / 2, -height / 2);
+
+        context.drawImage(this.__hiddenCanvas, 0, 0, width, height);
+
         context.restore();
     }
 
@@ -144,28 +155,28 @@ export default class Group extends Thing {
      * Recalculates the size of the group.
      * @private
      */
-    calculateSize(invalidated = false) {
+    __updateBounds() {
         let maxX = 0;
         let maxY = 0;
         let minX = Infinity;
         let minY = Infinity;
         this.elements.forEach(element => {
-            if (element.__lastCalculatedBoundsID > this.__lastRecordedBounds[element]) {
-                invalidated = true;
-                this.__lastRecordedBounds[element] = element.__lastCalculatedBoundsID;
+            if (element.__lastCalculatedBoundsID > (this.__lastRecordedBounds[element.__id] || 0)) {
+                this.__lastRecordedBounds[element.__id] = element.__lastCalculatedBoundsID;
             }
-            if (invalidated) {
-                minX = Math.min(minX, element.bounds.left);
-                minY = Math.min(minY, element.bounds.top);
-                maxX = Math.max(maxX, element.bounds.right);
-                maxY = Math.max(maxY, element.bounds.bottom);
-            }
+            const elementBounds = element.getBounds();
+            minX = Math.min(minX, elementBounds.left);
+            minY = Math.min(minY, elementBounds.top);
+            maxX = Math.max(maxX, elementBounds.right);
+            maxY = Math.max(maxY, elementBounds.bottom);
         });
-        if (invalidated) {
-            this.x = minX;
-            this.y = minY;
-            this.width = maxX - minX;
-            this.height = maxY - minY;
-        }
+        this.bounds = {
+            left: minX,
+            right: maxX,
+            top: minY,
+            bottom: maxY,
+        };
+        this.__hiddenCanvas.width = 1 + maxX - minX;
+        this.__hiddenCanvas.height = 1 + maxY - minY;
     }
 }

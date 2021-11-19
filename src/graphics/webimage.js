@@ -29,10 +29,19 @@ export default class WebImage extends Thing {
         }
 
         this.setImage(filename);
-        // used to indicate that the internal .data is out of sync with
-        // the __hiddenCanvas. when out of sync, the __hiddenCanvas must be
-        // updated before drawing
+        /**
+         * used to indicate that the internal .data is out of sync with
+         * the __hiddenCanvas. when out of sync, the __hiddenCanvas must be
+         * updated before drawing
+         * @type {boolean}
+         * @private
+         */
         this.__hiddenCanvasOutOfSync = false;
+        /**
+         * Indicates whether the image has already perfomed initial load
+         * @type {boolean}
+         */
+        this.imageLoaded = false;
     }
 
     /**
@@ -41,6 +50,9 @@ export default class WebImage extends Thing {
      * @param {function} callback - A function
      */
     loaded(callback) {
+        if (this.imageLoaded) {
+            callback();
+        }
         this.loadfn = callback;
     }
 
@@ -66,6 +78,7 @@ export default class WebImage extends Thing {
         this.height = null;
         this.data = NOT_LOADED;
         this.image.onload = () => {
+            this.imageLoaded = true;
             this.checkDimensions();
             this.loadPixelData();
             if (this.loadfn) {

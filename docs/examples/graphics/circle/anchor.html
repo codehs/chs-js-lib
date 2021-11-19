@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Circle Anchor Test</title>
+</head>
+<body>
+  <canvas id="game" width="480" height="400"></canvas>
+  <script src="../../../../dist/chs.iife.js"></script>
+  <script id="code">
+    let radius = 20;
+    let growing = true;
+    var c = new Circle(20);
+    c.setColor(Color.RED);
+    c.setAnchor({vertical: 0, horizontal: 0})
+    add(c);
+  </script>
+</body>
+</html>

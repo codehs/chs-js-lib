@@ -12,6 +12,9 @@ describe('Polygon', () => {
             const initialBoundsID = p.__lastCalculatedBoundsID;
             p.addPoint(0, 10);
             p.addPoint(0, 20);
+            expect(p.__boundsInvalidated).toBeTrue();
+            p.getBounds();
+            expect(p.__boundsInvalidated).toBeFalse();
             expect(initialBoundsID).toBeLessThan(p.__lastCalculatedBoundsID);
         });
     });

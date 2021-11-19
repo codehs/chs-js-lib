@@ -1,8 +1,6 @@
 import Manager, { DEFAULT_UPDATE_INTERVAL } from '../manager.js';
 import Thing from './thing.js';
 import WebVideo from './webvideo.js';
-import Group from './group.js';
-import group from './group.js';
 
 const FULLSCREEN_PADDING = 5;
 

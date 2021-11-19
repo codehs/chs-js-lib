@@ -22,7 +22,7 @@ var EYE_RADIUS = 10;
 var EYE_OFFSET = 14;
 let ghosts = [];
 
-for (let i = 0; i < 10; i++) {
+for (let i = 0; i < 20; i++) {
   newGhost();
 }
 
@@ -35,16 +35,18 @@ const rotateGhosts = () => {
 /* This is the callback drawing function. All we do here
  * is make a call to our drawGhost function with a random
  * position and random color. */
-function newGhost(){
-	const ghostParts = drawGhost(Randomizer.nextInt(0, getWidth()),
-			  Randomizer.nextInt(0, getHeight()),
-			  Randomizer.nextColor());
+function newGhost(x, y, r){
+	const ghostParts = drawGhost(
+    x || Randomizer.nextInt(0, getWidth()),
+	  y || Randomizer.nextInt(0, getHeight()),
+		Randomizer.nextColor()
+  );
   
   const g = new Group(...ghostParts);
   g.setOpacity(0.5);
-  g.__debugAABB = true;
+  //g.__debugAABB = true;
   add(g);
-  g.rotRate = Math.random() * 10;
+  g.rotRate = r || (Math.random() < 0.5 ? 1 : -1) * Math.random() * 10;
   ghosts.push(g);
 }
 
@@ -86,16 +88,22 @@ function drawGhost(cx, cy, color){
 				   cx + start*FOOT_RADIUS, 
 				   cy + BODY_HEIGHT));
 	}
-	
-	parts.push(drawCircle(EYE_RADIUS, Color.white, 
+  const leftEyeGroup = new Group();
+  leftEyeGroup.add(drawCircle(EYE_RADIUS, Color.white, 
 			   cx - EYE_OFFSET, cy));
-	parts.push(drawCircle(EYE_RADIUS, Color.white, 
+  leftEyeGroup.add(drawCircle(PUPIL_RADIUS, Color.blue, 
+			   cx - PUPIL_LEFT_OFFSET, cy))
+  const rightEyeGroup = new Group();
+  rightEyeGroup.add(drawCircle(EYE_RADIUS, Color.white, 
 			   cx + EYE_OFFSET, cy));
-	
-	parts.push(drawCircle(PUPIL_RADIUS, Color.blue, 
-			   cx - PUPIL_LEFT_OFFSET, cy));
-	parts.push(drawCircle(PUPIL_RADIUS, Color.blue, 
-			   cx + PUPIL_RIGHT_OFFSET, cy));
+  rightEyeGroup.add(drawCircle(PUPIL_RADIUS, Color.blue, 
+			   cx + PUPIL_RIGHT_OFFSET, cy))
+  parts.push(leftEyeGroup);
+  parts.push(rightEyeGroup);
+  setTimer(() => {
+    leftEyeGroup.rotate(3)
+    rightEyeGroup.rotate(3)
+  }, 50)
   return parts;
 }
 
