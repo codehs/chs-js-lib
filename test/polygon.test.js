@@ -6,6 +6,15 @@ describe('Polygon', () => {
             expect(new Polygon().type).toEqual('Polygon');
         });
     });
+    describe('addPoint', () => {
+        it("Invalidates the superclass's bounds", () => {
+            const p = new Polygon();
+            const initialBoundsID = p.__lastCalculatedBoundsID;
+            p.addPoint(0, 10);
+            p.addPoint(0, 20);
+            expect(initialBoundsID).toBeLessThan(p.__lastCalculatedBoundsID);
+        });
+    });
     describe('getWidth()', () => {
         it('Returns the maximum width between any two points in the x axis', () => {
             const p = new Polygon();

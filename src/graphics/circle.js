@@ -10,6 +10,7 @@ import { getDistance } from './graphics-utils.js';
  */
 class Circle extends Thing {
     type = 'Circle';
+    anchor = { horizontal: 0.5, vertical: 0.5 };
 
     /**
      * Constructs a new circle.
@@ -43,9 +44,9 @@ class Circle extends Thing {
      */
     draw(context) {
         super.draw(context, () => {
+            context.translate(this.radius, this.radius);
             context.beginPath();
-            context.translate(this.radius / 2, this.radius / 2);
-            context.arc(-this.radius / 2, -this.radius / 2, this.radius, 0, Math.PI * 2, true);
+            context.arc(0, 0, this.radius, 0, Math.PI * 2, true);
             context.closePath();
         });
     }
@@ -62,15 +63,23 @@ class Circle extends Thing {
         return this.radius;
     }
 
+    get radius() {
+        return this._radius;
+    }
+
     /**
      * Gets the height (diamter) of the circle.
      *
      * @example
      * const c = new Circle(20);
-     * c.getHeight === 40;
+     * c.getHeight() === 40;
      * @return {number} Height (diameter) of the circle.
      */
     getHeight() {
+        return this.radius * 2;
+    }
+
+    get height() {
         return this.radius * 2;
     }
 
@@ -79,10 +88,14 @@ class Circle extends Thing {
      *
      * @example
      * const c = new Circle(20);
-     * c.getHeight === 40;
+     * c.getHeight() === 40;
      * @return {number} Width (diameter) of the circle.
      */
     getWidth() {
+        return this.radius * 2;
+    }
+
+    get width() {
         return this.radius * 2;
     }
 
@@ -106,6 +119,11 @@ class Circle extends Thing {
         }
 
         this.radius = Math.max(0, radius);
+    }
+
+    set radius(radius) {
+        this._radius = radius;
+        super.__updateBounds();
     }
 
     /**

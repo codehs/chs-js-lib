@@ -153,7 +153,8 @@ class Polygon extends Thing {
             );
         }
 
-        for (var i = 0; i < this.points.length; i++) {
+        this.points.push({ x: x, y: y });
+        for (let i = 0; i < this.points.length; i++) {
             if (Math.abs(x - this.points[i].x) > this.width) {
                 this.width = Math.abs(x - this.points[i].x);
             }
@@ -161,7 +162,6 @@ class Polygon extends Thing {
                 this.height = Math.abs(y - this.points[i].y);
             }
         }
-        this.points.push({ x: x, y: y });
     }
 
     /**

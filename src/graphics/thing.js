@@ -7,6 +7,7 @@ export default class Thing {
     static RADIANS = 1;
 
     type = 'Thing';
+    anchor = { horizontal: 0, vertical: 0 };
 
     /**
      * Constructs a new Thing.
@@ -21,7 +22,33 @@ export default class Thing {
         this.filled = true;
         this.hasBorder = false;
         this.rotation = 0;
+        /**
+         * Used to record the layer of the element for sorting when drawing.
+         * @type {number}
+         * @private
+         */
         this.__layer = 1;
+        /**
+         * Used to record when the bounds of this element were last calculated.
+         * Groups containing elements need to recalculate their own bounds whenever
+         * an element's bounds change.
+         * @type {number}
+         * @private
+         */
+        this.__lastCalculatedBoundsID = 0;
+        /**
+         * Used to record when this element's sort value was changed, so the GraphicsManager
+         * can perform a resort.
+         * @type {boolean}
+         * @private
+         */
+        this.__sortInvalidated = true;
+        /**
+         * Whether the AABB should show.
+         * @type {boolean}
+         * @private
+         */
+        this.__debugAABB = false;
     }
 
     /**
@@ -35,6 +62,42 @@ export default class Thing {
 
     get layer() {
         return this.__layer;
+    }
+
+    set width(width) {
+        this._width = width;
+        this.__updateBounds();
+    }
+
+    get width() {
+        return this._width;
+    }
+
+    set height(height) {
+        this._height = height;
+        this.__updateBounds();
+    }
+
+    get height() {
+        return this._height;
+    }
+
+    set x(x) {
+        this._x = x;
+        this.__updateBounds();
+    }
+
+    get x() {
+        return this._x;
+    }
+
+    set y(y) {
+        this._y = y;
+        this.__updateBounds();
+    }
+
+    get y() {
+        return this._y;
     }
 
     /**
@@ -330,10 +393,33 @@ export default class Thing {
         }
         context.fillStyle = this.color.toString();
         context.globalAlpha = this.opacity;
+
+        // translate to the location of the shape
         context.translate(this.x, this.y);
+
+        // translate to the shape's center to perform rotation around its center
         context.translate(this.width / 2, this.height / 2);
         context.rotate(this.rotation);
         context.translate(-this.width / 2, -this.height / 2);
+
+        // translate to the shape's anchor to draw the shape
+        const anchorX = -this.width * this.anchor.horizontal;
+        const anchorY = -this.height * this.anchor.vertical;
+        if (anchorX || anchorY) {
+            context.translate(anchorX, anchorY);
+        }
+        if (this.__debugAABB) {
+            context.save();
+            context.strokeStyle = 'red';
+            context.rect(
+                this.bounds.left,
+                this.bounds.top,
+                this.bounds.right - this.bounds.left,
+                this.bounds.bottom - this.bounds.top
+            );
+            context.stroke();
+            context.restore();
+        }
         subclassDraw?.();
         if (this.hasBorder) {
             context.stroke();
@@ -352,5 +438,27 @@ export default class Thing {
      */
     containsPoint(x, y) {
         return false;
+    }
+
+    setAnchor(anchor) {
+        this.anchor = anchor;
+    }
+
+    /**
+     * Invalidate the bounds of this Thing, so that any Groups containing it can update.
+     * @private
+     */
+    __updateBounds() {
+        const left = this.x - this.anchor.horizontal * this.width;
+        const right = this.x + (1 - this.anchor.horizontal) * this.width;
+        const top = this.y - this.anchor.vertical * this.height;
+        const bottom = this.y + (1 - this.anchor.vertical) * this.height;
+        this.bounds = {
+            left: left,
+            right: right,
+            top: top,
+            bottom: bottom,
+        };
+        this.__lastCalculatedBoundsID++;
     }
 }

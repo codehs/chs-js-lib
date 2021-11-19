@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Group AABB Test</title>
+</head>
+<body>
+  <canvas id="game" width="480" height="400"></canvas>
+  <script src="../../../dist/chs.iife.js"></script>
+  <script id="code">
+  const group = new Group();
+  const c = new Circle(30);
+  group.add(c);
+
+  const r = new Rectangle(20, 20);
+  r.setPosition(30, 10);
+  group.add(r);
+
+  group.__debugAABB = true;
+  add(group);
+
+  setTimer(() => {
+    group.move(1, 1);
+  }, 50)
+  </script>
+</body>
+</html>

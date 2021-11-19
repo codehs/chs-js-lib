@@ -30,6 +30,8 @@ export default class Group extends Thing {
         this.__hiddenCanvas.style.display = 'none';
         document.body.appendChild(this.__hiddenCanvas);
         this.__hiddenContext = this.__hiddenCanvas.getContext('2d');
+        this.__lastRecordedBounds = {};
+        this.calculateSize(true);
     }
 
     /**
@@ -49,6 +51,7 @@ export default class Group extends Thing {
      * @param {Thing} element
      */
     add(element) {
+        this.__lastRecordedBounds[element] = element.__lastCalculatedBoundsID;
         this.elements.push(element);
     }
 
@@ -73,8 +76,6 @@ export default class Group extends Thing {
         this.elements.forEach(element => {
             element.move(dx, dy);
         });
-        //this.x += dx;
-        //this.y += dy;
     }
 
     /**
@@ -96,13 +97,27 @@ export default class Group extends Thing {
     draw(context) {
         this.__hiddenContext.clearRect(0, 0, window.innerWidth, window.innerHeight);
         this.__hiddenContext.save();
+
+        const w = this.bounds.right - this.bounds.left;
+        const h = this.bounds.bottom - this.bounds.top;
+        this.__hiddenContext.translate(this.bounds.left + w / 2, this.bounds.top + h / 2);
+        this.__hiddenContext.rotate(this.rotation);
+        this.__hiddenContext.translate(-(this.bounds.left + w / 2), -(this.bounds.top + h / 2));
+
+        if (this.__debugAABB) {
+            this.__hiddenContext.save();
+            this.__hiddenContext.strokeStyle = 'red';
+            this.__hiddenContext.strokeRect(this.bounds.left, this.bounds.top, w, h);
+            this.__hiddenContext.restore();
+        }
+
         this.elements.forEach(element => {
-            if (element.__groupBoundsInvalidated) {
+            if (element.__lastCalculatedBoundsID > this.__lastRecordedBounds[element]) {
                 this.__boundsInvalidated = true;
-                element.__sizeInvalidated = false;
             }
             element.draw(this.__hiddenContext);
         });
+
         if (this.__boundsInvalidated) {
             this.calculateSize();
         }
@@ -129,5 +144,28 @@ export default class Group extends Thing {
      * Recalculates the size of the group.
      * @private
      */
-    calculateSize() {}
+    calculateSize(invalidated = false) {
+        let maxX = 0;
+        let maxY = 0;
+        let minX = Infinity;
+        let minY = Infinity;
+        this.elements.forEach(element => {
+            if (element.__lastCalculatedBoundsID > this.__lastRecordedBounds[element]) {
+                invalidated = true;
+                this.__lastRecordedBounds[element] = element.__lastCalculatedBoundsID;
+            }
+            if (invalidated) {
+                minX = Math.min(minX, element.bounds.left);
+                minY = Math.min(minY, element.bounds.top);
+                maxX = Math.max(maxX, element.bounds.right);
+                maxY = Math.max(maxY, element.bounds.bottom);
+            }
+        });
+        if (invalidated) {
+            this.x = minX;
+            this.y = minY;
+            this.width = maxX - minX;
+            this.height = maxY - minY;
+        }
+    }
 }

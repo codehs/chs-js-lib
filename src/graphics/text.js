@@ -7,18 +7,14 @@ export default class Text extends Thing {
     static defaultContext = null;
 
     type = 'Text';
+    anchor = { horizontal: 0, vertical: 1 };
 
     /**
      *
      * @param {string|number} label
      * @param {string} font
-     * @param {{vertical: 'top'|'center'|'bottom', horizontal: 'left'|'center'|'right'}} alignment
      */
-    constructor(
-        label,
-        font = '20pt Arial',
-        alignment = { vertical: 'bottom', horizontal: 'left' }
-    ) {
+    constructor(label, font = '20pt Arial', anchor = { horizontal: 0, vertical: 1 }) {
         super();
         if (arguments.length < 1) {
             throw new Error(
@@ -42,10 +38,9 @@ export default class Text extends Thing {
                     ' but a string is required.'
             );
         }
-
         this.label = label;
         this.font = font;
-        this.alignment = alignment;
+        this.anchor = anchor;
         this.resetDimensions();
     }
 
@@ -67,29 +62,13 @@ export default class Text extends Thing {
      * @param {CanvasRenderingContext2D} context - Context to draw on.
      */
     draw(context) {
+        this.resetDimensions();
         super.draw(context, () => {
-            context.beginPath();
+            // text always draw above its position, so to keep anchor behavior consistent,
+            // translate down by height
+            context.translate(0, this.height);
             context.beginPath();
             context.font = this.font;
-            this.resetDimensions();
-            let xOffset = 0;
-            if (this.alignment.horizontal === 'left') {
-                xOffset = 0;
-            } else if (this.alignment.horizontal === 'center') {
-                xOffset = -this.width / 2;
-            } else {
-                xOffset = -this.width;
-            }
-            let yOffset = 0;
-            if (this.alignment.vertical === 'top') {
-                yOffset = this.height;
-            } else if (this.alignment.vertical === 'center') {
-                yOffset = this.height / 2;
-            } else {
-                yOffset = 0;
-            }
-            context.translate(xOffset, yOffset);
-            context.rotate(this.rotation);
             context.fillText(this.label, 0, 0);
             context.closePath();
         });

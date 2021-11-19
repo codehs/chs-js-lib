@@ -9,8 +9,8 @@
   <script id="code">
     var c = new Circle(20);
     add(c);
-    mouseMoveMethod(({x, y}) => {
-        c.setPosition(x, y);
+    mouseMoveMethod((e) => {
+        c.setPosition(e.getX(), e.getY());
     });
     mouseClickMethod(({x, y}) => {
         stopTimer('MAIN_TIMER');

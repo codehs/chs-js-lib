@@ -6,19 +6,19 @@ describe('Text', () => {
         describe('Initial alignment', () => {
             it('Defaults to {vertical: bottom, horizontal: left}', () => {
                 const t = new Text('Hello World');
-                expect(t.alignment).toEqual({
-                    vertical: 'bottom',
-                    horizontal: 'left',
+                expect(t.anchor).toEqual({
+                    vertical: 1,
+                    horizontal: 0,
                 });
             });
             it('Allows configuration', () => {
                 const t = new Text('Hello World', '20pt Arial', {
-                    vertical: 'top',
-                    horizontal: 'center',
+                    vertical: 0,
+                    horizontal: 0.5,
                 });
-                expect(t.alignment).toEqual({
-                    vertical: 'top',
-                    horizontal: 'center',
+                expect(t.anchor).toEqual({
+                    vertical: 0,
+                    horizontal: 0.5,
                 });
             });
             it('Creates a text with .type', () => {
@@ -34,9 +34,9 @@ describe('Text', () => {
             g.add(t);
             g.redraw();
             expect(canvasTranslateSpy).toHaveBeenCalledWith(0, 0);
-            t.setAlignment({ horizontal: 'center', vertical: 'center' });
+            t.setAnchor({ horizontal: 0.5, vertical: 0.5 });
             g.redraw();
-            expect(canvasTranslateSpy).toHaveBeenCalledWith(-t.getWidth() / 2, t.getHeight() / 2);
+            expect(canvasTranslateSpy).toHaveBeenCalledWith(-t.getWidth() / 2, -t.getHeight() / 2);
             t.setPosition(10, 10);
             g.redraw();
             expect(canvasTranslateSpy).toHaveBeenCalledWith(t.getWidth() / 2, t.getHeight() / 2);
