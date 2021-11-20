@@ -82,7 +82,6 @@ export default class Rectangle extends Thing {
                 'Invalid value for `width`. Make sure you are passing finite numbers to `setWidth(width)`. Did you forget the parentheses in `getWidth()` or `getHeight()`? Or did you perform a calculation on a variable that is not a number?'
             );
         }
-        this.__groupBoundsInvalidated = true;
         this.width = Math.max(0, width);
     }
 
@@ -111,6 +110,8 @@ export default class Rectangle extends Thing {
      * @returns {boolean} Whether the passed point is contained in the rectangle.
      */
     containsPoint(x, y) {
+        x += this.width * this.anchor.horizontal;
+        y += this.height * this.anchor.vertical;
         return x >= this.x && x <= this.x + this.width && y >= this.y && y <= this.y + this.height;
     }
 

@@ -123,7 +123,7 @@ class Circle extends Thing {
 
     set radius(radius) {
         this._radius = radius;
-        super.__invalidateBounds();
+        super._invalidateBounds();
     }
 
     /**
@@ -138,6 +138,8 @@ class Circle extends Thing {
      * @return {boolean} Whether the passed point is contained in the circle.
      */
     containsPoint(x, y) {
+        x -= this.width * (0.5 - this.anchor.horizontal);
+        y -= this.height * (0.5 - this.anchor.vertical);
         var circleEdge = this.radius;
         if (this.hasBorder) {
             circleEdge += this.lineWidth;

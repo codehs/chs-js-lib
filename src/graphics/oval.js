@@ -14,6 +14,7 @@ import Thing from './thing.js';
  */
 export default class Oval extends Thing {
     type = 'Oval';
+    anchor = { vertical: 0.5, horizontal: 0.5 };
 
     constructor(width, height) {
         super();
@@ -43,25 +44,9 @@ export default class Oval extends Thing {
      */
     draw(context) {
         super.draw(context, () => {
-            var w = this.width;
-            var h = this.height;
-            var x = -w / 2;
-            var y = -h / 2;
-
-            var kappa = 0.5522848;
-            var ox = (w / 2) * kappa; // control point offset horizontal
-            var oy = (h / 2) * kappa; // control point offset vertical
-            var xe = x + w; // x-end
-            var ye = y + h; // y-end
-            var xm = x + w / 2; // x-middle
-            var ym = y + h / 2; // y-middle
-
             context.beginPath();
-            context.moveTo(x, ym);
-            context.bezierCurveTo(x, ym - oy, xm - ox, y, xm, y);
-            context.bezierCurveTo(xm + ox, y, xe, ym - oy, xe, ym);
-            context.bezierCurveTo(xe, ym + oy, xm + ox, ye, xm, ye);
-            context.bezierCurveTo(xm - ox, ye, x, ym + oy, x, ym);
+            context.translate(this.width / 2, this.height / 2);
+            context.ellipse(0, 0, this.width / 2, this.height / 2, 2 * Math.PI, 0, 2 * Math.PI);
             context.closePath();
         });
     }

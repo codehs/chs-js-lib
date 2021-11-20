@@ -19,7 +19,7 @@ export default class Thing {
          * @type {number}
          * @private
          */
-        this.__id = Thing.thingID++;
+        this._id = Thing.thingID++;
         this.alive = true;
         this.x = 0;
         this.y = 0;
@@ -34,7 +34,7 @@ export default class Thing {
          * @type {number}
          * @private
          */
-        this.__layer = 1;
+        this._layer = 1;
         /**
          * Used to record when the bounds of this element were last calculated.
          * Groups containing elements need to recalculate their own bounds whenever
@@ -42,27 +42,22 @@ export default class Thing {
          * @type {number}
          * @private
          */
-        this.__lastCalculatedBoundsID = 0;
+        this._lastCalculatedBoundsID = 0;
         /**
          * Used to record when this element's sort value was changed, so the GraphicsManager
          * can perform a resort.
          * @type {boolean}
          * @private
          */
-        this.__sortInvalidated = true;
+        this._sortInvalidated = true;
         /**
          * Used to record when this element's bounds are invalidated,
          * so that when needed, they can be recalculated.
          * @type {boolean}
          * @private
          */
-        this.__boundsInvalidated = true;
-        this.bounds = {
-            top: null,
-            bottom: null,
-            left: null,
-            right: null,
-        };
+        this._boundsInvalidated = true;
+        this.bounds = null;
     }
 
     /**
@@ -70,17 +65,17 @@ export default class Thing {
      * so any Graphics instances drawing it know to re-sort.
      */
     set layer(newLayer) {
-        this.__sortInvalidated = true;
-        this.__layer = newLayer;
+        this._sortInvalidated = true;
+        this._layer = newLayer;
     }
 
     get layer() {
-        return this.__layer;
+        return this._layer;
     }
 
     set width(width) {
         this._width = width;
-        this.__invalidateBounds();
+        this._invalidateBounds();
     }
 
     get width() {
@@ -89,7 +84,7 @@ export default class Thing {
 
     set height(height) {
         this._height = height;
-        this.__invalidateBounds();
+        this._invalidateBounds();
     }
 
     get height() {
@@ -116,7 +111,7 @@ export default class Thing {
 
     set x(x) {
         this._x = x;
-        this.__invalidateBounds();
+        this._invalidateBounds();
     }
 
     get x() {
@@ -125,7 +120,7 @@ export default class Thing {
 
     set y(y) {
         this._y = y;
-        this.__invalidateBounds();
+        this._invalidateBounds();
     }
 
     get y() {
@@ -448,7 +443,15 @@ export default class Thing {
      */
     setAnchor(anchor) {
         this.anchor = anchor;
-        this.__invalidateBounds();
+        this._invalidateBounds();
+    }
+
+    /**
+     * Gets the jelement's anchor.
+     * @returns {{vertical: number, horizontal: number}}
+     */
+    getAnchor() {
+        return this.anchor;
     }
 
     /**
@@ -456,8 +459,8 @@ export default class Thing {
      * @returns {{top: number, bottom: number, left: number, right: number}}
      */
     getBounds() {
-        if (this.__boundsInvalidated) {
-            this.__updateBounds();
+        if (this._boundsInvalidated) {
+            this._updateBounds();
         }
         return this.bounds;
     }
@@ -465,26 +468,26 @@ export default class Thing {
     /**
      * Mark this element's bounds as invalidated.
      */
-    __invalidateBounds() {
-        this.__boundsInvalidated = true;
+    _invalidateBounds() {
+        this._boundsInvalidated = true;
     }
 
     /**
      * Invalidate the bounds of this Thing, so that any Groups containing it can update.
      * @private
      */
-    __updateBounds() {
-        const left = this.x - this.anchor.horizontal * this.width;
-        const right = this.x + (1 - this.anchor.horizontal) * this.width;
-        const top = this.y - this.anchor.vertical * this.height;
-        const bottom = this.y + (1 - this.anchor.vertical) * this.height;
+    _updateBounds() {
+        const left = Math.ceil(this.x - this.anchor.horizontal * this.width);
+        const right = Math.ceil(this.x + (1 - this.anchor.horizontal) * this.width);
+        const top = Math.ceil(this.y - this.anchor.vertical * this.height);
+        const bottom = Math.ceil(this.y + (1 - this.anchor.vertical) * this.height);
         this.bounds = {
             left,
             right,
             top,
             bottom,
         };
-        this.__lastCalculatedBoundsID++;
-        this.__boundsInvalidated = false;
+        this._lastCalculatedBoundsID++;
+        this._boundsInvalidated = false;
     }
 }

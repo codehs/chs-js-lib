@@ -22,15 +22,40 @@ var EYE_RADIUS = 10;
 var EYE_OFFSET = 14;
 let ghosts = [];
 
-for (let i = 0; i < 20; i++) {
+for (let i = 0; i < 5; i++) {
   newGhost();
 }
+
 
 const rotateGhosts = () => {
   ghosts.forEach(g => {
     g.rotate(g.rotRate);
   });
 }
+
+let draggedElement;
+let lastX, lastY;
+mouseDownMethod(e => {
+  const element = getElementAt(e.getX(), e.getY());
+  if (element instanceof Group) {
+    draggedElement = element;
+    lastX = element.x;
+    lastY = element.y;
+  }
+});
+
+mouseMoveMethod(e => {
+  //const dx = e.getX() - lastX;
+  //const dy = e.getY() - lastY;
+  //draggedElement?.move(dx, dy);
+  //lastX = e.getX();
+  //lastY = e.getY();
+  draggedElement?.setPosition(e.getX(), e.getY());
+})
+
+mouseUpMethod(e => {
+  draggedElement = null;
+})
 
 /* This is the callback drawing function. All we do here
  * is make a call to our drawGhost function with a random
@@ -46,9 +71,16 @@ function newGhost(x, y, r){
   g.setOpacity(0.5);
   //g.__debugAABB = true;
   add(g);
+  g.setAnchor({vertical: 0.5, horizontal: 0.5})
   g.rotRate = r || (Math.random() < 0.5 ? 1 : -1) * Math.random() * 10;
   ghosts.push(g);
+  g.__debugAABB = true;
 }
+//setTimer(() => {
+//  ghosts.forEach(g => {
+//    g.setPosition(g.getBounds().left + 1, g.getBounds().top);
+//  })
+//}, 50)
 
 setTimer(rotateGhosts, 50);
 

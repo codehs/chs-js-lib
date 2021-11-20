@@ -9,13 +9,13 @@ describe('Polygon', () => {
     describe('addPoint', () => {
         it("Invalidates the superclass's bounds", () => {
             const p = new Polygon();
-            const initialBoundsID = p.__lastCalculatedBoundsID;
+            const initialBoundsID = p._lastCalculatedBoundsID;
             p.addPoint(0, 10);
             p.addPoint(0, 20);
-            expect(p.__boundsInvalidated).toBeTrue();
+            expect(p._boundsInvalidated).toBeTrue();
             p.getBounds();
-            expect(p.__boundsInvalidated).toBeFalse();
-            expect(initialBoundsID).toBeLessThan(p.__lastCalculatedBoundsID);
+            expect(p._boundsInvalidated).toBeFalse();
+            expect(initialBoundsID).toBeLessThan(p._lastCalculatedBoundsID);
         });
     });
     describe('getWidth()', () => {

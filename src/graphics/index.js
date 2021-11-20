@@ -453,9 +453,9 @@ class GraphicsManager extends Manager {
         for (let i = 0; i < this.elementPool.length; i++) {
             elem = this.elementPool[i];
 
-            if (elem.__sortInvalidated) {
+            if (elem._sortInvalidated) {
                 sortPool = true;
-                elem.__sortInvalidated = false;
+                elem._sortInvalidated = false;
             }
             elem.draw(context);
         }
@@ -463,7 +463,7 @@ class GraphicsManager extends Manager {
         // and all elements with lower layer before elements
         // with higher layer
         if (sortPool) {
-            this.elementPool.sort((a, b) => a.__layer - b.__layer);
+            this.elementPool.sort((a, b) => a.layer - b.layer);
         }
     }
 

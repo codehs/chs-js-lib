@@ -10,6 +10,7 @@ export default class Group extends Thing {
      * @type {Array<Thing>}
      */
     elements;
+    // anchor = { vertical: 0.5, horizontal: 0.5 };
 
     /**
      * @constructor
@@ -24,13 +25,46 @@ export default class Group extends Thing {
          * @private
          * @type {HTMLCanvasElement}
          */
-        this.__hiddenCanvas = document.createElement('canvas');
-        this.__hiddenCanvas.width = this.width;
-        this.__hiddenCanvas.height = this.height;
-        //this.__hiddenCanvas.style.display = 'none';
-        document.body.appendChild(this.__hiddenCanvas);
-        this.__hiddenContext = this.__hiddenCanvas.getContext('2d');
-        this.__lastRecordedBounds = {};
+        this._hiddenCanvas = document.createElement('canvas');
+        this._hiddenCanvas.width = 1;
+        this._hiddenCanvas.height = 1;
+        this._hiddenCanvas.style.display = 'none';
+        document.body.appendChild(this._hiddenCanvas);
+        this._hiddenContext = this._hiddenCanvas.getContext('2d');
+        this._lastRecordedBounds = {};
+        this.bounds = null;
+    }
+
+    get x() {
+        return this.getBounds().left;
+    }
+
+    set x(x) {
+        if (!this.bounds) {
+            return;
+        }
+        this.setPosition(x, this.bounds.top);
+    }
+
+    get y() {
+        return this.getBounds().top;
+    }
+
+    set y(y) {
+        if (!this.bounds) {
+            return;
+        }
+        this.setPosition(this.bounds.left, y);
+    }
+
+    get width() {
+        const bounds = this.getBounds();
+        return bounds.right - bounds.left;
+    }
+
+    get height() {
+        const bounds = this.getBounds();
+        return bounds.bottom - bounds.top;
     }
 
     /**
@@ -51,7 +85,7 @@ export default class Group extends Thing {
      */
     add(element) {
         this.elements.push(element);
-        this.__invalidateBounds();
+        this._invalidateBounds();
     }
 
     /**
@@ -64,7 +98,7 @@ export default class Group extends Thing {
             return;
         }
         this.elements.splice(i, 1);
-        this.__invalidateBounds();
+        this._invalidateBounds();
     }
 
     /**
@@ -75,15 +109,13 @@ export default class Group extends Thing {
     move(dx, dy) {
         this.elements.forEach(element => {
             element.move(dx, dy);
-            // as a performance optimization, pre-empt the recalculation that would result from the
-            // elemenents being moved, and instead update the bounds directly after this.
-            this.__lastRecordedBounds[element.__id]++;
         });
+        const bounds = this.getBounds();
         this.bounds = {
-            top: this.bounds.top + dx,
-            left: this.bounds.left + dx,
-            right: this.bounds.right + dx,
-            bottom: this.bounds.bottom + dx,
+            top: bounds.top + dy,
+            left: bounds.left + dx,
+            right: bounds.right + dx,
+            bottom: bounds.bottom + dy,
         };
     }
 
@@ -94,8 +126,9 @@ export default class Group extends Thing {
      * @param {number} y
      */
     setPosition(x, y) {
-        const dx = x - this.x;
-        const dy = y - this.y;
+        const bounds = this.getBounds();
+        const dx = x - bounds.left;
+        const dy = y - bounds.top;
         this.move(dx, dy);
     }
 
@@ -110,31 +143,47 @@ export default class Group extends Thing {
         if (!width || !height) {
             return;
         }
-        this.__hiddenContext.clearRect(0, 0, width, height);
+        this._hiddenContext.clearRect(0, 0, width, height);
         // translate the hidden context so that the group is drawn
         // in tehe top left corner.
         // this means that only the bounding box surrounding the top
         // left corner needs to be drawn to the destination canvas
-        this.__hiddenContext.translate(-bounds.left, -bounds.top);
+        const anchorX = width * this.anchor.horizontal;
+        const anchorY = height * this.anchor.vertical;
+        this._hiddenContext.translate(-bounds.left, -bounds.top);
         this.elements.forEach(element => {
-            if (element.__lastCalculatedBoundsID > this.__lastRecordedBounds[element.__id]) {
-                this.__boundsInvalidated = true;
+            if (element._lastCalculatedBoundsID > this._lastRecordedBounds[element._id]) {
+                this._boundsInvalidated = true;
             }
-            element.draw(this.__hiddenContext);
+            element.draw(this._hiddenContext);
         });
-        this.__hiddenContext.translate(bounds.left, bounds.top);
+        this._hiddenContext.translate(bounds.left, bounds.top);
 
         context.save();
 
         context.globalAlpha = this.opacity;
+        if (this.__debug) {
+            context.save();
+            context.fillStyle = 'red';
+            context.beginPath();
+            context.arc(bounds.left, bounds.top, 5, 0, 360);
+            context.fill();
+            context.closePath();
+            context.restore();
+        }
+
         context.translate(bounds.left, bounds.top);
 
         // rotate the context around the center of the group
-        context.translate(width / 2, height / 2);
+        context.translate(width / 2 - anchorX, height / 2 - anchorY);
         context.rotate(this.rotation);
-        context.translate(-width / 2, -height / 2);
+        context.translate(-width / 2 + anchorX, -height / 2 + anchorY);
 
-        context.drawImage(this.__hiddenCanvas, 0, 0, width, height);
+        if (this.__debug) {
+            context.strokeStyle = 'red';
+            context.strokeRect(-anchorX, -anchorY, width, height);
+        }
+        context.drawImage(this._hiddenCanvas, -anchorX, -anchorY, width, height);
 
         context.restore();
     }
@@ -148,21 +197,23 @@ export default class Group extends Thing {
      * @returns
      */
     containsPoint(x, y) {
-        return this.elements.some(e => e.containsPoint(x - this.x, y - this.y));
+        x += this.width * this.anchor.horizontal;
+        y += this.height * this.anchor.vertical;
+        return this.elements.some(e => e.containsPoint(x, y));
     }
 
     /**
      * Recalculates the size of the group.
      * @private
      */
-    __updateBounds() {
+    _updateBounds() {
         let maxX = 0;
         let maxY = 0;
         let minX = Infinity;
         let minY = Infinity;
         this.elements.forEach(element => {
-            if (element.__lastCalculatedBoundsID > (this.__lastRecordedBounds[element.__id] || 0)) {
-                this.__lastRecordedBounds[element.__id] = element.__lastCalculatedBoundsID;
+            if (element._lastCalculatedBoundsID > (this._lastRecordedBounds[element._id] || 0)) {
+                this._lastRecordedBounds[element._id] = element._lastCalculatedBoundsID;
             }
             const elementBounds = element.getBounds();
             minX = Math.min(minX, elementBounds.left);
@@ -176,7 +227,9 @@ export default class Group extends Thing {
             top: minY,
             bottom: maxY,
         };
-        this.__hiddenCanvas.width = 1 + maxX - minX;
-        this.__hiddenCanvas.height = 1 + maxY - minY;
+        this._hiddenCanvas.width = maxX - minX;
+        this._hiddenCanvas.height = maxY - minY;
+        this._lastCalculatedBoundsID++;
+        this._boundsInvalidated = false;
     }
 }

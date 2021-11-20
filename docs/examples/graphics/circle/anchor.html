@@ -11,8 +11,19 @@
     let growing = true;
     var c = new Circle(20);
     c.setColor(Color.RED);
-    c.setAnchor({vertical: 0, horizontal: 0})
+    c.setAnchor({vertical: 0.5, horizontal: 0.5})
+    c.setPosition(getWidth(), getHeight());
     add(c);
+    setTimer(() => {
+      c.setAnchor({vertical: 1, horizontal: 1})
+    }, 1000)
+    mouseMoveMethod(e => {
+      if (c.containsPoint(e.getX(), e.getY())) {
+        c.setColor(Color.BLUE);
+      } else {
+        c.setColor(Color.RED);
+      }
+    })
   </script>
 </body>
 </html>

@@ -208,9 +208,9 @@ class Arc extends Thing {
         }
 
         // Get vector/ angle for the point
-        var vx = x - this.x;
-        var vy = this.y - y;
-        var theta = Math.atan(vy / vx);
+        const vx = x - this.x;
+        const vy = this.y - y;
+        let theta = Math.atan(vy / vx);
 
         // Adjust the arctan based on the quadran the point is in using the
         // position of the arc as the origin

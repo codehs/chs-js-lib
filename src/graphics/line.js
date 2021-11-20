@@ -35,6 +35,8 @@ export default class Line extends Thing {
         this.y1 = y1;
         this.x2 = x2;
         this.y2 = y2;
+        this.width = x2 - x1;
+        this.height = y2 - y1;
         this.lineWidth = 2;
         this.hasBorder = true;
     }
@@ -71,7 +73,11 @@ export default class Line extends Thing {
      */
     draw(context) {
         super.draw(context, () => {
-            var rotatedPoints = getRotatedPoints(this.x1, this.y1, this.x2, this.y2, this.rotation);
+            const x1 = this.x1;
+            const x2 = this.x2;
+            const y1 = this.y1;
+            const y2 = this.y2;
+            const rotatedPoints = getRotatedPoints(x1, y1, x2, y2, this.rotation);
             context.beginPath();
             context.moveTo(rotatedPoints[0], rotatedPoints[1]);
             context.lineTo(rotatedPoints[2], rotatedPoints[3]);
@@ -86,12 +92,12 @@ export default class Line extends Thing {
      * @param {number} y - y coordinate of the point being tested.
      */
     containsPoint(x, y) {
-        var betweenXs = (this.x1 <= x && x <= this.x2) || (this.x2 <= x && x <= this.x1);
-        var betweenYs = (this.y1 <= y && y <= this.y2) || (this.y2 <= y && y <= this.y1);
+        const betweenXs = (this.x1 <= x && x <= this.x2) || (this.x2 <= x && x <= this.x1);
+        const betweenYs = (this.y1 <= y && y <= this.y2) || (this.y2 <= y && y <= this.y1);
         if (this.x1 == this.x2) {
             return this.x1 == x && betweenYs;
         } else {
-            var slope = (this.y2 - this.y1) / (this.x2 - this.x1);
+            const slope = (this.y2 - this.y1) / (this.x2 - this.x1);
             return (
                 Math.abs(slope * (x - this.x1) - (y - this.y1)) <= this.lineWidth &&
                 betweenXs &&

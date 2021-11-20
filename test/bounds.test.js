@@ -2,37 +2,37 @@ import Thing from '../src/graphics/thing.js';
 
 describe('Bounds', () => {
     describe('Updating bounds', () => {
-        it('Updates the __lastCalculatedBounds of the Thing', () => {
+        it('Updates the _lastCalculatedBounds of the Thing', () => {
             const t = new Thing();
-            const initialBoundsID = t.__lastCalculatedBoundsID;
-            t.__updateBounds();
-            expect(t.__lastCalculatedBoundsID).toBeGreaterThan(initialBoundsID);
+            const initialBoundsID = t._lastCalculatedBoundsID;
+            t._updateBounds();
+            expect(t._lastCalculatedBoundsID).toBeGreaterThan(initialBoundsID);
         });
         it('Updating x, y, height, and width all force updates', () => {
             const t = new Thing();
-            let boundsID = t.__lastCalculatedBoundsID;
+            let boundsID = t._lastCalculatedBoundsID;
             t.x = 1;
             t.getBounds();
-            expect(t.__lastCalculatedBoundsID).toBeGreaterThan(boundsID);
-            boundsID = t.__lastCalculatedBoundsID;
+            expect(t._lastCalculatedBoundsID).toBeGreaterThan(boundsID);
+            boundsID = t._lastCalculatedBoundsID;
             t.y = 1;
             t.getBounds();
-            expect(t.__lastCalculatedBoundsID).toBeGreaterThan(boundsID);
-            boundsID = t.__lastCalculatedBoundsID;
+            expect(t._lastCalculatedBoundsID).toBeGreaterThan(boundsID);
+            boundsID = t._lastCalculatedBoundsID;
             t.height = 1;
             t.getBounds();
-            expect(t.__lastCalculatedBoundsID).toBeGreaterThan(boundsID);
-            boundsID = t.__lastCalculatedBoundsID;
+            expect(t._lastCalculatedBoundsID).toBeGreaterThan(boundsID);
+            boundsID = t._lastCalculatedBoundsID;
             t.width = 1;
             t.getBounds();
-            expect(t.__lastCalculatedBoundsID).toBeGreaterThan(boundsID);
-            boundsID = t.__lastCalculatedBoundsID;
+            expect(t._lastCalculatedBoundsID).toBeGreaterThan(boundsID);
+            boundsID = t._lastCalculatedBoundsID;
             t.setPosition(10, 10);
             t.getBounds();
-            expect(t.__lastCalculatedBoundsID).toBeGreaterThan(boundsID);
-            boundsID = t.__lastCalculatedBoundsID;
+            expect(t._lastCalculatedBoundsID).toBeGreaterThan(boundsID);
+            boundsID = t._lastCalculatedBoundsID;
             t.getBounds();
-            expect(t.__lastCalculatedBoundsID).toEqual(boundsID);
+            expect(t._lastCalculatedBoundsID).toEqual(boundsID);
         });
     });
     describe('Bounds calculations', () => {
