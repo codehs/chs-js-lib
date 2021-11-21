@@ -411,6 +411,7 @@ export default class Thing {
         context.rotate(this.rotation);
         context.translate(-this.width / 2, -this.height / 2);
 
+        context.save();
         // translate to the shape's anchor to draw the shape
         const anchorX = -this.width * this.anchor.horizontal;
         const anchorY = -this.height * this.anchor.vertical;
@@ -422,6 +423,19 @@ export default class Thing {
             context.stroke();
         }
         context.fill();
+        context.restore();
+
+        if (this.debug) {
+            // draw the origin when debugging
+            context.save();
+            context.beginPath();
+            context.fillStyle = 'red';
+            context.arc(0, 0, 3, 0, 2 * Math.PI);
+            context.fill();
+            context.closePath();
+            context.restore();
+        }
+
         context.restore();
     }
 

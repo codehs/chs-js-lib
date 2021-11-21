@@ -10,7 +10,7 @@
     var a = new Arc(30, 270, 360, 0);
     a.setPosition(30, 30);
     a.setColor(Color.RED);
-    a.setAnchor({vertical: 0.5, horizontal: 0.5});
+    a.setAnchor({vertical: 1, horizontal: 1});
     add(a);
     mouseMoveMethod(e => {
       a.setPosition(e.getX(), e.getY());

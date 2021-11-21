@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Rectangle Test</title>
+</head>
+<body>
+  <canvas id="game" width="480" height="400"></canvas>
+  <script src="../../../../dist/chs.iife.js"></script>
+  <script id="code">
+    let width = 40;
+    let height = 40;
+
+    let x = 0;
+    let y = 0;
+    let targetX = 0;
+    let targetY = 0;
+
+    let rectangle = new Rectangle(width, height);
+    rectangle.setColor(Color.RED);
+    rectangle.setAnchor({vertical: 0.5, horizontal: 0.5});
+    add(rectangle);
+    mouseMoveMethod(e => {
+      targetX = e.getX();
+      targetY = e.getY();
+    })
+    setTimer(() => {
+      let nextX = .75 * rectangle.x + .25 * targetX;
+      let nextY = .75 * rectangle.y + .25 * targetY;
+      rectangle.setPosition(nextX, nextY);
+    }, 20);
+  </script>
+</body>
+</html>

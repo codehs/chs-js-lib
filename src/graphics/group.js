@@ -162,15 +162,6 @@ export default class Group extends Thing {
         context.save();
 
         context.globalAlpha = this.opacity;
-        if (this.__debug) {
-            context.save();
-            context.fillStyle = 'red';
-            context.beginPath();
-            context.arc(bounds.left, bounds.top, 5, 0, 360);
-            context.fill();
-            context.closePath();
-            context.restore();
-        }
 
         context.translate(bounds.left, bounds.top);
 
@@ -179,11 +170,19 @@ export default class Group extends Thing {
         context.rotate(this.rotation);
         context.translate(-width / 2 + anchorX, -height / 2 + anchorY);
 
-        if (this.__debug) {
+        context.drawImage(this._hiddenCanvas, -anchorX, -anchorY, width, height);
+
+        if (this.debug) {
+            context.save();
+            context.fillStyle = 'red';
             context.strokeStyle = 'red';
             context.strokeRect(-anchorX, -anchorY, width, height);
+            context.beginPath();
+            context.arc(0, 0, 3, 0, 360);
+            context.fill();
+            context.closePath();
+            context.restore();
         }
-        context.drawImage(this._hiddenCanvas, -anchorX, -anchorY, width, height);
 
         context.restore();
     }
