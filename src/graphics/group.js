@@ -196,8 +196,6 @@ export default class Group extends Thing {
      * @returns
      */
     _containsPoint(x, y) {
-        x += this.width * this.anchor.horizontal;
-        y += this.height * this.anchor.vertical;
         return this.elements.some(e => e.containsPoint(x, y));
     }
 

@@ -115,6 +115,8 @@ export default class Oval extends Thing {
      * @returns {boolean} Whether the passed point is contained in the circle.
      */
     _containsPoint(x, y) {
+        x -= this.width * (0.5 - this.anchor.horizontal);
+        y -= this.height * (0.5 - this.anchor.vertical);
         var xRadiusSquared = Math.pow(this.width / 2, 2);
         var yRadiusSquared = Math.pow(this.height / 2, 2);
         var xDifferenceSquared = Math.pow(x - this.x, 2);

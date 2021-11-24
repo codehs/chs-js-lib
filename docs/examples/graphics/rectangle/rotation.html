@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Rectangle Test</title>
+</head>
+<body>
+  <canvas id="game" width="480" height="400"></canvas>
+  <script src="../../../../dist/chs.iife.js"></script>
+  <script id="code">
+    let rectangle = new Rectangle(100, 10);
+    rectangle.setAnchor({vertical: 0.5, horizontal: 0.5});
+    rectangle.debug = true;
+    rectangle.setPosition(getWidth() / 2, getHeight() / 2);
+    rectangle.setRotation(90);
+    add(rectangle);
+  </script>
+</body>
+</html>

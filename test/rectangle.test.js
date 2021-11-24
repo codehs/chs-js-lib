@@ -43,4 +43,13 @@ describe('Rectangle', () => {
             expect(r.containsPoint(9, 9)).toBeTrue();
         });
     });
+    describe('containsPoint', () => {
+        it('Considers rotation of the rectangle', () => {
+            const r = new Rectangle(100, 10);
+            r.setAnchor({ vertical: 0.5, horizontal: 0.5 });
+            expect(r.containsPoint(0, 11)).toBeFalse();
+            r.setRotation(90);
+            expect(r.containsPoint(0, 11)).toBeTrue();
+        });
+    });
 });

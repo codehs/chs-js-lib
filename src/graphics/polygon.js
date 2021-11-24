@@ -79,6 +79,8 @@ class Polygon extends Thing {
      * @returns {boolean}
      */
     _containsPoint(x, y) {
+        x += this.width * this.anchor.horizontal;
+        y += this.height * this.anchor.vertical;
         // https://www.eecs.umich.edu/courses/eecs380/HANDOUTS/PROJ2/InsidePoly.html
         // solution 3 from above
         let previousOrientation = -1;
