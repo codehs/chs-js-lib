@@ -48,14 +48,18 @@ class Polygon extends Thing {
         }
 
         super.draw(context, () => {
+            context.save();
+            context.translate(-this.x, -this.y);
             context.beginPath();
             const first = this.points[0];
+            let current;
             context.moveTo(first.x, first.y);
             for (let i = 1; i < this.points.length; i++) {
-                const cur = this.points[i];
-                context.lineTo(cur.x, cur.y);
+                current = this.points[i];
+                context.lineTo(current.x, current.y);
             }
             context.closePath();
+            context.restore();
         });
     }
 
@@ -74,7 +78,7 @@ class Polygon extends Thing {
      * @param {number} y - The y coordinate of the point being tested.
      * @returns {boolean}
      */
-    containsPoint(x, y) {
+    _containsPoint(x, y) {
         // https://www.eecs.umich.edu/courses/eecs380/HANDOUTS/PROJ2/InsidePoly.html
         // solution 3 from above
         let previousOrientation = -1;
@@ -191,10 +195,23 @@ class Polygon extends Thing {
             );
         }
 
-        for (var i = 0; i < this.points.length; i++) {
+        for (let i = 0; i < this.points.length; i++) {
             this.points[i].x += dx;
             this.points[i].y += dy;
         }
+        this.x += dx;
+        this.y += dy;
+    }
+
+    /**
+     * Set the position of the polygon by moving all of its points.
+     * @param {number} x
+     * @param {number} y
+     */
+    setPosition(x, y) {
+        const dx = x - this.x;
+        const dy = y - this.y;
+        this.move(dx, dy);
     }
 }
 

@@ -8,19 +8,25 @@
   <script src="../../../dist/chs.iife.js"></script>
   <script id="code">
   const group = new Group();
-  const c = new Circle(30);
-  group.add(c);
 
-  const r = new Rectangle(20, 20);
-  r.setPosition(30, 10);
+  const r = new Rectangle(40, 40);
+  r.setPosition(50, 50);
+  r.rotate(45);
+  r.debug = true;
+
+  let x = 0
+  setTimer(() => {
+    r.rotate(1)
+    x += 0.5;
+    const dot = new Circle(1);
+    dot.setPosition(x, getHeight() - group.getBounds().top);
+    add(dot);
+  }, 20);
+
   group.add(r);
 
-  group.__debugAABB = true;
+  group.debug = true;
   add(group);
-
-  setTimer(() => {
-    group.move(1, 1);
-  }, 50)
   </script>
 </body>
 </html>

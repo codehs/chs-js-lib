@@ -44,10 +44,11 @@ export default class Oval extends Thing {
      */
     draw(context) {
         super.draw(context, () => {
-            context.beginPath();
             context.translate(this.width / 2, this.height / 2);
+            context.beginPath();
             context.ellipse(0, 0, this.width / 2, this.height / 2, 2 * Math.PI, 0, 2 * Math.PI);
             context.closePath();
+            context.translate(-this.width / 2, -this.height / 2);
         });
     }
 
@@ -113,7 +114,7 @@ export default class Oval extends Thing {
      * @param {number} y - The y coordinate of the point being tested.
      * @returns {boolean} Whether the passed point is contained in the circle.
      */
-    containsPoint(x, y) {
+    _containsPoint(x, y) {
         var xRadiusSquared = Math.pow(this.width / 2, 2);
         var yRadiusSquared = Math.pow(this.height / 2, 2);
         var xDifferenceSquared = Math.pow(x - this.x, 2);

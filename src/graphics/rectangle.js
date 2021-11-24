@@ -109,7 +109,7 @@ export default class Rectangle extends Thing {
      * @param {number} y - The y coordinate of the point being tested.
      * @returns {boolean} Whether the passed point is contained in the rectangle.
      */
-    containsPoint(x, y) {
+    _containsPoint(x, y) {
         x += this.width * this.anchor.horizontal;
         y += this.height * this.anchor.vertical;
         return x >= this.x && x <= this.x + this.width && y >= this.y && y <= this.y + this.height;

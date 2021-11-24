@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>.containsPoint with Rotation</title>
+</head>
+<body>
+  <canvas id="game" width="480" height="400"></canvas>
+  <script src="../../../../dist/chs.iife.js"></script>
+  <script id="code">
+      let mouseX = 0;
+      let mouseY = 0;
+      mouseMoveMethod(e => {
+          mouseX = e.getX();
+          mouseY = e.getY();
+      })
+      const makeThing = (shape) => {
+
+          setTimer(() => {
+              shape.rotate(1);
+              if (shape.containsPoint(mouseX, mouseY)) {
+                  shape.setColor(Color.RED);
+              } else {
+                  shape.setColor(Color.BLUE)
+              }
+          }, 10)
+          return shape;
+      };
+
+      const circle = makeThing(new Circle(20));
+      circle.setPosition(getWidth()/4, getHeight()/4);
+      add(circle);
+
+      const rect = makeThing(new Rectangle(80, 40));
+      rect.setAnchor({vertical: 0.5, horizontal: 0.5});
+      rect.setPosition(2*getWidth()/4, getHeight()/4);
+      add(rect);
+
+      const group = new Group();
+      const triangle = makeThing(new Polygon());
+      triangle.addPoint(15, 0);
+      triangle.addPoint(30, 30);
+      triangle.addPoint(0, 30);
+      triangle.setPosition(3*getWidth() / 4, getHeight() / 4);
+      triangle.debug = true;
+      group.add(triangle);
+      group.debug = true;
+      add(group);
+  </script>
+</body>
+</html>

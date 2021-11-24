@@ -15,7 +15,7 @@ class Arc extends Thing {
     static RADIANS = 1;
 
     type = 'Arc';
-    radius;
+    anchor = { vertical: 0.5, horizontal: 0.5 };
 
     /**
      * @constructor
@@ -80,6 +80,14 @@ class Arc extends Thing {
         this.endAngle = endAngle;
     }
 
+    get width() {
+        return this.radius * 2;
+    }
+
+    get height() {
+        return this.radius * 2;
+    }
+
     /**
      * Draws the arc in the canvas.
      *
@@ -88,6 +96,7 @@ class Arc extends Thing {
      */
     draw(context) {
         super.draw(context, () => {
+            context.translate(this.radius, this.radius);
             context.beginPath();
             context.arc(
                 0,
@@ -99,6 +108,7 @@ class Arc extends Thing {
             );
             context.lineTo(0, 0);
             context.closePath();
+            context.translate(-this.radius, -this.radius);
         });
     }
 
@@ -200,7 +210,7 @@ class Arc extends Thing {
      * @param {number} y - y coordinate of the point being tested.
      * @return {boolean}
      */
-    containsPoint(x, y) {
+    _containsPoint(x, y) {
         // First check whether the point is in the circle
         var dist = getDistance(this.x, this.y, x, y);
         if (dist > this.radius) {

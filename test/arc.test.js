@@ -256,7 +256,78 @@ describe('arc', () => {
         });
     });
 
-    describe('containsPoint', () => {
-        // todo
+    describe('Anchoring', () => {
+        it('{vertical: 0, horizontal: 0}', () => {
+            const a = new Arc(10, 0, 359, Arc.DEGREES);
+            const g = new Graphics();
+            g.shouldUpdate = false;
+            a.setAnchor({ vertical: 0, horizontal: 0 });
+            a.setColor('red');
+            g.add(a);
+            g.redraw();
+            let topLeftPixel = g.getContext().getImageData(0, 0, 1, 1);
+            expect(topLeftPixel.data).toEqual(new Uint8ClampedArray([0, 0, 0, 0]));
+            a.setPosition(g.getWidth() - a.radius / 2, g.getHeight() - a.radius / 2);
+
+            g.redraw();
+            const bottomRightPixel = g
+                .getContext()
+                .getImageData(g.getWidth() - 1, g.getHeight() - 1, 1, 1);
+            expect(bottomRightPixel.data).toEqual(new Uint8ClampedArray([255, 0, 0, 255]));
+        });
+        it('{vertical: 0.5, horizontal: 0.5}', () => {
+            const a = new Arc(10, 0, 359, Arc.DEGREES);
+            const g = new Graphics();
+            g.shouldUpdate = false;
+            expect(a.getAnchor()).toEqual({ vertical: 0.5, horizontal: 0.5 });
+            a.setColor('red');
+            g.add(a);
+            g.redraw();
+            let topLeftPixel = g.getContext().getImageData(0, 0, 1, 1);
+            expect(topLeftPixel.data).toEqual(new Uint8ClampedArray([255, 0, 0, 255]));
+            a.setPosition(g.getWidth(), g.getHeight());
+
+            g.redraw();
+            const bottomRightPixel = g
+                .getContext()
+                .getImageData(g.getWidth() - 1, g.getHeight() - 1, 1, 1);
+            expect(bottomRightPixel.data).toEqual(new Uint8ClampedArray([255, 0, 0, 255]));
+        });
+    });
+
+    describe('Drawing', () => {
+        it('Only draws within the angle', () => {
+            const a = new Arc(30, 90, 270, Arc.DEGREES);
+            const g = new Graphics();
+            a.setColor('red');
+            g.shouldUpdate = false;
+            g.add(a);
+            g.redraw();
+            let topLeftPixel = g.getContext().getImageData(0, 0, 1, 1);
+            expect(topLeftPixel.data).toEqual(new Uint8ClampedArray([0, 0, 0, 0]));
+            a.setAnchor({ vertical: 0.5, horizontal: 0.4 });
+            g.redraw();
+            topLeftPixel = g.getContext().getImageData(1, 1, 1, 1);
+            expect(topLeftPixel.data).toEqual(new Uint8ClampedArray([255, 0, 0, 255]));
+        });
+    });
+
+    describe('Bounds', () => {
+        it('Bounds an arc', () => {
+            const a = new Arc(30, 10, 20, Arc.DEGREES);
+            expect(a.getBounds()).toEqual({
+                top: -30,
+                right: 30,
+                left: -30,
+                bottom: 30,
+            });
+            a.setPosition(20, 20);
+            expect(a.getBounds()).toEqual({
+                top: -10,
+                right: 50,
+                left: -10,
+                bottom: 50,
+            });
+        });
     });
 });

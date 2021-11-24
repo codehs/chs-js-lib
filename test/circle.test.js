@@ -207,4 +207,30 @@ describe('Circle', () => {
             expect(bottomRightPixel.data).toEqual(new Uint8ClampedArray([255, 0, 0, 255]));
         });
     });
+
+    describe('Bounds', () => {
+        it('Bounds the circle', () => {
+            const c = new Circle(30);
+            expect(c.getBounds()).toEqual({
+                top: -30,
+                right: 30,
+                left: -30,
+                bottom: 30,
+            });
+            c.setPosition(20, 20);
+            expect(c.getBounds()).toEqual({
+                top: -10,
+                right: 50,
+                left: -10,
+                bottom: 50,
+            });
+            c.setRotation(45);
+            expect(c.getBounds()).toEqual({
+                top: -10,
+                right: 50,
+                left: -10,
+                bottom: 50,
+            });
+        });
+    });
 });

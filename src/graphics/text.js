@@ -14,7 +14,7 @@ export default class Text extends Thing {
      * @param {string|number} label
      * @param {string} font
      */
-    constructor(label, font = '20pt Arial', anchor = { horizontal: 0, vertical: 1 }) {
+    constructor(label, font = '20pt Arial') {
         super();
         if (arguments.length < 1) {
             throw new Error(
@@ -40,7 +40,6 @@ export default class Text extends Thing {
         }
         this.label = label;
         this.font = font;
-        this.anchor = anchor;
         this.resetDimensions();
     }
 
@@ -52,7 +51,7 @@ export default class Text extends Thing {
         const context = canvas.getContext('2d');
         context.font = this.font;
         this.width = context.measureText(this.label).width;
-        this.height = context.measureText('m').width * 1.2; /* No height provided */
+        this.height = context.measureText('m').width * 1.2;
     }
 
     /**
@@ -71,6 +70,7 @@ export default class Text extends Thing {
             context.font = this.font;
             context.fillText(this.label, 0, 0);
             context.closePath();
+            context.translate(0, -this.height);
         });
     }
 
@@ -189,7 +189,9 @@ export default class Text extends Thing {
      * @param {number} y - The y coordinate of the point being tested.
      * @returns {boolean} Whether the passed point is contained in the text.
      */
-    containsPoint(x, y) {
+    _containsPoint(x, y) {
+        x += this.width * this.anchor.horizontal;
+        y += this.height * this.anchor.vertical;
         return x >= this.x && x <= this.x + this.width && y <= this.y && y >= this.y - this.height;
     }
 }

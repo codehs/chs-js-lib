@@ -72,9 +72,8 @@ function newGhost(x, y, r){
   //g.__debugAABB = true;
   add(g);
   g.setAnchor({vertical: 0.5, horizontal: 0.5})
-  g.rotRate = r || (Math.random() < 0.5 ? 1 : -1) * Math.random() * 10;
+  g.rotRate = r || (Math.random() < 0.5 ? 1 : -1) * Math.random() * 3;
   ghosts.push(g);
-  g.__debugAABB = true;
 }
 //setTimer(() => {
 //  ghosts.forEach(g => {
@@ -82,7 +81,7 @@ function newGhost(x, y, r){
 //  })
 //}, 50)
 
-setTimer(rotateGhosts, 50);
+setTimer(rotateGhosts, 10);
 
 /* This is a general draw circle function, which accepts any
  * radius, color, and x, y position. */

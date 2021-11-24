@@ -82,8 +82,10 @@ export default class WebVideo extends Thing {
      * @param {number} y - The y coordinate of the point being tested.
      * @returns {boolean} Whether the passed point is contained in the WebVideo.
      */
-    containsPoint(x, y) {
+    _containsPoint(x, y) {
         if (this.browserSupportsVideo) {
+            x += this.width * this.anchor.horizontal;
+            y += this.height * this.anchor.vertical;
             return (
                 x >= this.x && x <= this.x + this.width && y >= this.y && y <= this.y + this.height
             );

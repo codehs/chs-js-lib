@@ -48,6 +48,7 @@ class Circle extends Thing {
             context.beginPath();
             context.arc(0, 0, this.radius, 0, Math.PI * 2, true);
             context.closePath();
+            context.translate(-this.radius, -this.radius);
         });
     }
 
@@ -137,7 +138,7 @@ class Circle extends Thing {
      * @param {number} y - The y coordinate of the point being tested.
      * @return {boolean} Whether the passed point is contained in the circle.
      */
-    containsPoint(x, y) {
+    _containsPoint(x, y) {
         x -= this.width * (0.5 - this.anchor.horizontal);
         y -= this.height * (0.5 - this.anchor.vertical);
         var circleEdge = this.radius;

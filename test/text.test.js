@@ -11,29 +11,19 @@ describe('Text', () => {
                     horizontal: 0,
                 });
             });
-            it('Allows configuration', () => {
-                const t = new Text('Hello World', '20pt Arial', {
-                    vertical: 0,
-                    horizontal: 0.5,
-                });
-                expect(t.anchor).toEqual({
-                    vertical: 0,
-                    horizontal: 0.5,
-                });
-            });
             it('Creates a text with .type', () => {
                 expect(new Text('Hello').type).toEqual('Text');
             });
         });
     });
-    describe('Alignment', () => {
+    describe('Anchoring', () => {
         it('Affects the translated position of text', () => {
             const g = new Graphics();
             const t = new Text('Hello!');
             const canvasTranslateSpy = spyOn(g.getContext(), 'translate').and.callThrough();
             g.add(t);
             g.redraw();
-            expect(canvasTranslateSpy).toHaveBeenCalledWith(0, 0);
+            expect(canvasTranslateSpy).toHaveBeenCalledWith(0, t.getAnchor().vertical * t.height);
             t.setAnchor({ horizontal: 0.5, vertical: 0.5 });
             g.redraw();
             expect(canvasTranslateSpy).toHaveBeenCalledWith(-t.getWidth() / 2, -t.getHeight() / 2);

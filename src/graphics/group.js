@@ -1,4 +1,4 @@
-import Thing from './thing.js';
+import Thing, { rotatePointAboutPosition } from './thing.js';
 
 /**
  * Represents a collection of graphical elements that can be acted on together.
@@ -10,7 +10,6 @@ export default class Group extends Thing {
      * @type {Array<Thing>}
      */
     elements;
-    // anchor = { vertical: 0.5, horizontal: 0.5 };
 
     /**
      * @constructor
@@ -152,7 +151,10 @@ export default class Group extends Thing {
         const anchorY = height * this.anchor.vertical;
         this._hiddenContext.translate(-bounds.left, -bounds.top);
         this.elements.forEach(element => {
-            if (element._lastCalculatedBoundsID > this._lastRecordedBounds[element._id]) {
+            if (
+                element._lastCalculatedBoundsID > this._lastRecordedBounds[element._id] ||
+                element._boundsInvalidated
+            ) {
                 this._boundsInvalidated = true;
             }
             element.draw(this._hiddenContext);
@@ -173,7 +175,6 @@ export default class Group extends Thing {
         context.drawImage(this._hiddenCanvas, -anchorX, -anchorY, width, height);
 
         if (this.debug) {
-            context.save();
             context.fillStyle = 'red';
             context.strokeStyle = 'red';
             context.strokeRect(-anchorX, -anchorY, width, height);
@@ -181,7 +182,6 @@ export default class Group extends Thing {
             context.arc(0, 0, 3, 0, 360);
             context.fill();
             context.closePath();
-            context.restore();
         }
 
         context.restore();
@@ -195,7 +195,7 @@ export default class Group extends Thing {
      * @param {number} y
      * @returns
      */
-    containsPoint(x, y) {
+    _containsPoint(x, y) {
         x += this.width * this.anchor.horizontal;
         y += this.height * this.anchor.vertical;
         return this.elements.some(e => e.containsPoint(x, y));
@@ -215,10 +215,38 @@ export default class Group extends Thing {
                 this._lastRecordedBounds[element._id] = element._lastCalculatedBoundsID;
             }
             const elementBounds = element.getBounds();
-            minX = Math.min(minX, elementBounds.left);
-            minY = Math.min(minY, elementBounds.top);
-            maxX = Math.max(maxX, elementBounds.right);
-            maxY = Math.max(maxY, elementBounds.bottom);
+            let { left, right, top, bottom } = elementBounds;
+            if (element.rotation) {
+                const rotX = (right - left) / 2 + left;
+                const rotY = (bottom - top) / 2 + top;
+                let topLeft = rotatePointAboutPosition([left, top], [rotX, rotY], element.rotation);
+                let topRight = rotatePointAboutPosition(
+                    [right, top],
+                    [rotX, rotY],
+                    element.rotation
+                );
+                let bottomLeft = rotatePointAboutPosition(
+                    [left, bottom],
+                    [rotX, rotY],
+                    element.rotation
+                );
+                let bottomRight = rotatePointAboutPosition(
+                    [right, bottom],
+                    [rotX, rotY],
+                    element.rotation
+                );
+                const points = [topLeft, topRight, bottomLeft, bottomRight];
+                const xCoordinates = points.map(point => point[0]);
+                const yCoordinates = points.map(point => point[1]);
+                left = Math.min(...xCoordinates);
+                right = Math.max(...xCoordinates);
+                top = Math.min(...yCoordinates);
+                bottom = Math.max(...yCoordinates);
+            }
+            minX = Math.min(minX, left);
+            minY = Math.min(minY, top);
+            maxX = Math.max(maxX, right);
+            maxY = Math.max(maxY, bottom);
         });
         this.bounds = {
             left: minX,
