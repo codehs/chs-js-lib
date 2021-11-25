@@ -7,6 +7,7 @@
     <canvas width="500" height="500"></canvas>
     <script src="../../../dist/chs.iife.js"></script>
     <script>    
+    setBackgroundColor('#1d9bf0');
     let base = 0;
     let lastUpdate = Date.now();
     const UPDATE_INTERVAL = 30;
@@ -19,6 +20,7 @@
             removeAll();
             for (let i = 0; i < getWidth(); i += 1) {
                 const p = new Circle(1);
+                p.setColor(Color.WHITE);
                 p.setPosition(i, getHeight() / 2 + 100 * Randomizer.noise((i + base) / 50));
                 add(p);
             }
