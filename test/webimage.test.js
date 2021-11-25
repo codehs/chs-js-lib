@@ -126,6 +126,32 @@ describe('WebImage', () => {
             });
         });
     });
+    describe('getPixel, getRed/Blue/Green/Alpha', () => {
+        it('Returns undefined data for an out-of-bounds position', () => {
+            const img = new WebImage(RGBURL);
+            expect(img.getPixel(-1, -1)).toEqual([-1, -1, -1, -1]);
+            return new Promise(resolve => {
+                img.loaded(() => {
+                    expect(img.getPixel(-1, -1)).toEqual([-1, -1, -1, -1]);
+                    resolve();
+                });
+            });
+        });
+        it('Returns valid data for a valid position', () => {
+            const img = new WebImage(RGBURL);
+            expect(img.getPixel(1, 1)).toEqual([-1, -1, -1, -1]);
+            return new Promise(resolve => {
+                img.loaded(() => {
+                    expect(img.getPixel(1, 1)).toEqual([255, 0, 0, 255]);
+                    expect(img.getRed(1, 1)).toEqual(255);
+                    expect(img.getBlue(1, 1)).toEqual(0);
+                    expect(img.getGreen(1, 1)).toEqual(0);
+                    expect(img.getAlpha(1, 1)).toEqual(255);
+                    resolve();
+                });
+            });
+        });
+    });
     describe('setImageData', () => {
         it('Allows replacing the entire underlying imagedata for the next draw', () => {
             const img = new WebImage('www.codehs.com/doesnt-matter.gif');
@@ -137,6 +163,24 @@ describe('WebImage', () => {
             const context = g.getContext();
             const topLeftPixel = context.getImageData(0, 0, 1, 1);
             expect(topLeftPixel.data).toEqual(new Uint8ClampedArray([0, 0, 255, 255]));
+        });
+    });
+    describe('setRed/Blue/Green/Alpha', () => {
+        it('Updates the underlying data', () => {
+            const img = new WebImage(RGBURL);
+            return new Promise(resolve => {
+                img.loaded(() => {
+                    img.setRed(1, 1, 1);
+                    expect(img.getPixel(1, 1)).toEqual([1, 0, 0, 255]);
+                    img.setGreen(1, 1, 1);
+                    expect(img.getPixel(1, 1)).toEqual([1, 1, 0, 255]);
+                    img.setBlue(1, 1, 1);
+                    expect(img.getPixel(1, 1)).toEqual([1, 1, 1, 255]);
+                    img.setAlpha(1, 1, 1);
+                    expect(img.getPixel(1, 1)).toEqual([1, 1, 1, 1]);
+                    resolve();
+                });
+            });
         });
     });
     describe('rotation', () => {

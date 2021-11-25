@@ -18,3 +18,4 @@ export * as Randomizer from '../src/randomizer.js';
 export { default as AudioManager } from '../src/sound/';
 export { default as Audio } from '../src/sound/audio.js';
 export { default as Sound } from '../src/sound/sound.js';
+export { map as map } from '../src/graphics/graphics-utils.js';

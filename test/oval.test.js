@@ -118,4 +118,15 @@ describe('Oval', () => {
             });
         });
     });
+    describe('Oval setters/getters', () => {
+        const o = new Oval(40, 40);
+        it('set/getWidth', () => {
+            o.setWidth(50);
+            expect(o.getWidth()).toEqual(50);
+        });
+        it('set/getHeight', () => {
+            o.setHeight(50);
+            expect(o.getHeight()).toEqual(50);
+        });
+    });
 });

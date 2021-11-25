@@ -103,7 +103,6 @@ describe('Groups', () => {
         it('Should update bounds whenever an element is added/removed', () => {
             const g = new Group();
             g.add(new Circle(10));
-            console.log(g.getBounds());
             expect(g.getBounds()).toEqual({
                 top: -10,
                 left: -10,
@@ -126,6 +125,60 @@ describe('Groups', () => {
                 right: 10,
                 bottom: 10,
             });
+        });
+        it('Should update bounds whenever a child is rotated', () => {
+            const g = new Group();
+            const r = new Rectangle(100, 10);
+            r.setAnchor({ vertical: 0.5, horizontal: 0.5 });
+            g.add(r);
+            expect(g.getBounds()).toEqual({
+                top: -5,
+                bottom: 5,
+                left: -50,
+                right: 50,
+            });
+            r.rotate(Math.PI / 2, 1);
+            // weird rounding
+            const bounds = Object.entries(g.getBounds()).reduce((acc, [k, v]) => {
+                acc[k] = Math.round(v);
+                return acc;
+            }, {});
+            expect(bounds).toEqual({
+                top: -50,
+                bottom: 50,
+                left: -5,
+                right: 5,
+            });
+        });
+    });
+    describe('Positioning', () => {
+        it('A groups x is its left bound', () => {
+            const g = new Group();
+            g.add(new Rectangle(20, 20));
+            expect(g.x).toEqual(g.getBounds().left);
+            g.setPosition(10, 10);
+            expect(g.x).toEqual(g.getBounds().left);
+            expect(g.x).toEqual(10);
+        });
+    });
+    describe('containsPoint', () => {
+        it('Should be true if any of its children contain the point', () => {
+            const g = new Group();
+            expect(g.containsPoint(10, 10)).toBeFalse();
+            const r = new Rectangle(11, 11);
+            g.add(r);
+            expect(g.containsPoint(10, 10)).toBeTrue();
+            g.remove(r);
+            expect(g.containsPoint(10, 10)).toBeFalse();
+        });
+        it("Considers childrens' rotations", () => {
+            const g = new Group();
+            const r = new Rectangle(100, 10);
+            r.setAnchor({ vertical: 0.5, horizontal: 0.5 });
+            g.add(r);
+            expect(g.containsPoint(0, 11)).toBeFalse();
+            r.rotate(90);
+            expect(g.containsPoint(0, 11)).toBeTrue();
         });
     });
 });

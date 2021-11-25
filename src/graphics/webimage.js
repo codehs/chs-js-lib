@@ -10,15 +10,16 @@ const BLUE = 2;
 const ALPHA = 3;
 
 /**
- * @constructor
- * @augments Thing
- * @param {string} filename - Filepath to the image
+ * @class WebImage
+ * @extends Thing
  */
-export default class WebImage extends Thing {
+class WebImage extends Thing {
     type = 'WebImage';
     /**
      * @constructor
-     * @param {string} filename
+     * @param {string} filename - Filepath to the image
+     * @example
+     * const image = new WebImage('https://en.wikipedia.org/static/images/project-logos/enwiki.png');
      */
     constructor(filename) {
         super();
@@ -365,3 +366,5 @@ export default class WebImage extends Thing {
         this._hiddenCanvasOutOfSync = false;
     }
 }
+
+export default WebImage;

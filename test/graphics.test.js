@@ -1,5 +1,6 @@
 import Circle from '../src/graphics/circle.js';
 import Graphics from '../src/graphics/index.js';
+import Rectangle from '../src/graphics/rectangle.js';
 
 /**
  * Simulate a mouse event.
@@ -349,6 +350,65 @@ describe('Graphics', () => {
                     });
                 });
             });
+        });
+    });
+    describe('getElements', () => {
+        it('Only returns .alive elements', () => {
+            const g = new Graphics();
+            const r = new Rectangle(10, 10);
+            const c = new Circle(10);
+            c.alive = false;
+            g.add(r, c);
+            expect(g.getElements()).toEqual([r]);
+        });
+    });
+    describe('getElementAt', () => {
+        it('Returns the last element at the given position', () => {
+            const g = new Graphics();
+            const r1 = new Rectangle(10, 10);
+            const r2 = new Rectangle(10, 10);
+            g.add(r1);
+            g.add(r2);
+            expect(g.getElementAt(1, 1)).toEqual(r2);
+            g.remove(r2);
+            expect(g.getElementAt(1, 1)).toEqual(r1);
+        });
+        it('Returns null if none found', () => {
+            expect(new Graphics().getElementAt(0, 0)).toBeNull();
+        });
+    });
+    describe('getElementsAt', () => {
+        it('Returns all element at the given position', () => {
+            const g = new Graphics();
+            const r1 = new Rectangle(10, 10);
+            const r2 = new Rectangle(10, 10);
+            g.add(r1);
+            g.add(r2);
+            expect(g.getElementsAt(1, 1)).toEqual([r1, r2]);
+        });
+    });
+    describe('elementExistsWithParameters', () => {
+        it('Returns if an element exists satisfying all paramters', () => {
+            const g = new Graphics();
+            const r = new Rectangle(10, 10);
+            g.add(r);
+            expect(
+                g.elementExistsWithParameters({
+                    width: 10,
+                })
+            ).toBeTrue();
+            expect(
+                g.elementExistsWithParameters({
+                    width: 10,
+                    height: 11,
+                })
+            ).toBeFalse();
+            expect(
+                g.elementExistsWithParameters({
+                    width: 10,
+                    height: 10,
+                })
+            ).toBeTrue();
         });
     });
 });

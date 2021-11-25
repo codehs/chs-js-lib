@@ -18,6 +18,7 @@ import { default as Audio } from '../src/sound/audio.js';
 import { default as AudioManager } from '../src/sound/index.js';
 import { default as Sound } from '../src/sound/sound.js';
 import { default as Group } from '../src/graphics/group.js';
+import { map } from '../src/graphics/graphics-utils.js';
 
 window.Arc = Arc;
 window.Audio = Audio;
@@ -68,3 +69,5 @@ window.readInt = ConsoleInstance.readInt.bind(ConsoleInstance);
 
 const AudioInstance = new AudioManager();
 window.audioChangeMethod = AudioInstance.audioChangeMethod.bind(AudioInstance);
+
+window.map = map;

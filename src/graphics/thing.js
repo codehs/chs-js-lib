@@ -1,8 +1,8 @@
 /**
- * Generic class. You should never need to construct a thing directly, only extend from
- * Thing as a superclass.
+ * A generic class that other graphical elements inherit from.
+ * @class Thing
  */
-export default class Thing {
+class Thing {
     static DEGREES = 0;
     static RADIANS = 1;
     static thingID = 0;
@@ -21,14 +21,19 @@ export default class Thing {
          */
         this._id = Thing.thingID++;
         this.alive = true;
-        this.x = 0;
-        this.y = 0;
+        this._x = 0;
+        this._y = 0;
+        /**@private**/
+        this._height;
+        /**@private**/
+        this._width;
         this.color = '#000000';
         this.stroke = '#000000';
         this.lineWidth = 1;
         this.filled = true;
         this.hasBorder = false;
-        this.rotation = 0;
+        /**@private**/
+        this._rotation = 0;
         /**
          * Used to record the layer of the element for sorting when drawing.
          * @type {number}
@@ -57,6 +62,12 @@ export default class Thing {
          * @private
          */
         this._boundsInvalidated = true;
+        /**
+         * Elements whose bounds should be invalidated when this element's bounds are invalidated.
+         * @type {Thing[]}
+         * @private
+         */
+        this._invalidationDependants = [];
         this.bounds = null;
     }
 
@@ -507,6 +518,9 @@ export default class Thing {
      */
     _invalidateBounds() {
         this._boundsInvalidated = true;
+        this._invalidationDependants.forEach(element => {
+            element._invalidateBounds();
+        });
     }
 
     /**
@@ -550,10 +564,10 @@ export default class Thing {
 
 /**
  *
- * @param {[number, number]} point
- * @param {[number, number]} origin - point of rotation
+ * @param {number[]} point - [x, y] of the point to rotate
+ * @param {number[]} origin - [x, y] point of rotation
  * @param {number} angle - angle in radians
- * @returns
+ * @returns {number[]} - [x, y] rotated point
  */
 export const rotatePointAboutPosition = ([x, y], [rotX, rotY], angle) => {
     return [
@@ -561,3 +575,5 @@ export const rotatePointAboutPosition = ([x, y], [rotX, rotY], angle) => {
         (x - rotX) * Math.sin(angle) + (y - rotY) * Math.cos(angle) + rotY,
     ];
 };
+
+export default Thing;

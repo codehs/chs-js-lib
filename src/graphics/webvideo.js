@@ -2,21 +2,26 @@
 
 import Thing from './thing.js';
 
-var DEFAULT_WIDTH = 150;
-var DEFAULT_HEIGHT = (DEFAULT_WIDTH * 3) / 4;
-
+const DEFAULT_WIDTH = 150;
+const DEFAULT_HEIGHT = (DEFAULT_WIDTH * 3) / 4;
 const WEBCAM_INDICATOR = 'WEBCAM';
 
 /**
- * @constructor
- * @augments Thing
- * @param {string} filename - Filepath to the video
+ * @class WebVideo
+ * @extends Thing
  */
-export default class WebVideo extends Thing {
+class WebVideo extends Thing {
     static WEBCAM = WEBCAM_INDICATOR;
 
     type = 'WebVideo';
 
+    /**
+     * Constructs a WebVideo.
+     * @constructor
+     * @param {string} filename
+     * @example
+     * const webCam = new WebVideo('WEBCAM');
+     */
     constructor(filename) {
         super();
         if (typeof filename !== 'string') {
@@ -223,3 +228,5 @@ export default class WebVideo extends Thing {
         }
     }
 }
+
+export default WebVideo;

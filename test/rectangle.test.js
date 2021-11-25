@@ -52,4 +52,57 @@ describe('Rectangle', () => {
             expect(r.containsPoint(0, 11)).toBeTrue();
         });
     });
+    describe('Rectangle set/getters', () => {
+        const r = new Rectangle(0, 0);
+        it('setSize', () => {
+            r.setSize(10, 10);
+            expect(r.getHeight()).toEqual(10);
+            expect(r.getWidth()).toEqual(10);
+            expect(() => {
+                r.setSize();
+            }).toThrow(Error('You should pass exactly 2 arguments to `setSize(width, height)`.'));
+            expect(() => {
+                r.setSize('ten', 'ten');
+            }).toThrow(
+                Error(
+                    'Invalid value for `width`. Make sure you are passing finite numbers to `setSize(width, height)`. Did you forget the parentheses in `getWidth()` or `getHeight()`? Or did you perform a calculation on a variable that is not a number?'
+                )
+            );
+            expect(() => {
+                r.setSize(10, 'ten');
+            }).toThrow(
+                Error(
+                    'Invalid value for `height`. Make sure you are passing finite numbers to `setSize(width, height)`. Did you forget the parentheses in `getWidth()` or `getHeight()`? Or did you perform a calculation on a variable that is not a number?'
+                )
+            );
+        });
+        it('set/getWidth', () => {
+            r.setWidth(12);
+            expect(r.getWidth()).toEqual(12);
+            expect(() => {
+                r.setWidth();
+            }).toThrow(Error('You should pass exactly 1 argument to `setWidth(width)`'));
+            expect(() => {
+                r.setWidth('ten');
+            }).toThrow(
+                Error(
+                    'Invalid value for `width`. Make sure you are passing finite numbers to `setWidth(width)`. Did you forget the parentheses in `getWidth()` or `getHeight()`? Or did you perform a calculation on a variable that is not a number?'
+                )
+            );
+        });
+        it('set/getHeight', () => {
+            r.setHeight(12);
+            expect(r.getHeight()).toEqual(12);
+            expect(() => {
+                r.setHeight();
+            }).toThrow(Error('You should pass exactly 1 argument to `setHeight(height)`'));
+            expect(() => {
+                r.setHeight('ten');
+            }).toThrow(
+                Error(
+                    'Invalid value for `height`. Make sure you are passing finite numbers to `setHeight(height)`. Did you forget the parentheses in `getWidth()` or `getHeight()`? Or did you perform a calculation on a variable that is not a number?'
+                )
+            );
+        });
+    });
 });

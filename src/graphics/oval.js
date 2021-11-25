@@ -1,21 +1,24 @@
 import Thing from './thing.js';
 
-/**
- * Note: this is not used as a subclass for Circle since drawing ovals
- * is much more complex than drawing circles, and there is no point in
- * complicating the drawing just for some code reuse.
- */
+/** @module Oval */
 
 /**
  * @class Oval
- * @augments Thing
- * @param {number} width - Desired width of the Oval
- * @param {number} height - Desired height of the Oval
+ * @extends Thing
  */
 export default class Oval extends Thing {
     type = 'Oval';
     anchor = { vertical: 0.5, horizontal: 0.5 };
 
+    /**
+     * Constructs a new oval.
+     * @constructor
+     * @param {number} width - Desired width of the Oval
+     * @param {number} height - Desired height of the Oval
+     * @example
+     * const o = new Oval(20, 10);
+     * add(o);
+     */
     constructor(width, height) {
         super();
         if (arguments.length !== 2) {

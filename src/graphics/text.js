@@ -2,17 +2,22 @@ import Thing from './thing.js';
 
 /**
  * @class Text
+ * @extends Thing
  */
-export default class Text extends Thing {
+class Text extends Thing {
     static defaultContext = null;
 
     type = 'Text';
     anchor = { horizontal: 0, vertical: 1 };
 
     /**
-     *
+     * Constructs a text object.
+     * @constructor
      * @param {string|number} label
      * @param {string} font
+     * @example
+     * const label = new Text('Hello, World', '15pt Arial);
+     *
      */
     constructor(label, font = '20pt Arial') {
         super();
@@ -87,7 +92,7 @@ export default class Text extends Thing {
         if (typeof font !== 'string') {
             throw new TypeError(
                 'Invalid value passed to `setFont`. You passed a value of type ' +
-                    typeof label +
+                    typeof font +
                     ', but a string is required.'
             );
         }
@@ -174,15 +179,6 @@ export default class Text extends Thing {
     }
 
     /**
-     * Update the alignment of the text.
-     *
-     * @param {{vertical: 'top'|'center'|'bottom', horizontal: 'left'|'center'|'right'}} alignment
-     */
-    setAlignment(alignment) {
-        this.alignment = alignment;
-    }
-
-    /**
      * Checks if the passed point is contained in the text.
      *
      * @param {number} x - The x coordinate of the point being tested.
@@ -191,7 +187,9 @@ export default class Text extends Thing {
      */
     _containsPoint(x, y) {
         x += this.width * this.anchor.horizontal;
-        y += this.height * this.anchor.vertical;
+        y -= this.height * (1 - this.anchor.vertical);
         return x >= this.x && x <= this.x + this.width && y <= this.y && y >= this.y - this.height;
     }
 }
+
+export default Text;

@@ -18,6 +18,7 @@ class Arc extends Thing {
     anchor = { vertical: 0.5, horizontal: 0.5 };
 
     /**
+     * Constructs a new arc.
      * @constructor
      * @example
      * const a = new Arc(30, 0, 90, 0);

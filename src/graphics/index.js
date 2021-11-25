@@ -40,7 +40,7 @@ class GraphicsManager extends Manager {
     }
 
     /**
-     * Get all living elements..
+     * Get all living elements.
      */
     getElements() {
         return this.elementPool.filter(element => element.alive);
@@ -438,7 +438,7 @@ class GraphicsManager extends Manager {
      * @returns {CanvasRenderingContext2D} The 2D graphics context.
      */
     getContext() {
-        return this.getCanvas()?.getContext?.('2d') ?? null;
+        return this.getCanvas()?.getContext?.('2d');
     }
 
     /**
@@ -499,26 +499,14 @@ class GraphicsManager extends Manager {
      * Whether the selected canvas already has an instance associated.
      */
     canvasHasInstance(canvas) {
-        var instance;
-        for (var i = 0; i < allGraphicsInstances.length; i++) {
+        let instance;
+        for (let i = 0; i < allGraphicsInstances.length; i++) {
             instance = allGraphicsInstances[i];
             if (instance.instanceId !== this.instanceId && instance.getCanvas() === canvas) {
                 return instance.instanceId;
             }
         }
         return null;
-    }
-
-    /**
-     * Get the distance between two points, (x1, y1) and (x2, y2)
-     * @param {number} x1
-     * @param {number} y1
-     * @param {number} x2
-     * @param {number} y2
-     * @returns {number} Distance between the two points.
-     */
-    getDistance(x1, y1, x2, y2) {
-        return graphicsUtils.getDistance(x1, y1, x2, y2);
     }
 
     /**
@@ -635,7 +623,6 @@ window.onkeyup = function (e) {
     });
 };
 
-/** RESIZE EVENT ****/
 let resizeTimeout;
 window.onresize = function (e) {
     // https://developer.mozilla.org/en-US/docs/Web/Events/resize

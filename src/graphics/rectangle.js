@@ -2,13 +2,19 @@ import Thing from './thing.js';
 
 /**
  * @class Rectangle
- * @augments Thing
- * @param {number} width - Desired width of resulting rectangle.
- * @param {number} height - Desired height of resulting rectangle.
+ * @extends Thing
  */
-export default class Rectangle extends Thing {
+class Rectangle extends Thing {
     type = 'Rectangle';
 
+    /**
+     * Constructs a rectangle with width and height.
+     * @constructor
+     * @param {number} width
+     * @param {number} height
+     * @example
+     * const rect = new Rectangle(20, 20);
+     */
     constructor(width, height) {
         super();
         if (arguments.length !== 2) {
@@ -133,3 +139,5 @@ export default class Rectangle extends Thing {
         return this.height;
     }
 }
+
+export default Rectangle;

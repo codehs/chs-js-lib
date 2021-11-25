@@ -15,10 +15,10 @@ class Circle extends Thing {
     /**
      * Constructs a new circle.
      * @constructor
+     * @param {number} radius - Radius of the circle.
      * @example
      * const c = new Circle(20);
      *
-     * @param {number} radius
      */
     constructor(radius) {
         super();

@@ -1,10 +1,13 @@
 import Thing, { rotatePointAboutPosition } from './thing.js';
 
+/** @module Group */
+
 /**
  * Represents a collection of graphical elements that can be acted on together.
  * @class
+ * @extends Thing
  */
-export default class Group extends Thing {
+class Group extends Thing {
     /**
      * @private
      * @type {Array<Thing>}
@@ -12,7 +15,12 @@ export default class Group extends Thing {
     elements;
 
     /**
+     * Constructs a new Group.
+     * @param {...Thing} elements - Any number of elements to initialize the group with.
      * @constructor
+     * @example
+     * const group = new Group(new Circle(20));
+     * add(group);
      */
     constructor(...elements) {
         super();
@@ -85,6 +93,7 @@ export default class Group extends Thing {
     add(element) {
         this.elements.push(element);
         this._invalidateBounds();
+        element._invalidationDependants.push(this);
     }
 
     /**
@@ -92,6 +101,7 @@ export default class Group extends Thing {
      * @param {Thing} element
      */
     remove(element) {
+        element._invalidationDependants.splice(element._invalidationDependants.indexOf(this), 1);
         const i = this.elements.indexOf(element);
         if (i < 0) {
             return;
@@ -155,7 +165,7 @@ export default class Group extends Thing {
                 element._lastCalculatedBoundsID > this._lastRecordedBounds[element._id] ||
                 element._boundsInvalidated
             ) {
-                this._boundsInvalidated = true;
+                this._invalidateBounds();
             }
             element.draw(this._hiddenContext);
         });
@@ -193,9 +203,11 @@ export default class Group extends Thing {
      *
      * @param {number} x
      * @param {number} y
-     * @returns
+     * @returns {boolean}
      */
     _containsPoint(x, y) {
+        x += this.width * this.anchor.horizontal;
+        y += this.height * this.anchor.vertical;
         return this.elements.some(e => e.containsPoint(x, y));
     }
 
@@ -255,6 +267,8 @@ export default class Group extends Thing {
         this._hiddenCanvas.width = maxX - minX;
         this._hiddenCanvas.height = maxY - minY;
         this._lastCalculatedBoundsID++;
-        this._boundsInvalidated = false;
+        this._invalidateBounds();
     }
 }
+
+export default Group;
