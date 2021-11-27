@@ -421,7 +421,9 @@ class Thing {
             context.strokeStyle = this.stroke.toString();
             context.lineWidth = this.lineWidth;
         }
-        context.fillStyle = this.color.toString();
+        if (this.filled) {
+            context.fillStyle = this.color.toString();
+        }
         context.globalAlpha = this.opacity;
 
         // translate to the shape's anchor to draw the shape
@@ -442,7 +444,7 @@ class Thing {
         if (this.hasBorder) {
             context.stroke();
         }
-        context.fill();
+        this.filled && context.fill();
 
         if (this.debug) {
             context.save();

@@ -2,8 +2,9 @@ import Manager, { DEFAULT_UPDATE_INTERVAL } from '../manager.js';
 import Thing from './thing.js';
 import WebVideo from './webvideo.js';
 
-const FULLSCREEN_PADDING = 5;
+export const FULLSCREEN_PADDING = 5;
 
+/** @type {Object.<string, GraphicsManager>} */
 let GraphicsInstances = {};
 let graphicsInstanceID = 0;
 let pressedKeys = [];
@@ -19,7 +20,7 @@ class GraphicsManager extends Manager {
     /**
      * Set up an instance of the graphics library.
      * @constructor
-     * @param {dictionary} options - Options, primarily .canvas, the selector
+     * @param {Object} options - Options, primarily .canvas, the selector
      *      string for the canvas.
      *      If multiple are returned, we'll take the first one.
      *      If none is passed, we'll look for any canvas
@@ -33,6 +34,7 @@ class GraphicsManager extends Manager {
         this.fullscreenMode = false;
         this.fpsInterval = 1000 / DEFAULT_UPDATE_INTERVAL;
         this.lastDrawTime = Date.now();
+        this.shouldUpdate = options.shouldUpdate ?? true;
         GraphicsInstances[graphicsInstanceID++] = this;
     }
 
@@ -142,7 +144,7 @@ class GraphicsManager extends Manager {
      * @returns {boolean} Whether or not that key is being pressed.
      */
     isKeyPressed(keyCode) {
-        return pressedKeys.indexOf(keyCode) != -1;
+        return pressedKeys.indexOf(keyCode) !== -1;
     }
 
     /**
@@ -651,8 +653,8 @@ window.onresize = function (e) {
     if (!resizeTimeout) {
         resizeTimeout = setTimeout(function () {
             resizeTimeout = null;
-            Object.entries(GraphicsInstances).forEach(([id, instance]) => {
-                instance.setFullscreen?.();
+            Object.entries(GraphicsInstances).forEach(([_, instance]) => {
+                instance.fullscreenMode && instance.setFullscreen?.();
             });
         }, DEFAULT_UPDATE_INTERVAL);
     }

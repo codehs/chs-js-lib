@@ -16,7 +16,9 @@
             let targetY = 0;
 
             let rectangle = new Rectangle(width, height);
-            rectangle.setColor(Color.RED);
+            rectangle.setBorderColor(Color.RED);
+            rectangle.setBorder(true);
+            rectangle.setFilled(false);
             rectangle.setAnchor({ vertical: 0.5, horizontal: 0.5 });
             add(rectangle);
             mouseMoveMethod(e => {

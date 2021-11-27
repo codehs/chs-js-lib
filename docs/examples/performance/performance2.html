@@ -13,10 +13,12 @@
         <select name="shape" id="shape">
             <option value="circle">Circle</option>
             <option value="rectangle">Rectangle</option>
+            <option value="emptyrectangle">Empty Rectangle with Border</option>
             <option value="rectwithborder">Rectangle with Border</option>
             <option value="circlewithborder">Circle with Border</option>
+            <option value="emptycircle">Empty Circle with Border</option>
         </select>
-        <input type="checkbox" id="round">Round positions</input>
+        <input type="checkbox" id="round" label />Round positions
         <script src="../../../dist/chs.iife.js"></script>
         <script id="code">
             document.addEventListener('DOMContentLoaded', () => {
@@ -29,10 +31,18 @@
                         } else if (shapeName === 'rectwithborder') {
                             shape = new Rectangle(10, 10);
                             shape.setBorder(true);
+                        } else if (shapeName === 'emptyrectangle') {
+                            shape = new Rectangle(10, 10);
+                            shape.setFilled(false);
+                            shape.setBorder(true);
                         } else if (shapeName === 'circle') {
                             shape = new Circle(5);
                         } else if (shapeName === 'circlewithborder') {
                             shape = new Circle(5);
+                            shape.setBorder(true);
+                        } else if (shapeName === 'emptycircle') {
+                            shape = new Circle(5);
+                            shape.setFilled(false);
                             shape.setBorder(true);
                         }
                         shape.setColor(color);

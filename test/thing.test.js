@@ -52,4 +52,21 @@ describe('Thing', () => {
             expect(containsPointSpy).toHaveBeenCalledOnceWith(12.071067811865476, 5);
         });
     });
+    describe('setFilled', () => {
+        it('modifies .filled', () => {
+            const t = new Thing();
+            expect(t.filled).toBeTrue();
+            t.setFilled(false);
+            expect(t.filled).toBeFalse();
+        });
+        it('skips .fillStyle sets in draw', () => {
+            const g = new Graphics({ shouldUpdate: false });
+            const t = new Thing();
+            t.setFilled(false);
+            g.add(t);
+            const fillSpy = spyOnProperty(g.getContext(), 'fillStyle', 'set').and.callThrough();
+            g.redraw();
+            expect(fillSpy).not.toHaveBeenCalled();
+        });
+    });
 });
