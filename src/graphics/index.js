@@ -306,11 +306,22 @@ class GraphicsManager extends Manager {
      */
     setSize(w, h) {
         this.fullscreenMode = false;
-        var canvas = this.getCanvas();
+        const canvas = this.getCanvas();
+        // prevent flickering effect by saving the canvas and immediately drawing back.
+        // this will be cleared in redraw(), but it prevents a jarring
+        // flickering effect.
+        const temporaryCanvas = document.createElement('canvas');
+        temporaryCanvas.width = canvas.width;
+        temporaryCanvas.height = canvas.height;
+        const temporaryContext = temporaryCanvas.getContext('2d');
+        temporaryContext.drawImage(canvas, 0, 0);
+
         canvas.width = w;
         canvas.height = h;
         canvas.style['max-height'] = h;
         canvas.style['max-width'] = w;
+        this.getContext().drawImage(temporaryCanvas, 0, 0);
+        temporaryCanvas.remove();
     }
 
     /**

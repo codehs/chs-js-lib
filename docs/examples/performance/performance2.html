@@ -13,28 +13,44 @@
         <select name="shape" id="shape">
             <option value="circle">Circle</option>
             <option value="rectangle">Rectangle</option>
+            <option value="rectwithborder">Rectangle with Border</option>
+            <option value="circlewithborder">Circle with Border</option>
         </select>
+        <input type="checkbox" id="round">Round positions</input>
         <script src="../../../dist/chs.iife.js"></script>
         <script id="code">
             document.addEventListener('DOMContentLoaded', () => {
                 __graphics__.shouldUpdate = false;
-                const populateElements = (shapeName, color) => {
+                const populateElements = (shapeName, color, roundPositions) => {
                     for (let i = 0; i < 100000; i++) {
                         let shape;
                         if (shapeName === 'rectangle') {
                             shape = new Rectangle(10, 10);
+                        } else if (shapeName === 'rectwithborder') {
+                            shape = new Rectangle(10, 10);
+                            shape.setBorder(true);
                         } else if (shapeName === 'circle') {
                             shape = new Circle(5);
+                        } else if (shapeName === 'circlewithborder') {
+                            shape = new Circle(5);
+                            shape.setBorder(true);
                         }
                         shape.setColor(color);
-                        shape.setPosition(Math.random() * getWidth(), Math.random() * getHeight());
+                        let x = Math.random() * getWidth();
+                        let y = Math.random() * getHeight();
+                        if (roundPositions) {
+                            x = ~~x;
+                            y = ~~y;
+                        }
+                        shape.setPosition(x, y);
                         add(shape);
                     }
                 };
                 const redraw = () => {
                     const shape = document.querySelector('#shape').value;
+                    const round = document.querySelector('#round').checked;
                     __graphics__.removeAll();
-                    populateElements(shape, Randomizer.nextColor());
+                    populateElements(shape, Randomizer.nextColor(), round);
                     const now = performance.now();
                     __graphics__.redraw();
                     return performance.now() - now;

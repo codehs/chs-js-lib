@@ -1,6 +1,7 @@
 import Circle from '../src/graphics/circle.js';
 import Graphics from '../src/graphics/index.js';
 import Rectangle from '../src/graphics/rectangle.js';
+import { map } from '../src/graphics/graphics-utils.js';
 
 /**
  * Simulate a mouse event.
@@ -222,7 +223,7 @@ describe('Graphics', () => {
         });
     });
     describe('Removing', () => {
-        it("Doesn't remove the element from the internal element poolm only marks it as not alive", () => {
+        it("Doesn't remove the element from the internal element pool, only marks it as not alive", () => {
             const g = new Graphics();
             const arcSpy = spyOn(g.getContext(), 'arc');
             g.shouldUpdate = false;
@@ -235,6 +236,16 @@ describe('Graphics', () => {
             g.redraw();
             expect(g.elementPoolSize).toBe(0);
             expect(arcSpy).toHaveBeenCalledTimes(1);
+        });
+        it('removeAll() sets the size of the element pool to 0', () => {
+            const g = new Graphics();
+            g.shouldUpdate = false;
+            g.add(new Circle(5));
+            g.removeAll();
+            expect(g.elementPoolSize).toEqual(0);
+            const arcSpy = spyOn(g.getContext(), 'arc');
+            g.redraw();
+            expect(arcSpy).not.toHaveBeenCalled();
         });
     });
     describe('setBackgroundColor', () => {
@@ -415,6 +426,11 @@ describe('Graphics', () => {
                     height: 10,
                 })
             ).toBeTrue();
+        });
+    });
+    describe('map()', () => {
+        it('Rescales values in a new range', () => {
+            expect(map(50, 0, 100, 0, 4)).toEqual(2);
         });
     });
 });
