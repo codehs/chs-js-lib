@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Test</title>
+    </head>
+    <body>
+        <canvas id="game" width="480" height="400"></canvas>
+        <p>
+            This example records how quickly 100,000 shapes can be drawn.<br />This time, it took
+            <span id="target">loading</span> milliseconds.
+        </p>
+        <button id="redraw">Redraw</button>
+        <select name="shape" id="shape">
+            <option value="circle">Circle</option>
+            <option value="rectangle">Rectangle</option>
+        </select>
+        <script src="../../../dist/chs.iife.js"></script>
+        <script id="code">
+            document.addEventListener('DOMContentLoaded', () => {
+                __graphics__.shouldUpdate = false;
+                const populateElements = (shapeName, color) => {
+                    for (let i = 0; i < 100000; i++) {
+                        let shape;
+                        if (shapeName === 'rectangle') {
+                            shape = new Rectangle(10, 10);
+                        } else if (shapeName === 'circle') {
+                            shape = new Circle(5);
+                        }
+                        shape.setColor(color);
+                        shape.setPosition(Math.random() * getWidth(), Math.random() * getHeight());
+                        add(shape);
+                    }
+                };
+                const redraw = () => {
+                    const shape = document.querySelector('#shape').value;
+                    __graphics__.removeAll();
+                    populateElements(shape, Randomizer.nextColor());
+                    const now = performance.now();
+                    __graphics__.redraw();
+                    return performance.now() - now;
+                };
+
+                document.querySelector('#redraw').addEventListener('click', () => {
+                    updateDOM(redraw());
+                });
+                const updateDOM = t => {
+                    document.querySelector('#target').innerHTML = t;
+                };
+                updateDOM(redraw());
+            });
+        </script>
+    </body>
+</html>

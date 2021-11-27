@@ -1,21 +1,18 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <title>Arc Test</title>
-</head>
-<body>
-  <canvas id="game" width="480" height="400"></canvas>
-  <script src="../../../../dist/chs.iife.js"></script>
-  <script id="code">
-    const a2 = new Arc(20, 0, 350, Arc.DEGREES);
-    a2.setPosition(2 * getWidth() / 4, getHeight() / 2);
-    a2.setColor('blue');
-    a2.debug = true;
-    const g = new Group();
-    g.add(a2);
-    g.debug = true;
-    add(g);
-
-  </script>
-</body>
+    <head>
+        <title>Arc Test</title>
+    </head>
+    <body>
+        <canvas id="game" width="480" height="400"></canvas>
+        <script src="../../../../dist/chs.iife.js"></script>
+        <script id="code">
+            const a2 = new Arc(20, 0, 350, Arc.DEGREES);
+            a2.setPosition((2 * getWidth()) / 4, getHeight() / 2);
+            a2.setColor('blue');
+            a2.debug = true;
+            add(a2);
+        </script>
+        <p>An arc's bounds.</p>
+    </body>
 </html>

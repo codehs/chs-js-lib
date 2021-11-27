@@ -114,8 +114,8 @@ describe('Line', () => {
             const lineToSpy = spyOn(g.getContext(), 'lineTo').and.callThrough();
             g.add(line);
             g.redraw();
-            expect(moveToSpy).toHaveBeenCalledOnceWith(0, 200);
-            expect(lineToSpy).toHaveBeenCalledOnceWith(200, 0);
+            expect(moveToSpy).toHaveBeenCalledOnceWith(0, 0);
+            expect(lineToSpy).toHaveBeenCalledOnceWith(200, 200);
         });
     });
     describe('containsPoint', () => {

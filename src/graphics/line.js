@@ -1,4 +1,4 @@
-import Thing from './thing.js';
+import Thing, { rotatePointAboutPosition } from './thing.js';
 
 /**
  * @class Line
@@ -73,14 +73,19 @@ export default class Line extends Thing {
      */
     draw(context) {
         super.draw(context, () => {
-            const x1 = this.x1;
-            const x2 = this.x2;
-            const y1 = this.y1;
-            const y2 = this.y2;
-            const rotatedPoints = getRotatedPoints(x1, y1, x2, y2, this.rotation);
+            let x1 = this.x1;
+            let x2 = this.x2;
+            let y1 = this.y1;
+            let y2 = this.y2;
+
+            const rotX = (x2 - x1) / 2;
+            const rotY = (y2 - y1) / 2;
+
+            // [x1, y1] = rotatePointAboutPosition([x1, y1], [rotX, rotY], this.rotation);
+            // [x2, y2] = rotatePointAboutPosition([x2, y2], [rotX, rotY], this.rotation);
             context.beginPath();
-            context.moveTo(rotatedPoints[0], rotatedPoints[1]);
-            context.lineTo(rotatedPoints[2], rotatedPoints[3]);
+            context.moveTo(0, 0);
+            context.lineTo(x2 - x1, y2 - y1);
             context.closePath();
         });
     }
@@ -253,12 +258,20 @@ export default class Line extends Thing {
         return this.x1;
     }
 
+    get x() {
+        return this.x1;
+    }
+
     /**
      * Gets the y coordinate of the Line's start point.
      *
      * @returns {number} The y coordinate of the Line's start point.
      */
     getY() {
+        return this.y1;
+    }
+
+    get y() {
         return this.y1;
     }
 

@@ -1,31 +1,35 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <title>Circle Anchor Test</title>
-</head>
-<body>
-  <canvas id="game" width="480" height="400"></canvas>
-  <script src="../../../../dist/chs.iife.js"></script>
-  <script id="code">
-  const c1 = new Circle(20);
-  c1.setPosition(getWidth() / 4, getHeight() / 2);
-  c1.setAnchor({vertical: 0, horizontal: 0});
-  c1.setColor('blue');
-  c1.debug = true;
-  add(c1);
+    <head>
+        <title>Circle Anchor Test</title>
+    </head>
+    <body>
+        <canvas id="game" width="480" height="400"></canvas>
+        <script src="../../../../dist/chs.iife.js"></script>
+        <script id="code">
+            const c1 = new Circle(20);
+            c1.setPosition(getWidth() / 4, getHeight() / 2);
+            c1.setAnchor({ vertical: 0, horizontal: 0 });
+            c1.setColor('blue');
+            c1.debug = true;
+            add(c1);
 
-  const c2 = new Circle(20);
-  c2.setPosition(2 * getWidth() / 4, getHeight() / 2);
-  c2.setColor('blue');
-  c2.debug = true;
-  add(c2);
+            const c2 = new Circle(20);
+            c2.setPosition((2 * getWidth()) / 4, getHeight() / 2);
+            c2.setColor('blue');
+            c2.debug = true;
+            add(c2);
 
-  const c3 = new Circle(20);
-  c3.setPosition(3 * getWidth() / 4, getHeight() / 2);
-  c3.setColor('blue');
-  c3.setAnchor({vertical: 1, horizontal: 1})
-  c3.debug = true;
-  add(c3);
-  </script>
-</body>
+            const c3 = new Circle(20);
+            c3.setPosition((3 * getWidth()) / 4, getHeight() / 2);
+            c3.setColor('blue');
+            c3.setAnchor({ vertical: 1, horizontal: 1 });
+            c3.debug = true;
+            add(c3);
+        </script>
+        <p>
+            Circles can be anchored: {vertical: 0, horizontal: 0}, {vertical: 0.5, horizontal: 0.5}
+            (the default), {vertical: 1, horizontal: 1}
+        </p>
+    </body>
 </html>

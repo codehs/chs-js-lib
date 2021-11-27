@@ -180,5 +180,12 @@ describe('Groups', () => {
             r.rotate(90);
             expect(g.containsPoint(0, 11)).toBeTrue();
         });
+        it('Considers anchoring', () => {
+            const g = new Group(new Rectangle(20, 20));
+            expect(g.containsPoint(10, 10)).toBeTrue();
+            expect(g.containsPoint(-5, -5)).toBeFalse();
+            g.setAnchor({ vertical: 0.5, horizontal: 0.5 });
+            expect(g.containsPoint(-5, -5)).toBeTrue();
+        });
     });
 });

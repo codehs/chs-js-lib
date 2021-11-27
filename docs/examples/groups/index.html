@@ -1,38 +1,37 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <title>Group Test</title>
-</head>
-<body>
-  <canvas id="game" width="480" height="400"></canvas>
-  <script src="../../../dist/chs.iife.js"></script>
-  <script id="code">
-  const g = new Group();
+    <head>
+        <title>Group Test</title>
+    </head>
+    <body>
+        <canvas id="game" width="480" height="400"></canvas>
+        <script src="../../../dist/chs.iife.js"></script>
+        <script id="code">
+            const g = new Group();
 
-  (function start(){
-      const g = new Group();
+            (function start() {
+                const g = new Group();
 
-      const rect = new Rectangle(200, 200);
-      rect.setPosition(getWidth() / 2 - 100, getHeight() / 2 - 100);
-      rect.setColor(Color.RED);
-      g.add(rect);
+                const rect = new Rectangle(200, 200);
+                rect.setPosition(getWidth() / 2 - 100, getHeight() / 2 - 100);
+                rect.setColor(Color.RED);
+                g.add(rect);
 
-      const circle = new Circle(50);
-      circle.setPosition(getWidth() / 2, getHeight() / 2);
-      circle.setColor(Color.BLUE);
-      g.add(circle);
+                const circle = new Circle(50);
+                circle.setPosition(getWidth() / 2, getHeight() / 2);
+                circle.setColor(Color.BLUE);
+                g.add(circle);
 
-      g.setOpacity(0.5);
-      const opaqueSquare = new Rectangle(getWidth(), 50);
-      opaqueSquare.setPosition(0, getHeight()/2);
-      add(opaqueSquare);
-      add(g);
+                g.setOpacity(0.5);
+                const opaqueSquare = new Rectangle(getWidth(), 50);
+                opaqueSquare.setPosition(0, getHeight() / 2);
+                add(opaqueSquare);
+                add(g);
 
-      setTimer(() => {
-        g.move((1 - Math.random() * 2) * 4, (1 - Math.random() * 2) * 10)
-      }, 50);
-  })();
-
-  </script>
-</body>
+                setTimer(() => {
+                    g.move((1 - Math.random() * 2) * 4, (1 - Math.random() * 2) * 10);
+                }, 50);
+            })();
+        </script>
+    </body>
 </html>

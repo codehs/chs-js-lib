@@ -222,13 +222,19 @@ describe('Graphics', () => {
         });
     });
     describe('Removing', () => {
-        it('Removes the element from the internal element pool', () => {
+        it("Doesn't remove the element from the internal element poolm only marks it as not alive", () => {
             const g = new Graphics();
+            const arcSpy = spyOn(g.getContext(), 'arc');
+            g.shouldUpdate = false;
             const c = new Circle(20);
             g.add(c);
+            g.redraw();
             expect(g.elementPool[0]).toBe(c);
             g.remove(c);
-            expect(g.elementPool.length).toBe(0);
+            expect(c.alive).toBeFalse();
+            g.redraw();
+            expect(g.elementPoolSize).toBe(0);
+            expect(arcSpy).toHaveBeenCalledTimes(1);
         });
     });
     describe('setBackgroundColor', () => {

@@ -1,29 +1,43 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <title>Group Rotation Test</title>
-</head>
-<body>
-  <canvas id="game" width="480" height="400"></canvas>
-  <script src="../../../dist/chs.iife.js"></script>
-  <script id="code">
-  let el;
-  mouseDownMethod(e => {
-    el = getElementAt(e.getX(), e.getY());
-  });
-  mouseMoveMethod(e => {
-    el?.setPosition(e.getX(), e.getY());
-  });
-  mouseUpMethod(e => {
-    el = null;
-  })
-  const g = new Group();
-  g.setAnchor({vertical: 0.5, horizontal: 0.5})
-  g.add(new Rectangle(40, 40));
-  setTimer(() => {
-    g.rotate(1);
-  }, 5)
-  add(g);
-  </script>
-</body>
+    <head>
+        <title>Group Rotation Test</title>
+    </head>
+    <body>
+        <canvas id="game" width="480" height="400"></canvas>
+        <script src="../../../dist/chs.iife.js"></script>
+        <script id="code">
+            const g = new Group();
+            g.setAnchor({ vertical: 0.5, horizontal: 0.5 });
+            g.add(new Rectangle(80, 40));
+            setTimer(() => {
+                g.rotate(1);
+                if (g.containsPoint(mouseX, mouseY)) {
+                    g.getElements().forEach(el => {
+                        el.setColor(Color.RED);
+                    });
+                } else {
+                    g.getElements().forEach(el => {
+                        el.setColor(Color.BLACK);
+                    });
+                }
+            }, 5);
+            add(g);
+
+            let el;
+            let mouseX = 0;
+            let mouseY = 0;
+            mouseDownMethod(e => {
+                el = getElementAt(e.getX(), e.getY());
+            });
+            mouseMoveMethod(e => {
+                mouseX = e.getX();
+                mouseY = e.getY();
+                el?.setPosition(mouseX, mouseY);
+            });
+            mouseUpMethod(e => {
+                el = null;
+            });
+        </script>
+    </body>
 </html>

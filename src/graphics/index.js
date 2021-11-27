@@ -14,6 +14,7 @@ let pressedKeys = [];
  */
 class GraphicsManager extends Manager {
     elementPool = [];
+    elementPoolSize = 0;
 
     /**
      * Set up an instance of the graphics library.
@@ -52,7 +53,7 @@ class GraphicsManager extends Manager {
      */
     add(elem) {
         elem.alive = true;
-        this.elementPool.push(elem);
+        this.elementPool[this.elementPoolSize++] = elem;
     }
 
     /**
@@ -284,6 +285,7 @@ class GraphicsManager extends Manager {
     removeAll() {
         this.stopAllVideo();
         this.elementPool = [];
+        this.elementPoolSize = 0;
     }
 
     /**
@@ -294,7 +296,7 @@ class GraphicsManager extends Manager {
         if (elem instanceof WebVideo) {
             elem.stop();
         }
-        this.elementPool.splice(this.elementPool.indexOf(elem), 1);
+        elem.alive = false;
     }
 
     /**
@@ -450,20 +452,27 @@ class GraphicsManager extends Manager {
         let elem;
         let sortPool;
         const context = this.getContext();
-        for (let i = 0; i < this.elementPool.length; i++) {
+        let numberRemovedElementsFound = 0;
+        for (let i = 0; i < this.elementPoolSize; i++) {
             elem = this.elementPool[i];
 
             if (elem._sortInvalidated) {
                 sortPool = true;
                 elem._sortInvalidated = false;
             }
-            elem.draw(context);
+            if (elem.alive) {
+                elem.draw(context);
+            } else {
+                sortPool = true;
+                numberRemovedElementsFound++;
+            }
         }
         // sort all dead elements to the end of the pool
         // and all elements with lower layer before elements
         // with higher layer
         if (sortPool) {
-            this.elementPool.sort((a, b) => a.layer - b.layer);
+            this.elementPoolSize -= numberRemovedElementsFound;
+            this.elementPool.sort((a, b) => a.alive - b.alive || a.layer - b.layer);
         }
     }
 
