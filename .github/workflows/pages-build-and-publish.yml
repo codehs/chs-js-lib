@@ -4,8 +4,7 @@ name: GitHub pages
 
 on:
   release:
-    types:
-      - created
+    types: [released]
     
 
 jobs:
@@ -21,6 +20,7 @@ jobs:
           source_dir: ./src
           output_dir: ./out
           template: docdash
+          recurse: true
 
       - name: Deploy to pages
         uses: peaceiris/actions-gh-pages@v3
