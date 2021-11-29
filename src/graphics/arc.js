@@ -15,9 +15,10 @@ class Arc extends Thing {
     static RADIANS = 1;
 
     type = 'Arc';
-    radius;
+    anchor = { vertical: 0.5, horizontal: 0.5 };
 
     /**
+     * Constructs a new arc.
      * @constructor
      * @example
      * const a = new Arc(30, 0, 90, 0);
@@ -80,14 +81,23 @@ class Arc extends Thing {
         this.endAngle = endAngle;
     }
 
+    get width() {
+        return this.radius * 2;
+    }
+
+    get height() {
+        return this.radius * 2;
+    }
+
     /**
      * Draws the arc in the canvas.
      *
      * @private
-     * @param {CodeHSGraphics} graphics - Instance of the CodeHSGraphics module.
+     * @param {CanvasRenderingContext2D} context - Context to draw on.
      */
-    draw(graphics) {
-        super.draw(graphics, context => {
+    draw(context) {
+        super.draw(context, () => {
+            context.translate(this.radius, this.radius);
             context.beginPath();
             context.arc(
                 0,
@@ -99,6 +109,7 @@ class Arc extends Thing {
             );
             context.lineTo(0, 0);
             context.closePath();
+            context.translate(-this.radius, -this.radius);
         });
     }
 
@@ -200,7 +211,7 @@ class Arc extends Thing {
      * @param {number} y - y coordinate of the point being tested.
      * @return {boolean}
      */
-    containsPoint(x, y) {
+    _containsPoint(x, y) {
         // First check whether the point is in the circle
         var dist = getDistance(this.x, this.y, x, y);
         if (dist > this.radius) {
@@ -208,9 +219,9 @@ class Arc extends Thing {
         }
 
         // Get vector/ angle for the point
-        var vx = x - this.x;
-        var vy = this.y - y;
-        var theta = Math.atan(vy / vx);
+        const vx = x - this.x;
+        const vy = this.y - y;
+        let theta = Math.atan(vy / vx);
 
         // Adjust the arctan based on the quadran the point is in using the
         // position of the arc as the origin

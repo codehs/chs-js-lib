@@ -38,23 +38,28 @@ class Polygon extends Thing {
 
     /**
      * Draws the polygon in the canvas.
+     *
      * @private
-     * @param {CodeHSGraphics} graphics - Instance of the Graphics module.
+     * @param {CanvasRenderingContext2D} context - Context to draw on.
      */
-    draw(graphics) {
+    draw(context) {
         if (this.points.length === 0) {
             return;
         }
 
-        super.draw(graphics, context => {
+        super.draw(context, () => {
+            context.save();
+            context.translate(-this.x, -this.y);
             context.beginPath();
             const first = this.points[0];
+            let current;
             context.moveTo(first.x, first.y);
             for (let i = 1; i < this.points.length; i++) {
-                const cur = this.points[i];
-                context.lineTo(cur.x, cur.y);
+                current = this.points[i];
+                context.lineTo(current.x, current.y);
             }
             context.closePath();
+            context.restore();
         });
     }
 
@@ -73,7 +78,9 @@ class Polygon extends Thing {
      * @param {number} y - The y coordinate of the point being tested.
      * @returns {boolean}
      */
-    containsPoint(x, y) {
+    _containsPoint(x, y) {
+        x += this.width * this.anchor.horizontal;
+        y += this.height * this.anchor.vertical;
         // https://www.eecs.umich.edu/courses/eecs380/HANDOUTS/PROJ2/InsidePoly.html
         // solution 3 from above
         let previousOrientation = -1;
@@ -152,7 +159,8 @@ class Polygon extends Thing {
             );
         }
 
-        for (var i = 0; i < this.points.length; i++) {
+        this.points.push({ x: x, y: y });
+        for (let i = 0; i < this.points.length; i++) {
             if (Math.abs(x - this.points[i].x) > this.width) {
                 this.width = Math.abs(x - this.points[i].x);
             }
@@ -160,7 +168,6 @@ class Polygon extends Thing {
                 this.height = Math.abs(y - this.points[i].y);
             }
         }
-        this.points.push({ x: x, y: y });
     }
 
     /**
@@ -190,10 +197,23 @@ class Polygon extends Thing {
             );
         }
 
-        for (var i = 0; i < this.points.length; i++) {
+        for (let i = 0; i < this.points.length; i++) {
             this.points[i].x += dx;
             this.points[i].y += dy;
         }
+        this.x += dx;
+        this.y += dy;
+    }
+
+    /**
+     * Set the position of the polygon by moving all of its points.
+     * @param {number} x
+     * @param {number} y
+     */
+    setPosition(x, y) {
+        const dx = x - this.x;
+        const dy = y - this.y;
+        this.move(dx, dy);
     }
 }
 

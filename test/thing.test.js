@@ -36,4 +36,37 @@ describe('Thing', () => {
             expect(globalAlphaSpy).toHaveBeenCalledOnceWith(0.5);
         });
     });
+    describe('containsPoint', () => {
+        it('Performs rotation before checking the subclass', () => {
+            const containsPointSpy = jasmine.createSpy();
+            class Subclass extends Thing {
+                width = 10;
+                height = 10;
+                _containsPoint(x, y) {
+                    containsPointSpy(x, y);
+                }
+            }
+            const subThing = new Subclass();
+            subThing.setRotation(45);
+            subThing.containsPoint(10, 10);
+            expect(containsPointSpy).toHaveBeenCalledOnceWith(12.071067811865476, 5);
+        });
+    });
+    describe('setFilled', () => {
+        it('modifies .filled', () => {
+            const t = new Thing();
+            expect(t.filled).toBeTrue();
+            t.setFilled(false);
+            expect(t.filled).toBeFalse();
+        });
+        it('skips .fillStyle sets in draw', () => {
+            const g = new Graphics({ shouldUpdate: false });
+            const t = new Thing();
+            t.setFilled(false);
+            g.add(t);
+            const fillSpy = spyOnProperty(g.getContext(), 'fillStyle', 'set').and.callThrough();
+            g.redraw();
+            expect(fillSpy).not.toHaveBeenCalled();
+        });
+    });
 });

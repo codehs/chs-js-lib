@@ -1,20 +1,24 @@
 import Thing from './thing.js';
 
-/**
- * Note: this is not used as a subclass for Circle since drawing ovals
- * is much more complex than drawing circles, and there is no point in
- * complicating the drawing just for some code reuse.
- */
+/** @module Oval */
 
 /**
  * @class Oval
- * @augments Thing
- * @param {number} width - Desired width of the Oval
- * @param {number} height - Desired height of the Oval
+ * @extends Thing
  */
 export default class Oval extends Thing {
     type = 'Oval';
+    anchor = { vertical: 0.5, horizontal: 0.5 };
 
+    /**
+     * Constructs a new oval.
+     * @constructor
+     * @param {number} width - Desired width of the Oval
+     * @param {number} height - Desired height of the Oval
+     * @example
+     * const o = new Oval(20, 10);
+     * add(o);
+     */
     constructor(width, height) {
         super();
         if (arguments.length !== 2) {
@@ -38,30 +42,16 @@ export default class Oval extends Thing {
      * adapted from http://stackoverflow.com/questions/2172798/
      * how-to-draw-an-oval-in-html5-canvas
      *
-     * @param {CodeHSGraphics} graphics - Instance of the Graphics module.
+     * @private
+     * @param {CanvasRenderingContext2D} context - Context to draw on.
      */
-    draw(graphics) {
-        super.draw(graphics, context => {
-            var w = this.width;
-            var h = this.height;
-            var x = -w / 2;
-            var y = -h / 2;
-
-            var kappa = 0.5522848;
-            var ox = (w / 2) * kappa; // control point offset horizontal
-            var oy = (h / 2) * kappa; // control point offset vertical
-            var xe = x + w; // x-end
-            var ye = y + h; // y-end
-            var xm = x + w / 2; // x-middle
-            var ym = y + h / 2; // y-middle
-
+    draw(context) {
+        super.draw(context, () => {
+            context.translate(this.width / 2, this.height / 2);
             context.beginPath();
-            context.moveTo(x, ym);
-            context.bezierCurveTo(x, ym - oy, xm - ox, y, xm, y);
-            context.bezierCurveTo(xm + ox, y, xe, ym - oy, xe, ym);
-            context.bezierCurveTo(xe, ym + oy, xm + ox, ye, xm, ye);
-            context.bezierCurveTo(xm - ox, ye, x, ym + oy, x, ym);
+            context.ellipse(0, 0, this.width / 2, this.height / 2, 2 * Math.PI, 0, 2 * Math.PI);
             context.closePath();
+            context.translate(-this.width / 2, -this.height / 2);
         });
     }
 
@@ -127,7 +117,9 @@ export default class Oval extends Thing {
      * @param {number} y - The y coordinate of the point being tested.
      * @returns {boolean} Whether the passed point is contained in the circle.
      */
-    containsPoint(x, y) {
+    _containsPoint(x, y) {
+        x -= this.width * (0.5 - this.anchor.horizontal);
+        y -= this.height * (0.5 - this.anchor.vertical);
         var xRadiusSquared = Math.pow(this.width / 2, 2);
         var yRadiusSquared = Math.pow(this.height / 2, 2);
         var xDifferenceSquared = Math.pow(x - this.x, 2);
