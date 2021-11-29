@@ -5,7 +5,11 @@ name: Node.js Package
 
 on:
   release:
+<<<<<<< HEAD
     types: [released]
+=======
+    types: [created]
+>>>>>>> b35cb32 (Set up npm-publish action)
 
 jobs:
   build:
@@ -17,7 +21,10 @@ jobs:
           node-version: 14
       - run: npm ci
       - run: npm test
+<<<<<<< HEAD
       - run: npm dist
+=======
+>>>>>>> b35cb32 (Set up npm-publish action)
 
   publish-npm:
     needs: build
