@@ -16,9 +16,9 @@ export const nextInt = function (min, max) {
         min = 0;
     }
 
-    min = min | 0;
-    const r = Math.random();
-    return (min + r * (max - min + 1)) | 0;
+    min = Math.floor(min);
+    var r = Math.random();
+    return min + Math.floor(r * (max - min + 1));
 };
 
 /**

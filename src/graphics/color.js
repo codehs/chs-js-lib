@@ -222,7 +222,7 @@ export default class Color {
         for (var i = 0; i < componentsOne.length; i++) {
             colorOneComponent = getDec(componentsOne[i]);
             colorTwoComponent = getDec(componentsTwo[i]);
-            averageDec = ((colorOneComponent + colorTwoComponent) >> 1) | 0;
+            averageDec = Math.floor((colorOneComponent + colorTwoComponent) >> 1);
             h = getHex(averageDec);
             if (h.length == 1) h = '0' + h;
             averageHex += h;
@@ -256,9 +256,9 @@ export default class Color {
  * @returns {string} Hex representation.
  */
 export const rgbToHex = (r, g, b) => {
-    r = r | 0;
-    g = g | 0;
-    b = b | 0;
+    r = Math.floor(r);
+    g = Math.floor(g);
+    b = Math.floor(b);
     if (r > 255 || g > 255 || b > 255) {
         throw 'Invalid color component';
     }
