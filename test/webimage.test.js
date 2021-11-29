@@ -8,8 +8,9 @@ import Graphics from '../src/graphics/index.js';
  * |rr|gg|bb|
  * |rr|gg|bb|
  * +--+--+--+
+ * @type {string}
  */
-const RGBURL = 'https://codehs.com/uploads/4cd36a1bacbd8cdd22cf75947f4caea8';
+export const RGBURL = 'https://codehs.com/uploads/4cd36a1bacbd8cdd22cf75947f4caea8';
 
 describe('WebImage', () => {
     describe('The WebImage constructor', () => {
@@ -75,12 +76,12 @@ describe('WebImage', () => {
             const g = new Graphics();
             g.add(wi);
             wi.setSize(123, 123);
-            expect(wi.__hiddenCanvasOutOfSync).toBeTrue();
+            expect(wi._hiddenCanvasOutOfSync).toBeTrue();
             g.redraw();
-            expect(wi.__hiddenCanvasOutOfSync).toBeTrue();
+            expect(wi._hiddenCanvasOutOfSync).toBeTrue();
             wi.loaded(() => {
                 g.redraw();
-                expect(wi.__hiddenCanvasOutOfSync).toBeFalse();
+                expect(wi._hiddenCanvasOutOfSync).toBeFalse();
             });
         });
     });
@@ -103,23 +104,49 @@ describe('WebImage', () => {
                 });
             });
         });
-        it('Updates the internal __hidenCanvasOutOfSync', () => {
+        it('Updates the internal _hidenCanvasOutOfSync', () => {
             const wi = new WebImage(RGBURL);
             const g = new Graphics();
             g.add(wi);
             return new Promise((resolve, reject) => {
                 wi.loaded(() => {
                     wi.setPixel(0, 0, 1, 123);
-                    expect(wi.__hiddenCanvasOutOfSync).toBeTrue();
-                    const hiddenCanvas = wi.__hiddenCanvas;
+                    expect(wi._hiddenCanvasOutOfSync).toBeTrue();
+                    const hiddenCanvas = wi._hiddenCanvas;
                     let hiddenContext = hiddenCanvas.getContext('2d');
                     let modifiedPixel = hiddenContext.getImageData(0, 0, 1, 1);
                     expect(modifiedPixel.data).toEqual(new Uint8ClampedArray([255, 0, 0, 255]));
                     g.redraw();
-                    expect(wi.__hiddenCanvasOutOfSync).toBeFalse();
+                    expect(wi._hiddenCanvasOutOfSync).toBeFalse();
                     hiddenContext = hiddenCanvas.getContext('2d');
                     modifiedPixel = hiddenContext.getImageData(0, 0, 1, 1);
                     expect(modifiedPixel.data).toEqual(new Uint8ClampedArray([255, 123, 0, 255]));
+                    resolve();
+                });
+            });
+        });
+    });
+    describe('getPixel, getRed/Blue/Green/Alpha', () => {
+        it('Returns undefined data for an out-of-bounds position', () => {
+            const img = new WebImage(RGBURL);
+            expect(img.getPixel(-1, -1)).toEqual([-1, -1, -1, -1]);
+            return new Promise(resolve => {
+                img.loaded(() => {
+                    expect(img.getPixel(-1, -1)).toEqual([-1, -1, -1, -1]);
+                    resolve();
+                });
+            });
+        });
+        it('Returns valid data for a valid position', () => {
+            const img = new WebImage(RGBURL);
+            expect(img.getPixel(1, 1)).toEqual([-1, -1, -1, -1]);
+            return new Promise(resolve => {
+                img.loaded(() => {
+                    expect(img.getPixel(1, 1)).toEqual([255, 0, 0, 255]);
+                    expect(img.getRed(1, 1)).toEqual(255);
+                    expect(img.getBlue(1, 1)).toEqual(0);
+                    expect(img.getGreen(1, 1)).toEqual(0);
+                    expect(img.getAlpha(1, 1)).toEqual(255);
                     resolve();
                 });
             });
@@ -136,6 +163,24 @@ describe('WebImage', () => {
             const context = g.getContext();
             const topLeftPixel = context.getImageData(0, 0, 1, 1);
             expect(topLeftPixel.data).toEqual(new Uint8ClampedArray([0, 0, 255, 255]));
+        });
+    });
+    describe('setRed/Blue/Green/Alpha', () => {
+        it('Updates the underlying data', () => {
+            const img = new WebImage(RGBURL);
+            return new Promise(resolve => {
+                img.loaded(() => {
+                    img.setRed(1, 1, 1);
+                    expect(img.getPixel(1, 1)).toEqual([1, 0, 0, 255]);
+                    img.setGreen(1, 1, 1);
+                    expect(img.getPixel(1, 1)).toEqual([1, 1, 0, 255]);
+                    img.setBlue(1, 1, 1);
+                    expect(img.getPixel(1, 1)).toEqual([1, 1, 1, 255]);
+                    img.setAlpha(1, 1, 1);
+                    expect(img.getPixel(1, 1)).toEqual([1, 1, 1, 1]);
+                    resolve();
+                });
+            });
         });
     });
     describe('rotation', () => {

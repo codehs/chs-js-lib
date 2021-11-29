@@ -10,15 +10,16 @@ const BLUE = 2;
 const ALPHA = 3;
 
 /**
- * @constructor
- * @augments Thing
- * @param {string} filename - Filepath to the image
+ * @class WebImage
+ * @extends Thing
  */
-export default class WebImage extends Thing {
+class WebImage extends Thing {
     type = 'WebImage';
     /**
      * @constructor
-     * @param {string} filename
+     * @param {string} filename - Filepath to the image
+     * @example
+     * const image = new WebImage('https://en.wikipedia.org/static/images/project-logos/enwiki.png');
      */
     constructor(filename) {
         super();
@@ -29,10 +30,19 @@ export default class WebImage extends Thing {
         }
 
         this.setImage(filename);
-        // used to indicate that the internal .data is out of sync with
-        // the __hiddenCanvas. when out of sync, the __hiddenCanvas must be
-        // updated before drawing
-        this.__hiddenCanvasOutOfSync = false;
+        /**
+         * used to indicate that the internal .data is out of sync with
+         * the _hiddenCanvas. when out of sync, the _hiddenCanvas must be
+         * updated before drawing
+         * @type {boolean}
+         * @private
+         */
+        this._hiddenCanvasOutOfSync = false;
+        /**
+         * Indicates whether the image has already perfomed initial load
+         * @type {boolean}
+         */
+        this.imageLoaded = false;
     }
 
     /**
@@ -41,6 +51,9 @@ export default class WebImage extends Thing {
      * @param {function} callback - A function
      */
     loaded(callback) {
+        if (this.imageLoaded) {
+            callback();
+        }
         this.loadfn = callback;
     }
 
@@ -56,7 +69,7 @@ export default class WebImage extends Thing {
             );
         }
 
-        this.__hiddenCanvas = document.createElement('canvas');
+        this._hiddenCanvas = document.createElement('canvas');
 
         this.image = new Image();
         this.image.crossOrigin = true;
@@ -66,6 +79,7 @@ export default class WebImage extends Thing {
         this.height = null;
         this.data = NOT_LOADED;
         this.image.onload = () => {
+            this.imageLoaded = true;
             this.checkDimensions();
             this.loadPixelData();
             if (this.loadfn) {
@@ -87,22 +101,22 @@ export default class WebImage extends Thing {
     /**
      * Draws the WebImage in the canvas.
      *
-     * @param {CodeHSGraphics} __graphics__ - Instance of the __graphics__ module.
+     * @param {CanvasRenderingContext2D} context - Context to be drawn on.
      */
-    draw(graphics) {
+    draw(context) {
         if (this.data === NOT_LOADED) {
             return;
         }
-        if (this.__hiddenCanvasOutOfSync) {
+        if (this._hiddenCanvasOutOfSync) {
             this.updateHiddenCanvas();
         }
-        super.draw(graphics, context => {
+        super.draw(context, () => {
             // the __hiddenCanvas contains the ImageData, sized as it originally was.
             // in order to perform scaling, the destination width and height are
             // currentWidth * (currentWidth / originalWidth),
             // meaning the current size times the amount the size has changed
             context.drawImage(
-                this.__hiddenCanvas,
+                this._hiddenCanvas,
                 0,
                 0,
                 (this.width * this.width) / this.data.width,
@@ -117,12 +131,12 @@ export default class WebImage extends Thing {
      */
     loadPixelData() {
         if (this.data === NOT_LOADED) {
-            this.__hiddenCanvas.width = this.width;
-            this.__hiddenCanvas.height = this.height;
-            const context = this.__hiddenCanvas.getContext('2d');
+            this._hiddenCanvas.width = this.width;
+            this._hiddenCanvas.height = this.height;
+            const context = this._hiddenCanvas.getContext('2d');
             context.drawImage(this.image, 0, 0, this.width, this.height);
             this.data = context.getImageData(0, 0, this.width, this.height);
-            this.__hiddenCanvasOutOfSync = false;
+            this._hiddenCanvasOutOfSync = false;
         }
         return this.data;
     }
@@ -134,7 +148,9 @@ export default class WebImage extends Thing {
      * @param {number} y - The y coordinate of the point being tested.
      * @returns {boolean} Whether the passed point is contained in the WebImage.
      */
-    containsPoint(x, y) {
+    _containsPoint(x, y) {
+        x += this.width * this.anchor.horizontal;
+        y += this.height * this.anchor.vertical;
         return x >= this.x && x <= this.x + this.width && y >= this.y && y <= this.y + this.height;
     }
 
@@ -174,7 +190,7 @@ export default class WebImage extends Thing {
         }
         this.width = Math.max(0, width);
         this.height = Math.max(0, height);
-        this.__hiddenCanvasOutOfSync = true;
+        this._hiddenCanvasOutOfSync = true;
     }
 
     /* Get and set pixel functions */
@@ -263,7 +279,7 @@ export default class WebImage extends Thing {
             // Update the pixel value
             const index = NUM_CHANNELS * (y * this.width + x);
             this.data.data[index + component] = val;
-            this.__hiddenCanvasOutOfSync = true;
+            this._hiddenCanvasOutOfSync = true;
         }
     }
 
@@ -335,7 +351,7 @@ export default class WebImage extends Thing {
         this.data = imageData;
         this.width = imageData.width;
         this.height = imageData.height;
-        this.__hiddenCanvasOutOfSync = true;
+        this._hiddenCanvasOutOfSync = true;
     }
 
     /**
@@ -343,10 +359,12 @@ export default class WebImage extends Thing {
      * This is automatically called after operations that modify ImageData.
      */
     updateHiddenCanvas() {
-        this.__hiddenCanvas.width = this.width;
-        this.__hiddenCanvas.height = this.height;
-        const context = this.__hiddenCanvas.getContext('2d');
+        this._hiddenCanvas.width = this.width;
+        this._hiddenCanvas.height = this.height;
+        const context = this._hiddenCanvas.getContext('2d');
         context.putImageData(this.data, 0, 0);
-        this.__hiddenCanvasOutOfSync = false;
+        this._hiddenCanvasOutOfSync = false;
     }
 }
+
+export default WebImage;

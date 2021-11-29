@@ -2,13 +2,19 @@ import Thing from './thing.js';
 
 /**
  * @class Rectangle
- * @augments Thing
- * @param {number} width - Desired width of resulting rectangle.
- * @param {number} height - Desired height of resulting rectangle.
+ * @extends Thing
  */
-export default class Rectangle extends Thing {
+class Rectangle extends Thing {
     type = 'Rectangle';
 
+    /**
+     * Constructs a rectangle with width and height.
+     * @constructor
+     * @param {number} width
+     * @param {number} height
+     * @example
+     * const rect = new Rectangle(20, 20);
+     */
     constructor(width, height) {
         super();
         if (arguments.length !== 2) {
@@ -33,10 +39,11 @@ export default class Rectangle extends Thing {
     /**
      * Draws the rectangle in the canvas.
      *
-     * @param {CodeHSGraphics} __graphics__ - Instance of the __graphics__ module.
+     * @private
+     * @param {CanvasRenderingContext2D} context - Context to draw on.
      */
-    draw(graphics) {
-        super.draw(graphics, context => {
+    draw(context) {
+        super.draw(context, () => {
             context.beginPath();
             context.rect(0, 0, this.width, this.height);
             context.closePath();
@@ -108,7 +115,9 @@ export default class Rectangle extends Thing {
      * @param {number} y - The y coordinate of the point being tested.
      * @returns {boolean} Whether the passed point is contained in the rectangle.
      */
-    containsPoint(x, y) {
+    _containsPoint(x, y) {
+        x += this.width * this.anchor.horizontal;
+        y += this.height * this.anchor.vertical;
         return x >= this.x && x <= this.x + this.width && y >= this.y && y <= this.y + this.height;
     }
 
@@ -130,3 +139,5 @@ export default class Rectangle extends Thing {
         return this.height;
     }
 }
+
+export default Rectangle;

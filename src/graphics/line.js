@@ -1,4 +1,4 @@
-import Thing from './thing.js';
+import Thing, { rotatePointAboutPosition } from './thing.js';
 
 /**
  * @class Line
@@ -35,6 +35,8 @@ export default class Line extends Thing {
         this.y1 = y1;
         this.x2 = x2;
         this.y2 = y2;
+        this.width = x2 - x1;
+        this.height = y2 - y1;
         this.lineWidth = 2;
         this.hasBorder = true;
     }
@@ -66,14 +68,24 @@ export default class Line extends Thing {
     /**
      * Draws the line in the canvas.
      *
-     * @param {CodeHSGraphics} graphics - Instance of the __graphics__ module.
+     * @private
+     * @param {CanvasRenderingContext2D} context - Context to draw on.
      */
-    draw(graphics) {
-        super.draw(graphics, context => {
-            var rotatedPoints = getRotatedPoints(this.x1, this.y1, this.x2, this.y2, this.rotation);
+    draw(context) {
+        super.draw(context, () => {
+            let x1 = this.x1;
+            let x2 = this.x2;
+            let y1 = this.y1;
+            let y2 = this.y2;
+
+            const rotX = (x2 - x1) / 2;
+            const rotY = (y2 - y1) / 2;
+
+            // [x1, y1] = rotatePointAboutPosition([x1, y1], [rotX, rotY], this.rotation);
+            // [x2, y2] = rotatePointAboutPosition([x2, y2], [rotX, rotY], this.rotation);
             context.beginPath();
-            context.moveTo(rotatedPoints[0], rotatedPoints[1]);
-            context.lineTo(rotatedPoints[2], rotatedPoints[3]);
+            context.moveTo(0, 0);
+            context.lineTo(x2 - x1, y2 - y1);
             context.closePath();
         });
     }
@@ -85,12 +97,12 @@ export default class Line extends Thing {
      * @param {number} y - y coordinate of the point being tested.
      */
     containsPoint(x, y) {
-        var betweenXs = (this.x1 <= x && x <= this.x2) || (this.x2 <= x && x <= this.x1);
-        var betweenYs = (this.y1 <= y && y <= this.y2) || (this.y2 <= y && y <= this.y1);
+        const betweenXs = (this.x1 <= x && x <= this.x2) || (this.x2 <= x && x <= this.x1);
+        const betweenYs = (this.y1 <= y && y <= this.y2) || (this.y2 <= y && y <= this.y1);
         if (this.x1 == this.x2) {
             return this.x1 == x && betweenYs;
         } else {
-            var slope = (this.y2 - this.y1) / (this.x2 - this.x1);
+            const slope = (this.y2 - this.y1) / (this.x2 - this.x1);
             return (
                 Math.abs(slope * (x - this.x1) - (y - this.y1)) <= this.lineWidth &&
                 betweenXs &&
@@ -246,12 +258,20 @@ export default class Line extends Thing {
         return this.x1;
     }
 
+    get x() {
+        return this.x1;
+    }
+
     /**
      * Gets the y coordinate of the Line's start point.
      *
      * @returns {number} The y coordinate of the Line's start point.
      */
     getY() {
+        return this.y1;
+    }
+
+    get y() {
         return this.y1;
     }
 

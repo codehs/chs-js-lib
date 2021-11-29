@@ -2,8 +2,9 @@ import Manager, { DEFAULT_UPDATE_INTERVAL } from '../manager.js';
 import Thing from './thing.js';
 import WebVideo from './webvideo.js';
 
-const FULLSCREEN_PADDING = 5;
+export const FULLSCREEN_PADDING = 5;
 
+/** @type {Object.<string, GraphicsManager>} */
 let GraphicsInstances = {};
 let graphicsInstanceID = 0;
 let pressedKeys = [];
@@ -14,11 +15,12 @@ let pressedKeys = [];
  */
 class GraphicsManager extends Manager {
     elementPool = [];
+    elementPoolSize = 0;
 
     /**
      * Set up an instance of the graphics library.
      * @constructor
-     * @param {dictionary} options - Options, primarily .canvas, the selector
+     * @param {Object} options - Options, primarily .canvas, the selector
      *      string for the canvas.
      *      If multiple are returned, we'll take the first one.
      *      If none is passed, we'll look for any canvas
@@ -32,6 +34,7 @@ class GraphicsManager extends Manager {
         this.fullscreenMode = false;
         this.fpsInterval = 1000 / DEFAULT_UPDATE_INTERVAL;
         this.lastDrawTime = Date.now();
+        this.shouldUpdate = options.shouldUpdate ?? true;
         GraphicsInstances[graphicsInstanceID++] = this;
     }
 
@@ -40,7 +43,7 @@ class GraphicsManager extends Manager {
     }
 
     /**
-     * Get all living elements..
+     * Get all living elements.
      */
     getElements() {
         return this.elementPool.filter(element => element.alive);
@@ -52,7 +55,7 @@ class GraphicsManager extends Manager {
      */
     add(elem) {
         elem.alive = true;
-        this.elementPool.push(elem);
+        this.elementPool[this.elementPoolSize++] = elem;
     }
 
     /**
@@ -141,7 +144,7 @@ class GraphicsManager extends Manager {
      * @returns {boolean} Whether or not that key is being pressed.
      */
     isKeyPressed(keyCode) {
-        return pressedKeys.indexOf(keyCode) != -1;
+        return pressedKeys.indexOf(keyCode) !== -1;
     }
 
     /**
@@ -245,11 +248,17 @@ class GraphicsManager extends Manager {
      */
     getElementAt(x, y) {
         for (let i = this.elementPool.length; i--; ) {
-            if (this.elementPool[i].alive && this.elementPool[i].containsPoint(x, y, this)) {
+            if (this.elementPool[i].alive && this.elementPool[i].containsPoint(x, y)) {
                 return this.elementPool[i];
             }
         }
         return null;
+    }
+
+    getElementsAt(x, y) {
+        return this.elementPool.filter(e => {
+            return e.alive && e.containsPoint(x, y);
+        });
     }
 
     /**
@@ -278,6 +287,7 @@ class GraphicsManager extends Manager {
     removeAll() {
         this.stopAllVideo();
         this.elementPool = [];
+        this.elementPoolSize = 0;
     }
 
     /**
@@ -288,7 +298,7 @@ class GraphicsManager extends Manager {
         if (elem instanceof WebVideo) {
             elem.stop();
         }
-        this.elementPool.splice(this.elementPool.indexOf(elem), 1);
+        elem.alive = false;
     }
 
     /**
@@ -298,11 +308,22 @@ class GraphicsManager extends Manager {
      */
     setSize(w, h) {
         this.fullscreenMode = false;
-        var canvas = this.getCanvas();
+        const canvas = this.getCanvas();
+        // prevent flickering effect by saving the canvas and immediately drawing back.
+        // this will be cleared in redraw(), but it prevents a jarring
+        // flickering effect.
+        const temporaryCanvas = document.createElement('canvas');
+        temporaryCanvas.width = canvas.width;
+        temporaryCanvas.height = canvas.height;
+        const temporaryContext = temporaryCanvas.getContext('2d');
+        temporaryContext.drawImage(canvas, 0, 0);
+
         canvas.width = w;
         canvas.height = h;
         canvas.style['max-height'] = h;
         canvas.style['max-width'] = w;
+        this.getContext().drawImage(temporaryCanvas, 0, 0);
+        temporaryCanvas.remove();
     }
 
     /**
@@ -381,7 +402,7 @@ class GraphicsManager extends Manager {
     /**
      * Return the current canvas we are using. If there is no
      * canvas on the page this will return null.
-     * @returns {object} The current canvas.
+     * @returns {HTMLCanvasElement} The current canvas.
      */
     getCanvas() {
         return this.currentCanvas;
@@ -429,10 +450,10 @@ class GraphicsManager extends Manager {
     /**
      * Return the 2D graphics context for this graphics
      * object, or null if none exists.
-     * @returns {context} The 2D graphics context.
+     * @returns {CanvasRenderingContext2D} The 2D graphics context.
      */
     getContext() {
-        return this.getCanvas()?.getContext?.('2d') ?? null;
+        return this.getCanvas()?.getContext?.('2d');
     }
 
     /**
@@ -443,20 +464,28 @@ class GraphicsManager extends Manager {
         this.drawBackground();
         let elem;
         let sortPool;
-        for (let i = 0; i < this.elementPool.length; i++) {
+        const context = this.getContext();
+        let numberRemovedElementsFound = 0;
+        for (let i = 0; i < this.elementPoolSize; i++) {
             elem = this.elementPool[i];
 
-            if (elem.__sortInvalidated) {
+            if (elem._sortInvalidated) {
                 sortPool = true;
-                elem.__sortInvalidated = false;
+                elem._sortInvalidated = false;
             }
-            elem.draw(this);
+            if (elem.alive) {
+                elem.draw(context);
+            } else {
+                sortPool = true;
+                numberRemovedElementsFound++;
+            }
         }
         // sort all dead elements to the end of the pool
         // and all elements with lower layer before elements
         // with higher layer
         if (sortPool) {
-            this.elementPool.sort((a, b) => a.__layer - b.__layer);
+            this.elementPoolSize -= numberRemovedElementsFound;
+            this.elementPool.sort((a, b) => a.alive - b.alive || a.layer - b.layer);
         }
     }
 
@@ -492,26 +521,14 @@ class GraphicsManager extends Manager {
      * Whether the selected canvas already has an instance associated.
      */
     canvasHasInstance(canvas) {
-        var instance;
-        for (var i = 0; i < allGraphicsInstances.length; i++) {
+        let instance;
+        for (let i = 0; i < allGraphicsInstances.length; i++) {
             instance = allGraphicsInstances[i];
             if (instance.instanceId !== this.instanceId && instance.getCanvas() === canvas) {
                 return instance.instanceId;
             }
         }
         return null;
-    }
-
-    /**
-     * Get the distance between two points, (x1, y1) and (x2, y2)
-     * @param {number} x1
-     * @param {number} y1
-     * @param {number} x2
-     * @param {number} y2
-     * @returns {number} Distance between the two points.
-     */
-    getDistance(x1, y1, x2, y2) {
-        return graphicsUtils.getDistance(x1, y1, x2, y2);
     }
 
     /**
@@ -628,7 +645,6 @@ window.onkeyup = function (e) {
     });
 };
 
-/** RESIZE EVENT ****/
 let resizeTimeout;
 window.onresize = function (e) {
     // https://developer.mozilla.org/en-US/docs/Web/Events/resize
@@ -637,8 +653,8 @@ window.onresize = function (e) {
     if (!resizeTimeout) {
         resizeTimeout = setTimeout(function () {
             resizeTimeout = null;
-            Object.entries(GraphicsInstances).forEach(([id, instance]) => {
-                instance.setFullscreen?.();
+            Object.entries(GraphicsInstances).forEach(([_, instance]) => {
+                instance.fullscreenMode && instance.setFullscreen?.();
             });
         }, DEFAULT_UPDATE_INTERVAL);
     }

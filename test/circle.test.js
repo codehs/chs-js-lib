@@ -44,14 +44,17 @@ describe('Circle', () => {
     describe('Drawing circles', () => {
         it('Invokes context.arc', () => {
             const g = new Graphics();
+            g.shouldUpdate = false;
             const circle = new Circle(50);
             circle.setPosition(30, 20);
             const contextSpy = spyOn(g.getContext(), 'arc');
-            circle.draw(g);
-            expect(contextSpy).toHaveBeenCalledOnceWith(-25, -25, 50, 0, Math.PI * 2, true);
+            g.add(circle);
+            g.redraw();
+            expect(contextSpy).toHaveBeenCalledOnceWith(0, 0, 50, 0, Math.PI * 2, true);
         });
         it('Applies the appropriate fillStyle', () => {
             const g = new Graphics();
+            g.shouldUpdate = false;
             const circle = new Circle(30);
             circle.setPosition(30, 20);
             circle.setColor(Color.BLUE);
@@ -60,11 +63,13 @@ describe('Circle', () => {
                 'fillStyle',
                 'set'
             ).and.callThrough();
-            circle.draw(g);
+            g.add(circle);
+            g.redraw();
             expect(fillStyleSpy).toHaveBeenCalledOnceWith(Color.BLUE);
         });
         it('Applies the appropriate border strokestyle and width, and invokes .stroke()', () => {
             const g = new Graphics();
+            g.shouldUpdate = false;
             const circle = new Circle(30);
             circle.setPosition(30, 20);
             circle.setBorderColor(Color.RED);
@@ -79,12 +84,14 @@ describe('Circle', () => {
                 'lineWidth',
                 'set'
             ).and.callThrough();
-            circle.draw(g);
+            g.add(circle);
+            g.redraw();
             expect(strokeStyleSpy).toHaveBeenCalledOnceWith(Color.RED);
             expect(lineWidthSpy).toHaveBeenCalledOnceWith(123);
         });
         it("Colors pixels at the circle's position", () => {
             const g = new Graphics();
+            g.shouldUpdate = false;
             const circle = new Circle(2);
             circle.setColor(Color.RED);
             const context = g.getContext();
@@ -151,6 +158,79 @@ describe('Circle', () => {
             const c = new Circle(1);
             c.setBorderWidth(2);
             expect(c.containsPoint(0, 1.5)).toBeTrue();
+        });
+        it('Accounts for anchor', () => {
+            const c = new Circle(5);
+            expect(c.containsPoint(5.1, 2)).toBeFalse();
+            c.setAnchor({ vertical: 0, horizontal: 0 });
+            expect(c.containsPoint(5.1, 2)).toBeTrue();
+        });
+    });
+    describe('Anchoring circles', () => {
+        it('Should apply anchors when drawing the circle', () => {
+            const c = new Circle(20);
+            c.setColor(Color.RED);
+            expect(c.getAnchor()).toEqual({
+                vertical: 0.5,
+                horizontal: 0.5,
+            });
+            const g = new Graphics();
+            g.shouldUpdate = false;
+            g.add(c);
+
+            // a circle at the top left should be placed exactly
+            // at the origin, with the bottom right quadrant visible
+            g.redraw();
+            let topLeftPixel = g.getContext().getImageData(0, 0, 1, 1);
+            expect(topLeftPixel.data).toEqual(new Uint8ClampedArray([255, 0, 0, 255]));
+
+            // a circle at the top left with anchor 0, 0 should be drawn
+            // down and to the right of the origin, with its entire
+            // self visible
+            c.setAnchor({ vertical: 0, horizontal: 0 });
+            g.redraw();
+            topLeftPixel = g.getContext().getImageData(0, 0, 1, 1);
+            expect(topLeftPixel.data).toEqual(new Uint8ClampedArray([0, 0, 0, 0]));
+
+            c.setPosition(g.getWidth(), g.getHeight());
+            c.setAnchor({ vertical: 1, horizontal: 1 });
+            g.redraw();
+            let bottomRightPixel = g
+                .getContext()
+                .getImageData(g.getWidth() - 1, g.getHeight() - 1, 1, 1);
+            expect(bottomRightPixel.data).toEqual(new Uint8ClampedArray([0, 0, 0, 0]));
+            c.setAnchor({ vertical: 0.5, horizontal: 0.5 });
+            g.redraw();
+            bottomRightPixel = g
+                .getContext()
+                .getImageData(g.getWidth() - 1, g.getHeight() - 1, 1, 1);
+            expect(bottomRightPixel.data).toEqual(new Uint8ClampedArray([255, 0, 0, 255]));
+        });
+    });
+
+    describe('Bounds', () => {
+        it('Bounds the circle', () => {
+            const c = new Circle(30);
+            expect(c.getBounds()).toEqual({
+                top: -30,
+                right: 30,
+                left: -30,
+                bottom: 30,
+            });
+            c.setPosition(20, 20);
+            expect(c.getBounds()).toEqual({
+                top: -10,
+                right: 50,
+                left: -10,
+                bottom: 50,
+            });
+            c.setRotation(45);
+            expect(c.getBounds()).toEqual({
+                top: -10,
+                right: 50,
+                left: -10,
+                bottom: 50,
+            });
         });
     });
 });
