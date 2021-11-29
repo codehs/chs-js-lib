@@ -1,0 +1,29 @@
+# This workflow builds JSDoc documentation and publishes it to
+# GitHub pages
+name: GitHub pages
+
+on:
+  release:
+    types:
+      - created
+    
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Build docs
+        uses: andstor/jsdoc-action@v1
+        with:
+          source_dir: ./src
+          output_dir: ./out
+          template: docdash
+
+      - name: Deploy to pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          deploy_key: ${{ secrets.ACTIONS_DEPLOY_KEY }}
+          publish_dir: ./out
