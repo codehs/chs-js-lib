@@ -1,5 +1,5 @@
 /**
- * A generic class that other graphical elements inherit from.
+ * A generic class that other elements inherit from.
  * @class Thing
  */
 class Thing {
@@ -426,7 +426,6 @@ class Thing {
         }
         context.globalAlpha = this.opacity;
 
-        // translate to the shape's anchor to draw the shape
         const anchorX = this.width * this.anchor.horizontal;
         const anchorY = this.height * this.anchor.vertical;
         const drawX = this.x - anchorX;
@@ -435,16 +434,21 @@ class Thing {
         // translate to the location of the shape
         context.translate(drawX, drawY);
 
-        // translate to the shape's center to perform rotation around its center
+        // translate to the shape's center to perform rotation around its center,
+        // then translate back
         context.translate(this.width / 2, this.height / 2);
         context.rotate(this.rotation);
         context.translate(-this.width / 2, -this.height / 2);
 
         subclassDraw?.();
+
         if (this.hasBorder) {
             context.stroke();
         }
-        this.filled && context.fill();
+
+        if (this.filled) {
+            context.fill();
+        }
 
         if (this.debug) {
             context.save();

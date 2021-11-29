@@ -8,6 +8,7 @@ import Thing, { rotatePointAboutPosition } from './thing.js';
  * @extends Thing
  */
 class Group extends Thing {
+    type = 'Group';
     /**
      * @private
      * @type {Array<Thing>}
@@ -19,7 +20,7 @@ class Group extends Thing {
      * @param {...Thing} elements - Any number of elements to initialize the group with.
      * @constructor
      * @example
-     * const group = new Group(new Circle(20));
+     * const group = new Group(new Circle(20), new Rectangle(20, 20));
      * add(group);
      */
     constructor(...elements) {
@@ -42,6 +43,10 @@ class Group extends Thing {
         this.bounds = null;
     }
 
+    /**
+     * X position of the group, indicated by its left bound.
+     * @type {number}
+     */
     get x() {
         return this.getBounds().left;
     }
@@ -53,6 +58,10 @@ class Group extends Thing {
         this.setPosition(x, this.bounds.top);
     }
 
+    /**
+     * X position of the group, indicated by its top bound.
+     * @type {number}
+     */
     get y() {
         return this.getBounds().top;
     }
@@ -64,11 +73,19 @@ class Group extends Thing {
         this.setPosition(this.bounds.left, y);
     }
 
+    /**
+     * Width of the group, meaning the difference between right and left bounds.
+     * @type {number}
+     */
     get width() {
         const bounds = this.getBounds();
         return bounds.right - bounds.left;
     }
 
+    /**
+     * Height of the group, meaning the difference between bottom and top bounds.
+     * @type {number}
+     */
     get height() {
         const bounds = this.getBounds();
         return bounds.bottom - bounds.top;
@@ -83,7 +100,8 @@ class Group extends Thing {
     }
 
     /**
-     * Adds `element` to the group.
+     * Add an element to the group.
+     * This will cause the group's bounds to recalculate to include this element.
      * @example
      * const g = new Group();
      * g.add(new Circle(10));
@@ -98,6 +116,7 @@ class Group extends Thing {
 
     /**
      * Removes `element` from the group.
+     * This will cause the group's bounds to recalculate to remove this element.
      * @param {Thing} element
      */
     remove(element) {
@@ -112,6 +131,7 @@ class Group extends Thing {
 
     /**
      * Moves all elements in the group by dx, dy.
+     * The .move method of each element in the group will be called with dx, dy.
      * @param {number} dx
      * @param {number} dy
      */
@@ -119,17 +139,12 @@ class Group extends Thing {
         this.elements.forEach(element => {
             element.move(dx, dy);
         });
-        const bounds = this.getBounds();
-        this.bounds = {
-            top: bounds.top + dy,
-            left: bounds.left + dx,
-            right: bounds.right + dx,
-            bottom: bounds.bottom + dy,
-        };
     }
 
     /**
-     * Set the position of the group, moving all elements in it.
+     * Set the position of the group.
+     * This will calculate the difference between the current and desired position
+     * and .move() the group and all its elements by that distance.
      *
      * @param {number} x
      * @param {number} y
@@ -142,7 +157,7 @@ class Group extends Thing {
     }
 
     /**
-     *
+     * Draws the group, which draws all of its elements.
      * @param {CanvasRenderingContext2D} context
      */
     draw(context) {
@@ -154,7 +169,7 @@ class Group extends Thing {
         }
         this._hiddenContext.clearRect(0, 0, width, height);
         // translate the hidden context so that the group is drawn
-        // in tehe top left corner.
+        // in the top left corner of the context.
         // this means that only the bounding box surrounding the top
         // left corner needs to be drawn to the destination canvas
         const anchorX = width * this.anchor.horizontal;
@@ -213,6 +228,9 @@ class Group extends Thing {
 
     /**
      * Recalculates the size of the group.
+     * This will update the internal _lastRecordedBounds to indicate that bounds have been
+     * recalculated given the updated size of a child. When .draw() is claled, the elements' last
+     * bounds ID are compared to see if bounds need to be invalidated.
      * @private
      */
     _updateBounds() {
@@ -267,7 +285,7 @@ class Group extends Thing {
         this._hiddenCanvas.width = maxX - minX;
         this._hiddenCanvas.height = maxY - minY;
         this._lastCalculatedBoundsID++;
-        this._invalidateBounds();
+        this._boundsInvalidated = false;
     }
 }
 

@@ -125,6 +125,7 @@ describe('Groups', () => {
                 right: 10,
                 bottom: 10,
             });
+            expect(g._boundsInvalidated).toBeFalse();
         });
         it('Should update bounds whenever a child is rotated', () => {
             const g = new Group();
@@ -157,6 +158,7 @@ describe('Groups', () => {
             g.add(new Rectangle(20, 20));
             expect(g.x).toEqual(g.getBounds().left);
             g.setPosition(10, 10);
+            expect(g._boundsInvalidated).toBeTrue();
             expect(g.x).toEqual(g.getBounds().left);
             expect(g.x).toEqual(10);
         });
