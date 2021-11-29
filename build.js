@@ -1,5 +1,5 @@
 const esbuild = require('esbuild');
-const dist = process.argv?.[2] ?? false;
+const dist = process.argv.length >= 3 && process.argv[2] === 'dist';
 
 const defaultConfig = {
     logLevel: 'info',
