@@ -139,6 +139,7 @@ class Group extends Thing {
         this.elements.forEach(element => {
             element.move(dx, dy);
         });
+        this._invalidateBounds();
     }
 
     /**
@@ -169,19 +170,13 @@ class Group extends Thing {
         }
         this._hiddenContext.clearRect(0, 0, width, height);
         // translate the hidden context so that the group is drawn
-        // in the top left corner of the context.
+        // in the top left corner.
         // this means that only the bounding box surrounding the top
         // left corner needs to be drawn to the destination canvas
         const anchorX = width * this.anchor.horizontal;
         const anchorY = height * this.anchor.vertical;
         this._hiddenContext.translate(-bounds.left, -bounds.top);
         this.elements.forEach(element => {
-            if (
-                element._lastCalculatedBoundsID > this._lastRecordedBounds[element._id] ||
-                element._boundsInvalidated
-            ) {
-                this._invalidateBounds();
-            }
             element.draw(this._hiddenContext);
         });
         this._hiddenContext.translate(bounds.left, bounds.top);
