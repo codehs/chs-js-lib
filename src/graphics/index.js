@@ -485,7 +485,7 @@ class GraphicsManager extends Manager {
         // with higher layer
         if (sortPool) {
             this.elementPoolSize -= numberRemovedElementsFound;
-            this.elementPool.sort((a, b) => a.alive - b.alive || a.layer - b.layer);
+            this.elementPool.sort((a, b) => b.alive - a.alive || a.layer - b.layer);
         }
     }
 
