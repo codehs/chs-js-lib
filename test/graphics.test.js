@@ -264,6 +264,28 @@ describe('Graphics', () => {
             g.redraw();
             expect(arcSpy).not.toHaveBeenCalled();
         });
+        it('remove() preserves other living elements', () => {
+            const g = new Graphics({ shouldUpdate: false });
+            const c1 = new Circle(10);
+            const c2 = new Circle(10);
+            const c3 = new Circle(10);
+            g.add(c1);
+            g.add(c2);
+            g.add(c3);
+            g.redraw();
+            g.remove(c1);
+            expect(g.elementPoolSize).toEqual(3);
+            expect(g.elementPool[0].alive).toBeFalse();
+            expect(g.elementPool[1].alive).toBeTrue();
+            expect(g.elementPool[2].alive).toBeTrue();
+            g.redraw();
+            expect(g.elementPoolSize).toEqual(2);
+            g.redraw();
+            expect(g.elementPoolSize).toEqual(2);
+            expect(g.elementPool[0].alive).toBeTrue();
+            expect(g.elementPool[1].alive).toBeTrue();
+            expect(g.elementPool[2].alive).toBeFalse();
+        });
     });
     describe('setBackgroundColor', () => {
         it('Causes drawBackground to be invoked in redraw()', () => {
