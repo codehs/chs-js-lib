@@ -2,21 +2,26 @@
 
 import Thing from './thing.js';
 
-var DEFAULT_WIDTH = 150;
-var DEFAULT_HEIGHT = (DEFAULT_WIDTH * 3) / 4;
-
+const DEFAULT_WIDTH = 150;
+const DEFAULT_HEIGHT = (DEFAULT_WIDTH * 3) / 4;
 const WEBCAM_INDICATOR = 'WEBCAM';
 
 /**
- * @constructor
- * @augments Thing
- * @param {string} filename - Filepath to the video
+ * @class WebVideo
+ * @extends Thing
  */
-export default class WebVideo extends Thing {
+class WebVideo extends Thing {
     static WEBCAM = WEBCAM_INDICATOR;
 
     type = 'WebVideo';
 
+    /**
+     * Constructs a WebVideo.
+     * @constructor
+     * @param {string} filename
+     * @example
+     * const webCam = new WebVideo('WEBCAM');
+     */
     constructor(filename) {
         super();
         if (typeof filename !== 'string') {
@@ -64,13 +69,13 @@ export default class WebVideo extends Thing {
     /**
      * Draws the WebVideo in the canvas.
      *
-     * @param {CodeHSGraphics} graphics - Instance of the CodeHSGraphics module.
+     * @param {CanvasRenderingContext2D} context - Context to draw on.
      */
-    draw(graphics) {
+    draw(context) {
         if (!this.browserSupportsVideo) {
             return;
         }
-        super.draw(graphics, context => {
+        super.draw(context, () => {
             context.drawImage(this.video, 0, 0, this.width, this.height);
         });
     }
@@ -82,8 +87,10 @@ export default class WebVideo extends Thing {
      * @param {number} y - The y coordinate of the point being tested.
      * @returns {boolean} Whether the passed point is contained in the WebVideo.
      */
-    containsPoint(x, y) {
+    _containsPoint(x, y) {
         if (this.browserSupportsVideo) {
+            x += this.width * this.anchor.horizontal;
+            y += this.height * this.anchor.vertical;
             return (
                 x >= this.x && x <= this.x + this.width && y >= this.y && y <= this.y + this.height
             );
@@ -221,3 +228,5 @@ export default class WebVideo extends Thing {
         }
     }
 }
+
+export default WebVideo;

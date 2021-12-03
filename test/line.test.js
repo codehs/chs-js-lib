@@ -65,6 +65,7 @@ describe('Line', () => {
     describe('Drawing', () => {
         it('Applies the appropriate strokeStyle', () => {
             const g = new Graphics();
+            g.shouldUpdate = false;
             const line = new Line(1, 2, 3, 4);
             line.setColor('blue');
             line.setBorderColor('red');
@@ -78,15 +79,18 @@ describe('Line', () => {
                 'strokeStyle',
                 'set'
             ).and.callThrough();
-            line.draw(g);
+            g.add(line);
+            g.redraw();
             expect(fillStyleSpy).toHaveBeenCalledOnceWith('#000000');
             expect(strokeStyleSpy).toHaveBeenCalledOnceWith('red');
         });
         it('Invokes stroke', () => {
             const g = new Graphics();
+            g.shouldUpdate = false;
             const line = new Line(1, 2, 3, 4);
             const strokeSpy = spyOn(g.getContext(), 'stroke').and.callThrough();
-            line.draw(g);
+            g.add(line);
+            g.redraw();
             expect(strokeSpy).toHaveBeenCalledTimes(1);
         });
         it('Applies the appropriate lineWidth', () => {
@@ -98,7 +102,8 @@ describe('Line', () => {
                 'lineWidth',
                 'set'
             ).and.callThrough();
-            line.draw(g);
+            g.add(line);
+            g.redraw();
             expect(lineWidthSpy).toHaveBeenCalledOnceWith(111);
         });
         it('Applies the appropriate rotation around the midpoint', () => {
@@ -107,9 +112,10 @@ describe('Line', () => {
             line.setRotation(-90);
             const moveToSpy = spyOn(g.getContext(), 'moveTo').and.callThrough();
             const lineToSpy = spyOn(g.getContext(), 'lineTo').and.callThrough();
-            line.draw(g);
-            expect(moveToSpy).toHaveBeenCalledOnceWith(0, 200);
-            expect(lineToSpy).toHaveBeenCalledOnceWith(200, 0);
+            g.add(line);
+            g.redraw();
+            expect(moveToSpy).toHaveBeenCalledOnceWith(0, 0);
+            expect(lineToSpy).toHaveBeenCalledOnceWith(200, 200);
         });
     });
     describe('containsPoint', () => {
@@ -118,10 +124,12 @@ describe('Line', () => {
             const end = [120, 150];
             const m = (end[1] - start[1]) / (end[0] - start[0]);
             const l = new Line(...start, ...end);
+            const lReverse = new Line(...end, ...start);
             const b = start[1] - m * start[0];
             for (let x = start[0]; x < end[0]; x += 5) {
                 const y = m * x + b;
                 expect(l.containsPoint(x, y)).toBeTrue();
+                expect(lReverse.containsPoint(x, y)).toBeTrue();
             }
         });
         it('Returns false for points along the line outside of lineWidth', () => {
@@ -147,6 +155,37 @@ describe('Line', () => {
                 const y = m * x + b;
                 expect(l.containsPoint(x, y)).toBeTrue();
             }
+        });
+    });
+    describe('Dimensions of the line', () => {
+        it('Has height equal to its dy', () => {
+            expect(new Line(0, 0, 10, 10).getHeight()).toEqual(10);
+        });
+        it('Has width equal to its d', () => {
+            expect(new Line(0, 0, 10, 10).getWidth()).toEqual(10);
+        });
+    });
+    describe('Line setters', () => {
+        const l = new Line(0, 0, 0, 0);
+        it('startPoint', () => {
+            l.setStartpoint(-10, -10);
+            expect(l.getStartX()).toEqual(-10);
+            expect(l.getStartY()).toEqual(-10);
+        });
+        it('endPoint', () => {
+            l.setEndpoint(-10, -10);
+            expect(l.getEndX()).toEqual(-10);
+            expect(l.getEndY()).toEqual(-10);
+        });
+    });
+    describe('Moving lines', () => {
+        it('Translates all points', () => {
+            const l = new Line(1, 2, 3, 4);
+            l.move(40, 40);
+            expect(l.getStartX()).toEqual(41);
+            expect(l.getStartY()).toEqual(42);
+            expect(l.getEndX()).toEqual(43);
+            expect(l.getEndY()).toEqual(44);
         });
     });
 });

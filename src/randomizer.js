@@ -73,3 +73,37 @@ export const nextBoolean = probabilityTrue => {
 
     return Math.random() < probabilityTrue;
 };
+
+let perlin;
+const PERLIN_SIZE = 4095;
+
+const lerp = (a, b, x) => {
+    return a * (1 - x) + b * x;
+};
+
+/**
+ * A noise function for generating a smooth, random value between 0 and 1.
+ * @param {number} x - Any number. Adjacent numbers will have similar noise values, by definition
+ * of Perlin noise.
+ * @returns {number}
+ */
+export const noise = x => {
+    if (!perlin) {
+        perlin = new Array(PERLIN_SIZE + 1);
+        for (let i = 0; i < PERLIN_SIZE + 1; i++) {
+            perlin[i] = Math.random();
+        }
+    }
+
+    x = Math.abs(x);
+    const xFloor = Math.floor(x);
+    const t = x - xFloor;
+    const tRemapSmoothstep = t * t * (3 - 2 * t);
+
+    // get the left and right neighbors of x
+    const xMin = xFloor & PERLIN_SIZE;
+    const xMax = (xMin + 1) & PERLIN_SIZE;
+
+    const y = lerp(perlin[xMin], perlin[xMax], tRemapSmoothstep);
+    return y;
+};

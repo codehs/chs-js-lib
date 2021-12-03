@@ -1,42 +1,45 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <title>Test</title>
-</head>
-<body>
-    <canvas width="500" height="500"></canvas>
-    <script src="../../../dist/chs.iife.js"></script>
-    <script>
-        // rooster sound from https://www.fesliyanstudios.com/royalty-free-sound-effects-download/rooster-chicken-259
-        const instructions = new Text('Press squares to play notes or sounds', '12pt Arial', {vertical: 'center', horizontal: 'center'});
-        instructions.setPosition(getWidth() / 2, getHeight() / 4);
-        add(instructions);
+    <head>
+        <title>Test</title>
+    </head>
+    <body>
+        <canvas width="500" height="500"></canvas>
+        <script src="../../../dist/chs.iife.js"></script>
+        <script>
+            // rooster sound from https://www.fesliyanstudios.com/royalty-free-sound-effects-download/rooster-chicken-259
+            const instructions = new Text('Press squares to play notes or sounds', '12pt Arial');
+            instructions.setAnchor({ vertical: 0.5, horizontal: 0.5 });
+            instructions.setPosition(getWidth() / 2, getHeight() / 4);
+            add(instructions);
 
-        const chickenSound = new Audio('https://codehs.com/uploads/27c456d459b009c6c7835c89b9ead6bb');
+            const chickenSound = new Audio(
+                'https://codehs.com/uploads/27c456d459b009c6c7835c89b9ead6bb'
+            );
 
-        const cButton = new Rectangle(getWidth() / 2 - 10, 100);
-        cButton.setPosition(0, getHeight() / 2);
-        cButton.pitch = 'C4';
-        add(cButton);
-        const chickenButton = new Rectangle(getWidth() / 2 - 10, 100);
-        chickenButton.setPosition(getWidth()/2, getHeight() / 2);
-        chickenButton.pitch = 'E4';
-        add(chickenButton);
+            const cButton = new Rectangle(getWidth() / 2 - 10, 100);
+            cButton.setPosition(0, getHeight() / 2);
+            cButton.pitch = 'C4';
+            add(cButton);
+            const chickenButton = new Rectangle(getWidth() / 2 - 10, 100);
+            chickenButton.setPosition(getWidth() / 2, getHeight() / 2);
+            chickenButton.pitch = 'E4';
+            add(chickenButton);
 
-        mouseDownMethod((e) => {
-            const element = getElementAt(e.getX(), e.getY());
-            if (element === cButton) {
-                var sound = new Sound('C4', "sine");
-                sound.setVolume(2);
-                sound.playFor(2);
-            } else if (element === chickenButton) {
-                if (chickenSound.paused) {
-                    chickenSound.play();
-                }else{
-                    chickenSound.currentTime = 0
+            mouseDownMethod(e => {
+                const element = getElementAt(e.getX(), e.getY());
+                if (element === cButton) {
+                    var sound = new Sound('C4', 'sine');
+                    sound.setVolume(2);
+                    sound.playFor(2);
+                } else if (element === chickenButton) {
+                    if (chickenSound.paused) {
+                        chickenSound.play();
+                    } else {
+                        chickenSound.currentTime = 0;
+                    }
                 }
-            }
-        });
-    </script>
-</body>
+            });
+        </script>
+    </body>
 </html>

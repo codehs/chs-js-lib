@@ -18,6 +18,8 @@ import * as Randomizer from '../src/randomizer.js';
 import { default as Audio } from '../src/sound/audio.js';
 import { default as AudioManager } from '../src/sound/index.js';
 import { default as Sound } from '../src/sound/sound.js';
+import { default as Group } from '../src/graphics/group.js';
+import { map } from '../src/graphics/graphics-utils.js';
 
 window.Arc = Arc;
 window.Audio = Audio;
@@ -25,6 +27,7 @@ window.Circle = Circle;
 window.Color = Color;
 window.Console = Console;
 window.Graphics = GraphicsManager;
+window.Group = Group;
 window.Keyboard = Keyboard;
 window.Line = Line;
 window.Oval = Oval;
@@ -58,6 +61,7 @@ window.removeAll = GraphicsInstance.removeAll.bind(GraphicsInstance);
 window.remove = GraphicsInstance.remove.bind(GraphicsInstance);
 window.setBackgroundColor = GraphicsInstance.setBackgroundColor.bind(GraphicsInstance);
 window.getElementAt = GraphicsInstance.getElementAt.bind(GraphicsInstance);
+window.getElementsAt = GraphicsInstance.getElementsAt.bind(GraphicsInstance);
 window.setFullscreen = GraphicsInstance.setFullscreen.bind(GraphicsInstance);
 window.setSize = GraphicsInstance.setSize.bind(GraphicsInstance);
 
@@ -67,3 +71,5 @@ window.readInt = ConsoleInstance.readInt.bind(ConsoleInstance);
 
 const AudioInstance = new AudioManager();
 window.audioChangeMethod = AudioInstance.audioChangeMethod.bind(AudioInstance);
+
+window.map = map;

@@ -1,5 +1,7 @@
 import Circle from '../src/graphics/circle.js';
-import Graphics from '../src/graphics/index.js';
+import Graphics, { FULLSCREEN_PADDING } from '../src/graphics/index.js';
+import Rectangle from '../src/graphics/rectangle.js';
+import { map } from '../src/graphics/graphics-utils.js';
 
 /**
  * Simulate a mouse event.
@@ -32,8 +34,27 @@ export const simulateEvent = (type, config, target, touch = false) => {
 describe('Graphics', () => {
     describe('Not window-binding a Graphics instance', () => {
         it("Doesn't attach anything if it's not window-bound", () => {
-            new Graphics();
+            new Graphics({ shouldUpdate: false });
             expect(window.mouseClickMethod).toBeUndefined();
+        });
+    });
+    describe('setSize', () => {
+        it('Changes the size of the backed canvas', () => {
+            const g = new Graphics({ shouldUpdate: false });
+            g.setSize(20, 20);
+            const canvas = document.querySelector('canvas');
+            expect(canvas.width).toEqual(20);
+            expect(canvas.height).toEqual(20);
+        });
+    });
+    describe('setFullscreen', () => {
+        it("Updates the canvas' size to the parent's size less padding less border", () => {
+            const g = new Graphics();
+            g.setFullscreen();
+            const canvas = g.getCanvas();
+            expect(canvas.width).toEqual(document.body.offsetWidth - FULLSCREEN_PADDING);
+            // what is the origin of this off-by-one?
+            expect(canvas.height).toEqual(document.body.offsetHeight - FULLSCREEN_PADDING + 1);
         });
     });
     describe('Mouse events', () => {
@@ -221,13 +242,49 @@ describe('Graphics', () => {
         });
     });
     describe('Removing', () => {
-        it('Removes the element from the internal element pool', () => {
-            const g = new Graphics();
+        it("Doesn't remove the element from the internal element pool, only marks it as not alive", () => {
+            const g = new Graphics({ shouldUpdate: false });
+            const arcSpy = spyOn(g.getContext(), 'arc');
             const c = new Circle(20);
             g.add(c);
+            g.redraw();
             expect(g.elementPool[0]).toBe(c);
             g.remove(c);
-            expect(g.elementPool.length).toBe(0);
+            expect(c.alive).toBeFalse();
+            g.redraw();
+            expect(g.elementPoolSize).toBe(0);
+            expect(arcSpy).toHaveBeenCalledTimes(1);
+        });
+        it('removeAll() sets the size of the element pool to 0', () => {
+            const g = new Graphics({ shouldUpdate: false });
+            g.add(new Circle(5));
+            g.removeAll();
+            expect(g.elementPoolSize).toEqual(0);
+            const arcSpy = spyOn(g.getContext(), 'arc');
+            g.redraw();
+            expect(arcSpy).not.toHaveBeenCalled();
+        });
+        it('remove() preserves other living elements', () => {
+            const g = new Graphics({ shouldUpdate: false });
+            const c1 = new Circle(10);
+            const c2 = new Circle(10);
+            const c3 = new Circle(10);
+            g.add(c1);
+            g.add(c2);
+            g.add(c3);
+            g.redraw();
+            g.remove(c1);
+            expect(g.elementPoolSize).toEqual(3);
+            expect(g.elementPool[0].alive).toBeFalse();
+            expect(g.elementPool[1].alive).toBeTrue();
+            expect(g.elementPool[2].alive).toBeTrue();
+            g.redraw();
+            expect(g.elementPoolSize).toEqual(2);
+            g.redraw();
+            expect(g.elementPoolSize).toEqual(2);
+            expect(g.elementPool[0].alive).toBeTrue();
+            expect(g.elementPool[1].alive).toBeTrue();
+            expect(g.elementPool[2].alive).toBeFalse();
         });
     });
     describe('setBackgroundColor', () => {
@@ -349,6 +406,70 @@ describe('Graphics', () => {
                     });
                 });
             });
+        });
+    });
+    describe('getElements', () => {
+        it('Only returns .alive elements', () => {
+            const g = new Graphics();
+            const r = new Rectangle(10, 10);
+            const c = new Circle(10);
+            c.alive = false;
+            g.add(r, c);
+            expect(g.getElements()).toEqual([r]);
+        });
+    });
+    describe('getElementAt', () => {
+        it('Returns the last element at the given position', () => {
+            const g = new Graphics();
+            const r1 = new Rectangle(10, 10);
+            const r2 = new Rectangle(10, 10);
+            g.add(r1);
+            g.add(r2);
+            expect(g.getElementAt(1, 1)).toEqual(r2);
+            g.remove(r2);
+            expect(g.getElementAt(1, 1)).toEqual(r1);
+        });
+        it('Returns null if none found', () => {
+            expect(new Graphics().getElementAt(0, 0)).toBeNull();
+        });
+    });
+    describe('getElementsAt', () => {
+        it('Returns all element at the given position', () => {
+            const g = new Graphics();
+            const r1 = new Rectangle(10, 10);
+            const r2 = new Rectangle(10, 10);
+            g.add(r1);
+            g.add(r2);
+            expect(g.getElementsAt(1, 1)).toEqual([r1, r2]);
+        });
+    });
+    describe('elementExistsWithParameters', () => {
+        it('Returns if an element exists satisfying all paramters', () => {
+            const g = new Graphics();
+            const r = new Rectangle(10, 10);
+            g.add(r);
+            expect(
+                g.elementExistsWithParameters({
+                    width: 10,
+                })
+            ).toBeTrue();
+            expect(
+                g.elementExistsWithParameters({
+                    width: 10,
+                    height: 11,
+                })
+            ).toBeFalse();
+            expect(
+                g.elementExistsWithParameters({
+                    width: 10,
+                    height: 10,
+                })
+            ).toBeTrue();
+        });
+    });
+    describe('map()', () => {
+        it('Rescales values in a new range', () => {
+            expect(map(50, 0, 100, 0, 4)).toEqual(2);
         });
     });
 });

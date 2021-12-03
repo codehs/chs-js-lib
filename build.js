@@ -1,5 +1,6 @@
 const esbuild = require('esbuild');
-const dist = process.argv?.[2] ?? false;
+const dist = process.argv.length >= 3 && process.argv[2] === 'dist';
+const watch = process.argv.length >= 3 && process.argv[2] === 'watch';
 
 const defaultConfig = {
     logLevel: 'info',
@@ -11,6 +12,7 @@ let configs = [
         entryPoints: ['./entrypoints/chs.js'],
         outfile: './dist/chs.mjs',
         format: 'esm',
+        watch,
     },
     {
         ...defaultConfig,
@@ -18,6 +20,7 @@ let configs = [
         outfile: './dist/chs.iife.js',
         format: 'iife',
         globalName: 'CHSJS',
+        watch,
     },
 ];
 

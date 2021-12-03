@@ -1,28 +1,75 @@
 /**
- * Generic class. You should never need to construct a thing directly, only extend from
- * Thing as a superclass.
+ * A generic class that other elements inherit from.
+ * @class Thing
  */
-export default class Thing {
+class Thing {
     static DEGREES = 0;
     static RADIANS = 1;
+    static thingID = 0;
 
     type = 'Thing';
+    anchor = { horizontal: 0, vertical: 0 };
 
     /**
      * Constructs a new Thing.
      */
     constructor() {
+        /**
+         * Unique identifier for a Thing.
+         * @type {number}
+         * @private
+         */
+        this._id = Thing.thingID++;
         this.alive = true;
-        this.x = 0;
-        this.y = 0;
+        this._x = 0;
+        this._y = 0;
+        /**@private**/
+        this._height;
+        /**@private**/
+        this._width;
         this.color = '#000000';
         this.stroke = '#000000';
         this.lineWidth = 1;
         this.filled = true;
         this.hasBorder = false;
-        this.rotation = 0;
-        this.__layer = 1;
         this.focused = false;
+        /**@private**/
+        this._rotation = 0;
+        /**
+         * Used to record the layer of the element for sorting when drawing.
+         * @type {number}
+         * @private
+         */
+        this._layer = 1;
+        /**
+         * Used to record when the bounds of this element were last calculated.
+         * Groups containing elements need to recalculate their own bounds whenever
+         * an element's bounds change.
+         * @type {number}
+         * @private
+         */
+        this._lastCalculatedBoundsID = 0;
+        /**
+         * Used to record when this element's sort value was changed, so the GraphicsManager
+         * can perform a resort.
+         * @type {boolean}
+         * @private
+         */
+        this._sortInvalidated = true;
+        /**
+         * Used to record when this element's bounds are invalidated,
+         * so that when needed, they can be recalculated.
+         * @type {boolean}
+         * @private
+         */
+        this._boundsInvalidated = true;
+        /**
+         * Elements whose bounds should be invalidated when this element's bounds are invalidated.
+         * @type {Thing[]}
+         * @private
+         */
+        this._invalidationDependants = [];
+        this.bounds = null;
     }
 
     /**
@@ -30,12 +77,75 @@ export default class Thing {
      * so any Graphics instances drawing it know to re-sort.
      */
     set layer(newLayer) {
-        this.__sortInvalidated = true;
-        this.__layer = newLayer;
+        this._sortInvalidated = true;
+        this._layer = newLayer;
     }
 
     get layer() {
-        return this.__layer;
+        return this._layer;
+    }
+
+    set width(width) {
+        this._width = width;
+        this._invalidateBounds();
+    }
+
+    get width() {
+        return this._width;
+    }
+
+    set height(height) {
+        this._height = height;
+        this._invalidateBounds();
+    }
+
+    get height() {
+        return this._height;
+    }
+
+    set rotation(rotation) {
+        this._rotation = rotation;
+        this._invalidateBounds();
+    }
+
+    get rotation() {
+        return this._rotation;
+    }
+
+    /**
+     * Gets the x position of the Thing.
+     *
+     * @return {number} The x position of the Thing.
+     */
+    getX() {
+        return this.x;
+    }
+
+    /**
+     * Gets the y position of the Thing.
+     *
+     * @return {number} The y position of the Thing.
+     */
+    getY() {
+        return this.y;
+    }
+
+    set x(x) {
+        this._x = x;
+        this._invalidateBounds();
+    }
+
+    get x() {
+        return this._x;
+    }
+
+    set y(y) {
+        this._y = y;
+        this._invalidateBounds();
+    }
+
+    get y() {
+        return this._y;
     }
 
     /**
@@ -154,10 +264,10 @@ export default class Thing {
                 'Invalid value for `angleUnit`. Make sure you are passing finite numbers to `setRotation(degrees, angleUnit)`.'
             );
         }
-        if (angleUnit == Thing.DEGREES) {
-            this.rotation = (degrees * Math.PI) / 180;
+        if (angleUnit === Thing.DEGREES) {
+            this._rotation = (degrees * Math.PI) / 180;
         } else {
-            this.rotation = degrees;
+            this._rotation = degrees;
         }
     }
 
@@ -190,6 +300,7 @@ export default class Thing {
         } else {
             this.rotation += degrees;
         }
+        this._invalidateBounds();
     }
 
     /**
@@ -300,29 +411,12 @@ export default class Thing {
     }
 
     /**
-     * Gets the x position of the Thing.
-     *
-     * @return {number} The x position of the Thing.
-     */
-    getX() {
-        return this.x;
-    }
-
-    /**
-     * Gets the y position of the Thing.
-     *
-     * @return {number} The y position of the Thing.
-     */
-    getY() {
-        return this.y;
-    }
-
-    /**
      * This function is invoked by subclassed, and exists to add
      * common, shared functionality all classes share.
+     * @param {CanvasRenderingContext2D} context
+     * @param {function} subclassDraw
      */
-    draw(graphics, subclassDraw) {
-        const context = graphics.getContext();
+    draw(context, subclassDraw) {
         context.save();
         if (this.hasBorder) {
             context.strokeStyle = this.stroke.toString();
@@ -332,17 +426,54 @@ export default class Thing {
             context.shadowColor = '#0066ff';
             context.shadowBlur = 20;
         }
-        context.fillStyle = this.color.toString();
+        if (this.filled) {
+            context.fillStyle = this.color.toString();
+        }
         context.globalAlpha = this.opacity;
-        context.translate(this.x, this.y);
+
+        const anchorX = this.width * this.anchor.horizontal;
+        const anchorY = this.height * this.anchor.vertical;
+        const drawX = this.x - anchorX;
+        const drawY = this.y - anchorY;
+
+        // translate to the location of the shape
+        context.translate(drawX, drawY);
+
+        // translate to the shape's center to perform rotation around its center,
+        // then translate back
         context.translate(this.width / 2, this.height / 2);
         context.rotate(this.rotation);
         context.translate(-this.width / 2, -this.height / 2);
-        subclassDraw?.(context);
+
+        subclassDraw?.();
+
         if (this.hasBorder) {
             context.stroke();
         }
-        context.fill();
+
+        if (this.filled) {
+            context.fill();
+        }
+
+        if (this.debug) {
+            context.save();
+            // draw the origin when debugging
+            context.beginPath();
+            context.fillStyle = 'red';
+            context.arc(anchorX, anchorY, 3, 0, 2 * Math.PI);
+            context.fill();
+            context.closePath();
+            context.strokeStyle = 'red';
+            const bounds = this.getBounds();
+            context.strokeRect(
+                bounds.left - drawX,
+                bounds.top - drawY,
+                bounds.right - bounds.left,
+                bounds.bottom - bounds.top
+            );
+            context.restore();
+        }
+
         context.restore();
     }
 
@@ -376,6 +507,105 @@ export default class Thing {
      * @return {boolean} Whether the point x, y is within the Thing.
      */
     containsPoint(x, y) {
-        return false;
+        if (this.rotation) {
+            const anchorX = this.width * this.anchor.horizontal;
+            const anchorY = this.height * this.anchor.vertical;
+            const rotX = this.x - anchorX + this.width / 2;
+            const rotY = this.y - anchorY + this.height / 2;
+            [x, y] = rotatePointAboutPosition([x, y], [rotX, rotY], -this.rotation);
+        }
+        return this._containsPoint(x, y);
+    }
+
+    /**
+     * Sets the Anchor for the object.
+     * @param {{vertical: number, horizontal: number}} anchor
+     */
+    setAnchor(anchor) {
+        this.anchor = anchor;
+        this._invalidateBounds();
+    }
+
+    /**
+     * Gets the jelement's anchor.
+     * @returns {{vertical: number, horizontal: number}}
+     */
+    getAnchor() {
+        return this.anchor;
+    }
+
+    /**
+     * Get the elements bounds.
+     * @returns {{top: number, bottom: number, left: number, right: number}}
+     */
+    getBounds() {
+        if (this._boundsInvalidated) {
+            this._updateBounds();
+        }
+        return this.bounds;
+    }
+
+    /**
+     * Mark this element's bounds as invalidated.
+     */
+    _invalidateBounds() {
+        this._boundsInvalidated = true;
+        this._invalidationDependants.forEach(element => {
+            element._invalidateBounds();
+        });
+    }
+
+    /**
+     * Invalidate the bounds of this Thing, so that any Groups containing it can update.
+     * @private
+     */
+    _updateBounds() {
+        let left = Math.ceil(this.x - this.anchor.horizontal * this.width);
+        let right = Math.ceil(this.x + (1 - this.anchor.horizontal) * this.width);
+        let top = Math.ceil(this.y - this.anchor.vertical * this.height);
+        let bottom = Math.ceil(this.y + (1 - this.anchor.vertical) * this.height);
+        //if (this.rotation) {
+        //    const rotX = (right - left) / 2 + left;
+        //    const rotY = (bottom - top) / 2 + top;
+        //    let topLeft = rotatePointAboutPosition([left, top], [rotX, rotY], this.rotation);
+        //    let topRight = rotatePointAboutPosition([right, top], [rotX, rotY], this.rotation);
+        //    let bottomLeft = rotatePointAboutPosition([left, bottom], [rotX, rotY], this.rotation);
+        //    let bottomRight = rotatePointAboutPosition(
+        //        [right, bottom],
+        //        [rotX, rotY],
+        //        this.rotation
+        //    );
+        //    const points = [topLeft, topRight, bottomLeft, bottomRight];
+        //    const xCoordinates = points.map(point => point[0]);
+        //    const yCoordinates = points.map(point => point[1]);
+        //    left = Math.min(...xCoordinates);
+        //    right = Math.max(...xCoordinates);
+        //    top = Math.min(...yCoordinates);
+        //    bottom = Math.max(...yCoordinates);
+        //}
+        this.bounds = {
+            left,
+            right,
+            top,
+            bottom,
+        };
+        this._lastCalculatedBoundsID++;
+        this._boundsInvalidated = false;
     }
 }
+
+/**
+ *
+ * @param {number[]} point - [x, y] of the point to rotate
+ * @param {number[]} origin - [x, y] point of rotation
+ * @param {number} angle - angle in radians
+ * @returns {number[]} - [x, y] rotated point
+ */
+export const rotatePointAboutPosition = ([x, y], [rotX, rotY], angle) => {
+    return [
+        (x - rotX) * Math.cos(angle) - (y - rotY) * Math.sin(angle) + rotX,
+        (x - rotX) * Math.sin(angle) + (y - rotY) * Math.cos(angle) + rotY,
+    ];
+};
+
+export default Thing;

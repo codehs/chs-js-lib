@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Text Test</title>
+    </head>
+    <body>
+        <canvas id="game" width="480" height="400"></canvas>
+        <script src="../../../../dist/chs.iife.js"></script>
+        <script id="code">
+            var t = new Text('Hello World');
+            add(t);
+            mouseMoveMethod(({ x, y }) => {
+                t.setPosition(x, y);
+            });
+        </script>
+        <p>This Text follows the mouse's position</p>
+    </body>
+</html>

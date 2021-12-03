@@ -4,8 +4,8 @@
  */
 
 /**
- * Gets an audiocontext for the browser if possible. TODO docs
- * @return {Object} audiocontext
+ * Gets an audiocontext for the browser if possible.
+ * @returns {AudioContext}
  */
 export const getAudioContext = () => {
     // Test for browser compatibility
