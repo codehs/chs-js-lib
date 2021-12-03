@@ -83,9 +83,9 @@ class GraphicsManager extends Manager {
             // Throttle the resize event handler since it fires at such a rapid rate
             // Only respond to the resize event if there's not already a response queued up
             if (!resizeTimeout) {
-                resizeTimeout = setTimeout(function () {
+                resizeTimeout = setTimeout(() => {
                     resizeTimeout = null;
-                    this.setFullscreen?.();
+                    this.fullscreenMode && this.setFullscreen?.();
                 }, DEFAULT_UPDATE_INTERVAL);
             }
         });
