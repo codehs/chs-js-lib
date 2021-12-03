@@ -59,6 +59,12 @@ describe('Text', () => {
             g.redraw();
             expect(fontSpy).toHaveBeenCalledOnceWith('1000pt Arial');
         });
+        it('Updates dimensions', () => {
+            const t = new Text('mmmm');
+            const originalWidth = t.getWidth();
+            t.setFont('100pt Arial');
+            expect(t.getWidth()).toBeGreaterThan(originalWidth);
+        });
     });
     describe('setText', () => {
         it('Errors for invalid arguments', () => {

@@ -97,6 +97,7 @@ class Text extends Thing {
             );
         }
         this.font = font;
+        this.resetDimensions();
     }
 
     /**
