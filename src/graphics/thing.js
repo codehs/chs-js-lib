@@ -440,6 +440,7 @@ class Thing {
         context.rotate(this.rotation);
         context.translate(-this.width / 2, -this.height / 2);
 
+        context.globalCompositeOperation = this.globalCompositeOperation ?? 'source-over';
         subclassDraw?.();
 
         if (this.hasBorder) {

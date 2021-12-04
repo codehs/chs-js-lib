@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Layering Test</title>
+    </head>
+    <body>
+        <canvas id="game" width="480" height="400"></canvas>
+        <script src="../../../../dist/chs.iife.js"></script>
+        <script id="code">
+            const EASE = 0.9;
+            const width = getWidth();
+            const height = getHeight();
+
+            let circles = [];
+            let bakedWebImages = [];
+            const t = new Text('edujs', '50pt Arial');
+            t.globalCompositeOperation = 'destination-out';
+            t.setPosition(width / 2, height / 2);
+            t.setAnchor({ vertical: 0.5, horizontal: 0.5 });
+
+            const nCircles = 5;
+            const offset = t.getWidth() / nCircles;
+            const circleMinTop = t.y - t.getHeight() / 2;
+            const circleMinBottom = t.y + t.getHeight() / 2;
+            for (let i = 0; i < nCircles; i++) {
+                const c = new Circle(100);
+                c.setColor(
+                    Color.createFromRGB(
+                        Randomizer.nextInt(0, 200),
+                        Randomizer.nextInt(0, 200),
+                        Randomizer.nextInt(0, 200)
+                    )
+                );
+                let x = offset * i + t.x - t.getWidth() / 2;
+                let y = Randomizer.nextInt(circleMinTop, circleMinBottom);
+                c.setPosition(x, y);
+                c.setOpacity(0.4);
+                circles.push(c);
+            }
+
+            const extractImageDataInCircleAtPosition = (radius, x, y, g) => {
+                // apply a mask of a circle and yoink it
+                const maskingCircle = new Circle(radius);
+                maskingCircle.setPosition(x, y);
+                maskingCircle.globalCompositeOperation = 'destination-in';
+                g.add(maskingCircle);
+                __graphics__.redraw();
+                const ctx = g.getContext();
+                const img = ctx.getImageData(x - radius, y - radius, 2 * radius, 2 * radius);
+                g.remove(maskingCircle);
+                __graphics__.redraw();
+                return img;
+            };
+
+            circles.forEach(c => {
+                add(c);
+                add(t);
+                const imgData = extractImageDataInCircleAtPosition(
+                    c.radius,
+                    c.x,
+                    c.y,
+                    __graphics__
+                );
+                remove(c);
+                remove(t);
+                const webimg = new WebImage('whatever');
+                webimg.setImageData(imgData);
+                //webimg.setAnchor({ vertical: 0.5, horizontal: 0.5 });
+                //webimg.debug = true;
+                webimg._cx = c.x;
+                webimg._cy = c.y;
+                bakedWebImages.push(webimg);
+            });
+            remove(t);
+
+            bakedWebImages.forEach(wi => {
+                const g = new Group(wi);
+                g.setAnchor({ vertical: 0.5, horizontal: 0.5 });
+                //g.debug = true;
+                g.setPosition(Randomizer.nextInt(0, width), Randomizer.nextInt(0, height));
+                add(g);
+                wi.g = g;
+            });
+
+            setTimer(() => {
+                bakedWebImages.forEach(wi => {
+                    const destX = wi._cx;
+                    const destY = wi._cy;
+                    if (Math.abs(destX - wi.g.x) < 0.001 && Math.abs(destY - wi.g.y) < 0.001) {
+                        return;
+                    }
+                    wi.g.setPosition(
+                        EASE * wi.g.x + (1 - EASE) * destX,
+                        EASE * wi.g.y + (1 - EASE) * destY
+                    );
+                });
+            }, 30);
+        </script>
+    </body>
+</html>

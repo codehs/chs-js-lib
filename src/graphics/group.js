@@ -177,6 +177,8 @@ class Group extends Thing {
         const anchorY = height * this.anchor.vertical;
         this._hiddenContext.translate(-bounds.left, -bounds.top);
         this.elements.forEach(element => {
+            this._hiddenContext.globalCompositeOperation =
+                element.globalCompositeOperation ?? 'source-over';
             element.draw(this._hiddenContext);
         });
         this._hiddenContext.translate(bounds.left, bounds.top);
