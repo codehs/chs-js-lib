@@ -4,7 +4,7 @@ import WebVideo from './webvideo.js';
 
 export const FULLSCREEN_PADDING = 5;
 export const KEYBOARD_NAVIGATION_DOM_ELEMENT_STYLE =
-    'position: absolute; width: 1px; height: 1px; overflow: hidden;';
+    'position: absolute; width: 1px; height: 1px; top: -10px; overflow: hidden;';
 
 export const HIDDEN_KEYBOARD_NAVIGATION_DOM_ELEMENT_STYLE =
     KEYBOARD_NAVIGATION_DOM_ELEMENT_STYLE + 'display: none;';
