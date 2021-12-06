@@ -148,7 +148,7 @@ class GraphicsManager extends Manager {
                 const event = new Event('mousedown');
                 event.getX = () => elem.x;
                 event.getY = () => elem.y;
-                this.mouseDownCallback(event);
+                this.mouseDownCallback?.(event);
             }
         };
         button.onkeyup = e => {
@@ -156,7 +156,7 @@ class GraphicsManager extends Manager {
                 const event = new Event('mouseup');
                 event.getX = () => elem.x;
                 event.getY = () => elem.y;
-                this.mouseUpCallback(event);
+                this.mouseUpCallback?.(event);
             }
         };
         document.body.appendChild(button);
