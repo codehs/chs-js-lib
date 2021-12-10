@@ -13,7 +13,8 @@ describe('Keyboard navigation', () => {
             g.add(t);
             const button = document.querySelector('button');
             expect(button).not.toBeNull();
-            expect(button.innerHTML).toEqual(t.describe());
+            button.dispatchEvent(new Event('focus'));
+            expect(button.textContent).toEqual(t.describe());
         });
         it('Starts hidden', () => {
             const g = new Graphics();
