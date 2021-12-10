@@ -135,10 +135,10 @@ class GraphicsManager extends Manager {
         button.style = this.userNavigatingWithKeyboard
             ? KEYBOARD_NAVIGATION_DOM_ELEMENT_STYLE
             : HIDDEN_KEYBOARD_NAVIGATION_DOM_ELEMENT_STYLE;
-        button.textContent = elem.describe?.() ?? 'An unknown graphics element';
 
         button.onfocus = () => {
             elem.focus();
+            button.textContent = elem.describe?.() ?? 'An unknown graphics element';
         };
         button.onblur = () => {
             elem.unfocus();

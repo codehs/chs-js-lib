@@ -9,7 +9,7 @@
         <script id="code">
             let ghosts = [];
 
-            for (let i = 0; i < 1; i++) {
+            for (let i = 0; i < 5; i++) {
                 newGhost();
             }
 
@@ -47,7 +47,6 @@
 
                 const g = new Group(...ghostParts);
                 g.setOpacity(0.5);
-                g.debug = true;
                 add(g);
                 g.setAnchor({ vertical: 0.5, horizontal: 0.5 });
                 g.rotRate = r || (Math.random() < 0.5 ? 1 : -1) * Math.random() * 3;
