@@ -20,6 +20,41 @@ describe('Thing', () => {
             expect(g.elementPool.indexOf(t1)).toBe(1);
             expect(g.elementPool.indexOf(t2)).toBe(0);
         });
+        it('Layering works through removal', () => {
+            const g = new Graphics();
+            const t1 = new Thing();
+            const t2 = new Thing();
+            const t3 = new Thing();
+            g.add(t1);
+            g.add(t2);
+            g.add(t3);
+            t3.layer = 2;
+            expect(g.elementPool.indexOf(t1)).toBe(0);
+            g.redraw();
+            expect(g.elementPool.indexOf(t1)).toBe(0);
+            expect(g.elementPool.indexOf(t2)).toBe(1);
+            expect(g.elementPool.indexOf(t3)).toBe(2);
+            g.remove(t1);
+            g.redraw();
+            expect(g.elementPool.indexOf(t2)).toBe(0);
+            expect(g.elementPool.indexOf(t3)).toBe(1);
+            expect(g.elementPool.indexOf(t1)).toBe(2);
+
+            g.removeAll();
+            g.add(t1);
+            g.add(t2);
+            g.redraw();
+            expect(g.elementPool.indexOf(t1)).toBe(0);
+            expect(g.elementPool.indexOf(t2)).toBe(1);
+            g.remove(t1);
+            g.redraw();
+            expect(g.elementPool.indexOf(t2)).toBe(0);
+            expect(g.elementPool.indexOf(t1)).toBe(1);
+            g.add(t3);
+            expect(g.elementPool.indexOf(t2)).toBe(0);
+            expect(g.elementPool.indexOf(t3)).toBe(1);
+            expect(g.elementPool.indexOf(t1)).toBe(-1);
+        });
     });
     describe('Opacity', () => {
         it('Changing the opacity updates globalAlpha', () => {
