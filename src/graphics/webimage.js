@@ -70,6 +70,8 @@ class WebImage extends Thing {
         }
 
         this._hiddenCanvas = document.createElement('canvas');
+        this._hiddenCanvas.width = 1;
+        this._hiddenCanvas.height = 1;
 
         this.image = new Image();
         this.image.crossOrigin = true;
@@ -359,8 +361,8 @@ class WebImage extends Thing {
      * This is automatically called after operations that modify ImageData.
      */
     updateHiddenCanvas() {
-        this._hiddenCanvas.width = this.width;
-        this._hiddenCanvas.height = this.height;
+        this._hiddenCanvas.width = Math.max(this._hiddenCanvas.width, this.width);
+        this._hiddenCanvas.height = Math.max(this._hiddenCanvas.height, this.height);
         const context = this._hiddenCanvas.getContext('2d');
         context.putImageData(this.data, 0, 0);
         this._hiddenCanvasOutOfSync = false;
