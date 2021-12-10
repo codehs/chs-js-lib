@@ -36,8 +36,6 @@ class Group extends Thing {
         this._hiddenCanvas = document.createElement('canvas');
         this._hiddenCanvas.width = 1;
         this._hiddenCanvas.height = 1;
-        this._hiddenCanvas.style.display = 'none';
-        document.body.appendChild(this._hiddenCanvas);
         this._hiddenContext = this._hiddenCanvas.getContext('2d');
         this._lastRecordedBounds = {};
         this.bounds = null;
@@ -162,49 +160,36 @@ class Group extends Thing {
      * @param {CanvasRenderingContext2D} context
      */
     draw(context) {
-        const bounds = this.getBounds();
-        const width = bounds.right - bounds.left;
-        const height = bounds.bottom - bounds.top;
-        if (!width || !height) {
-            return;
-        }
-        this._hiddenContext.clearRect(0, 0, width, height);
-        // translate the hidden context so that the group is drawn
-        // in the top left corner.
-        // this means that only the bounding box surrounding the top
-        // left corner needs to be drawn to the destination canvas
-        const anchorX = width * this.anchor.horizontal;
-        const anchorY = height * this.anchor.vertical;
-        this._hiddenContext.translate(-bounds.left, -bounds.top);
-        this.elements.forEach(element => {
-            element.draw(this._hiddenContext);
-        });
-        this._hiddenContext.translate(bounds.left, bounds.top);
-
-        context.save();
-
-        context.globalAlpha = this.opacity;
-
-        context.translate(bounds.left, bounds.top);
-
-        // rotate the context around the center of the group
-        context.translate(width / 2 - anchorX, height / 2 - anchorY);
-        context.rotate(this.rotation);
-        context.translate(-width / 2 + anchorX, -height / 2 + anchorY);
-
-        context.drawImage(this._hiddenCanvas, -anchorX, -anchorY, width, height);
-
-        if (this.debug) {
-            context.fillStyle = 'red';
-            context.strokeStyle = 'red';
-            context.strokeRect(-anchorX, -anchorY, width, height);
+        super.draw(context, () => {
             context.beginPath();
-            context.arc(0, 0, 3, 0, 360);
-            context.fill();
+            const bounds = this.getBounds();
+            const width = bounds.right - bounds.left;
+            const height = bounds.bottom - bounds.top;
+            if (!width || !height) {
+                return;
+            }
+            this._hiddenContext.clearRect(0, 0, width, height);
+            // translate the hidden context so that the group is drawn
+            // in the top left corner.
+            // this means that only the bounding box surrounding the top
+            // left corner needs to be drawn to the destination canvas
+            this._hiddenContext.translate(-bounds.left, -bounds.top);
+            this.elements.forEach(element => {
+                element.draw(this._hiddenContext);
+            });
+            this._hiddenContext.translate(bounds.left, bounds.top);
+            context.drawImage(this._hiddenCanvas, 0, 0, width, height);
             context.closePath();
-        }
+        });
+    }
 
-        context.restore();
+    /**
+     * Describe the element for screen readers.
+     */
+    describe() {
+        return `A Group at ${this.x}, ${this.y}, containing: ${this.elements
+            .map(element => element.describe())
+            .join(' ')}`;
     }
 
     /**

@@ -447,31 +447,24 @@ class Thing {
 
         subclassDraw?.();
 
-        if (this.hasBorder) {
-            context.stroke();
-        }
-
         if (this.filled) {
             context.fill();
         }
 
+        if (this.hasBorder) {
+            context.stroke();
+        }
+
         if (this.debug) {
-            context.save();
             // draw the origin when debugging
             context.beginPath();
-            context.fillStyle = 'red';
             context.arc(anchorX, anchorY, 3, 0, 2 * Math.PI);
-            context.fill();
             context.closePath();
+            context.fillStyle = 'red';
             context.strokeStyle = 'red';
+            context.fill();
             const bounds = this.getBounds();
-            context.strokeRect(
-                bounds.left - drawX,
-                bounds.top - drawY,
-                bounds.right - bounds.left,
-                bounds.bottom - bounds.top
-            );
-            context.restore();
+            context.strokeRect(0, 0, bounds.right - bounds.left, bounds.bottom - bounds.top);
         }
 
         context.restore();
