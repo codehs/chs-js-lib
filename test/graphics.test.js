@@ -10,7 +10,7 @@ import { map } from '../src/graphics/graphics-utils.js';
  * @param {HTMLElement} target
  * @param {boolean} touch
  */
-function simulateEvent(type, config, target, touch = false) {
+export const simulateEvent = (type, config, target, touch = false) => {
     let event;
     try {
         if (touch) {
@@ -29,7 +29,7 @@ function simulateEvent(type, config, target, touch = false) {
     }
 
     target.dispatchEvent(event);
-}
+};
 
 describe('Graphics', () => {
     describe('Not window-binding a Graphics instance', () => {

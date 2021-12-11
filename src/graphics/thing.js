@@ -32,6 +32,7 @@ class Thing {
         this.lineWidth = 1;
         this.filled = true;
         this.hasBorder = false;
+        this.focused = false;
         /**@private**/
         this._rotation = 0;
         /**
@@ -421,6 +422,10 @@ class Thing {
             context.strokeStyle = this.stroke.toString();
             context.lineWidth = this.lineWidth;
         }
+        if (this.focused) {
+            context.shadowColor = '#0066ff';
+            context.shadowBlur = 20;
+        }
         if (this.filled) {
             context.fillStyle = this.color.toString();
         }
@@ -442,34 +447,48 @@ class Thing {
 
         subclassDraw?.();
 
-        if (this.hasBorder) {
-            context.stroke();
-        }
-
         if (this.filled) {
             context.fill();
         }
 
+        if (this.hasBorder) {
+            context.stroke();
+        }
+
         if (this.debug) {
-            context.save();
             // draw the origin when debugging
             context.beginPath();
-            context.fillStyle = 'red';
             context.arc(anchorX, anchorY, 3, 0, 2 * Math.PI);
-            context.fill();
             context.closePath();
+            context.fillStyle = 'red';
             context.strokeStyle = 'red';
+            context.fill();
             const bounds = this.getBounds();
-            context.strokeRect(
-                bounds.left - drawX,
-                bounds.top - drawY,
-                bounds.right - bounds.left,
-                bounds.bottom - bounds.top
-            );
-            context.restore();
+            context.strokeRect(0, 0, bounds.right - bounds.left, bounds.bottom - bounds.top);
         }
 
         context.restore();
+    }
+
+    /**
+     * Focuses the element for use with screen readers.
+     */
+    focus() {
+        this.focused = true;
+    }
+
+    /**
+     * Unfocuses the element for use with screen readers.
+     */
+    unfocus() {
+        this.focused = false;
+    }
+
+    /**
+     * Describes the element for use with screen readers.
+     */
+    describe() {
+        return `A ${this.type} at ${this.x}, ${this.y}. Colored: ${this.color}.`;
     }
 
     /**

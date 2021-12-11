@@ -5,7 +5,7 @@
     </head>
     <body>
         <canvas id="game" width="480" height="400"></canvas>
-        <script src="../../../dist/chs.iife.js"></script>
+        <script src="../../../../dist/chs.iife.js"></script>
         <script id="code">
             let ghosts = [];
 
@@ -47,6 +47,7 @@
 
                 const g = new Group(...ghostParts);
                 g.setOpacity(0.5);
+                //g.__debugAABB = true;
                 add(g);
                 g.setAnchor({ vertical: 0.5, horizontal: 0.5 });
                 g.rotRate = r || (Math.random() < 0.5 ? 1 : -1) * Math.random() * 3;
@@ -107,5 +108,6 @@
                 return parts;
             }
         </script>
+        <p>This example shows how Groups can receive focus. Hit Tab to navigate through the objects.</p>
     </body>
 </html>

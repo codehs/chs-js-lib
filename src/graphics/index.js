@@ -3,6 +3,11 @@ import Thing from './thing.js';
 import WebVideo from './webvideo.js';
 
 export const FULLSCREEN_PADDING = 5;
+export const KEYBOARD_NAVIGATION_DOM_ELEMENT_STYLE =
+    'position: absolute; width: 1px; height: 1px; top: -10px; overflow: hidden;';
+
+export const HIDDEN_KEYBOARD_NAVIGATION_DOM_ELEMENT_STYLE =
+    KEYBOARD_NAVIGATION_DOM_ELEMENT_STYLE + 'display: none;';
 
 /** @type {Object.<string, GraphicsManager>} */
 let GraphicsInstances = {};
@@ -16,6 +21,7 @@ let pressedKeys = [];
 class GraphicsManager extends Manager {
     elementPool = [];
     elementPoolSize = 0;
+    accessibleDOMElements = [];
 
     /**
      * Set up an instance of the graphics library.
@@ -34,8 +40,68 @@ class GraphicsManager extends Manager {
         this.fullscreenMode = false;
         this.fpsInterval = 1000 / DEFAULT_UPDATE_INTERVAL;
         this.lastDrawTime = Date.now();
+        /**
+         * Whether the user is using the keyboard to navigate the page.
+         * This is used to toggle whether the hidden DOM elements used for keyboard
+         * navigation should show up.
+         * @private
+         * @type {boolean}
+         */
+        this.userNavigatingWithKeyboard = false;
+        this.addEventListeners();
         this.shouldUpdate = options.shouldUpdate ?? true;
         GraphicsInstances[graphicsInstanceID++] = this;
+    }
+
+    addEventListeners() {
+        window.addEventListener('keydown', e => {
+            const index = pressedKeys.indexOf(e.keyCode);
+            if (index === -1) {
+                pressedKeys.push(e.keyCode);
+            }
+
+            if (e.key === 'Tab') {
+                this.userNavigatingWithKeyboard = true;
+                this.showKeyboardNavigationDOMElements();
+            }
+
+            this.keyDownCallback?.(e);
+            return true;
+        });
+
+        window.addEventListener('keyup', e => {
+            const index = pressedKeys.indexOf(e.keyCode);
+            if (index !== -1) {
+                pressedKeys.splice(index, 1);
+            }
+            this.keyUpCallback?.(e);
+        });
+
+        let resizeTimeout;
+        window.addEventListener('resize', e => {
+            // https://developer.mozilla.org/en-US/docs/Web/Events/resize
+            // Throttle the resize event handler since it fires at such a rapid rate
+            // Only respond to the resize event if there's not already a response queued up
+            if (!resizeTimeout) {
+                resizeTimeout = setTimeout(() => {
+                    resizeTimeout = null;
+                    this.fullscreenMode && this.setFullscreen?.();
+                }, DEFAULT_UPDATE_INTERVAL);
+            }
+        });
+
+        /** MOBILE DEVICE EVENTS ****/
+        if (window.DeviceOrientationEvent) {
+            window.addEventListener('orientationchange', e => {
+                this.deviceOrientationCallback?.(e);
+            });
+        }
+
+        if (window.DeviceMotionEvent) {
+            window.addEventListener('devicemotion', e => {
+                this.deviceMotionCallback?.(e);
+            });
+        }
     }
 
     configure(options = {}) {
@@ -56,6 +122,62 @@ class GraphicsManager extends Manager {
     add(elem) {
         elem.alive = true;
         this.elementPool[this.elementPoolSize++] = elem;
+        this.createAccessibleDOMElement(elem);
+    }
+
+    /**
+     * Creates a hidden DOM element that can be navigated with a screen reader.
+     * @param {Thing} elem
+     */
+    createAccessibleDOMElement(elem) {
+        const button = document.createElement('button');
+        // https://webaim.org/techniques/css/invisiblecontent/
+        button.style = this.userNavigatingWithKeyboard
+            ? KEYBOARD_NAVIGATION_DOM_ELEMENT_STYLE
+            : HIDDEN_KEYBOARD_NAVIGATION_DOM_ELEMENT_STYLE;
+
+        button.onfocus = () => {
+            elem.focus();
+            button.textContent = elem.describe?.() ?? 'An unknown graphics element';
+        };
+        button.onblur = () => {
+            elem.unfocus();
+        };
+        button.onkeydown = e => {
+            if (e.code === 'Space' && !e.repeat) {
+                const event = new Event('mousedown');
+                event.getX = () => elem.x;
+                event.getY = () => elem.y;
+                this.mouseDownCallback?.(event);
+            }
+        };
+        button.onkeyup = e => {
+            if (e.code === 'Space') {
+                const event = new Event('mouseup');
+                event.getX = () => elem.x;
+                event.getY = () => elem.y;
+                this.mouseUpCallback?.(event);
+            }
+        };
+        document.body.appendChild(button);
+        this.accessibleDOMElements.push(button);
+    }
+
+    exitKeyboardNavigation() {
+        this.userNavigatingWithKeyboard = false;
+        this.hideKeyboardNavigationDOMElements();
+    }
+
+    showKeyboardNavigationDOMElements() {
+        this.accessibleDOMElements.forEach(
+            element => (element.style = KEYBOARD_NAVIGATION_DOM_ELEMENT_STYLE)
+        );
+    }
+
+    hideKeyboardNavigationDOMElements() {
+        this.accessibleDOMElements.forEach(
+            element => (element.style = HIDDEN_KEYBOARD_NAVIGATION_DOM_ELEMENT_STYLE)
+        );
     }
 
     /**
@@ -359,6 +481,8 @@ class GraphicsManager extends Manager {
     resetAllState() {
         this.backgroundColor = null;
         this.elementPool = [];
+        this.accessibleDOMElements.forEach(element => element.remove);
+        this.accessibleDOMElements = [];
         this.clickCallback = null;
         this.moveCallback = null;
         this.mouseDownCallback = null;
@@ -559,6 +683,9 @@ class GraphicsManager extends Manager {
         var mouseDown = false;
 
         drawingCanvas.onmousemove = this.withErrorHandler(e => {
+            if (this.userNavigatingWithKeyboard) {
+                this.exitKeyboardNavigation();
+            }
             if (this.moveCallback) {
                 this.moveCallback(e);
             }
@@ -568,6 +695,9 @@ class GraphicsManager extends Manager {
         });
 
         drawingCanvas.onmousedown = e => {
+            if (this.userNavigatingWithKeyboard) {
+                this.exitKeyboardNavigation();
+            }
             mouseDown = true;
             if (this.mouseDownCallback) {
                 this.mouseDownCallback(e);
@@ -575,6 +705,9 @@ class GraphicsManager extends Manager {
         };
 
         drawingCanvas.onmouseup = e => {
+            if (this.userNavigatingWithKeyboard) {
+                this.exitKeyboardNavigation();
+            }
             mouseDown = false;
             if (this.mouseUpCallback) {
                 this.mouseUpCallback(e);
@@ -582,6 +715,9 @@ class GraphicsManager extends Manager {
         };
 
         drawingCanvas.ontouchmove = e => {
+            if (this.userNavigatingWithKeyboard) {
+                this.exitKeyboardNavigation();
+            }
             e.preventDefault();
             if (this.dragCallback) {
                 this.dragCallback(e);
@@ -591,6 +727,9 @@ class GraphicsManager extends Manager {
         };
 
         drawingCanvas.ontouchstart = e => {
+            if (this.userNavigatingWithKeyboard) {
+                this.exitKeyboardNavigation();
+            }
             e.preventDefault();
             if (this.mouseDownCallback) {
                 this.mouseDownCallback(e);
@@ -613,68 +752,15 @@ class GraphicsManager extends Manager {
         };
 
         drawingCanvas.ontouchend = e => {
+            if (this.userNavigatingWithKeyboard) {
+                this.exitKeyboardNavigation();
+            }
             e.preventDefault();
             if (this.mouseUpCallback) {
                 this.mouseUpCallback(e);
             }
         };
     }
-}
-
-/** KEY EVENTS ****/
-window.onkeydown = function (e) {
-    var index = pressedKeys.indexOf(e.keyCode);
-    if (index === -1) {
-        pressedKeys.push(e.keyCode);
-    }
-
-    Object.entries(GraphicsInstances).forEach(([id, instance]) => {
-        instance.keyDownCallback?.(e);
-    });
-
-    return true;
-};
-
-window.onkeyup = function (e) {
-    var index = pressedKeys.indexOf(e.keyCode);
-    if (index !== -1) {
-        pressedKeys.splice(index, 1);
-    }
-    Object.entries(GraphicsInstances).forEach(([id, instance]) => {
-        instance.keyUpCallback?.(e);
-    });
-};
-
-let resizeTimeout;
-window.onresize = function (e) {
-    // https://developer.mozilla.org/en-US/docs/Web/Events/resize
-    // Throttle the resize event handler since it fires at such a rapid rate
-    // Only respond to the resize event if there's not already a response queued up
-    if (!resizeTimeout) {
-        resizeTimeout = setTimeout(function () {
-            resizeTimeout = null;
-            Object.entries(GraphicsInstances).forEach(([_, instance]) => {
-                instance.fullscreenMode && instance.setFullscreen?.();
-            });
-        }, DEFAULT_UPDATE_INTERVAL);
-    }
-};
-
-/** MOBILE DEVICE EVENTS ****/
-if (window.DeviceOrientationEvent) {
-    window.ondeviceorientation = function (e) {
-        Object.entries(GraphicsInstances).forEach(([id, instance]) => {
-            instance.deviceOrientationCallback?.(e);
-        });
-    };
-}
-
-if (window.DeviceMotionEvent) {
-    window.ondevicemotion = function (e) {
-        Object.entries(GraphicsInstances).forEach(([id, instance]) => {
-            instance.deviceMotionCallback?.(e);
-        });
-    };
 }
 
 /* Mouse and Touch Event Helpers */
