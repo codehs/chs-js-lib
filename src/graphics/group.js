@@ -174,9 +174,12 @@ class Group extends Thing {
             // this means that only the bounding box surrounding the top
             // left corner needs to be drawn to the destination canvas
             this._hiddenContext.translate(-bounds.left, -bounds.top);
-            this.elements.forEach(element => {
-                element.draw(this._hiddenContext);
-            });
+            this.elements
+                .filter(element => element.alive)
+                .sort((a, b) => a.layer - b.layer)
+                .forEach(element => {
+                    element.draw(this._hiddenContext);
+                });
             this._hiddenContext.translate(bounds.left, bounds.top);
             context.drawImage(this._hiddenCanvas, 0, 0, width, height);
             context.closePath();
