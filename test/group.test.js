@@ -190,4 +190,27 @@ describe('Groups', () => {
             expect(g.containsPoint(-5, -5)).toBeTrue();
         });
     });
+    describe('Drawing', () => {
+        it('Draws according to layer', () => {
+            const g = new Group();
+            const red = new Rectangle(20, 20);
+            red.setColor('red');
+            const blue = new Rectangle(20, 20);
+            blue.setColor('blue');
+            g.add(red);
+            g.add(blue);
+
+            const gfx = new Graphics({ shouldUpdate: false });
+            gfx.add(g);
+            gfx.redraw();
+
+            let topLeftPixel = gfx.getContext().getImageData(0, 0, 1, 1);
+            expect(topLeftPixel.data).toEqual(new Uint8ClampedArray([0, 0, 255, 255]));
+
+            red.layer = 2;
+            gfx.redraw();
+            topLeftPixel = gfx.getContext().getImageData(0, 0, 1, 1);
+            expect(topLeftPixel.data).toEqual(new Uint8ClampedArray([255, 0, 0, 255]));
+        });
+    });
 });
