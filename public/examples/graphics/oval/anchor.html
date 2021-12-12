@@ -1,11 +1,19 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css" />
         <title>Circle Anchor Test</title>
     </head>
     <body>
-        <canvas id="game" width="480" height="400"></canvas>
-        <script src="../../../../dist/chs.iife.js"></script>
+        <header>
+            <h1>Oval - Anchor</h1>
+            <nav>
+                <a href="/">Home</a>
+                <a href="/examples">Examples</a>
+            </nav>
+        </header>
+        <canvas id="game" width="480" height="200"></canvas>
+        <script src="/chs.iife.js"></script>
         <script id="code">
             const o1 = new Oval(40, 20);
             o1.setPosition(getWidth() / 4, getHeight() / 2);
@@ -42,5 +50,9 @@
                 }
             });
         </script>
+        <p>
+            Ovals can be anchored: {vertical: 0, horizontal: 0}, {vertical: 0.5, horizontal: 0.5}
+            (the default), {vertical: 1, horizontal: 1}
+        </p>
     </body>
 </html>

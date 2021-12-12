@@ -2,10 +2,18 @@
 <html>
     <head>
         <title>Circle Anchor Test</title>
+        <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css" />
     </head>
     <body>
-        <canvas id="game" width="480" height="400"></canvas>
-        <script src="../../../../dist/chs.iife.js"></script>
+        <header>
+            <h1>Circle - Anchor</h1>
+            <nav>
+                <a href="/">Home</a>
+                <a href="/examples">Examples</a>
+            </nav>
+        </header>
+        <canvas id="game" width="480" height="200"></canvas>
+        <script src="/chs.iife.js"></script>
         <script id="code">
             const c1 = new Circle(20);
             c1.setPosition(getWidth() / 4, getHeight() / 2);
@@ -28,7 +36,7 @@
             add(c3);
         </script>
         <p>
-            Circles can be anchored: {vertical: 0, horizontal: 0}, {vertical: 0.5, horizontal: 0.5}
+            Circles can be anchored: <code>{vertical: 0, horizontal: 0}</code>, <code>{vertical: 0.5, horizontal: 0.5}
             (the default), {vertical: 1, horizontal: 1}
         </p>
     </body>

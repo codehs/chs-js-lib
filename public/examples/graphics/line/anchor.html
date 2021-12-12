@@ -2,24 +2,44 @@
 <html>
     <head>
         <title>Line Anchor Test</title>
+        <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css" />
     </head>
     <body>
+        <header>
+            <h1>Line - Anchor</h1>
+            <nav>
+                <a href="/">Home</a>
+                <a href="/examples">Examples</a>
+            </nav>
+        </header>
         <canvas id="game" width="480" height="400"></canvas>
-        <script src="../../../../dist/chs.iife.js"></script>
+        <script src="/chs.iife.js"></script>
         <script id="code">
+            let darkMode =
+                window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+
             var line = new Line(20, 20, 30, 200);
             line.setAnchor({ vertical: 0, horizontal: 0 });
             line.debug = true;
+            if (darkMode) {
+                line.setColor('blue');
+            }
             add(line);
 
             var line2 = new Line(50, 110, 60, 290);
             line2.setAnchor({ vertical: 0.5, horizontal: 0.5 });
             line2.debug = true;
+            if (darkMode) {
+                line2.setColor('blue');
+            }
             add(line2);
 
             var line3 = new Line(80, 200, 90, 380);
             line3.setAnchor({ vertical: 1, horizontal: 1 });
             line3.debug = true;
+            if (darkMode) {
+                line3.setColor('blue');
+            }
             add(line3);
 
             mouseMoveMethod(e => {
@@ -29,8 +49,9 @@
             });
         </script>
         <p>
-            Lines can be anchored: {vertical: 0, horizontal: 0} (default), {vertical: 0.5,
-            horizontal: 0.5}, {vertical: 1, horizontal: 1}.
+            Lines can be anchored: <code>{vertical: 0, horizontal: 0}</code> (default),
+            <code>{vertical: 0.5, horizontal: 0.5}</code>,
+            <code>{vertical: 1, horizontal: 1}</code>.
         </p>
     </body>
 </html>
