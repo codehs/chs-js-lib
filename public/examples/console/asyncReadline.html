@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Console Test</title>
+        <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css" />
+    </head>
+    <body>
+        <header>
+            <h1>Console - Asynchronous Input</h1>
+            <nav>
+                <a href="/">Home</a>
+                <a href="/examples">Examples</a>
+            </nav>
+        </header>
+        <script id="code" type="module">
+            import { Console } from '/chs.mjs';
+            const c = new Console({
+                onPrompt: message => {
+                    return new Promise(resolve => {
+                        setTimeout(() => {
+                            resolve(message);
+                        }, 1000);
+                    });
+                },
+            });
+
+            (async () => {
+                const input = await c.readLine('Echo!');
+                alert(input);
+            })();
+        </script>
+        <p>Console can be configured to use async/await input methods.</p>
+    </body>
+</html>

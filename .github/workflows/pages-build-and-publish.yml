@@ -19,7 +19,7 @@ jobs:
         uses: andstor/jsdoc-action@v1
         with:
           source_dir: ./src
-          output_dir: ./out
+          output_dir: ./public/docs
           template: docdash
           recurse: true
 

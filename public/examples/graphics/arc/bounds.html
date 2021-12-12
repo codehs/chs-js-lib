@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Arc Test</title>
+        <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css" />
+    </head>
+    <body>
+        <header>
+            <h1>Arc - Bounds</h1>
+            <nav>
+                <a href="/">Home</a>
+                <a href="/examples">Examples</a>
+            </nav>
+        </header>
+        <canvas id="game" width="480" height="200"></canvas>
+        <script src="/chs.iife.js"></script>
+        <script id="code">
+            const a2 = new Arc(20, 0, 350, Arc.DEGREES);
+            a2.setPosition((2 * getWidth()) / 4, getHeight() / 2);
+            a2.setColor('blue');
+            a2.debug = true;
+            add(a2);
+        </script>
+        <p>An arc's bounds.</p>
+    </body>
+</html>
