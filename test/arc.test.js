@@ -124,9 +124,8 @@ describe('arc', () => {
             a.setColor('red');
             g.add(a);
             g.redraw();
-            const context = g.getContext();
-            const pixel = context.getImageData(0, 0, 1, 1);
-            expect(pixel.data).toEqual(new Uint8ClampedArray([255, 0, 0, 255]));
+            const pixel = g.getPixel(0, 0);
+            expect(pixel).toEqual([255, 0, 0, 255]);
         });
     });
 
@@ -265,15 +264,13 @@ describe('arc', () => {
             a.setColor('red');
             g.add(a);
             g.redraw();
-            let topLeftPixel = g.getContext().getImageData(0, 0, 1, 1);
-            expect(topLeftPixel.data).toEqual(new Uint8ClampedArray([0, 0, 0, 0]));
+            let topLeftPixel = g.getPixel(0, 0);
+            expect(topLeftPixel).toEqual([0, 0, 0, 0]);
             a.setPosition(g.getWidth() - a.radius / 2, g.getHeight() - a.radius / 2);
 
             g.redraw();
-            const bottomRightPixel = g
-                .getContext()
-                .getImageData(g.getWidth() - 1, g.getHeight() - 1, 1, 1);
-            expect(bottomRightPixel.data).toEqual(new Uint8ClampedArray([255, 0, 0, 255]));
+            const bottomRightPixel = g.getPixel(g.getWidth() - 1, g.getHeight() - 1);
+            expect(bottomRightPixel).toEqual([255, 0, 0, 255]);
         });
         it('{vertical: 0.5, horizontal: 0.5}', () => {
             const a = new Arc(10, 0, 359, Arc.DEGREES);
@@ -283,15 +280,13 @@ describe('arc', () => {
             a.setColor('red');
             g.add(a);
             g.redraw();
-            let topLeftPixel = g.getContext().getImageData(0, 0, 1, 1);
-            expect(topLeftPixel.data).toEqual(new Uint8ClampedArray([255, 0, 0, 255]));
+            let topLeftPixel = g.getPixel(0, 0);
+            expect(topLeftPixel).toEqual([255, 0, 0, 255]);
             a.setPosition(g.getWidth(), g.getHeight());
 
             g.redraw();
-            const bottomRightPixel = g
-                .getContext()
-                .getImageData(g.getWidth() - 1, g.getHeight() - 1, 1, 1);
-            expect(bottomRightPixel.data).toEqual(new Uint8ClampedArray([255, 0, 0, 255]));
+            const bottomRightPixel = g.getPixel(g.getWidth() - 1, g.getHeight() - 1);
+            expect(bottomRightPixel).toEqual([255, 0, 0, 255]);
         });
     });
 
@@ -303,12 +298,12 @@ describe('arc', () => {
             g.shouldUpdate = false;
             g.add(a);
             g.redraw();
-            let topLeftPixel = g.getContext().getImageData(0, 0, 1, 1);
-            expect(topLeftPixel.data).toEqual(new Uint8ClampedArray([0, 0, 0, 0]));
+            let topLeftPixel = g.getPixel(0, 0);
+            expect(topLeftPixel).toEqual([0, 0, 0, 0]);
             a.setAnchor({ vertical: 0.5, horizontal: 0.4 });
             g.redraw();
-            topLeftPixel = g.getContext().getImageData(1, 1, 1, 1);
-            expect(topLeftPixel.data).toEqual(new Uint8ClampedArray([255, 0, 0, 255]));
+            topLeftPixel = g.getPixel(1, 1);
+            expect(topLeftPixel).toEqual([255, 0, 0, 255]);
         });
     });
 

@@ -22,6 +22,16 @@ class GraphicsManager extends Manager {
     elementPool = [];
     elementPoolSize = 0;
     accessibleDOMElements = [];
+    /**
+     * The ratio of physical pixels to CSS pixels for the current device.
+     * This allows the canvas to be scaled for higher resolution drawing.
+     * For example, a devicePixelRatio of 2 indicates that the device will use
+     * 2 physical pixels to draw a single css pixel.
+     * https://developer.mozilla.org/en-US/docs/Web/API/Window/devicePixelRatio
+     * @private
+     * @type {number}
+     */
+    devicePixelRatio = window.devicePixelRatio ?? 1;
 
     /**
      * Set up an instance of the graphics library.
@@ -275,7 +285,7 @@ class GraphicsManager extends Manager {
      */
     getWidth() {
         const canvas = this.getCanvas();
-        return parseFloat(canvas.getAttribute('width'));
+        return parseFloat(canvas.getAttribute('width') / this.devicePixelRatio);
     }
 
     /**
@@ -284,7 +294,7 @@ class GraphicsManager extends Manager {
      */
     getHeight() {
         const canvas = this.getCanvas();
-        return parseFloat(canvas.getAttribute('height'));
+        return parseFloat(canvas.getAttribute('height') / this.devicePixelRatio);
     }
 
     /**
@@ -437,14 +447,18 @@ class GraphicsManager extends Manager {
         const temporaryCanvas = document.createElement('canvas');
         temporaryCanvas.width = canvas.width;
         temporaryCanvas.height = canvas.height;
+        temporaryCanvas.style.width = `${w / this.devicePixelRatio}px`;
+        temporaryCanvas.style.height = `${h / this.devicePixelRatio}px`;
         const temporaryContext = temporaryCanvas.getContext('2d');
         temporaryContext.drawImage(canvas, 0, 0);
 
-        canvas.width = w;
-        canvas.height = h;
-        canvas.style['max-height'] = h;
-        canvas.style['max-width'] = w;
-        this.getContext().drawImage(temporaryCanvas, 0, 0);
+        canvas.width = w * this.devicePixelRatio;
+        canvas.height = h * this.devicePixelRatio;
+        canvas.style.width = `${w}px`;
+        canvas.style.height = `${h}px`;
+        const context = this.getContext();
+        context.drawImage(temporaryCanvas, 0, 0);
+        context.scale(this.devicePixelRatio, this.devicePixelRatio);
         temporaryCanvas.remove();
     }
 
@@ -551,6 +565,7 @@ class GraphicsManager extends Manager {
             document.body.appendChild(currentCanvas);
         }
         this.currentCanvas = currentCanvas;
+        this.setSize(currentCanvas.width, currentCanvas.height);
 
         // On changing the canvas reset the state.
         this.fullReset();
@@ -578,6 +593,18 @@ class GraphicsManager extends Manager {
      */
     getContext() {
         return this.getCanvas()?.getContext?.('2d');
+    }
+
+    /**
+     * Return the RGBA value of the pixel at the x, y coordinate.
+     */
+    getPixel(x, y) {
+        const context = this.getContext();
+        x *= this.devicePixelRatio;
+        y *= this.devicePixelRatio;
+        const data = context.getImageData(x, y, 1, 1).data;
+        const index = 0;
+        return [data[index + 0], data[index + 1], data[index + 2], data[index + 3]];
     }
 
     /**
@@ -767,9 +794,10 @@ class GraphicsManager extends Manager {
 const calculateCoordinates = e => {
     const canvas = e.target;
     const rect = canvas.getBoundingClientRect();
+    debugger;
     return {
-        x: Math.round(((e.clientX - rect.left) * canvas.width) / canvas.clientWidth),
-        y: Math.round(((e.clientY - rect.top) * canvas.height) / canvas.clientHeight),
+        x: e.clientX - rect.left,
+        y: e.clientY - rect.top,
     };
 };
 

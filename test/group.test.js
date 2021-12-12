@@ -52,15 +52,13 @@ describe('Groups', () => {
             g.add(group);
             g.redraw();
 
-            let context = g.getContext();
-            let topLeftPixel = context.getImageData(0, 0, 1, 1);
-            expect(topLeftPixel.data).toEqual(new Uint8ClampedArray([0, 0, 0, 128]));
+            let topLeftPixel = g.getPixel(0, 0);
+            expect(topLeftPixel).toEqual([0, 0, 0, 128]);
 
             group.add(r);
             g.redraw();
-            context = g.getContext();
-            topLeftPixel = context.getImageData(0, 0, 1, 1);
-            expect(topLeftPixel.data).toEqual(new Uint8ClampedArray([0, 0, 0, 128]));
+            topLeftPixel = g.getPixel(0, 0);
+            expect(topLeftPixel).toEqual([0, 0, 0, 128]);
         });
     });
     describe('Rotation', () => {
@@ -80,8 +78,8 @@ describe('Groups', () => {
             g.rotate(180);
             gfx.add(g);
             gfx.redraw();
-            const topLeftPixel = gfx.getContext().getImageData(0, 0, 1, 1);
-            expect(topLeftPixel.data).toEqual(new Uint8ClampedArray([0, 0, 255, 255]));
+            const topLeftPixel = gfx.getPixel(0, 0);
+            expect(topLeftPixel).toEqual([0, 0, 255, 255]);
         });
         it('Should rotate the entire content of the group around its center', () => {
             const g = new Group();
@@ -95,8 +93,8 @@ describe('Groups', () => {
             g.add(chartreuseRect);
             gfx.add(g);
             gfx.redraw();
-            const topLeftPixel = gfx.getContext().getImageData(0, 0, 1, 1);
-            expect(topLeftPixel.data).toEqual(new Uint8ClampedArray([127, 255, 0, 255]));
+            const topLeftPixel = gfx.getPixel(0, 0);
+            expect(topLeftPixel).toEqual([127, 255, 0, 255]);
         });
     });
     describe('Bounds calculations', () => {
@@ -204,13 +202,13 @@ describe('Groups', () => {
             gfx.add(g);
             gfx.redraw();
 
-            let topLeftPixel = gfx.getContext().getImageData(0, 0, 1, 1);
-            expect(topLeftPixel.data).toEqual(new Uint8ClampedArray([0, 0, 255, 255]));
+            let topLeftPixel = gfx.getPixel(0, 0);
+            expect(topLeftPixel).toEqual([0, 0, 255, 255]);
 
             red.layer = 2;
             gfx.redraw();
-            topLeftPixel = gfx.getContext().getImageData(0, 0, 1, 1);
-            expect(topLeftPixel.data).toEqual(new Uint8ClampedArray([255, 0, 0, 255]));
+            topLeftPixel = gfx.getPixel(0, 0);
+            expect(topLeftPixel).toEqual([255, 0, 0, 255]);
         });
     });
 });
