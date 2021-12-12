@@ -605,9 +605,14 @@ class GraphicsManager extends Manager {
         const context = this.getContext();
         x *= this.devicePixelRatio;
         y *= this.devicePixelRatio;
-        const data = context.getImageData(x, y, 1, 1).data;
+        const pixelData = context.getImageData(x, y, 1, 1).data;
         const index = 0;
-        return [data[index + 0], data[index + 1], data[index + 2], data[index + 3]];
+        return [
+            pixelData[index + 0],
+            pixelData[index + 1],
+            pixelData[index + 2],
+            pixelData[index + 3],
+        ];
     }
 
     /**
