@@ -597,6 +597,9 @@ class GraphicsManager extends Manager {
 
     /**
      * Return the RGBA value of the pixel at the x, y coordinate.
+     * @param {number} x - X coordinate
+     * @param {number} y - Y coordinate
+     * @returns {Array<number>} pixel - the [r, g, b, a] values for the pixel.
      */
     getPixel(x, y) {
         const context = this.getContext();
