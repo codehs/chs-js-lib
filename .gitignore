@@ -2,6 +2,8 @@ node_modules
 .DS_Store
 dist/*
 public/docs
+public/chs.iife.min.js
+public/chs.min.mjs
 public/chs.iife.js
 public/chs.mjs
 coverage
