@@ -14,8 +14,8 @@ describe('Rectangle', () => {
             g.add(r);
             g.redraw();
 
-            const topLeftPixel = g.getContext().getImageData(0, 0, 1, 1);
-            expect(topLeftPixel.data).toEqual(new Uint8ClampedArray([255, 0, 0, 255]));
+            const topLeftPixel = g.getPixel(0, 0);
+            expect(topLeftPixel).toEqual([255, 0, 0, 255]);
         });
         it('Will draw down and to the right of a 0, 0 (default) anchor', () => {
             const g = new Graphics();
@@ -25,14 +25,10 @@ describe('Rectangle', () => {
             r.setColor('red');
             g.add(r);
             g.redraw();
-            const bottomRightPixel = g
-                .getContext()
-                .getImageData(g.getWidth() - 1, g.getHeight() - 1, 1, 1);
-            expect(bottomRightPixel.data).toEqual(new Uint8ClampedArray([255, 0, 0, 255]));
-            const oobPixel = g
-                .getContext()
-                .getImageData(g.getWidth() - 11, g.getHeight() - 11, 1, 1);
-            expect(oobPixel.data).toEqual(new Uint8ClampedArray([0, 0, 0, 0]));
+            const bottomRightPixel = g.getPixel(g.getWidth() - 1, g.getHeight() - 1);
+            expect(bottomRightPixel).toEqual([255, 0, 0, 255]);
+            const oobPixel = g.getPixel(g.getWidth() - 11, g.getHeight() - 11);
+            expect(oobPixel).toEqual([0, 0, 0, 0]);
         });
         it('Affects containsPoint() calculations', () => {
             const r = new Rectangle(5, 5);

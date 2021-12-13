@@ -36,13 +36,12 @@ describe('WebImage', () => {
             return new Promise((resolve, reject) => {
                 wi.loaded(() => {
                     g.redraw();
-                    const context = g.getContext();
-                    let topLeftPixel = context.getImageData(0, 0, 1, 1);
-                    expect(topLeftPixel.data).toEqual(new Uint8ClampedArray([255, 0, 0, 255]));
+                    let topLeftPixel = g.getPixel(0, 0);
+                    expect(topLeftPixel).toEqual([255, 0, 0, 255]);
                     wi.setPosition(50, 50);
                     g.redraw();
-                    topLeftPixel = context.getImageData(50, 50, 1, 1);
-                    expect(topLeftPixel.data).toEqual(new Uint8ClampedArray([255, 0, 0, 255]));
+                    topLeftPixel = g.getPixel(50, 50);
+                    expect(topLeftPixel).toEqual([255, 0, 0, 255]);
                     resolve();
                 });
             });
@@ -96,10 +95,8 @@ describe('WebImage', () => {
                 wi.loaded(() => {
                     wi.setPixel(0, 0, 0, 0);
                     g.redraw();
-                    const context = g.getContext();
-                    const topLeftPixel = context.getImageData(0, 0, 1, 1);
-                    const pixelData = topLeftPixel.data;
-                    expect(pixelData).toEqual(new Uint8ClampedArray([0, 0, 0, 255]));
+                    const topLeftPixel = g.getPixel(0, 0);
+                    expect(topLeftPixel).toEqual([0, 0, 0, 255]);
                     resolve();
                 });
             });
@@ -160,9 +157,8 @@ describe('WebImage', () => {
             g.add(img);
             img.setImageData(imageData);
             g.redraw();
-            const context = g.getContext();
-            const topLeftPixel = context.getImageData(0, 0, 1, 1);
-            expect(topLeftPixel.data).toEqual(new Uint8ClampedArray([0, 0, 255, 255]));
+            const topLeftPixel = g.getPixel(0, 0);
+            expect(topLeftPixel).toEqual([0, 0, 255, 255]);
         });
     });
     describe('setRed/Blue/Green/Alpha', () => {
@@ -192,13 +188,12 @@ describe('WebImage', () => {
             return new Promise((resolve, reject) => {
                 img.loaded(() => {
                     g.redraw();
-                    const context = g.getContext();
-                    let topLeftPixel = context.getImageData(0, 0, 1, 1);
-                    expect(topLeftPixel.data).toEqual(new Uint8ClampedArray([255, 0, 0, 255]));
+                    let topLeftPixel = g.getPixel(0, 0);
+                    expect(topLeftPixel).toEqual([255, 0, 0, 255]);
                     img.setRotation(180);
                     g.redraw();
-                    topLeftPixel = context.getImageData(0, 0, 1, 1);
-                    expect(topLeftPixel.data).toEqual(new Uint8ClampedArray([0, 0, 255, 255]));
+                    topLeftPixel = g.getPixel(0, 0);
+                    expect(topLeftPixel).toEqual([0, 0, 255, 255]);
                     resolve();
                 });
             });

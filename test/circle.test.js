@@ -94,12 +94,11 @@ describe('Circle', () => {
             g.shouldUpdate = false;
             const circle = new Circle(2);
             circle.setColor(Color.RED);
-            const context = g.getContext();
             circle.setPosition(20, 20);
             g.add(circle);
             g.redraw();
-            const pixel = context.getImageData(20, 20, 1, 1);
-            expect(pixel.data).toEqual(new Uint8ClampedArray([255, 0, 0, 255]));
+            const pixel = g.getPixel(20, 20);
+            expect(pixel).toEqual([255, 0, 0, 255]);
         });
     });
     it('getRadius returns radius', () => {
@@ -181,30 +180,26 @@ describe('Circle', () => {
             // a circle at the top left should be placed exactly
             // at the origin, with the bottom right quadrant visible
             g.redraw();
-            let topLeftPixel = g.getContext().getImageData(0, 0, 1, 1);
-            expect(topLeftPixel.data).toEqual(new Uint8ClampedArray([255, 0, 0, 255]));
+            let topLeftPixel = g.getPixel(0, 0);
+            expect(topLeftPixel).toEqual([255, 0, 0, 255]);
 
             // a circle at the top left with anchor 0, 0 should be drawn
             // down and to the right of the origin, with its entire
             // self visible
             c.setAnchor({ vertical: 0, horizontal: 0 });
             g.redraw();
-            topLeftPixel = g.getContext().getImageData(0, 0, 1, 1);
-            expect(topLeftPixel.data).toEqual(new Uint8ClampedArray([0, 0, 0, 0]));
+            topLeftPixel = g.getPixel(0, 0, 1, 1);
+            expect(topLeftPixel).toEqual([0, 0, 0, 0]);
 
             c.setPosition(g.getWidth(), g.getHeight());
             c.setAnchor({ vertical: 1, horizontal: 1 });
             g.redraw();
-            let bottomRightPixel = g
-                .getContext()
-                .getImageData(g.getWidth() - 1, g.getHeight() - 1, 1, 1);
-            expect(bottomRightPixel.data).toEqual(new Uint8ClampedArray([0, 0, 0, 0]));
+            let bottomRightPixel = g.getPixel(g.getWidth() - 1, g.getHeight() - 1);
+            expect(bottomRightPixel).toEqual([0, 0, 0, 0]);
             c.setAnchor({ vertical: 0.5, horizontal: 0.5 });
             g.redraw();
-            bottomRightPixel = g
-                .getContext()
-                .getImageData(g.getWidth() - 1, g.getHeight() - 1, 1, 1);
-            expect(bottomRightPixel.data).toEqual(new Uint8ClampedArray([255, 0, 0, 255]));
+            bottomRightPixel = g.getPixel(g.getWidth() - 1, g.getHeight() - 1);
+            expect(bottomRightPixel).toEqual([255, 0, 0, 255]);
         });
     });
 

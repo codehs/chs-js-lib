@@ -39,12 +39,13 @@ describe('Graphics', () => {
         });
     });
     describe('setSize', () => {
-        it('Changes the size of the backed canvas', () => {
+        it('Changes the size of the backed canvas, considering the devicePixelRatio of the device', () => {
+            window.devicePixelRatio = 2;
             const g = new Graphics({ shouldUpdate: false });
             g.setSize(20, 20);
             const canvas = document.querySelector('canvas');
-            expect(canvas.width).toEqual(20);
-            expect(canvas.height).toEqual(20);
+            expect(canvas.width).toEqual(20 * window.devicePixelRatio);
+            expect(canvas.height).toEqual(20 * window.devicePixelRatio);
         });
     });
     describe('setFullscreen', () => {
@@ -53,8 +54,7 @@ describe('Graphics', () => {
             g.setFullscreen();
             const canvas = g.getCanvas();
             expect(canvas.width).toEqual(document.body.offsetWidth - FULLSCREEN_PADDING);
-            // what is the origin of this off-by-one?
-            expect(canvas.height).toEqual(document.body.offsetHeight - FULLSCREEN_PADDING + 1);
+            expect(canvas.height).toEqual(document.body.offsetHeight - FULLSCREEN_PADDING);
         });
     });
     describe('Mouse events', () => {
