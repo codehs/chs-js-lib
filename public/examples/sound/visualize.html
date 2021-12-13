@@ -1,11 +1,19 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Test</title>
+        <title>Visualizer</title>
+        <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css" />
     </head>
     <body>
-        <canvas width="500" height="500"></canvas>
-        <script src="../../../dist/chs.iife.js"></script>
+        <header>
+            <h1>Sound - Visualize</h1>
+            <nav>
+                <a href="/">Home</a>
+                <a href="/examples">Examples</a>
+            </nav>
+        </header>
+        <canvas id="game" width="480" height="200"></canvas>
+        <script src="/chs.iife.js"></script>
         <script>
             const instructions = new Text('Press to start', '15pt Arial', {
                 vertical: 'center',
@@ -71,5 +79,6 @@
                 }
             }
         </script>
+        <p>This example visualizes sound using the <code>audioChangeMethod</code>.</p>
     </body>
 </html>

@@ -2,11 +2,19 @@
 <html>
     <head>
         <title>Scaling</title>
+        <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css" />
     </head>
 </html>
 <body>
-    <canvas id="game" width="480" height="400"></canvas>
-    <script src="../../../../dist/chs.iife.js"></script>
+    <header>
+        <h1>WebImage - Scaling</h1>
+        <nav>
+            <a href="/">Home</a>
+            <a href="/examples">Examples</a>
+        </nav>
+    </header>
+    <canvas id="game" width="480" height="200"></canvas>
+    <script src="/chs.iife.js"></script>
     <script id="code">
         const IMG_URL =
             'https://upload.wikimedia.org/wikipedia/commons/d/da/The_Parthenon_in_Athens.jpg';
@@ -37,5 +45,5 @@
             }, 30);
         };
     </script>
-    <p>This program resizes the image.</p>
+    <p>This program resizes an image by calling <code>setSize</code>.</p>
 </body>

@@ -1,11 +1,19 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Rectangle Test</title>
+        <title>Rectangle Easing</title>
+        <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css" />
     </head>
     <body>
-        <canvas id="game" width="480" height="400"></canvas>
-        <script src="../../../../dist/chs.iife.js"></script>
+        <header>
+            <h1>Rectangle - Easing</h1>
+            <nav>
+                <a href="/">Home</a>
+                <a href="/examples">Examples</a>
+            </nav>
+        </header>
+        <canvas id="game" width="480" height="200"></canvas>
+        <script src="/chs.iife.js"></script>
         <script id="code">
             let width = 40;
             let height = 40;
@@ -31,6 +39,6 @@
                 rectangle.setPosition(nextX, nextY);
             }, 20);
         </script>
-        <p>The rectangle follows mouse movement with an easing function.</p>
+        <p>This example shows how movement can use an easing function for smoother movement.</p>
     </body>
 </html>

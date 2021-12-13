@@ -1,15 +1,22 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Test</title>
+        <title>Performance</title>
     </head>
     <body>
-        <canvas id="game" width="480" height="400"></canvas>
+        <header>
+            <h1>Performance</h1>
+            <nav>
+                <a href="/">Home</a>
+                <a href="/examples">Examples</a>
+            </nav>
+        </header>
+        <canvas id="game" width="480" height="200"></canvas>
+        <script src="/chs.iife.js"></script>
         <p>
             This example records how quickly 100,000 circles can be added and removed, without being
             drawn.<br />This time, it took <span id="target">loading</span> milliseconds.
         </p>
-        <script src="../../../dist/chs.iife.js"></script>
         <script id="code">
             const g = new Graphics();
             g.shouldUpdate = false;

@@ -1,33 +1,42 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <title>Test</title>
-</head>
-<body>
-    <canvas width="500" height="500"></canvas>
-    <script src="../../../dist/chs.iife.js"></script>
-    <script>    
-    setBackgroundColor('#1d9bf0');
-    let base = 0;
-    let lastUpdate = Date.now();
-    const UPDATE_INTERVAL = 30;
-    const update = () => {
-        let now = Date.now();
-        const elapsedTime = now - lastUpdate;
-        if (elapsedTime > UPDATE_INTERVAL) {
-            lastUpdate = now;
-            base += 5;
-            removeAll();
-            for (let i = 0; i < getWidth(); i += 1) {
-                const p = new Circle(1);
-                p.setColor(Color.WHITE);
-                p.setPosition(i, getHeight() / 2 + 100 * Randomizer.noise((i + base) / 50));
-                add(p);
-            }
-        }
-        requestAnimationFrame(update);
-    };
-    requestAnimationFrame(update);
-    </script>
-</body>
+    <head>
+        <title>Test</title>
+        <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css" />
+    </head>
+    <body>
+        <header>
+            <h1>Randomizer - Wave</h1>
+            <nav>
+                <a href="/">Home</a>
+                <a href="/examples">Examples</a>
+            </nav>
+        </header>
+        <canvas id="game" width="480" height="200"></canvas>
+        <script src="/chs.iife.js"></script>
+        <script>
+            setBackgroundColor('#1d9bf0');
+            let base = 0;
+            let lastUpdate = Date.now();
+            const UPDATE_INTERVAL = 30;
+            const update = () => {
+                let now = Date.now();
+                const elapsedTime = now - lastUpdate;
+                if (elapsedTime > UPDATE_INTERVAL) {
+                    lastUpdate = now;
+                    base += 5;
+                    removeAll();
+                    for (let i = 0; i < getWidth(); i += 1) {
+                        const p = new Circle(1);
+                        p.setColor(Color.WHITE);
+                        p.setPosition(i, getHeight() / 2 + 100 * (0.5 - Randomizer.noise((i + base) / 50)));
+                        add(p);
+                    }
+                }
+                requestAnimationFrame(update);
+            };
+            requestAnimationFrame(update);
+        </script>
+        <p>This example visualizes a wave of Perlin noise.</p>
+    </body>
 </html>

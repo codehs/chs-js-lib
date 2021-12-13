@@ -1,11 +1,19 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Text Test</title>
+        <title>Text containsPoint</title>
+        <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css" />
     </head>
     <body>
-        <canvas id="game" width="480" height="400"></canvas>
-        <script src="../../../../dist/chs.iife.js"></script>
+        <header>
+            <h1>Text - <code>containsPoint</code></h1>
+            <nav>
+                <a href="/">Home</a>
+                <a href="/examples">Examples</a>
+            </nav>
+        </header>
+        <canvas id="game" width="480" height="200"></canvas>
+        <script src="/chs.iife.js"></script>
         <script id="code">
             let mouseX = 0;
             let mouseY = 0;
@@ -42,6 +50,6 @@
             t3.setPosition((3 * getWidth()) / 4, getHeight() / 2);
             add(t3);
         </script>
-        <p>These Texts change color when they contain the mouse's position.</p>
+        <p>These Texts change color when they contain the mouse's position. A Text follows the same rules for <code>containsPoint</code> as Rectangles.</p>
     </body>
 </html>

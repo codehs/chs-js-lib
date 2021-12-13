@@ -2,10 +2,18 @@
 <html>
     <head>
         <title>Group Rotation Test</title>
+        <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css" />
     </head>
     <body>
-        <canvas id="game" width="480" height="400"></canvas>
-        <script src="../../../dist/chs.iife.js"></script>
+        <header>
+            <h1>Group - Rotation</h1>
+            <nav>
+                <a href="/">Home</a>
+                <a href="/examples">Examples</a>
+            </nav>
+        </header>
+        <canvas id="game" width="480" height="200"></canvas>
+        <script src="/chs.iife.js"></script>
         <script id="code">
             let ghosts = [];
 
@@ -107,5 +115,6 @@
                 return parts;
             }
         </script>
+        <p>A Group can be rotated with <code>rotate</code> and <code>setRotation</code>, which will rotate the Group around its center.</p>
     </body>
 </html>

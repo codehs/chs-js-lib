@@ -2,6 +2,7 @@
 <html>
     <head>
         <title>Text Test</title>
+        <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css" />
         <style>
             canvas {
                 border: 1px solid black;
@@ -9,8 +10,15 @@
         </style>
     </head>
     <body>
+        <header>
+            <h1>Text - Anchors</h1>
+            <nav>
+                <a href="/">Home</a>
+                <a href="/examples">Examples</a>
+            </nav>
+        </header>
         <script type="module">
-            import { Graphics, Line, Text } from '../../../../dist/chs.mjs';
+            import { Graphics, Line, Text } from '/chs.mjs';
             const g1 = new Graphics({ canvas: '#c1' });
             var t = new Text('Bottom/Left');
             g1.add(t);
@@ -43,9 +51,9 @@
         <canvas id="c3" width="200" height="200"></canvas>
         <canvas id="c4" width="200" height="200"></canvas>
         <p>
-            These four canvases each contain text anchored at {vertical: 1, horizontal: 0}
-            (default), {vertical: 0, horizontal: 0}, {vertical: 0, horizontal: 1}, and {horizontal:
-            0.5, vertical: 0.5}
+            These four canvases each contain text anchored at <code>{vertical: 1, horizontal: 0}</code>
+            (default), <code>{vertical: 0, horizontal: 0}</code>, <code>{vertical: 0, horizontal: 1}</code>, and <code>{horizontal:
+            0.5, vertical: 0.5}</code>
         </p>
     </body>
 </html>

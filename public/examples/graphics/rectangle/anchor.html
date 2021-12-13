@@ -1,25 +1,45 @@
-<!DOCTYPE html>
 <html>
     <head>
-        <title>Rectangle Test</title>
+        <title>Rectangle Bounds Test</title>
+        <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css" />
     </head>
     <body>
-        <canvas id="game" width="480" height="400"></canvas>
-        <script src="../../../../dist/chs.iife.js"></script>
+        <header>
+            <h1>Rectangle - Bounds</h1>
+            <nav>
+                <a href="/">Home</a>
+                <a href="/examples">Examples</a>
+            </nav>
+        </header>
+        <canvas id="game" width="480" height="200"></canvas>
+        <script src="/chs.iife.js"></script>
         <script id="code">
-            let width = 40;
-            let height = 40;
-            let rectangle = new Rectangle(width, height);
-            rectangle.setColor(Color.RED);
-            rectangle.setAnchor({ vertical: 0.5, horizontal: 0.5 });
-            add(rectangle);
-            mouseMoveMethod(e => {
-                rectangle.setPosition(e.getX(), e.getY());
-            });
+            const r1 = new Rectangle(20, 20);
+            r1.setPosition(getWidth() / 4, getHeight() / 2);
+            r1.debug = true;
+            add(r1);
+
+            const r2 = new Rectangle(20, 20);
+            r2.setPosition((2 * getWidth()) / 4, getHeight() / 2);
+            r2.setAnchor({ vertical: 0.5, horizontal: 0.5 });
+            r2.debug = true;
+            add(r2);
+
+            const r3 = new Rectangle(20, 20);
+            r3.setPosition((3 * getWidth()) / 4, getHeight() / 2);
+            r3.setAnchor({ vertical: 1, horizontal: 1 });
+            r3.debug = true;
+            add(r3);
+
+            setTimer(() => {
+                r1.rotate(2);
+                r2.rotate(2);
+                r3.rotate(2);
+            }, 50);
         </script>
         <p>
-            This rectangle is anchored at {vertical: 0.5, horizontal: 0.5}, so its center will
-            follow mouse position.
+            Rectangles can be anchored. <code>{vertical: 0, horizontal: 0}</code> (default),
+            <code>{vertical: 0.5, horizontal: 0.5}</code>, <code>{vertical: 1, horizontal: 1}</code>
         </p>
     </body>
 </html>

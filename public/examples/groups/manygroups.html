@@ -4,8 +4,15 @@
         <title>Group Next</title>
     </head>
     <body>
-        <canvas id="game" width="480" height="400"></canvas>
-        <script src="../../../../dist/chs.iife.js"></script>
+        <header>
+            <h1>Group - Nested Groups</h1>
+            <nav>
+                <a href="/">Home</a>
+                <a href="/examples">Examples</a>
+            </nav>
+        </header>
+        <canvas id="game" width="480" height="200"></canvas>
+        <script src="/chs.iife.js"></script>
         <script id="code">
             const g1 = new Group();
             const r = new Rectangle(40, 40);
@@ -31,6 +38,6 @@
                 g2.rotate(1);
             }, 10);
         </script>
-        <p>Each group fully bounds its children, accounting for their rotation</p>
+        <p>Groups can contain other Groups, each fully containing the child.</p>
     </body>
 </html>

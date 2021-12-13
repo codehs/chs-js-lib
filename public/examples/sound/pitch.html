@@ -1,11 +1,19 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Test</title>
+        <title>Sound - Pitch</title>
+        <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css" />
     </head>
     <body>
-        <canvas width="500" height="500"></canvas>
-        <script src="../../../dist/chs.iife.js"></script>
+        <header>
+            <h1>Sound - Pitch</h1>
+            <nav>
+                <a href="/">Home</a>
+                <a href="/examples">Examples</a>
+            </nav>
+        </header>
+        <canvas id="game" width="480" height="200"></canvas>
+        <script src="/chs.iife.js"></script>
         <script>
             const instructions = new Text('Press squares to play notes', '12pt Arial', {
                 vertical: 'center',
@@ -41,5 +49,6 @@
                 sound.playFor(2);
             });
         </script>
+        <p>This example creates and plays a Sound object based on which button you touch, either with pitch C4, E4, or G4.</p>
     </body>
 </html>

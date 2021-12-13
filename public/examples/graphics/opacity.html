@@ -1,11 +1,19 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Layering Test</title>
+        <title>Graphics - Opacity</title>
+        <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css" />
     </head>
     <body>
-        <canvas id="game" width="480" height="400"></canvas>
-        <script src="../../../../dist/chs.iife.js"></script>
+        <header>
+            <h1>Graphics - Opacity</h1>
+            <nav>
+                <a href="/">Home</a>
+                <a href="/examples">Examples</a>
+            </nav>
+        </header>
+        <canvas id="game" width="480" height="200"></canvas>
+        <script src="/chs.iife.js"></script>
         <script id="code">
             setBackgroundColor(Color.BLACK);
 
@@ -58,6 +66,7 @@
                 });
             }, 30);
         </script>
-        <p>An example of opacity in rectangles</p>
+        <p>An example of opacity in Rectangles.</p>
+        <p>Opacity is changed with <code>setOpacity</code>. Opacity is a number between 0 and 1.0, where 1.0 is fully opaque and 0.0 is fully transparent.</p>
     </body>
 </html>

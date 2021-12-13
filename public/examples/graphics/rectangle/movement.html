@@ -1,36 +1,33 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Rectangle Test</title>
         <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css" />
+        <title>Rectangle Test</title>
     </head>
     <body>
         <header>
-            <h1>Rectangle - Bounce</h1>
+            <h1>Rectangle - Anchor</h1>
             <nav>
                 <a href="/">Home</a>
                 <a href="/examples">Examples</a>
             </nav>
         </header>
+        <canvas id="game" width="480" height="200"></canvas>
+        <script src="/chs.iife.js"></script>
         <script id="code">
             let width = 40;
             let height = 40;
             let rectangle = new Rectangle(width, height);
             rectangle.setColor(Color.RED);
-            rectangle.setPosition(getWidth() / 2, getHeight() / 2);
+            rectangle.setAnchor({ vertical: 0.5, horizontal: 0.5 });
             add(rectangle);
-
-            let dx = 5;
-            let dy = 5;
-            setTimer(() => {
-                rectangle.move(dx, dy);
-                if (rectangle.x + width >= getWidth() || rectangle.x <= 0) {
-                    dx = -dx;
-                }
-                if (rectangle.y + height >= getHeight() || rectangle.y <= 0) {
-                    dy = -dy;
-                }
-            }, 30);
+            mouseMoveMethod(e => {
+                rectangle.setPosition(e.getX(), e.getY());
+            });
         </script>
+        <p>
+            This rectangle is anchored at <code>{vertical: 0.5, horizontal: 0.5}</code>, so its
+            center will follow mouse position.
+        </p>
     </body>
 </html>

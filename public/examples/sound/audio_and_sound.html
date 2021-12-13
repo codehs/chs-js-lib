@@ -1,11 +1,19 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Test</title>
+        <title>Sound - Audio and Sound</title>
+        <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css" />
     </head>
     <body>
-        <canvas width="500" height="500"></canvas>
-        <script src="../../../dist/chs.iife.js"></script>
+        <header>
+            <h1>Sound - Audio and Sound</h1>
+            <nav>
+                <a href="/">Home</a>
+                <a href="/examples">Examples</a>
+            </nav>
+        </header>
+        <canvas id="game" width="480" height="200"></canvas>
+        <script src="/chs.iife.js"></script>
         <script>
             // rooster sound from https://www.fesliyanstudios.com/royalty-free-sound-effects-download/rooster-chicken-259
             const instructions = new Text('Press squares to play notes or sounds', '12pt Arial');
@@ -41,5 +49,6 @@
                 }
             });
         </script>
+        <p>This example creates both Audio and Sound objects, which are used for playing a sound effect and sine wave with a pitch.</p>
     </body>
 </html>

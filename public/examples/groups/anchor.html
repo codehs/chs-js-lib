@@ -2,10 +2,18 @@
 <html>
     <head>
         <title>Group Image</title>
+        <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css" />
     </head>
     <body>
-        <canvas id="game" width="480" height="400"></canvas>
-        <script src="../../../dist/chs.iife.js"></script>
+        <header>
+            <h1>Groups - Anchor</h1>
+            <nav>
+                <a href="/">Home</a>
+                <a href="/examples">Examples</a>
+            </nav>
+        </header>
+        <canvas id="game" width="480" height="200"></canvas>
+        <script src="/chs.iife.js"></script>
         <script id="code">
             const g1 = new Group();
             const a1 = new Circle(15);
@@ -43,5 +51,10 @@
             g3.debug = true;
             add(g3);
         </script>
+        <p>Groups can be anchored just like other Graphical elements.</p>
+        <p>
+            These Groups are anchored at<code>{vertical: 0, horizontal: 0}</code>
+            (default), <code>{vertical: 0.5, horizontal: 0.5}</code>, and <code>{vertical: 1.0, horizontal: 1.0}</code>.
+        </p>
     </body>
 </html>

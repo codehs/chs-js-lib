@@ -1,10 +1,19 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Test</title>
+        <title>Performance</title>
+        <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css" />
     </head>
     <body>
+        <header>
+            <h1>Performance</h1>
+            <nav>
+                <a href="/">Home</a>
+                <a href="/examples">Examples</a>
+            </nav>
+        </header>
         <canvas id="game" width="480" height="400"></canvas>
+        <script src="/chs.iife.js"></script>
         <p>
             This example records how quickly 100,000 shapes can be drawn.<br />This time, it took
             <span id="target">loading</span> milliseconds.
@@ -19,7 +28,6 @@
             <option value="emptycircle">Empty Circle with Border</option>
         </select>
         <input type="checkbox" id="round" label />Round positions
-        <script src="../../../dist/chs.iife.js"></script>
         <script id="code">
             document.addEventListener('DOMContentLoaded', () => {
                 __graphics__.shouldUpdate = false;

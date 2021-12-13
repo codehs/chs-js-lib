@@ -2,10 +2,18 @@
 <html>
     <head>
         <title>Group Image</title>
+        <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css" />
     </head>
     <body>
-        <canvas id="game" width="480" height="400"></canvas>
-        <script src="../../../dist/chs.iife.js"></script>
+        <header>
+            <h1>Group - Mouse</h1>
+            <nav>
+                <a href="/">Home</a>
+                <a href="/examples">Examples</a>
+            </nav>
+        </header>
+        <canvas id="game" width="480" height="200"></canvas>
+        <script src="/chs.iife.js"></script>
         <script id="code">
             const g = new Group();
             g.add(new Rectangle(40, 40));
@@ -17,5 +25,6 @@
                 g.setPosition(e.getX(), e.getY());
             });
         </script>
+        <p>Groups can move with <code>setPosition</code>, in this case following the mouse.</p>
     </body>
 </html>

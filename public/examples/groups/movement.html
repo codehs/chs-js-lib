@@ -2,10 +2,18 @@
 <html>
     <head>
         <title>Group Movement Test</title>
+        <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css" />
     </head>
     <body>
-        <canvas id="game" width="480" height="400"></canvas>
-        <script src="../../../dist/chs.iife.js"></script>
+        <header>
+            <h1>Group - Movement</h1>
+            <nav>
+                <a href="/">Home</a>
+                <a href="/examples">Examples</a>
+            </nav>
+        </header>
+        <canvas id="game" width="480" height="200"></canvas>
+        <script src="/chs.iife.js"></script>
         <script id="code">
             setBackgroundColor(Color.BLACK);
             const fgGroup = new Group();
@@ -30,5 +38,6 @@
                 bgGroup.move(-1, -1);
             }, 50);
         </script>
+        <p>Groups can be moved using <code>.move</code>. In this example, three Groups move at different rates to create a parallax effect.</p>
     </body>
 </html>
