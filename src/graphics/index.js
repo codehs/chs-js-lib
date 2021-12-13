@@ -560,8 +560,10 @@ class GraphicsManager extends Manager {
         } else {
             currentCanvas = document.getElementsByTagName('canvas')[0];
         }
-        if (currentCanvas === null) {
+        if (!currentCanvas) {
             currentCanvas = document.createElement('canvas');
+            currentCanvas.width = 400;
+            currentCanvas.height = 400;
             document.body.appendChild(currentCanvas);
         }
         this.currentCanvas = currentCanvas;
