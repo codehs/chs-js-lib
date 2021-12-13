@@ -802,7 +802,6 @@ class GraphicsManager extends Manager {
 const calculateCoordinates = e => {
     const canvas = e.target;
     const rect = canvas.getBoundingClientRect();
-    debugger;
     return {
         x: Math.round(e.clientX - rect.left),
         y: Math.round(e.clientY - rect.top),
