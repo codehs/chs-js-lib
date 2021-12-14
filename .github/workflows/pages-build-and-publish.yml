@@ -23,6 +23,9 @@ jobs:
           template: docdash
           recurse: true
 
+      - name: Generate JS
+      - run: npm run docs
+
       - name: Deploy to pages
         uses: peaceiris/actions-gh-pages@v3
         with:

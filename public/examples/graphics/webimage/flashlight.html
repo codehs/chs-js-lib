@@ -2,12 +2,25 @@
 <html>
     <head>
         <title>Flashlight</title>
+        <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css" />
+        <link rel="stylesheet" href="/style.css" />
+        <script type="text/javascript" src="/main.js"></script>
     </head>
 </html>
 <body>
-    <canvas id="game" width="480" height="400"></canvas>
-    <script src="../../../../dist/chs.iife.js"></script>
+    <header>
+        <h1>WebImage - Flashlight</h1>
+        <nav>
+            <a href="/">Home</a>
+            <a href="/examples">Examples</a>
+            <a href="/documentation">Documentation</a>
+        </nav>
+    </header>
+    <canvas id="game" width="480" height="200"></canvas>
+    <script src="/chs.iife.js"></script>
     <script id="code">
+        setBackgroundColor('white');
+        setSize(100, 100);
         const webImage = new WebImage('x');
         const blackPixel = [0, 0, 0, 255];
         const width = 100;
@@ -48,6 +61,6 @@
     </script>
     <p>
         This example manually sets the image data of the webimage to all black pixels, then
-        selectively sets opacity based on the mouse's position using the map() function
+        selectively sets opacity based on the mouse's position using the <code>map()</code> function
     </p>
 </body>
