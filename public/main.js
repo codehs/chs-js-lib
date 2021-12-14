@@ -1,5 +1,4 @@
 document.addEventListener('DOMContentLoaded', () => {
-    console.log('wee');
     const code = document.getElementById('code')?.innerHTML;
     if (code) {
         const leftPadding = code.length - code.trimStart().length;

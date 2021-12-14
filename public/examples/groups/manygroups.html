@@ -18,8 +18,11 @@
         <canvas id="game" width="480" height="200"></canvas>
         <script src="/chs.iife.js"></script>
         <script id="code">
+            let darkMode =
+                window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
             const g1 = new Group();
             const r = new Rectangle(40, 40);
+            darkMode && r.setColor('white');
             g1.add(r);
             g1.setPosition(getWidth() / 2, getHeight() / 2);
             g1.debug = true;
