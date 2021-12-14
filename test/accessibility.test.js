@@ -12,8 +12,10 @@ describe('Keyboard navigation', () => {
             const g = new Graphics();
             const t = new Thing();
             g.add(t);
-            simulateEvent('keydown', { key: 'Tab' }, window);
-            const button = document.querySelector('button');
+            simulateEvent('keydown', { key: 'Tab' }, document.querySelector('#game'));
+            const button = document.getElementById(
+                HIDDEN_KEYBOARD_NAVIGATION_DOM_ELEMENT_ID(t._id)
+            );
             expect(button).not.toBeNull();
             button.dispatchEvent(new Event('focus'));
             expect(button.textContent).toEqual(t.describe());
@@ -22,8 +24,10 @@ describe('Keyboard navigation', () => {
             const g = new Graphics();
             const t = new Thing();
             g.add(t);
-            simulateEvent('keydown', { key: 'Tab' }, window);
-            const button = document.querySelector('button');
+            simulateEvent('keydown', { key: 'Tab' }, document.querySelector('#game'));
+            const button = document.getElementById(
+                HIDDEN_KEYBOARD_NAVIGATION_DOM_ELEMENT_ID(t._id)
+            );
             expect(button.style.cssText.replace(/\s+/g, '')).toEqual(
                 KEYBOARD_NAVIGATION_DOM_ELEMENT_STYLE.replace(/\s+/g, '')
             );
@@ -33,7 +37,9 @@ describe('Keyboard navigation', () => {
             const t = new Thing();
             g.add(t);
             simulateEvent('keydown', { key: 'Tab' }, window);
-            const button = document.querySelector('button');
+            const button = document.getElementById(
+                HIDDEN_KEYBOARD_NAVIGATION_DOM_ELEMENT_ID(t._id)
+            );
             expect(button.style.cssText.replace(/\s+/g, '')).toEqual(
                 KEYBOARD_NAVIGATION_DOM_ELEMENT_STYLE.replace(/\s+/g, '')
             );
@@ -42,7 +48,7 @@ describe('Keyboard navigation', () => {
             const g = new Graphics();
             const t = new Thing();
             g.add(t);
-            simulateEvent('keydown', { key: 'Tab' }, window);
+            simulateEvent('keydown', { key: 'Tab' }, document.querySelector('#game'));
             let button = document.getElementById(HIDDEN_KEYBOARD_NAVIGATION_DOM_ELEMENT_ID(t._id));
             expect(button).not.toBeNull();
             g.remove(t);
