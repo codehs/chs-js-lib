@@ -9,6 +9,8 @@ export const KEYBOARD_NAVIGATION_DOM_ELEMENT_STYLE =
 export const HIDDEN_KEYBOARD_NAVIGATION_DOM_ELEMENT_STYLE =
     KEYBOARD_NAVIGATION_DOM_ELEMENT_STYLE + 'display: none;';
 
+export const HIDDEN_KEYBOARD_NAVIGATION_DOM_ELEMENT_ID = id => `${id}focusbutton`;
+
 /** @type {Object.<string, GraphicsManager>} */
 let GraphicsInstances = {};
 let graphicsInstanceID = 0;
@@ -145,6 +147,8 @@ class GraphicsManager extends Manager {
         button.style = this.userNavigatingWithKeyboard
             ? KEYBOARD_NAVIGATION_DOM_ELEMENT_STYLE
             : HIDDEN_KEYBOARD_NAVIGATION_DOM_ELEMENT_STYLE;
+
+        button.id = HIDDEN_KEYBOARD_NAVIGATION_DOM_ELEMENT_ID(elem._id);
 
         button.onfocus = () => {
             elem.focus();
@@ -420,6 +424,8 @@ class GraphicsManager extends Manager {
         this.stopAllVideo();
         this.elementPool = [];
         this.elementPoolSize = 0;
+        this.accessibleDOMElements.forEach(node => node.remove());
+        this.accessibleDOMElements = [];
     }
 
     /**
@@ -431,8 +437,9 @@ class GraphicsManager extends Manager {
             elem.stop();
         }
         elem.alive = false;
+        const focusButtonID = HIDDEN_KEYBOARD_NAVIGATION_DOM_ELEMENT_ID(elem._id);
+        document.getElementById(focusButtonID).remove();
     }
-
     /**
      * Set the size of the canvas.
      * @param {number} w - Desired width of the canvas.
@@ -560,8 +567,10 @@ class GraphicsManager extends Manager {
         } else {
             currentCanvas = document.getElementsByTagName('canvas')[0];
         }
-        if (currentCanvas === null) {
+        if (!currentCanvas) {
             currentCanvas = document.createElement('canvas');
+            currentCanvas.width = 400;
+            currentCanvas.height = 400;
             document.body.appendChild(currentCanvas);
         }
         this.currentCanvas = currentCanvas;
@@ -802,10 +811,9 @@ class GraphicsManager extends Manager {
 const calculateCoordinates = e => {
     const canvas = e.target;
     const rect = canvas.getBoundingClientRect();
-    debugger;
     return {
-        x: e.clientX - rect.left,
-        y: e.clientY - rect.top,
+        x: Math.round(e.clientX - rect.left),
+        y: Math.round(e.clientY - rect.top),
     };
 };
 
@@ -817,12 +825,14 @@ MouseEvent.prototype.getY = function () {
     return calculateCoordinates(this).y;
 };
 
-TouchEvent.prototype.getX = function () {
-    return calculateCoordinates(this.touches[0]).x;
-};
+if (typeof TouchEvent !== 'undefined') {
+    TouchEvent.prototype.getX = function () {
+        return calculateCoordinates(this.touches[0]).x;
+    };
 
-TouchEvent.prototype.getY = function () {
-    return calculateCoordinates(this.touches[0]).y;
-};
+    TouchEvent.prototype.getY = function () {
+        return calculateCoordinates(this.touches[0]).y;
+    };
+}
 
 export default GraphicsManager;
