@@ -825,7 +825,7 @@ MouseEvent.prototype.getY = function () {
     return calculateCoordinates(this).y;
 };
 
-if (typeof TouchEvent) {
+if (typeof TouchEvent !== 'undefined') {
     TouchEvent.prototype.getX = function () {
         return calculateCoordinates(this.touches[0]).x;
     };
