@@ -825,12 +825,14 @@ MouseEvent.prototype.getY = function () {
     return calculateCoordinates(this).y;
 };
 
-TouchEvent.prototype.getX = function () {
-    return calculateCoordinates(this.touches[0]).x;
-};
+if (typeof TouchEvent !== 'undefined') {
+    TouchEvent.prototype.getX = function () {
+        return calculateCoordinates(this.touches[0]).x;
+    };
 
-TouchEvent.prototype.getY = function () {
-    return calculateCoordinates(this.touches[0]).y;
-};
+    TouchEvent.prototype.getY = function () {
+        return calculateCoordinates(this.touches[0]).y;
+    };
+}
 
 export default GraphicsManager;
