@@ -73,6 +73,12 @@ class GraphicsManager extends Manager {
             }
 
             if (e.key === 'Tab') {
+                for (let i = 0; i < this.elementPoolSize; i++) {
+                    const elem = this.elementPool[i];
+                    if (!elem._hasAccessibleDOMElement) {
+                        this.createAccessibleDOMElement(elem);
+                    }
+                }
                 this.userNavigatingWithKeyboard = true;
                 this.showKeyboardNavigationDOMElements();
             }
@@ -134,7 +140,6 @@ class GraphicsManager extends Manager {
     add(elem) {
         elem.alive = true;
         this.elementPool[this.elementPoolSize++] = elem;
-        this.createAccessibleDOMElement(elem);
     }
 
     /**
@@ -175,6 +180,7 @@ class GraphicsManager extends Manager {
         };
         document.body.appendChild(button);
         this.accessibleDOMElements.push(button);
+        elem._hasAccessibleDOMElement = true;
     }
 
     exitKeyboardNavigation() {
@@ -438,7 +444,7 @@ class GraphicsManager extends Manager {
         }
         elem.alive = false;
         const focusButtonID = HIDDEN_KEYBOARD_NAVIGATION_DOM_ELEMENT_ID(elem._id);
-        document.getElementById(focusButtonID).remove();
+        document.getElementById(focusButtonID)?.remove();
     }
     /**
      * Set the size of the canvas.

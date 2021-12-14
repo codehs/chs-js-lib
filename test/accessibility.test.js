@@ -12,6 +12,7 @@ describe('Keyboard navigation', () => {
             const g = new Graphics();
             const t = new Thing();
             g.add(t);
+            simulateEvent('keydown', { key: 'Tab' }, document.querySelector('#game'));
             const button = document.querySelector('button');
             expect(button).not.toBeNull();
             button.dispatchEvent(new Event('focus'));
@@ -21,9 +22,10 @@ describe('Keyboard navigation', () => {
             const g = new Graphics();
             const t = new Thing();
             g.add(t);
+            simulateEvent('keydown', { key: 'Tab' }, document.querySelector('#game'));
             const button = document.querySelector('button');
             expect(button.style.cssText.replace(/\s+/g, '')).toEqual(
-                HIDDEN_KEYBOARD_NAVIGATION_DOM_ELEMENT_STYLE.replace(/\s+/g, '')
+                KEYBOARD_NAVIGATION_DOM_ELEMENT_STYLE.replace(/\s+/g, '')
             );
         });
         it('Changes style when the graphics instance switches to keyboard navigation mode', () => {
@@ -40,6 +42,7 @@ describe('Keyboard navigation', () => {
             const g = new Graphics();
             const t = new Thing();
             g.add(t);
+            simulateEvent('keydown', { key: 'Tab' }, document.querySelector('#game'));
             let button = document.getElementById(HIDDEN_KEYBOARD_NAVIGATION_DOM_ELEMENT_ID(t._id));
             expect(button).not.toBeNull();
             g.remove(t);
