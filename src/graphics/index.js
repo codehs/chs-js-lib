@@ -444,7 +444,7 @@ class GraphicsManager extends Manager {
         }
         elem.alive = false;
         const focusButtonID = HIDDEN_KEYBOARD_NAVIGATION_DOM_ELEMENT_ID(elem._id);
-        document.getElementById(focusButtonID).remove();
+        document.getElementById(focusButtonID)?.remove();
     }
     /**
      * Set the size of the canvas.
