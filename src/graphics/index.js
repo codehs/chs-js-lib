@@ -567,8 +567,10 @@ class GraphicsManager extends Manager {
         } else {
             currentCanvas = document.getElementsByTagName('canvas')[0];
         }
-        if (currentCanvas === null) {
+        if (!currentCanvas) {
             currentCanvas = document.createElement('canvas');
+            currentCanvas.width = 400;
+            currentCanvas.height = 400;
             document.body.appendChild(currentCanvas);
         }
         this.currentCanvas = currentCanvas;
@@ -809,10 +811,9 @@ class GraphicsManager extends Manager {
 const calculateCoordinates = e => {
     const canvas = e.target;
     const rect = canvas.getBoundingClientRect();
-    debugger;
     return {
-        x: e.clientX - rect.left,
-        y: e.clientY - rect.top,
+        x: Math.round(e.clientX - rect.left),
+        y: Math.round(e.clientY - rect.top),
     };
 };
 
