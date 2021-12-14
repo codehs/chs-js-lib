@@ -36,6 +36,7 @@ class Group extends Thing {
         this._hiddenCanvas = document.createElement('canvas');
         this._hiddenCanvas.width = 1;
         this._hiddenCanvas.height = 1;
+        document.body.appendChild(this._hiddenCanvas);
         this._hiddenContext = this._hiddenCanvas.getContext('2d');
         this._lastRecordedBounds = {};
         this.bounds = null;
@@ -265,8 +266,11 @@ class Group extends Thing {
             top: minY,
             bottom: maxY,
         };
-        this._hiddenCanvas.width = maxX - minX;
-        this._hiddenCanvas.height = maxY - minY;
+        this._hiddenCanvas.width = window.devicePixelRatio ?? 1 * (maxX - minX);
+        this._hiddenCanvas.height = window.devicePixelRatio ?? 1 * (maxY - minY);
+        this._hiddenCanvas.style.width = `${maxX - minX}px`;
+        this._hiddenCanvas.style.height = `${maxY - minY}px`;
+        this._hiddenContext.scale(window.devicePixelRatio, window.devicePixelRatio);
         this._lastCalculatedBoundsID++;
         this._boundsInvalidated = false;
     }
