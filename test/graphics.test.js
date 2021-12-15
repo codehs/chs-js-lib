@@ -472,4 +472,15 @@ describe('Graphics', () => {
             expect(map(50, 0, 100, 0, 4)).toEqual(2);
         });
     });
+    describe('cleanup()', () => {
+        it('Removes all handlers', () => {
+            const g = new Graphics();
+            const keyDownSpy = spyOn(g, 'onKeyDown');
+            simulateEvent('keydown', {}, document.querySelector('#game'));
+            expect(keyDownSpy).toHaveBeenCalled();
+            g.cleanup();
+            simulateEvent('keydown', {}, document.querySelector('#game'));
+            expect(keyDownSpy).toHaveBeenCalledTimes(1);
+        });
+    });
 });
