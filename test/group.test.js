@@ -211,4 +211,33 @@ describe('Groups', () => {
             expect(topLeftPixel).toEqual([255, 0, 0, 255]);
         });
     });
+    describe('The hidden canvas', () => {
+        it("Is sized according to the groups's bounds and devicePixelRatio", () => {
+            const g = new Group();
+            g.add(new Rectangle(20, 20));
+            expect(g.getBounds()).toEqual({
+                top: 0,
+                left: 0,
+                bottom: 20,
+                right: 20,
+            });
+            let hiddenCanvas = g._hiddenCanvas;
+            expect(hiddenCanvas.width).toEqual(window.devicePixelRatio * 20);
+            expect(hiddenCanvas.height).toEqual(window.devicePixelRatio * 20);
+            expect(hiddenCanvas.style.width).toEqual('20px');
+            expect(hiddenCanvas.style.height).toEqual('20px');
+            g.add(new Rectangle(40, 20));
+            expect(g.getBounds()).toEqual({
+                top: 0,
+                left: 0,
+                bottom: 20,
+                right: 40,
+            });
+            hiddenCanvas = g._hiddenCanvas;
+            expect(hiddenCanvas.width).toEqual(window.devicePixelRatio * 40);
+            expect(hiddenCanvas.height).toEqual(window.devicePixelRatio * 20);
+            expect(hiddenCanvas.style.width).toEqual('40px');
+            expect(hiddenCanvas.style.height).toEqual('20px');
+        });
+    });
 });
