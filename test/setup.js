@@ -1,3 +1,5 @@
+import { GraphicsInstances } from '../src/graphics/index.js';
+
 function setup() {
     const canvas = document.createElement('canvas');
     canvas.id = 'game';
@@ -12,6 +14,9 @@ beforeEach(() => {
 
 afterEach(() => {
     document.body.innerHTML = '';
+    Object.entries(GraphicsInstances).forEach(([id, instance]) => {
+        instance.cleanup();
+    });
 });
 
 setup();
