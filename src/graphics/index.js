@@ -12,9 +12,10 @@ export const HIDDEN_KEYBOARD_NAVIGATION_DOM_ELEMENT_STYLE =
 export const HIDDEN_KEYBOARD_NAVIGATION_DOM_ELEMENT_ID = id => `${id}focusbutton`;
 
 /** @type {Object.<string, GraphicsManager>} */
-let GraphicsInstances = {};
+export let GraphicsInstances = {};
+/** @type {Array.<any>} */
+export let pressedKeys = [];
 let graphicsInstanceID = 0;
-let pressedKeys = [];
 
 /**
  * Class for interacting with Graphics.
@@ -65,61 +66,82 @@ class GraphicsManager extends Manager {
         GraphicsInstances[graphicsInstanceID++] = this;
     }
 
-    addEventListeners() {
-        window.addEventListener('keydown', e => {
-            const index = pressedKeys.indexOf(e.keyCode);
-            if (index === -1) {
-                pressedKeys.push(e.keyCode);
-            }
+    onKeyDown = e => {
+        const index = pressedKeys.indexOf(e.keyCode);
+        if (index === -1) {
+            pressedKeys.push(e.keyCode);
+        }
 
-            if (e.key === 'Tab') {
-                for (let i = 0; i < this.elementPoolSize; i++) {
-                    const elem = this.elementPool[i];
-                    if (!elem._hasAccessibleDOMElement) {
-                        this.createAccessibleDOMElement(elem);
-                    }
+        if (e.key === 'Tab') {
+            for (let i = 0; i < this.elementPoolSize; i++) {
+                const elem = this.elementPool[i];
+                if (!elem._hasAccessibleDOMElement) {
+                    this.createAccessibleDOMElement(elem);
                 }
-                this.userNavigatingWithKeyboard = true;
-                this.showKeyboardNavigationDOMElements();
             }
+            this.userNavigatingWithKeyboard = true;
+            this.showKeyboardNavigationDOMElements();
+        }
 
-            this.keyDownCallback?.(e);
-            return true;
-        });
+        this.keyDownCallback?.(e);
+        return true;
+    };
 
-        window.addEventListener('keyup', e => {
-            const index = pressedKeys.indexOf(e.keyCode);
-            if (index !== -1) {
-                pressedKeys.splice(index, 1);
-            }
-            this.keyUpCallback?.(e);
-        });
+    onKeyUp = e => {
+        const index = pressedKeys.indexOf(e.keyCode);
+        if (index !== -1) {
+            pressedKeys.splice(index, 1);
+        }
+        this.keyUpCallback?.(e);
+    };
 
-        let resizeTimeout;
-        window.addEventListener('resize', e => {
-            // https://developer.mozilla.org/en-US/docs/Web/Events/resize
-            // Throttle the resize event handler since it fires at such a rapid rate
-            // Only respond to the resize event if there's not already a response queued up
-            if (!resizeTimeout) {
-                resizeTimeout = setTimeout(() => {
-                    resizeTimeout = null;
-                    this.fullscreenMode && this.setFullscreen?.();
-                }, DEFAULT_UPDATE_INTERVAL);
-            }
-        });
+    onResize = e => {
+        // https://developer.mozilla.org/en-US/docs/Web/Events/resize
+        // Throttle the resize event handler since it fires at such a rapid rate
+        // Only respond to the resize event if there's not already a response queued up
+        if (!this._resizeTimeout) {
+            this._resizeTimeout = setTimeout(() => {
+                this._resizeTimeout = null;
+                this.fullscreenMode && this.setFullscreen?.();
+            }, DEFAULT_UPDATE_INTERVAL);
+        }
+    };
+
+    onOrientationChange = e => {
+        this.deviceOrientationCallback?.(e);
+    };
+
+    onDeviceMotion = e => {
+        this.deviceMotionCallback?.(e);
+    };
+
+    /**
+     * Add all handlers to the window for triggering functions on the instance.
+     */
+    addEventListeners() {
+        window.addEventListener('keydown', this.onKeyDown);
+        window.addEventListener('keyup', this.onKeyUp);
+        window.addEventListener('resize', this.onResize);
 
         /** MOBILE DEVICE EVENTS ****/
         if (window.DeviceOrientationEvent) {
-            window.addEventListener('orientationchange', e => {
-                this.deviceOrientationCallback?.(e);
-            });
+            window.addEventListener('orientationchange', this.onOrientationChange);
         }
 
         if (window.DeviceMotionEvent) {
-            window.addEventListener('devicemotion', e => {
-                this.deviceMotionCallback?.(e);
-            });
+            window.addEventListener('devicemotion', this.onDeviceMotion);
         }
+    }
+
+    /**
+     * Remove all handlers from the window and clean up any memory.
+     */
+    cleanup() {
+        window.removeEventListener('keydown', this.onKeyDown);
+        window.removeEventListener('keyup', this.onKeyUp);
+        window.removeEventListener('resize', this.onResize);
+        window.removeEventListener('orientationchange', this.onOrientationChange);
+        window.removeEventListener('devicemotion', this.onDeviceMotion);
     }
 
     configure(options = {}) {
