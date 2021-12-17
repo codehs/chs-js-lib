@@ -13,8 +13,9 @@ export const HIDDEN_KEYBOARD_NAVIGATION_DOM_ELEMENT_ID = id => `${id}focusbutton
 
 /** @type {Object.<string, GraphicsManager>} */
 export let GraphicsInstances = {};
+/** @type {Array.<any>} */
+export let pressedKeys = [];
 let graphicsInstanceID = 0;
-let pressedKeys = [];
 
 /**
  * Class for interacting with Graphics.

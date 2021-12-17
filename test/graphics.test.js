@@ -1,5 +1,5 @@
 import Circle from '../src/graphics/circle.js';
-import Graphics, { FULLSCREEN_PADDING } from '../src/graphics/index.js';
+import Graphics, { FULLSCREEN_PADDING, pressedKeys } from '../src/graphics/index.js';
 import Rectangle from '../src/graphics/rectangle.js';
 import { map } from '../src/graphics/graphics-utils.js';
 
@@ -475,12 +475,11 @@ describe('Graphics', () => {
     describe('cleanup()', () => {
         it('Removes all handlers', () => {
             const g = new Graphics();
-            const keyDownSpy = spyOn(g, 'onKeyDown');
-            simulateEvent('keydown', {}, document.querySelector('#game'));
-            expect(keyDownSpy).toHaveBeenCalled();
+            simulateEvent('keydown', { keyCode: 'testkey' }, window);
+            expect(pressedKeys).toContain('testkey');
             g.cleanup();
-            simulateEvent('keydown', {}, document.querySelector('#game'));
-            expect(keyDownSpy).toHaveBeenCalledTimes(1);
+            simulateEvent('keydown', { keyCode: 'test2' }, window);
+            expect(pressedKeys).not.toContain('test2');
         });
     });
 });
