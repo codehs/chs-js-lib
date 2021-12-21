@@ -505,8 +505,12 @@ class GraphicsManager extends Manager {
     setFullscreen() {
         this.fullscreenMode = true; // when this is true, canvas will resize with parent
         var canvas = this.getCanvas();
-        canvas.width = canvas.parentElement.offsetWidth - FULLSCREEN_PADDING;
-        canvas.height = canvas.parentElement.offsetHeight - FULLSCREEN_PADDING;
+        const width = canvas.parentElement.offsetWidth - FULLSCREEN_PADDING;
+        const height = canvas.parentElement.offsetHeight - FULLSCREEN_PADDING;
+        canvas.width = this.devicePixelRatio * width;
+        canvas.height = this.devicePixelRatio * height;
+        canvas.style.width = `${width}px`;
+        canvas.style.height = `${height}px`;
     }
 
     /**
