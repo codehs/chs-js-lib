@@ -1,5 +1,6 @@
 import WebImage from '../src/graphics/webimage.js';
 import Graphics from '../src/graphics/index.js';
+import Rectangle from '../src/graphics/rectangle.js';
 
 // a 90x90 image with R, G, and B vertical stripes of 30px width, i.e.
 /**
@@ -42,6 +43,26 @@ describe('WebImage', () => {
                     g.redraw();
                     topLeftPixel = g.getPixel(50, 50);
                     expect(topLeftPixel).toEqual([255, 0, 0, 255]);
+                    resolve();
+                });
+            });
+        });
+        it('Appropriately closes its path so it doesnt affect other elements', () => {
+            const g = new Graphics({ shouldUpdate: false });
+            const r = new Rectangle(100, 100);
+            r.setColor('red');
+            g.add(r);
+            g.redraw();
+            expect(g.getPixel(0, 0)).toEqual([255, 0, 0, 255]);
+
+            const wi = new WebImage(RGBURL);
+            wi.setPosition(100, 100);
+            g.add(wi);
+            return new Promise(resolve => {
+                wi.loaded(() => {
+                    g.redraw();
+                    expect(g.getPixel(0, 0)).toEqual([255, 0, 0, 255]);
+                    expect(g.getPixel(131, 101)).toEqual([0, 255, 0, 255]);
                     resolve();
                 });
             });

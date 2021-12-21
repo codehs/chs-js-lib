@@ -113,6 +113,7 @@ class WebImage extends Thing {
             this.updateHiddenCanvas();
         }
         super.draw(context, () => {
+            context.beginPath();
             // the __hiddenCanvas contains the ImageData, sized as it originally was.
             // in order to perform scaling, the destination width and height are
             // currentWidth * (currentWidth / originalWidth),
@@ -124,6 +125,7 @@ class WebImage extends Thing {
                 (this.width * this.width) / this.data.width,
                 (this.height * this.height) / this.data.height
             );
+            context.closePath();
         });
     }
 
