@@ -855,11 +855,11 @@ MouseEvent.prototype.getY = function () {
 
 if (typeof TouchEvent !== 'undefined') {
     TouchEvent.prototype.getX = function () {
-        return calculateCoordinates(this.touches[0]).x;
+        return (this.touches.length && calculateCoordinates(this.touches[0]).x) || null;
     };
 
     TouchEvent.prototype.getY = function () {
-        return calculateCoordinates(this.touches[0]).y;
+        return (this.touches.length && calculateCoordinates(this.touches[0]).y) || null;
     };
 }
 
