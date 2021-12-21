@@ -93,6 +93,18 @@ describe('Graphics', () => {
             simulateEvent('mouseup', {}, document.querySelector('#game'));
             expect(mouseSpy).toHaveBeenCalledWith(-8, -8);
         });
+        it('Appropriately bails out when no touches are available in a TouchEvent', () => {
+            let t = new TouchEvent('touchstart', { touches: [] });
+            expect(t.getX()).toBeNull();
+            expect(t.getY()).toBeNull();
+            t = new TouchEvent('touchstart', {
+                touches: [
+                    new Touch({ identifier: ':)', target: document.querySelector('canvas') }),
+                ],
+            });
+            expect(t.getX()).not.toBeNull();
+            expect(t.getY()).not.toBeNull();
+        });
         // TODO: is it possible to test this?
         // I'm unable to mock a Touch
         // it('Translates x and y coordinates for touches', () => {
