@@ -1,10 +1,9 @@
 import Graphics, {
-    KEYBOARD_NAVIGATION_DOM_ELEMENT_STYLE,
-    HIDDEN_KEYBOARD_NAVIGATION_DOM_ELEMENT_STYLE,
     HIDDEN_KEYBOARD_NAVIGATION_DOM_ELEMENT_ID,
+    KEYBOARD_NAVIGATION_DOM_ELEMENT_STYLE,
 } from '../src/graphics/index.js';
-import { simulateEvent } from './graphics.test.js';
 import Thing from '../src/graphics/thing.js';
+import { simulateEvent } from './utils.js';
 
 describe('Keyboard navigation', () => {
     describe('DOM elements corresponding to elements', () => {

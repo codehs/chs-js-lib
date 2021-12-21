@@ -2,34 +2,7 @@ import Circle from '../src/graphics/circle.js';
 import Graphics, { FULLSCREEN_PADDING, pressedKeys } from '../src/graphics/index.js';
 import Rectangle from '../src/graphics/rectangle.js';
 import { map } from '../src/graphics/graphics-utils.js';
-
-/**
- * Simulate a mouse event.
- * @param {string} type
- * @param {object} config
- * @param {HTMLElement} target
- * @param {boolean} touch
- */
-export const simulateEvent = (type, config, target, touch = false) => {
-    let event;
-    try {
-        if (touch) {
-            event = new TouchEvent(type, { bubbles: true });
-        } else {
-            event = new MouseEvent(type, { bubbles: true });
-        }
-    } catch (e) {
-        event = document.createEvent('Event');
-        event.initEvent(type, true, false);
-    }
-
-    config = config || {};
-    for (let prop in config) {
-        event[prop] = config[prop];
-    }
-
-    target.dispatchEvent(event);
-};
+import { simulateEvent } from './utils.js';
 
 describe('Graphics', () => {
     describe('Not window-binding a Graphics instance', () => {
@@ -53,8 +26,13 @@ describe('Graphics', () => {
             const g = new Graphics();
             g.setFullscreen();
             const canvas = g.getCanvas();
-            expect(canvas.width).toEqual(document.body.offsetWidth - FULLSCREEN_PADDING);
-            expect(canvas.height).toEqual(document.body.offsetHeight - FULLSCREEN_PADDING);
+            expect(canvas.style.width).toEqual(
+                `${canvas.parentElement.offsetWidth - FULLSCREEN_PADDING}px`
+            );
+            // todo: explain this off by one?
+            expect(canvas.style.height).toEqual(
+                `${canvas.parentElement.offsetHeight - FULLSCREEN_PADDING + 1}px`
+            );
         });
     });
     describe('Mouse events', () => {
