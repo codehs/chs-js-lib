@@ -474,6 +474,8 @@ class GraphicsManager extends Manager {
      * @param {number} h - Desired height of the canvas.
      */
     setSize(w, h) {
+        w = Math.floor(w);
+        h = Math.floor(h);
         this.fullscreenMode = false;
         const canvas = this.getCanvas();
         // prevent flickering effect by saving the canvas and immediately drawing back.
@@ -482,8 +484,8 @@ class GraphicsManager extends Manager {
         const temporaryCanvas = document.createElement('canvas');
         temporaryCanvas.width = canvas.width;
         temporaryCanvas.height = canvas.height;
-        temporaryCanvas.style.width = `${w / this.devicePixelRatio}px`;
-        temporaryCanvas.style.height = `${h / this.devicePixelRatio}px`;
+        temporaryCanvas.style.width = `${canvas.width / this.devicePixelRatio}px`;
+        temporaryCanvas.style.height = `${canvas.height / this.devicePixelRatio}px`;
         const temporaryContext = temporaryCanvas.getContext('2d');
         temporaryContext.drawImage(canvas, 0, 0);
 
