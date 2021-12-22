@@ -22,7 +22,7 @@ jobs:
           recurse: true
 
       - name: Generate JS
-      - run: npm run docs
+        run: npm run docs
 
       - name: Deploy to pages
         uses: peaceiris/actions-gh-pages@v3
