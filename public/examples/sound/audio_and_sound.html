@@ -3,8 +3,8 @@
     <head>
         <title>Sound - Audio and Sound</title>
         <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css" />
-<link rel="stylesheet" href="/style.css" />
-<script type="text/javascript" src="/main.js"></script>
+        <link rel="stylesheet" href="/style.css" />
+        <script type="text/javascript" src="/main.js"></script>
     </head>
     <body>
         <header>
@@ -18,10 +18,13 @@
         <canvas id="game" width="480" height="200"></canvas>
         <script src="/chs.iife.js"></script>
         <script>
+            let darkMode =
+                window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
             // rooster sound from https://www.fesliyanstudios.com/royalty-free-sound-effects-download/rooster-chicken-259
             const instructions = new Text('Press squares to play notes or sounds', '12pt Arial');
             instructions.setAnchor({ vertical: 0.5, horizontal: 0.5 });
             instructions.setPosition(getWidth() / 2, getHeight() / 4);
+            darkMode && instructions.setColor('white');
             add(instructions);
 
             const chickenSound = new Audio(
@@ -31,10 +34,13 @@
             const cButton = new Rectangle(getWidth() / 2 - 10, 100);
             cButton.setPosition(0, getHeight() / 2);
             cButton.pitch = 'C4';
+            darkMode && cButton.setColor('white');
+
             add(cButton);
             const chickenButton = new Rectangle(getWidth() / 2 - 10, 100);
             chickenButton.setPosition(getWidth() / 2, getHeight() / 2);
             chickenButton.pitch = 'E4';
+            darkMode && chickenButton.setColor('white');
             add(chickenButton);
 
             mouseDownMethod(e => {
@@ -52,6 +58,9 @@
                 }
             });
         </script>
-        <p>This example creates both Audio and Sound objects, which are used for playing a sound effect and sine wave with a pitch.</p>
+        <p>
+            This example creates both Audio and Sound objects, which are used for playing a sound
+            effect and sine wave with a pitch.
+        </p>
     </body>
 </html>

@@ -1,16 +1,25 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Test</title>
+        <title>Stress Test</title>
+        <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css" />
+        <link rel="stylesheet" href="/style.css" />
+        <script type="text/javascript" src="/main.js"></script>
     </head>
     <body>
+        <header>
+            <h1>Stress Test</h1>
+            <nav>
+                <a href="/">Home</a>
+                <a href="/examples">Examples</a>
+                <a href="/documentation">Documentation</a>
+            </nav>
+        </header>
         <canvas id="game" width="480" height="400"></canvas>
-        <p>
-            This example records how quickly 100,000 circles can be added and removed, without being
-            drawn.<br />This time, it took <span id="target">loading</span> milliseconds.
-        </p>
-        <script src="../../../dist/chs.iife.js"></script>
+        <script src="/chs.iife.js"></script>
         <script id="code">
+            let darkMode =
+                window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
             const gravity = 0.1;
             class Ball extends Circle {
                 constructor(x, y) {
@@ -80,10 +89,13 @@
             const fpsText = new Text(averageFPS);
             const elementsLabel = new Text(0);
             if (debug) {
+                window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
                 fpsText.setAnchor({ vertical: 0, horizontal: 1 });
                 fpsText.setPosition(getWidth(), 0);
+                fpsText.setColor(darkMode ? 'white' : 'black');
                 elementsLabel.setAnchor({ vertical: 0, horizontal: 1 });
                 elementsLabel.setPosition(getWidth(), fpsText.height);
+                elementsLabel.setColor(darkMode ? 'white' : 'black');
                 add(fpsText);
                 add(elementsLabel);
             }
