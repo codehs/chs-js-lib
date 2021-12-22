@@ -3,8 +3,8 @@
     <head>
         <title>Interaction Test</title>
         <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css" />
-<link rel="stylesheet" href="/style.css" />
-<script type="text/javascript" src="/main.js"></script>
+        <link rel="stylesheet" href="/style.css" />
+        <script type="text/javascript" src="/main.js"></script>
         <style>
             canvas {
                 border: 1px solid black;
@@ -23,9 +23,14 @@
         <canvas id="game" width="480" height="200"></canvas>
         <script src="/chs.iife.js"></script>
         <script id="code">
+            let darkMode =
+                window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
             let label;
             label = new Text('Move the mouse to change the size of the canvas');
             label.setAnchor({ vertical: 0, horizontal: 0 });
+            if (darkMode) {
+                label.setColor('white');
+            }
             add(label);
             function circleAt(radius, color, x, y) {
                 var circle = new Circle(radius);
@@ -54,9 +59,6 @@
                 const parts = [];
                 parts.push(circleAt(HEAD_RADIUS, color, cx, cy));
                 parts.push(rectAt(BODY_WIDTH, BODY_HEIGHT, color, cx - BODY_WIDTH / 2, cy));
-
-                // This is a bit more confusing since it
-                // draws a ghost with any number of feet
                 for (let i = 0; i < NUM_FEET; i++) {
                     var start = -NUM_FEET + 1 + i * 2;
                     parts.push(
@@ -84,6 +86,9 @@
                 setSize(w, w);
             });
         </script>
-        <p><code>setSize()</code> can be used to resize the canvas. In this example, moving the mouse will change the size of the canvas.</p>
+        <p>
+            <code>setSize()</code> can be used to resize the canvas. In this example, moving the
+            mouse will change the size of the canvas.
+        </p>
     </body>
 </html>

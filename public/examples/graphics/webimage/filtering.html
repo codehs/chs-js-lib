@@ -19,6 +19,8 @@
     <canvas id="game" width="480" height="200"></canvas>
     <script src="/chs.iife.js"></script>
     <script id="code">
+        let darkMode =
+            window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
         var grabbedImage;
         var allImages = [];
         let started = false;
@@ -98,6 +100,7 @@
                 'Caution:\nThis example has flashing lights. Click to continue',
                 '12pt Arial'
             );
+            t.setColor(darkMode ? 'white' : 'black');
             t.setAnchor({ vertical: 0.5, horizontal: 0.5 });
             t.setPosition(getWidth() / 2, getHeight() / 2);
             add(t);

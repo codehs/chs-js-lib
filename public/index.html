@@ -1,7 +1,7 @@
 <head>
     <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css" />
-<link rel="stylesheet" href="/style.css" />
-<script type="text/javascript" src="/main.js"></script>
+    <link rel="stylesheet" href="/style.css" />
+    <script type="text/javascript" src="/main.js"></script>
 </head>
 <body>
     <header>
@@ -59,9 +59,10 @@ add(c);
 
             <pre><code>
 &lt;script type="module"&gt;
-import {Graphics} from "https://unpkg.com/chs-js-lib@latest/dist/chs.mjs";
+import {Circle, Graphics} from "https://unpkg.com/chs-js-lib@latest/dist/chs.mjs";
 
 const graphics = new Graphics();
+graphics.add(new Circle(50));
 &lt;/script&gt;
             </code></pre>
         </section>

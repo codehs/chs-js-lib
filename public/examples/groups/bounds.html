@@ -3,8 +3,8 @@
     <head>
         <title>Group - Bounds</title>
         <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css" />
-<link rel="stylesheet" href="/style.css" />
-<script type="text/javascript" src="/main.js"></script>
+        <link rel="stylesheet" href="/style.css" />
+        <script type="text/javascript" src="/main.js"></script>
     </head>
     <body>
         <header>
@@ -18,11 +18,15 @@
         <canvas id="game" width="480" height="200"></canvas>
         <script src="/chs.iife.js"></script>
         <script id="code">
+            let darkMode =
+                window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+
             const group = new Group();
 
             const r = new Rectangle(40, 40);
             r.setPosition(50, 50);
             r.rotate(45);
+            r.setColor(darkMode ? 'yellow' : 'black');
 
             setTimer(() => {
                 r.rotate(1);
@@ -32,6 +36,9 @@
             group.debug = true;
             add(group);
         </script>
-        <p>A Group's bounds fully include all elements contained in it. When elements in the group resize or move, the Group's bounds also change.</p>
+        <p>
+            A Group's bounds fully include all elements contained in it. When elements in the group
+            resize or move, the Group's bounds also change.
+        </p>
     </body>
 </html>
