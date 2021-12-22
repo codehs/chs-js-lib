@@ -439,11 +439,13 @@ class Thing {
         // translate to the location of the shape
         context.translate(drawX, drawY);
 
-        // translate to the shape's center to perform rotation around its center,
-        // then translate back
-        context.translate(this.width / 2, this.height / 2);
-        context.rotate(this.rotation);
-        context.translate(-this.width / 2, -this.height / 2);
+        if (this.rotation) {
+            // translate to the shape's center to perform rotation around its center,
+            // then translate back
+            context.translate(this.width / 2, this.height / 2);
+            context.rotate(this.rotation);
+            context.translate(-this.width / 2, -this.height / 2);
+        }
 
         subclassDraw?.();
 
