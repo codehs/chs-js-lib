@@ -14,7 +14,7 @@ module.exports = function (config) {
         files: [
             { pattern: 'src/**/*.js', type: 'module', included: false },
             { pattern: 'test/setup.js', type: 'module' },
-            { pattern: 'test/*.test.js', type: 'module' },
+            { pattern: 'test/*.js', type: 'module' },
         ],
 
         // list of files / patterns to exclude

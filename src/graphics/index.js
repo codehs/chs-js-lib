@@ -12,9 +12,10 @@ export const HIDDEN_KEYBOARD_NAVIGATION_DOM_ELEMENT_STYLE =
 export const HIDDEN_KEYBOARD_NAVIGATION_DOM_ELEMENT_ID = id => `${id}focusbutton`;
 
 /** @type {Object.<string, GraphicsManager>} */
-let GraphicsInstances = {};
+export let GraphicsInstances = {};
+/** @type {Array.<any>} */
+export let pressedKeys = [];
 let graphicsInstanceID = 0;
-let pressedKeys = [];
 
 /**
  * Class for interacting with Graphics.
@@ -65,55 +66,82 @@ class GraphicsManager extends Manager {
         GraphicsInstances[graphicsInstanceID++] = this;
     }
 
+    onKeyDown = e => {
+        const index = pressedKeys.indexOf(e.keyCode);
+        if (index === -1) {
+            pressedKeys.push(e.keyCode);
+        }
+
+        if (e.key === 'Tab') {
+            for (let i = 0; i < this.elementPoolSize; i++) {
+                const elem = this.elementPool[i];
+                if (!elem._hasAccessibleDOMElement) {
+                    this.createAccessibleDOMElement(elem);
+                }
+            }
+            this.userNavigatingWithKeyboard = true;
+            this.showKeyboardNavigationDOMElements();
+        }
+
+        this.keyDownCallback?.(e);
+        return true;
+    };
+
+    onKeyUp = e => {
+        const index = pressedKeys.indexOf(e.keyCode);
+        if (index !== -1) {
+            pressedKeys.splice(index, 1);
+        }
+        this.keyUpCallback?.(e);
+    };
+
+    onResize = e => {
+        // https://developer.mozilla.org/en-US/docs/Web/Events/resize
+        // Throttle the resize event handler since it fires at such a rapid rate
+        // Only respond to the resize event if there's not already a response queued up
+        if (!this._resizeTimeout) {
+            this._resizeTimeout = setTimeout(() => {
+                this._resizeTimeout = null;
+                this.fullscreenMode && this.setFullscreen?.();
+            }, DEFAULT_UPDATE_INTERVAL);
+        }
+    };
+
+    onOrientationChange = e => {
+        this.deviceOrientationCallback?.(e);
+    };
+
+    onDeviceMotion = e => {
+        this.deviceMotionCallback?.(e);
+    };
+
+    /**
+     * Add all handlers to the window for triggering functions on the instance.
+     */
     addEventListeners() {
-        window.addEventListener('keydown', e => {
-            const index = pressedKeys.indexOf(e.keyCode);
-            if (index === -1) {
-                pressedKeys.push(e.keyCode);
-            }
-
-            if (e.key === 'Tab') {
-                this.userNavigatingWithKeyboard = true;
-                this.showKeyboardNavigationDOMElements();
-            }
-
-            this.keyDownCallback?.(e);
-            return true;
-        });
-
-        window.addEventListener('keyup', e => {
-            const index = pressedKeys.indexOf(e.keyCode);
-            if (index !== -1) {
-                pressedKeys.splice(index, 1);
-            }
-            this.keyUpCallback?.(e);
-        });
-
-        let resizeTimeout;
-        window.addEventListener('resize', e => {
-            // https://developer.mozilla.org/en-US/docs/Web/Events/resize
-            // Throttle the resize event handler since it fires at such a rapid rate
-            // Only respond to the resize event if there's not already a response queued up
-            if (!resizeTimeout) {
-                resizeTimeout = setTimeout(() => {
-                    resizeTimeout = null;
-                    this.fullscreenMode && this.setFullscreen?.();
-                }, DEFAULT_UPDATE_INTERVAL);
-            }
-        });
+        window.addEventListener('keydown', this.onKeyDown);
+        window.addEventListener('keyup', this.onKeyUp);
+        window.addEventListener('resize', this.onResize);
 
         /** MOBILE DEVICE EVENTS ****/
         if (window.DeviceOrientationEvent) {
-            window.addEventListener('orientationchange', e => {
-                this.deviceOrientationCallback?.(e);
-            });
+            window.addEventListener('orientationchange', this.onOrientationChange);
         }
 
         if (window.DeviceMotionEvent) {
-            window.addEventListener('devicemotion', e => {
-                this.deviceMotionCallback?.(e);
-            });
+            window.addEventListener('devicemotion', this.onDeviceMotion);
         }
+    }
+
+    /**
+     * Remove all handlers from the window and clean up any memory.
+     */
+    cleanup() {
+        window.removeEventListener('keydown', this.onKeyDown);
+        window.removeEventListener('keyup', this.onKeyUp);
+        window.removeEventListener('resize', this.onResize);
+        window.removeEventListener('orientationchange', this.onOrientationChange);
+        window.removeEventListener('devicemotion', this.onDeviceMotion);
     }
 
     configure(options = {}) {
@@ -134,7 +162,6 @@ class GraphicsManager extends Manager {
     add(elem) {
         elem.alive = true;
         this.elementPool[this.elementPoolSize++] = elem;
-        this.createAccessibleDOMElement(elem);
     }
 
     /**
@@ -175,6 +202,7 @@ class GraphicsManager extends Manager {
         };
         document.body.appendChild(button);
         this.accessibleDOMElements.push(button);
+        elem._hasAccessibleDOMElement = true;
     }
 
     exitKeyboardNavigation() {
@@ -438,7 +466,7 @@ class GraphicsManager extends Manager {
         }
         elem.alive = false;
         const focusButtonID = HIDDEN_KEYBOARD_NAVIGATION_DOM_ELEMENT_ID(elem._id);
-        document.getElementById(focusButtonID).remove();
+        document.getElementById(focusButtonID)?.remove();
     }
     /**
      * Set the size of the canvas.
@@ -446,6 +474,8 @@ class GraphicsManager extends Manager {
      * @param {number} h - Desired height of the canvas.
      */
     setSize(w, h) {
+        w = Math.floor(w);
+        h = Math.floor(h);
         this.fullscreenMode = false;
         const canvas = this.getCanvas();
         // prevent flickering effect by saving the canvas and immediately drawing back.
@@ -454,8 +484,8 @@ class GraphicsManager extends Manager {
         const temporaryCanvas = document.createElement('canvas');
         temporaryCanvas.width = canvas.width;
         temporaryCanvas.height = canvas.height;
-        temporaryCanvas.style.width = `${w / this.devicePixelRatio}px`;
-        temporaryCanvas.style.height = `${h / this.devicePixelRatio}px`;
+        temporaryCanvas.style.width = `${canvas.width / this.devicePixelRatio}px`;
+        temporaryCanvas.style.height = `${canvas.height / this.devicePixelRatio}px`;
         const temporaryContext = temporaryCanvas.getContext('2d');
         temporaryContext.drawImage(canvas, 0, 0);
 
@@ -475,8 +505,12 @@ class GraphicsManager extends Manager {
     setFullscreen() {
         this.fullscreenMode = true; // when this is true, canvas will resize with parent
         var canvas = this.getCanvas();
-        canvas.width = canvas.parentElement.offsetWidth - FULLSCREEN_PADDING;
-        canvas.height = canvas.parentElement.offsetHeight - FULLSCREEN_PADDING;
+        const width = canvas.parentElement.offsetWidth - FULLSCREEN_PADDING;
+        const height = canvas.parentElement.offsetHeight - FULLSCREEN_PADDING;
+        canvas.width = this.devicePixelRatio * width;
+        canvas.height = this.devicePixelRatio * height;
+        canvas.style.width = `${width}px`;
+        canvas.style.height = `${height}px`;
     }
 
     /**
@@ -827,11 +861,11 @@ MouseEvent.prototype.getY = function () {
 
 if (typeof TouchEvent !== 'undefined') {
     TouchEvent.prototype.getX = function () {
-        return calculateCoordinates(this.touches[0]).x;
+        return (this.touches.length && calculateCoordinates(this.touches[0]).x) || null;
     };
 
     TouchEvent.prototype.getY = function () {
-        return calculateCoordinates(this.touches[0]).y;
+        return (this.touches.length && calculateCoordinates(this.touches[0]).y) || null;
     };
 }
 

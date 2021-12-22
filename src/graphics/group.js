@@ -14,6 +14,16 @@ class Group extends Thing {
      * @type {Array<Thing>}
      */
     elements;
+    /**
+     * The ratio of physical pixels to CSS pixels for the current device.
+     * This allows the canvas to be scaled for higher resolution drawing.
+     * For example, a devicePixelRatio of 2 indicates that the device will use
+     * 2 physical pixels to draw a single css pixel.
+     * https://developer.mozilla.org/en-US/docs/Web/API/Window/devicePixelRatio
+     * @private
+     * @type {number}
+     */
+    devicePixelRatio = window.devicePixelRatio ?? 1;
 
     /**
      * Constructs a new Group.
@@ -265,8 +275,13 @@ class Group extends Thing {
             top: minY,
             bottom: maxY,
         };
-        this._hiddenCanvas.width = maxX - minX;
-        this._hiddenCanvas.height = maxY - minY;
+        const width = maxX - minX;
+        const height = maxY - minY;
+        this._hiddenCanvas.width = this.devicePixelRatio * width;
+        this._hiddenCanvas.height = this.devicePixelRatio * height;
+        this._hiddenCanvas.style.width = `${width}px`;
+        this._hiddenCanvas.style.height = `${height}px`;
+        this._hiddenContext.scale(this.devicePixelRatio, this.devicePixelRatio);
         this._lastCalculatedBoundsID++;
         this._boundsInvalidated = false;
     }
