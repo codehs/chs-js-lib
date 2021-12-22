@@ -27,10 +27,10 @@ describe('Text', () => {
             expect(canvasTranslateSpy).toHaveBeenCalledWith(0, t.getAnchor().vertical * t.height);
             t.setAnchor({ horizontal: 0.5, vertical: 0.5 });
             g.redraw();
-            expect(canvasTranslateSpy).toHaveBeenCalledWith(-t.getWidth() / 2, -t.getHeight() / 2);
+            expect(canvasTranslateSpy).toHaveBeenCalledWith(t.x - t.width / 2, t.y - t.height / 2);
             t.setPosition(10, 10);
             g.redraw();
-            expect(canvasTranslateSpy).toHaveBeenCalledWith(t.getWidth() / 2, t.getHeight() / 2);
+            expect(canvasTranslateSpy).toHaveBeenCalledWith(t.x - t.width / 2, t.y - t.height / 2);
         });
     });
     describe('setFont', () => {
