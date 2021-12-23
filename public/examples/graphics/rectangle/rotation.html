@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Rectangle Test</title>
+        <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css" />
+        <link rel="stylesheet" href="/style.css" />
+        <script type="text/javascript" src="/main.js"></script>
+    </head>
+    <body>
+        <header>
+            <h1>Rectangle - Rotation</h1>
+            <nav>
+                <a href="/">Home</a>
+                <a href="/examples">Examples</a>
+                <a href="/documentation">Documentation</a>
+            </nav>
+        </header>
+        <canvas id="game" width="480" height="200"></canvas>
+        <script src="/chs.iife.js"></script>
+        <script id="code">
+            let rectangle = new Rectangle(100, 10);
+            rectangle.setAnchor({ vertical: 0.5, horizontal: 0.5 });
+            rectangle.debug = true;
+            rectangle.setPosition(getWidth() / 2, getHeight() / 2);
+            rectangle.setRotation(90);
+            mouseDownMethod(() => {
+                rectangle.rotate(90);
+            })
+            add(rectangle);
+        </script>
+        <p>
+            This rectangle is rotated 90 degrees around its center with <code>setRotation(90)</code>
+            Tap the canvas to rotate it by 90 more degrees.
+        </p>
+    </body>
+</html>

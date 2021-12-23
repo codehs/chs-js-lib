@@ -1,0 +1,28 @@
+<html>
+    <head>
+        <title>Group - Bounds</title>
+    </head>
+    <body>
+        <header>
+            <h1>Group - Bounds</h1>
+            <nav>
+                <a href="/">Home</a>
+                <a href="/examples">Examples</a>
+                <a href="/documentation">Documentation</a>
+            </nav>
+        </header>
+        <canvas id="game" width="480" height="200"></canvas>
+        <script src="/chs.iife.js"></script>
+        <script id="code">
+            var circle = new Circle(50);
+            circle.setPosition(100, 100);
+            circle.setColor('red');
+            add(circle);
+
+            mouseMoveMethod((e) => {
+                circle.setPosition(e.getX(), e.getY());
+            })
+        </script>
+        <p>A Group's bounds fully include all elements contained in it. When elements in the group resize or move, the Group's bounds also change.</p>
+    </body>
+</html>

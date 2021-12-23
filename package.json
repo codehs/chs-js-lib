@@ -17,7 +17,7 @@
     "build": "node build.js",
     "dev": "node build.js watch",
     "dist": "node build.js dist",
-    "docs": "jsdoc src/**/*.js --template node_modules/docdash --destination docs/gen",
+    "docs": "npm run build && cp dist/* public/ && jsdoc src/**/*.js --template node_modules/docdash --destination public/docs",
     "prepare": "husky install"
   },
   "keywords": [

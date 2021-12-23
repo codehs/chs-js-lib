@@ -465,8 +465,11 @@ class GraphicsManager extends Manager {
             elem.stop();
         }
         elem.alive = false;
-        const focusButtonID = HIDDEN_KEYBOARD_NAVIGATION_DOM_ELEMENT_ID(elem._id);
-        document.getElementById(focusButtonID)?.remove();
+        if (elem._hasAccessibleDOMElement) {
+            const focusButtonID = HIDDEN_KEYBOARD_NAVIGATION_DOM_ELEMENT_ID(elem._id);
+            document.getElementById(focusButtonID)?.remove();
+            elem._hasAccessibleDOMElement = false;
+        }
     }
     /**
      * Set the size of the canvas.

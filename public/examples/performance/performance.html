@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Performance</title>
+        <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css" />
+        <link rel="stylesheet" href="/style.css" />
+        <script type="text/javascript" src="/main.js"></script>
+    </head>
+    <body>
+        <header>
+            <h1>Performance</h1>
+            <nav>
+                <a href="/">Home</a>
+                <a href="/examples">Examples</a>
+                <a href="/documentation">Documentation</a>
+            </nav>
+        </header>
+        <canvas id="game" width="480" height="400"></canvas>
+        <script src="/chs.iife.js"></script>
+        <p>
+            This example records how quickly 100,000 circles can be added and removed, without being
+            drawn.<br />This time, it took <span id="target">loading</span> milliseconds.
+        </p>
+        <script id="code">
+            const g = new Graphics();
+            g.shouldUpdate = false;
+            const now = performance.now();
+            const elements = [];
+            for (let i = 0; i < 100000; i++) {
+                const c = new Circle(5);
+                elements.push(c);
+                g.add(c);
+            }
+            for (let i = 100000; i--; ) {
+                g.remove(elements[i]);
+            }
+            const t = performance.now() - now;
+            document.querySelector('#target').innerHTML = t;
+        </script>
+    </body>
+</html>

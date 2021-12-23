@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Rectangle Easing</title>
+        <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css" />
+<link rel="stylesheet" href="/style.css" />
+<script type="text/javascript" src="/main.js"></script>
+    </head>
+    <body>
+        <header>
+            <h1>Rectangle - Easing</h1>
+            <nav>
+                <a href="/">Home</a>
+                <a href="/examples">Examples</a>
+                <a href="/documentation">Documentation</a>
+            </nav>
+        </header>
+        <canvas id="game" width="480" height="200"></canvas>
+        <script src="/chs.iife.js"></script>
+        <script id="code">
+            let width = 40;
+            let height = 40;
+
+            let x = 0;
+            let y = 0;
+            let targetX = 0;
+            let targetY = 0;
+
+            let rectangle = new Rectangle(width, height);
+            rectangle.setBorderColor(Color.RED);
+            rectangle.setBorder(true);
+            rectangle.setFilled(false);
+            rectangle.setAnchor({ vertical: 0.5, horizontal: 0.5 });
+            add(rectangle);
+            mouseMoveMethod(e => {
+                targetX = e.getX();
+                targetY = e.getY();
+            });
+            setTimer(() => {
+                let nextX = 0.75 * rectangle.x + 0.25 * targetX;
+                let nextY = 0.75 * rectangle.y + 0.25 * targetY;
+                rectangle.setPosition(nextX, nextY);
+            }, 20);
+        </script>
+        <p>This example shows how movement can use an easing function for smoother movement. Touch or move your mouse in the canvas and the rectangle will follow.</p>
+    </body>
+</html>
