@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Group Image</title>
+        <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css" />
+        <link rel="stylesheet" href="/style.css" />
+        <script type="text/javascript" src="/main.js"></script>
+    </head>
+    <body>
+        <header>
+            <h1>Group - Mouse</h1>
+            <nav>
+                <a href="/">Home</a>
+                <a href="/examples">Examples</a>
+                <a href="/documentation">Documentation</a>
+            </nav>
+        </header>
+        <canvas id="game" width="480" height="200"></canvas>
+        <script src="/chs.iife.js"></script>
+        <script id="code">
+            let darkMode =
+                window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+            const g = new Group();
+            const r = new Rectangle(40, 40);
+            r.setColor(darkMode ? 'yellow' : 'blue');
+            g.add(r);
+            g.setRotation(180);
+            g.setAnchor({ vertical: 0.5, horizontal: 0.5 });
+            add(g);
+
+            mouseMoveMethod(e => {
+                g.setPosition(e.getX(), e.getY());
+            });
+        </script>
+        <p>Groups can move with <code>setPosition</code>, in this case following the mouse.</p>
+    </body>
+</html>

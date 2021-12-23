@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Test</title>
+        <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css" />
+        <link rel="stylesheet" href="/style.css" />
+        <script type="text/javascript" src="/main.js"></script>
+    </head>
+    <body>
+        <header>
+            <h1>Randomizer - Ball</h1>
+            <nav>
+                <a href="/">Home</a>
+                <a href="/examples">Examples</a>
+                <a href="/documentation">Documentation</a>
+            </nav>
+        </header>
+        <canvas id="game" width="480" height="200"></canvas>
+        <script src="/chs.iife.js"></script>
+        <script id="code">
+            let darkMode =
+                window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+            const ball = new Circle(20);
+            ball.setPosition(getWidth() / 2, getHeight() / 2);
+            darkMode && ball.setColor('white');
+            add(ball);
+
+            let t = 0;
+            setTimer(() => {
+                t += 0.1;
+                ball.setPosition(getWidth() * Randomizer.noise(t), getHeight() / 2);
+            }, 40);
+        </script>
+        <p>This example moves a ball left and right according to Perlin noise.</p>
+    </body>
+</html>
