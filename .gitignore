@@ -6,3 +6,5 @@ coverage
 public/docs
 public/chs.iife.js
 public/chs.mjs
+site/assets/chs.iife.js
+site/assets/chs.mjs
