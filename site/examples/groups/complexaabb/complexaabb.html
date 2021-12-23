@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Group - Complex Bounds</title>
+        <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css" />
+        <link rel="stylesheet" href="/style.css" />
+        <script type="text/javascript" src="/main.js"></script>
+    </head>
+    <body>
+        <header>
+            <h1>Group - Bounds</h1>
+            <nav>
+                <a href="/">Home</a>
+                <a href="/examples">Examples</a>
+                <a href="/documentation">Documentation</a>
+            </nav>
+        </header>
+        <canvas id="game" width="480" height="200"></canvas>
+        <script src="/chs.iife.js"></script>
+        <script id="code">
+            let darkMode =
+                window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+            const group = new Group();
+
+            const r = new Rectangle(40, 40);
+            r.setPosition(50, 50);
+            r.rotate(45);
+
+            const c = new Circle(30);
+            c.setPosition(50, 50);
+
+            if (darkMode) {
+                r.setColor('yellow');
+                c.setColor('yellow');
+            }
+
+            setTimer(() => {
+                r.rotate(1);
+            }, 5);
+
+            group.add(r);
+            group.add(c);
+
+            group.debug = true;
+            add(group);
+        </script>
+        <p>A more complex example of Group bounds.</p>
+    </body>
+</html>

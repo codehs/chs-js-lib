@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Lava Lamp</title>
+        <style>
+            canvas {
+                border: 1px solid black;
+            }
+        </style>
+    </head>
+    <body>
+        <canvas id="game" width="480" height="400"></canvas>
+        <script src="../../../../dist/chs.iife.js"></script>
+        <script id="code">
+            const circle = (radius, x, y, color) => {
+                const c = new Circle(radius);
+                c.setPosition(x, y);
+                c.setColor(color);
+                add(c);
+            };
+
+            const position = (thing, x, y) => {
+                thing.setPosition(x, y);
+            };
+
+            const move = (thing, x, y) => {
+                thing.move(x, y);
+            };
+
+            const random = (x, y) => {
+                return Randomizer.nextInt(x, y);
+            };
+
+            const width = getWidth();
+            const height = getHeight();
+            let mouseX = 0;
+            let mouseY = 0;
+            mouseMoveMethod(e => {
+                mouseX = e.getX();
+                mouseY = e.getY();
+            });
+
+            const oldRedraw = __graphics__.redraw.bind(__graphics__);
+            __graphics__.redraw = () => {
+                removeAll();
+                draw();
+                oldRedraw();
+            };
+
+            const clamp = (v, min, max) => {
+                return Math.min(max, Math.max(min, v));
+            };
+
+            const color = (r, g, b) => {
+                return Color.createFromRGB(clamp(r, 0, 255), clamp(g, 0, 255), clamp(b, 0, 255));
+            };
+
+            let nCircles = 50;
+            let circles = new Array(nCircles).fill(0).map(() => {
+                return [random(0, width), random(10, height - 10), 0, random(5, 7)];
+            });
+
+            function draw() {
+                for (let i = 0; i < circles.length; i++) {
+                    let [x, y, dx, dy] = circles[i];
+                    let dCenter = Math.sqrt((x - width / 2) ** 2 + (y - height / 2) ** 2);
+                    let maxD = Math.sqrt((width / 2) ** 2 + (height / 2) ** 2);
+                    let radius = map(dCenter, maxD, 0, 1, 50);
+
+                    if (x + radius > width || x - radius < 0) {
+                        dx = -dx;
+                    }
+                    if (y + radius > height || y - radius < 0) {
+                        dy = -dy;
+                    }
+
+                    x += dx;
+                    y += dy;
+                    circles[i] = [x, y, dx, dy];
+
+                    let r = 255;
+                    let g = map(x, 0, width, 0, 255);
+                    let b = map(y, 0, height, 0, 255);
+                    circle(radius, x, y, color(r, g, b));
+                }
+            }
+        </script>
+        <p>This example shows how graphics can be drawn in a more declarative style.</p>
+    </body>
+</html>

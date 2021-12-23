@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Timers - Stop</title>
+        <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css" />
+        <link rel="stylesheet" href="/style.css" />
+        <script type="text/javascript" src="/main.js"></script>
+    </head>
+    <body>
+        <header>
+            <h1>Timers - Stop</h1>
+            <nav>
+                <a href="/">Home</a>
+                <a href="/examples">Examples</a>
+                <a href="/documentation">Documentation</a>
+            </nav>
+        </header>
+        <canvas id="game" width="480" height="200"></canvas>
+        <script src="/chs.iife.js"></script>
+        <script id="code">
+            let darkMode =
+                window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+            let color = darkMode ? 'white' : 'black';
+            const draw = () => {
+                var c = new Circle(20);
+                c.setPosition(Math.random() * getWidth(), Math.random() * getHeight());
+                c.setColor(color);
+                add(c);
+            };
+            setTimer(draw, 20);
+            mouseClickMethod(() => {
+                stopTimer(draw);
+            });
+        </script>
+        <p>
+            This example starts a timer that draws circles, then stops the timer when the mouse is
+            clicked.
+        </p>
+    </body>
+</html>
