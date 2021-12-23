@@ -3,8 +3,8 @@
 name: GitHub pages
 
 on:
-  release:
-    types: [released]
+  push:
+    branches: [ main ]
     
 jobs:
   deploy:
