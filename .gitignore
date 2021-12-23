@@ -4,3 +4,5 @@ dist/*
 _site/
 coverage
 public/docs
+public/chs.iife.js
+public/chs.mjs
