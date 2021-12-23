@@ -1,4 +1,3 @@
 {
-    "*.js": "prettier --write",
-    "site/*.(html)|(njk)": "prettier --write"
+    "*.{js,jsx,ts,tsx,md,html,css,njk}": "prettier --write"
 }
