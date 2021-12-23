@@ -1,4 +1,4 @@
 {
     "*.js": "prettier --write",
-    "docs/examples/*.html": "prettier --write"
+    "site/*(.html|.njk)": "prettier --write"
 }
