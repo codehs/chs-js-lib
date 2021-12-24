@@ -1,0 +1,18 @@
+---
+title: Performance - Drawing
+layout: example
+code: performance2.js
+---
+
+This example records how quickly 100,000 shapes can be drawn.<br />This time, it took
+<span id="target">loading</span> milliseconds.
+<button id="redraw">Redraw</button>
+<select name="shape" id="shape">
+    <option value="circle">Circle</option>
+    <option value="rectangle">Rectangle</option>
+    <option value="emptyrectangle">Empty Rectangle with Border</option>
+    <option value="rectwithborder">Rectangle with Border</option>
+    <option value="circlewithborder">Circle with Border</option>
+    <option value="emptycircle">Empty Circle with Border</option>
+</select>
+<input type="checkbox" id="round" label />round positions to integer values

@@ -341,7 +341,8 @@ class GraphicsManager extends Manager {
     }
 
     /**
-     * Create a new timer
+     * Create a new timer.
+     * {@link Manager#setTimer}
      * @param {function} fn - Function to be called at intervals.
      * @param {integer} time - Time interval to call function `fn`
      * @param {dictionary} data - Any data associated with the timer.
@@ -383,7 +384,7 @@ class GraphicsManager extends Manager {
                 name: name,
             });
         } else {
-            super.setTimer(this.withErrorHandler(fn), time, data, name ?? fn.name);
+            return super.setTimer(this.withErrorHandler(fn), time, data, name ?? fn.name);
         }
     }
 

@@ -9,23 +9,17 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    env:
+      GITHUB_ACTION: 1
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Build docs
-        uses: andstor/jsdoc-action@v1
-        with:
-          source_dir: ./src
-          output_dir: ./public/docs
-          template: docdash
-          recurse: true
-
       - run: npm ci
-      - run: npm run docs
+      - run: npm run site
 
       - name: Deploy to pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           deploy_key: ${{ secrets.ACTIONS_DEPLOY_KEY }}
-          publish_dir: ./public
+          publish_dir: ./_site

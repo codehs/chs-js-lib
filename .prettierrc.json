@@ -17,5 +17,9 @@
     "useTabs": false,
     "vueIndentScriptAndStyle": false,
     "parser": "babel",
-    "overrides": [{"files": "*.html", "options": {"parser": "html"}}]
+    "overrides": [
+        {"files": ["*.html", "*.njk"], "options": {"parser": "html"}},
+        {"files": "*.md", "options": {"parser": "markdown"}},
+        {"files": "*.css", "options": {"parser": "css"}}
+    ]
 }
