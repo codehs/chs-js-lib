@@ -9,6 +9,8 @@ module.exports = eleventyConfig => {
         });
     });
     eleventyConfig.addPassthroughCopy('site/assets');
+    eleventyConfig.addPassthroughCopy('site/docs');
+    eleventyConfig.addWatchTarget('site/examples/');
 
     return {
         pathPrefix: process.env.GITHUB_ACTION ? '/chs-js-lib/' : '',

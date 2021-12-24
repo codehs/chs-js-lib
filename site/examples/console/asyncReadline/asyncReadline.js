@@ -1,4 +1,4 @@
-import { Console } from '/chs.mjs';
+import { Console } from '/assets/chs.mjs';
 const c = new Console({
     onPrompt: message => {
         return new Promise(resolve => {

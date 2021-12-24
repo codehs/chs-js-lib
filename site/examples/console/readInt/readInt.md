@@ -1,5 +1,5 @@
 ---
-title: readInt
+title: Console - readInt
 code: readInt.js
 layout: example.11ty.js
 ---

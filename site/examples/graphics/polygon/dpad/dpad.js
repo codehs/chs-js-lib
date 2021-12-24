@@ -22,7 +22,7 @@ for (var i = 0; i < 4; i++) {
     add(button);
 }
 
-press = function (direction) {
+const press = function (direction) {
     shapes.forEach(shape => {
         if (shape.direction === direction) {
             shape.setColor('#a8a8a8');
@@ -32,7 +32,7 @@ press = function (direction) {
     });
 };
 
-unpress = function (direction) {
+const unpress = function (direction) {
     shapes.forEach(shape => {
         if (shape.direction === direction) {
             if (shape.pressed) {

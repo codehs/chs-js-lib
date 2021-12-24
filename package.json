@@ -17,8 +17,10 @@
     "build": "node build.js",
     "dev": "node build.js watch",
     "dist": "node build.js dist",
-    "docs": "npm run build && cp dist/* ./site/assets/ && jsdoc src/**/*.js --template node_modules/docdash --destination public/docs",
-    "prepare": "husky install"
+    "docs": "npm run build && cp dist/* ./site/assets/ && jsdoc src/**/*.js --template node_modules/docdash --destination _site/docs",
+    "prepare": "husky install",
+    "site": "npm run docs && npx @11ty/eleventy",
+    "site:watch": "npm run docs && npx @11ty/eleventy --watch"
   },
   "keywords": [
     "javacsript",
@@ -28,6 +30,7 @@
   "author": "CodeHS",
   "license": "ISC",
   "devDependencies": {
+    "@11ty/eleventy": "^0.12.1",
     "docdash": "^1.2.0",
     "esbuild": "^0.13.13",
     "husky": "^7.0.4",
