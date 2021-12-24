@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css" />
+        <link rel="stylesheet" href="/chs-js-lib/assets/style.css" />
+        <script type="text/javascript" src="/chs-js-lib/assets/main.js"></script>
+        <title>Layering</title>
+    </head>
+    <body>
+        <header>
+            <h1>Layering</h1>
+            <nav>
+                <a href="/chs-js-lib/">Home</a>
+                <a href="/chs-js-lib/examples">Examples</a>
+                <a href="/chs-js-lib/documentation">Documentation</a>
+            </nav>
+        </header>
+
+        <main>
+            <div style="display: flex">
+                <canvas id="game" width="480" height="200"></canvas>
+            </div>
+            <script src="/chs-js-lib/assets/chs.iife.js"></script>
+            <script type="text/javascript">
+                window.root = '/chs-js-lib/assets/';
+            </script>
+            <script id="code" type="module">
+                let rectangles = [];
+                let colors = [
+                    '#F72585',
+                    '#B5179E',
+                    '#7209B7',
+                    '#560bad',
+                    '#480ca8',
+                    '#3a0ca3',
+                    '#3f37c9',
+                    '#4361ee',
+                    '#4895ef',
+                    '#4cc9f0',
+                ];
+                for (let i = 0; i < 10; i++) {
+                    const rect = new Rectangle(getWidth() / 5, 100);
+                    rect.setColor(colors[i]);
+                    rect.setPosition((i * getWidth()) / 10 - 50, i * 10);
+                    add(rect);
+                    rectangles.push(rect);
+                }
+
+                let reverse = true;
+                setInterval(() => {
+                    rectangles.forEach((rectangle, i) => {
+                        rectangle.layer = reverse ? 10 - i : i;
+                    });
+                    reverse = !reverse;
+                }, 1000);
+            </script>
+            <p>
+                The ordering of elements can be controlled by changing the
+                <code>.layer</code> attribute of an element. In this example, every 1000
+                milliseconds the layering of the Rectangles are flipped.
+            </p>
+        </main>
+    </body>
+</html>

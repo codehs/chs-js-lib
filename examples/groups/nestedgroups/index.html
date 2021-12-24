@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css" />
+        <link rel="stylesheet" href="/chs-js-lib/assets/style.css" />
+        <script type="text/javascript" src="/chs-js-lib/assets/main.js"></script>
+        <title>Group - Nested Groups</title>
+    </head>
+    <body>
+        <header>
+            <h1>Group - Nested Groups</h1>
+            <nav>
+                <a href="/chs-js-lib/">Home</a>
+                <a href="/chs-js-lib/examples">Examples</a>
+                <a href="/chs-js-lib/documentation">Documentation</a>
+            </nav>
+        </header>
+
+        <main>
+            <div style="display: flex">
+                <canvas id="game" width="480" height="200"></canvas>
+            </div>
+            <script src="/chs-js-lib/assets/chs.iife.js"></script>
+            <script type="text/javascript">
+                window.root = '/chs-js-lib/assets/';
+            </script>
+            <script id="code" type="module">
+                let darkMode =
+                    window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+                const g1 = new Group();
+                const r = new Rectangle(40, 40);
+                darkMode && r.setColor('white');
+                g1.add(r);
+                g1.setPosition(getWidth() / 2, getHeight() / 2);
+                g1.debug = true;
+
+                const g2 = new Group();
+                g2.add(g1);
+                g2.debug = true;
+                g2.setPosition(getWidth() / 2, getHeight() / 2);
+
+                const g3 = new Group();
+                g3.add(g2);
+                g3.setPosition(getWidth() / 2, getHeight() / 2);
+                g3.debug = true;
+
+                add(g3);
+
+                setTimer(() => {
+                    r.rotate(1);
+                    g1.rotate(1);
+                    g2.rotate(1);
+                }, 10);
+            </script>
+            <p>Groups can contain other Groups, each fully containing the child.</p>
+        </main>
+    </body>
+</html>

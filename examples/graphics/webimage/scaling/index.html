@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css" />
+        <link rel="stylesheet" href="/chs-js-lib/assets/style.css" />
+        <script type="text/javascript" src="/chs-js-lib/assets/main.js"></script>
+        <title>WebImage - Scaling</title>
+    </head>
+    <body>
+        <header>
+            <h1>WebImage - Scaling</h1>
+            <nav>
+                <a href="/chs-js-lib/">Home</a>
+                <a href="/chs-js-lib/examples">Examples</a>
+                <a href="/chs-js-lib/documentation">Documentation</a>
+            </nav>
+        </header>
+
+        <main>
+            <div style="display: flex">
+                <canvas id="game" width="480" height="200"></canvas>
+            </div>
+            <script src="/chs-js-lib/assets/chs.iife.js"></script>
+            <script type="text/javascript">
+                window.root = '/chs-js-lib/assets/';
+            </script>
+            <script id="code" type="module">
+                const IMG_URL =
+                    'https://upload.wikimedia.org/wikipedia/commons/d/da/The_Parthenon_in_Athens.jpg';
+
+                const image = new WebImage(IMG_URL);
+
+                let w = 10;
+                let h = 10;
+                let aspectRatio = 1;
+                let maxW;
+                let dh = -4;
+                image.loaded(() => {
+                    add(image);
+                    aspectRatio = image.width / image.height;
+                    maxW = image.width;
+                    w = image.width;
+                    h = image.height;
+                    start();
+                });
+                const start = () => {
+                    setTimer(() => {
+                        h += dh;
+                        w = aspectRatio * h;
+                        image.setSize(w, h);
+                        if (h <= 50 || w > maxW) {
+                            dh = -dh;
+                        }
+                    }, 30);
+                };
+            </script>
+            <p>This program resizes an image by calling <code>setSize</code>.</p>
+        </main>
+    </body>
+</html>

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css" />
+        <link rel="stylesheet" href="/chs-js-lib/assets/style.css" />
+        <script type="text/javascript" src="/chs-js-lib/assets/main.js"></script>
+        <title>Polygon - Bounds</title>
+    </head>
+    <body>
+        <header>
+            <h1>Polygon - Bounds</h1>
+            <nav>
+                <a href="/chs-js-lib/">Home</a>
+                <a href="/chs-js-lib/examples">Examples</a>
+                <a href="/chs-js-lib/documentation">Documentation</a>
+            </nav>
+        </header>
+
+        <main>
+            <div style="display: flex">
+                <canvas id="game" width="480" height="200"></canvas>
+            </div>
+            <script src="/chs-js-lib/assets/chs.iife.js"></script>
+            <script type="text/javascript">
+                window.root = '/chs-js-lib/assets/';
+            </script>
+            <script id="code" type="module">
+                let darkMode =
+                    window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+                let color = 'blue';
+                if (darkMode) {
+                    color = 'yellow';
+                }
+                const t1 = new Polygon();
+                t1.addPoint(15, 0);
+                t1.addPoint(30, 30);
+                t1.addPoint(0, 30);
+                t1.debug = true;
+                t1.setPosition(getWidth() / 4, getHeight() / 2);
+                t1.setAnchor({ horizontal: 0, vertical: 0 });
+                t1.setColor(color);
+                add(t1);
+                const t2 = new Polygon();
+                t2.addPoint(15, 0);
+                t2.addPoint(30, 30);
+                t2.addPoint(0, 30);
+                t2.debug = true;
+                t2.setPosition((2 * getWidth()) / 4, getHeight() / 2);
+                t2.setAnchor({ horizontal: 0.5, vertical: 0.5 });
+                t2.setColor(color);
+                add(t2);
+                const t3 = new Polygon();
+                t3.addPoint(15, 0);
+                t3.addPoint(30, 30);
+                t3.addPoint(0, 30);
+                t3.debug = true;
+                t3.setPosition((3 * getWidth()) / 4, getHeight() / 2);
+                t3.setAnchor({ horizontal: 1, vertical: 1 });
+                t3.setColor(color);
+                add(t3);
+
+                setTimer(() => {
+                    t1.rotate(2);
+                    t2.rotate(2);
+                    t3.rotate(2);
+                }, 50);
+            </script>
+            <p>
+                Polygons can be anchored. <code>{vertical: 0, horizontal: 0}</code> (default),
+                <code>{vertical: 0.5, horizontal: 0.5}</code>,
+                <code>{vertical: 1, horizontal: 1}</code>.
+            </p>
+        </main>
+    </body>
+</html>

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css" />
+        <link rel="stylesheet" href="/chs-js-lib/assets/style.css" />
+        <script type="text/javascript" src="/chs-js-lib/assets/main.js"></script>
+        <title>WebImage - ImageData</title>
+    </head>
+    <body>
+        <header>
+            <h1>WebImage - ImageData</h1>
+            <nav>
+                <a href="/chs-js-lib/">Home</a>
+                <a href="/chs-js-lib/examples">Examples</a>
+                <a href="/chs-js-lib/documentation">Documentation</a>
+            </nav>
+        </header>
+
+        <main>
+            <div style="display: flex">
+                <canvas id="game" width="480" height="200"></canvas>
+            </div>
+            <script src="/chs-js-lib/assets/chs.iife.js"></script>
+            <script type="text/javascript">
+                window.root = '/chs-js-lib/assets/';
+            </script>
+            <script id="code" type="module">
+                const RGBURL = 'https://codehs.com/uploads/4cd36a1bacbd8cdd22cf75947f4caea8';
+                const img = new WebImage(RGBURL);
+                const size = getWidth() * getHeight();
+                const arr = new Uint8ClampedArray(size * 4);
+                for (let i = 0; i < arr.length; i += 4) {
+                    arr[i + 0] = 255; // R value
+                    arr[i + 1] = 0; // G value
+                    arr[i + 2] = 0; // B value
+                    arr[i + 3] = 255; // A value
+                }
+                const imageData = new ImageData(arr, getWidth(), getHeight());
+                img.setImageData(imageData);
+                add(img);
+
+                mouseMoveMethod(e => {
+                    const x = e.getX();
+                    const y = e.getY();
+                    img.setPixel(x, y, 2, 255);
+                    img.setPixel(x, y, 0, 0);
+                });
+            </script>
+            <p>
+                This example sets the ImageData of a WebImage by creating a new ImageData object.
+                Then, using <code>setPixel</code>, the pixels at the mouse's position are turned
+                blue.
+            </p>
+        </main>
+    </body>
+</html>

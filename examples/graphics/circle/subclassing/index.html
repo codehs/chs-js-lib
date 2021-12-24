@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css" />
+        <link rel="stylesheet" href="/chs-js-lib/assets/style.css" />
+        <script type="text/javascript" src="/chs-js-lib/assets/main.js"></script>
+        <title>Circle - Subclass</title>
+    </head>
+    <body>
+        <header>
+            <h1>Circle - Subclass</h1>
+            <nav>
+                <a href="/chs-js-lib/">Home</a>
+                <a href="/chs-js-lib/examples">Examples</a>
+                <a href="/chs-js-lib/documentation">Documentation</a>
+            </nav>
+        </header>
+
+        <main>
+            <div style="display: flex">
+                <canvas id="game" width="480" height="200"></canvas>
+            </div>
+            <script src="/chs-js-lib/assets/chs.iife.js"></script>
+            <script type="text/javascript">
+                window.root = '/chs-js-lib/assets/';
+            </script>
+            <script id="code" type="module">
+                setBackgroundColor('gray');
+
+                let flakeID = 0;
+                class Snowflake {
+                    theta = Randomizer.nextFloat(Math.PI * 2);
+                    dTheta = 0.04;
+
+                    constructor(x, y, dy) {
+                        this.id = flakeID++;
+                        this.x = x;
+                        this.y = y;
+                        this.dy = dy;
+
+                        this.shape = new Circle(Randomizer.nextInt(1, 3));
+                        this.shape.setColor('white');
+                        this.shape.setPosition(x, y);
+                        add(this.shape);
+                        setTimer(this.update, 50, {}, this.id);
+                    }
+
+                    update = () => {
+                        this.y += this.dy;
+                        const x = this.x - (Math.sin(this.theta) * getWidth()) / 2;
+                        this.shape.setPosition(x, this.y);
+
+                        this.theta += this.dTheta;
+
+                        if (this.y > getHeight()) {
+                            stopTimer(this.id);
+                            remove(this.shape);
+                        }
+                    };
+                }
+
+                setTimer(() => {
+                    new Snowflake(Randomizer.nextInt(getWidth()), 0, Randomizer.nextInt(1, 3));
+                }, 10);
+            </script>
+            <p>You can subclass the <code>Circle</code> class to add functionality.</p>
+        </main>
+    </body>
+</html>

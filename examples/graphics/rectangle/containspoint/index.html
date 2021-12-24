@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css" />
+        <link rel="stylesheet" href="/chs-js-lib/assets/style.css" />
+        <script type="text/javascript" src="/chs-js-lib/assets/main.js"></script>
+        <title>Rectangle - containsPoint</title>
+    </head>
+    <body>
+        <header>
+            <h1>Rectangle - containsPoint</h1>
+            <nav>
+                <a href="/chs-js-lib/">Home</a>
+                <a href="/chs-js-lib/examples">Examples</a>
+                <a href="/chs-js-lib/documentation">Documentation</a>
+            </nav>
+        </header>
+
+        <main>
+            <div style="display: flex">
+                <canvas id="game" width="480" height="200"></canvas>
+            </div>
+            <script src="/chs-js-lib/assets/chs.iife.js"></script>
+            <script type="text/javascript">
+                window.root = '/chs-js-lib/assets/';
+            </script>
+            <script id="code" type="module">
+                let mouseX = 0;
+                let mouseY = 0;
+                mouseMoveMethod(e => {
+                    mouseX = e.getX();
+                    mouseY = e.getY();
+                });
+
+                const withHover = element => {
+                    setTimer(() => {
+                        if (element.containsPoint(mouseX, mouseY)) {
+                            element.setColor(Color.RED);
+                        } else {
+                            element.setColor(Color.BLUE);
+                        }
+                    }, 10);
+                    return element;
+                };
+                var t = withHover(new Rectangle(20, 20));
+                t.debug = true;
+                t.setPosition(getWidth() / 4, getHeight() / 2);
+                add(t);
+
+                var t2 = withHover(new Rectangle(20, 20));
+                t2.setAnchor({ vertical: 0.5, horizontal: 0.5 });
+                t2.debug = true;
+                t2.setPosition((2 * getWidth()) / 4, getHeight() / 2);
+                add(t2);
+
+                var t3 = withHover(new Rectangle(20, 20));
+                t3.setAnchor({ vertical: 1.0, horizontal: 1.0 });
+                t3.debug = true;
+                t3.setPosition((3 * getWidth()) / 4, getHeight() / 2);
+                add(t3);
+            </script>
+            <p>
+                These rectangles change color when they contain the mouse's position, which shows
+                how <code>containsPoint</code> considers anchoring.
+            </p>
+        </main>
+    </body>
+</html>

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css" />
+        <link rel="stylesheet" href="/chs-js-lib/assets/style.css" />
+        <script type="text/javascript" src="/chs-js-lib/assets/main.js"></script>
+        <title>Anchors</title>
+    </head>
+    <body>
+        <header>
+            <h1>Anchors</h1>
+            <nav>
+                <a href="/chs-js-lib/">Home</a>
+                <a href="/chs-js-lib/examples">Examples</a>
+                <a href="/chs-js-lib/documentation">Documentation</a>
+            </nav>
+        </header>
+
+        <main>
+            <div style="display: flex">
+                <canvas id="game" width="480" height="200"></canvas>
+            </div>
+            <script src="/chs-js-lib/assets/chs.iife.js"></script>
+            <script type="text/javascript">
+                window.root = '/chs-js-lib/assets/';
+            </script>
+            <script id="code" type="module">
+                const c = new Circle(20);
+                c.debug = true;
+                c.setPosition(getWidth() / 4, getHeight() / 2);
+                add(c);
+
+                const r = new Rectangle(20, 20);
+                r.debug = true;
+                r.setPosition((2 * getWidth()) / 4, getHeight() / 2);
+                add(r);
+
+                const t = new Text('Hi');
+                t.debug = true;
+                t.setPosition((3 * getWidth()) / 4, getHeight() / 2);
+                add(t);
+                let darkMode =
+                    window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+                if (darkMode) {
+                    [c, r, t].forEach(shape => shape.setColor('yellow'));
+                }
+            </script>
+            <p>
+                A general example showing default anchors. A circle, a rectangle, and a text each
+                have different default anchors.
+            </p>
+        </main>
+    </body>
+</html>

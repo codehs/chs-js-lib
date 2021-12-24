@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css" />
+        <link rel="stylesheet" href="/chs-js-lib/assets/style.css" />
+        <script type="text/javascript" src="/chs-js-lib/assets/main.js"></script>
+        <title>Accessibility - Shapes</title>
+    </head>
+    <body>
+        <header>
+            <h1>Accessibility - Shapes</h1>
+            <nav>
+                <a href="/chs-js-lib/">Home</a>
+                <a href="/chs-js-lib/examples">Examples</a>
+                <a href="/chs-js-lib/documentation">Documentation</a>
+            </nav>
+        </header>
+
+        <main>
+            <div style="display: flex">
+                <canvas id="game" width="480" height="200"></canvas>
+            </div>
+            <script src="/chs-js-lib/assets/chs.iife.js"></script>
+            <script type="text/javascript">
+                window.root = '/chs-js-lib/assets/';
+            </script>
+            <script id="code" type="module">
+                let colors = ['#F72585', '#B5179E', '#7209B7', '#560bad'];
+                for (let i = 0; i < 4; i++) {
+                    if (i % 2 == 0) {
+                        const circle = new Circle(getWidth() / 10);
+                        circle.setColor(colors[i]);
+                        circle.setPosition(
+                            i * (5 + getWidth() / 5) + getWidth() / 10,
+                            getWidth() / 10
+                        );
+                        add(circle);
+                    } else {
+                        const rect = new Rectangle(getWidth() / 5, 100);
+                        rect.setColor(colors[i]);
+                        rect.setPosition(i * (5 + getWidth() / 5), 0);
+                        add(rect);
+                    }
+                }
+                mouseDownMethod(e => {
+                    console.log(`${e.getX()}, ${e.getY()}`);
+                    const el = getElementAt(e.getX(), e.getY());
+                    el.setColor('#4cc9f0');
+                });
+            </script>
+            <p>Use tab and shift+tab to navigate between shapes and the space bar to click them</p>
+        </main>
+    </body>
+</html>

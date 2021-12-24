@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css" />
+        <link rel="stylesheet" href="/chs-js-lib/assets/style.css" />
+        <script type="text/javascript" src="/chs-js-lib/assets/main.js"></script>
+        <title>Performance - Add/Remove</title>
+    </head>
+    <body>
+        <header>
+            <h1>Performance - Add/Remove</h1>
+            <nav>
+                <a href="/chs-js-lib/">Home</a>
+                <a href="/chs-js-lib/examples">Examples</a>
+                <a href="/chs-js-lib/documentation">Documentation</a>
+            </nav>
+        </header>
+
+        <main>
+            <div style="display: flex">
+                <canvas id="game" width="480" height="200"></canvas>
+            </div>
+            <script src="/chs-js-lib/assets/chs.iife.js"></script>
+            <script type="text/javascript">
+                window.root = '/chs-js-lib/assets/';
+            </script>
+            <script id="code" type="module">
+                const g = new Graphics();
+                g.shouldUpdate = false;
+                const now = performance.now();
+                const elements = [];
+                for (let i = 0; i < 100000; i++) {
+                    const c = new Circle(5);
+                    elements.push(c);
+                    g.add(c);
+                }
+                for (let i = 100000; i--; ) {
+                    g.remove(elements[i]);
+                }
+                const t = performance.now() - now;
+                document.querySelector('#target').innerHTML = t;
+            </script>
+            <p>
+                This example records how quickly 100,000 circles can be added and removed, without
+                being drawn.<br />This time, it took <span id="target">loading</span> milliseconds.
+            </p>
+        </main>
+    </body>
+</html>

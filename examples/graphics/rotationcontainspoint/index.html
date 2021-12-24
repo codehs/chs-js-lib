@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css" />
+        <link rel="stylesheet" href="/chs-js-lib/assets/style.css" />
+        <script type="text/javascript" src="/chs-js-lib/assets/main.js"></script>
+        <title>containsPoint with Rotation</title>
+    </head>
+    <body>
+        <header>
+            <h1>containsPoint with Rotation</h1>
+            <nav>
+                <a href="/chs-js-lib/">Home</a>
+                <a href="/chs-js-lib/examples">Examples</a>
+                <a href="/chs-js-lib/documentation">Documentation</a>
+            </nav>
+        </header>
+
+        <main>
+            <div style="display: flex">
+                <canvas id="game" width="480" height="200"></canvas>
+            </div>
+            <script src="/chs-js-lib/assets/chs.iife.js"></script>
+            <script type="text/javascript">
+                window.root = '/chs-js-lib/assets/';
+            </script>
+            <script id="code" type="module">
+                let mouseX = 0;
+                let mouseY = 0;
+                mouseMoveMethod(e => {
+                    mouseX = e.getX();
+                    mouseY = e.getY();
+                    point.setPosition(mouseX, mouseY);
+                });
+                const makeThing = shape => {
+                    setTimer(() => {
+                        shape.rotate(1);
+                        if (shape.containsPoint(point.x, point.y)) {
+                            shape.setColor(Color.RED);
+                        } else {
+                            shape.setColor(Color.BLUE);
+                        }
+                    }, 10);
+                    return shape;
+                };
+
+                const circle = makeThing(new Circle(20));
+                circle.setPosition(getWidth() / 4, getHeight() / 4);
+                circle.debug = true;
+                add(circle);
+
+                const rect = makeThing(new Rectangle(80, 40));
+                rect.setAnchor({ vertical: 0.5, horizontal: 0.5 });
+                rect.setPosition((2 * getWidth()) / 4, getHeight() / 4);
+                rect.debug = true;
+                add(rect);
+
+                const group = new Group();
+                const triangle = makeThing(new Polygon());
+                triangle.addPoint(15, 0);
+                triangle.addPoint(30, 30);
+                triangle.addPoint(0, 30);
+                triangle.setPosition((3 * getWidth()) / 4, getHeight() / 4);
+                triangle.setAnchor({ vertical: 0.5, horizontal: 0.5 });
+                triangle.debug = true;
+                add(triangle);
+
+                const oval = makeThing(new Oval(50, 30));
+                oval.setPosition(getWidth() / 4, (2 * getHeight()) / 4);
+                oval.debug = true;
+                add(oval);
+
+                const point = new Circle(2);
+                point.setColor('red');
+                point.setPosition(getWidth() / 2, getHeight() / 4 + 40);
+                add(point);
+            </script>
+            <p>
+                A general example showing how <code>containsPoint</code> considers the rotation of
+                an object when checking for collision. The small red dot will follow your mouse, and
+                any time an object contains it the object will turn red.
+            </p>
+        </main>
+    </body>
+</html>

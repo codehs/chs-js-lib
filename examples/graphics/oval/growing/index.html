@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css" />
+        <link rel="stylesheet" href="/chs-js-lib/assets/style.css" />
+        <script type="text/javascript" src="/chs-js-lib/assets/main.js"></script>
+        <title>Oval - Growing</title>
+    </head>
+    <body>
+        <header>
+            <h1>Oval - Growing</h1>
+            <nav>
+                <a href="/chs-js-lib/">Home</a>
+                <a href="/chs-js-lib/examples">Examples</a>
+                <a href="/chs-js-lib/documentation">Documentation</a>
+            </nav>
+        </header>
+
+        <main>
+            <div style="display: flex">
+                <canvas id="game" width="480" height="200"></canvas>
+            </div>
+            <script src="/chs-js-lib/assets/chs.iife.js"></script>
+            <script type="text/javascript">
+                window.root = '/chs-js-lib/assets/';
+            </script>
+            <script id="code" type="module">
+                let width = 40;
+                let height = 40;
+                let widthGrowing = true;
+                let heightGrowing = true;
+                var oval = new Oval(width, height);
+                oval.setColor(Color.GREEN);
+                oval.setPosition(getWidth() / 2, getHeight() / 2);
+                add(oval);
+                setTimer(() => {
+                    width += widthGrowing ? 5 : -5;
+                    height += heightGrowing ? 5 : -5;
+                    if (width > 200 || width < 10) {
+                        widthGrowing = !widthGrowing;
+                    }
+                    if (height > 60 || height < 10) {
+                        heightGrowing = !heightGrowing;
+                    }
+                    oval.setWidth(width);
+                    oval.setHeight(height);
+                }, 30);
+            </script>
+            <p>An oval growing on its major and minor axis (width and height).</p>
+        </main>
+    </body>
+</html>

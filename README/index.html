@@ -1,0 +1,49 @@
+<h2>The Static Site</h2>
+<p>
+    This directory contains the files needed to generate the static site, which is hosted at
+    codehs.github.io/chs-js-lib.
+</p>
+<p>
+    This site is built using a tool called eleventy, which will generate a site from templates. For
+    more on eleventy, <a href="https://www.11ty.dev/docs/">see the documentation</a>.
+</p>
+<h2>Building the Static Site</h2>
+<p>To build the static site, run <code>npm run site:watch</code>, which will do the following:</p>
+<ol>
+    <li>build the library and copy it into the <code>site/assets</code> folder</li>
+    <li>
+        build documentation using <code>jsdoc</code> and copy it into the
+        <code>site/docs</code> folder
+    </li>
+    <li>
+        run eleventy in &quot;watch&quot; mode, which will automatically rebuild when the templates
+        change.
+    </li>
+</ol>
+<p>
+    You can then run the site locally by navigating to <code>_site</code> and running a static
+    server. If you have Python 2 installed, you should be able to run
+    <code>python -m SimpleHTTPServer</code>, or with <code>node</code> you can run
+    <code>npm install -g http-server</code> and <code>http-server</code>.
+</p>
+<h2>Templates</h2>
+<p>
+    The templates used for the static site are in the <code>_includes</code> folder as
+    <code>.11ty.js</code> files. These are JavaScript files that export a function that will take
+    data and return HTML from it.
+</p>
+<h2>Content</h2>
+<p>
+    Any <code>.md</code> or <code>.html</code> file in the <code>site</code> folder is turned into
+    HTML (including this page!).
+</p>
+<p>
+    Directives at the top of the <code>.html</code> or <code>.md</code> file are used to describe
+    the data that should be passed into the template and the template file which should be used.
+</p>
+<p>
+    The examples in the <code>examples/</code> folder are a content file (markdown or html) and a
+    script, which will be loaded in the template. The <code>code</code> directive in the top of the
+    content file specifies the name of the script that should be loaded. It will search in the
+    directory where the markdown or html file is.
+</p>

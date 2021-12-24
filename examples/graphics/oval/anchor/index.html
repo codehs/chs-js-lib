@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css" />
+        <link rel="stylesheet" href="/chs-js-lib/assets/style.css" />
+        <script type="text/javascript" src="/chs-js-lib/assets/main.js"></script>
+        <title>Oval - Anchor</title>
+    </head>
+    <body>
+        <header>
+            <h1>Oval - Anchor</h1>
+            <nav>
+                <a href="/chs-js-lib/">Home</a>
+                <a href="/chs-js-lib/examples">Examples</a>
+                <a href="/chs-js-lib/documentation">Documentation</a>
+            </nav>
+        </header>
+
+        <main>
+            <div style="display: flex">
+                <canvas id="game" width="480" height="200"></canvas>
+            </div>
+            <script src="/chs-js-lib/assets/chs.iife.js"></script>
+            <script type="text/javascript">
+                window.root = '/chs-js-lib/assets/';
+            </script>
+            <script id="code" type="module">
+                const o1 = new Oval(40, 20);
+                o1.setPosition(getWidth() / 4, getHeight() / 2);
+                o1.setAnchor({ vertical: 0, horizontal: 0 });
+                o1.setColor('blue');
+                o1.debug = true;
+                add(o1);
+
+                const o2 = new Oval(40, 20);
+                o2.setPosition((2 * getWidth()) / 4, getHeight() / 2);
+                o2.setColor('blue');
+                o2.debug = true;
+                add(o2);
+
+                const o3 = new Oval(40, 20);
+                o3.setPosition((3 * getWidth()) / 4, getHeight() / 2);
+                o3.setColor('blue');
+                o3.setAnchor({ vertical: 1, horizontal: 1 });
+                o3.debug = true;
+                add(o3);
+
+                let mouseX;
+                let mouseY;
+                mouseMoveMethod(e => {
+                    mouseX = e.getX();
+                    mouseY = e.getY();
+                    let el = getElementAt(mouseX, mouseY);
+                    if (el) {
+                        el.setColor(Color.RED);
+                    } else {
+                        o1.setColor(Color.BLUE);
+                        o2.setColor(Color.BLUE);
+                        o3.setColor(Color.BLUE);
+                    }
+                });
+            </script>
+            <p>
+                Ovals can be anchored: <code>{vertical: 0, horizontal: 0}</code>,
+                <code>{vertical: 0.5, horizontal: 0.5}</code> (the default),
+                <code>{vertical: 1, horizontal: 1}</code>.
+            </p>
+        </main>
+    </body>
+</html>

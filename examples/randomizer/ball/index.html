@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css" />
+        <link rel="stylesheet" href="/chs-js-lib/assets/style.css" />
+        <script type="text/javascript" src="/chs-js-lib/assets/main.js"></script>
+        <title>Randomizer - Ball</title>
+    </head>
+    <body>
+        <header>
+            <h1>Randomizer - Ball</h1>
+            <nav>
+                <a href="/chs-js-lib/">Home</a>
+                <a href="/chs-js-lib/examples">Examples</a>
+                <a href="/chs-js-lib/documentation">Documentation</a>
+            </nav>
+        </header>
+
+        <main>
+            <div style="display: flex">
+                <canvas id="game" width="480" height="200"></canvas>
+            </div>
+            <script src="/chs-js-lib/assets/chs.iife.js"></script>
+            <script type="text/javascript">
+                window.root = '/chs-js-lib/assets/';
+            </script>
+            <script id="code" type="module">
+                let darkMode =
+                    window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+                const ball = new Circle(20);
+                ball.setPosition(getWidth() / 2, getHeight() / 2);
+                darkMode && ball.setColor('white');
+                add(ball);
+
+                let t = 0;
+                setTimer(() => {
+                    t += 0.1;
+                    const noise = Randomizer.noise(t);
+                    ball.setPosition(map(noise, 0, 1, 0, getWidth()), getHeight() / 2);
+                }, 40);
+            </script>
+            <p>This example moves a ball left and right according to Perlin noise.</p>
+        </main>
+    </body>
+</html>

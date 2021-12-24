@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css" />
+        <link rel="stylesheet" href="/chs-js-lib/assets/style.css" />
+        <script type="text/javascript" src="/chs-js-lib/assets/main.js"></script>
+        <title>Text - Anchor</title>
+    </head>
+    <body>
+        <header>
+            <h1>Text - Anchor</h1>
+            <nav>
+                <a href="/chs-js-lib/">Home</a>
+                <a href="/chs-js-lib/examples">Examples</a>
+                <a href="/chs-js-lib/documentation">Documentation</a>
+            </nav>
+        </header>
+
+        <main>
+            <div style="display: flex">
+                <canvas id="game" width="500" height="500"></canvas>
+            </div>
+            <script src="/chs-js-lib/assets/chs.iife.js"></script>
+            <script type="text/javascript">
+                window.root = '/chs-js-lib/assets/';
+            </script>
+            <script id="code" type="module">
+                let darkMode =
+                    window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+                let color = darkMode ? 'white' : 'black';
+
+                var t = new Text('Bottom/Left');
+                t.setColor(color);
+                add(t);
+                t.setPosition(5, getHeight() - 5);
+                t.debug = true;
+
+                var t = new Text('Top/Left');
+                t.setAnchor({ horizontal: 0, vertical: 0 });
+                t.setColor(color);
+                add(t);
+                t.setPosition(5, 5);
+                t.debug = true;
+
+                var t = new Text('Top/Right');
+                t.setAnchor({ horizontal: 1, vertical: 0 });
+                t.setColor(color);
+                add(t);
+                t.setPosition(getWidth() - 5, 5);
+                t.debug = true;
+
+                var t = new Text('Center/Center');
+                t.setAnchor({ horizontal: 0.5, vertical: 0.5 });
+                t.setColor(color);
+                add(t);
+                t.setPosition(getWidth() / 2, getHeight() / 2);
+                t.debug = true;
+
+                document.querySelector('canvas').style.border = `1px solid ${color}`;
+            </script>
+            <p>These four <code>Text</code> objects are all anchored differently:</p>
+            <ul>
+                <li>Top/Left - <code>{vertical: 0, horizontal: 0}</code></li>
+                <li>Top/Right - <code>{vertical: 0, horizontal: 1}</code></li>
+                <li>Center/Center - <code>{vertical: 0.5, horizontal: 0.5}</code></li>
+                <li>Bottom/Left - <code>{vertical: 1, horizontal: 0}</code> (default)</li>
+            </ul>
+            <p>
+                Anchors are set with <code>setAnchor({vertical: x, horizontal: y})</code>. The
+                <code>Text</code> objects are in debug mode (<code>.debug = true</code>) so you can
+                see the position of their origin (small red dot) relative to the <code>Text</code>.
+            </p>
+        </main>
+    </body>
+</html>
