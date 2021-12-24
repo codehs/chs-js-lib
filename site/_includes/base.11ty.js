@@ -16,7 +16,7 @@ exports.render = data => {
             <nav>
                 <a href="${this.url('/')}">Home</a>
                 <a href="${this.url('/examples')}">Examples</a>
-                <a href="${this.url('/documentation')}">Documentation</a>
+                <a href="${this.url('/docs')}">Documentation</a>
             </nav>
         </header>
         ${data.content}
