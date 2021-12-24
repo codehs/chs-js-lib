@@ -77,7 +77,6 @@ class Manager {
         })();
 
         this.timers[name] = stop;
-        return stop;
     }
 
     /**

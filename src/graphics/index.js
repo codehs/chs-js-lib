@@ -384,7 +384,7 @@ class GraphicsManager extends Manager {
                 name: name,
             });
         } else {
-            super.setTimer(this.withErrorHandler(fn), time, data, name ?? fn.name);
+            return super.setTimer(this.withErrorHandler(fn), time, data, name ?? fn.name);
         }
     }
 
