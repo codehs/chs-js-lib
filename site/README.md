@@ -23,3 +23,5 @@ The templates used for the static site are in the `_includes` folder as `.11ty.j
 Any `.md` or `.html` file in the `site` folder is turned into HTML (including this page!).
 
 Directives at the top of the `.html` or `.md` file are used to describe the data that should be passed into the template and the template file which should be used.
+
+The examples in the `examples/` folder are a content file (markdown or html) and a script, which will be loaded in the template. The `code` directive in the top of the content file specifies the name of the script that should be loaded. It will search in the directory where the markdown or html file is.
