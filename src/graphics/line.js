@@ -35,10 +35,96 @@ export default class Line extends Thing {
         this.y1 = y1;
         this.x2 = x2;
         this.y2 = y2;
-        this.width = x2 - x1;
-        this.height = y2 - y1;
         this.lineWidth = 2;
         this.hasBorder = true;
+    }
+
+    get width() {
+        return Math.abs(this.x2 - this.x1);
+    }
+
+    get height() {
+        return Math.abs(this.y2 - this.y1);
+    }
+
+    /**
+     * Returns the width of the line.
+     *
+     * @returns {number} The width of the line.
+     */
+    getWidth() {
+        return this.width;
+    }
+
+    /**
+     * Returns the height of the line.
+     *
+     * @returns {number} The width of the line.
+     */
+    getHeight() {
+        return this.height;
+    }
+
+    /**
+     * Gets the x coordinate of the Line's start point.
+     *
+     * @returns {number} The x coordinate of the Line's start point.
+     */
+    getX() {
+        return this.x;
+    }
+
+    get x() {
+        return Math.min(this.x1, this.x2);
+    }
+
+    /**
+     * Gets the y coordinate of the Line's start point.
+     *
+     * @returns {number} The y coordinate of the Line's start point.
+     */
+    getY() {
+        return this.y1;
+    }
+
+    get y() {
+        return Math.min(this.y1, this.y2);
+    }
+
+    /**
+     * Gets the x coordinate of the Line's start point.
+     *
+     * @returns {number} The x coordinate of the Line's start point.
+     */
+    getStartX() {
+        return this.x1;
+    }
+
+    /**
+     * Gets the y coordinate of the Line's start point.
+     *
+     * @returns {number} The y coordinate of the Line's start point.
+     */
+    getStartY() {
+        return this.y1;
+    }
+
+    /**
+     * Gets the x coordinate of the Line's end point.
+     *
+     * @returns {number} The x coordinate of the Line's end point.
+     */
+    getEndX() {
+        return this.x2;
+    }
+
+    /**
+     * Gets the y coordinate of the Line's end point.
+     *
+     * @returns {number} The y coordinate of the Line's end point.
+     */
+    getEndY() {
+        return this.y2;
     }
 
     /**
@@ -73,19 +159,14 @@ export default class Line extends Thing {
      */
     draw(context) {
         super.draw(context, () => {
-            let x1 = this.x1;
-            let x2 = this.x2;
-            let y1 = this.y1;
-            let y2 = this.y2;
-
-            const rotX = (x2 - x1) / 2;
-            const rotY = (y2 - y1) / 2;
-
-            // [x1, y1] = rotatePointAboutPosition([x1, y1], [rotX, rotY], this.rotation);
-            // [x2, y2] = rotatePointAboutPosition([x2, y2], [rotX, rotY], this.rotation);
+            // the super draw call translates to this.x, this.y,
+            // which will be the most upper-left of the points.
+            // to account for that, this line needs to be drawn relative
+            // to the top left, so this.x and this.y are subtracted from
+            // each point.
             context.beginPath();
-            context.moveTo(0, 0);
-            context.lineTo(x2 - x1, y2 - y1);
+            context.moveTo(this.x1 - this.x, this.y1 - this.y);
+            context.lineTo(this.x2 - this.x, this.y2 - this.y);
             context.closePath();
         });
     }
@@ -109,24 +190,6 @@ export default class Line extends Thing {
                 betweenYs
             );
         }
-    }
-
-    /**
-     * Returns the width of the line.
-     *
-     * @returns {number} The width of the line.
-     */
-    getWidth() {
-        return this.width;
-    }
-
-    /**
-     * Returns the height of the line.
-     *
-     * @returns {number} The width of the line.
-     */
-    getHeight() {
-        return this.height;
     }
 
     /**
@@ -247,68 +310,6 @@ export default class Line extends Thing {
         this.y1 += dy;
         this.x2 += dx;
         this.y2 += dy;
-    }
-
-    /**
-     * Gets the x coordinate of the Line's start point.
-     *
-     * @returns {number} The x coordinate of the Line's start point.
-     */
-    getX() {
-        return this.x1;
-    }
-
-    get x() {
-        return this.x1;
-    }
-
-    /**
-     * Gets the y coordinate of the Line's start point.
-     *
-     * @returns {number} The y coordinate of the Line's start point.
-     */
-    getY() {
-        return this.y1;
-    }
-
-    get y() {
-        return this.y1;
-    }
-
-    /**
-     * Gets the x coordinate of the Line's start point.
-     *
-     * @returns {number} The x coordinate of the Line's start point.
-     */
-    getStartX() {
-        return this.x1;
-    }
-
-    /**
-     * Gets the y coordinate of the Line's start point.
-     *
-     * @returns {number} The y coordinate of the Line's start point.
-     */
-    getStartY() {
-        return this.y1;
-    }
-
-    /**
-     * Gets the x coordinate of the Line's end point.
-     *
-     * @returns {number} The x coordinate of the Line's end point.
-     */
-    getEndX() {
-        return this.x2;
-    }
-
-    /**
-     * Gets the y coordinate of the Line's end point.
-     *
-     * @returns {number} The y coordinate of the Line's end point.
-     */
-    getEndY() {
-        return this.y2;
     }
 }
 /**

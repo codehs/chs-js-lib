@@ -170,6 +170,9 @@ class Group extends Thing {
      * @param {CanvasRenderingContext2D} context
      */
     draw(context) {
+        if (this.elements.length === 0) {
+            return;
+        }
         super.draw(context, () => {
             context.beginPath();
             const bounds = this.getBounds();
