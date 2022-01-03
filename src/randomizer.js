@@ -114,8 +114,19 @@ export const noise = (x, y) => {
                 });
             });
         }
-
-        /*  (x0, y0)    (x1, y0)
+        /*
+         * 2D perlin noise creates a 2-dimensional array of gradients (random unit vectors)
+         * then calculates the value for an (x, y) pair by doing the following:
+         * 1. clip the (x, y) pair to a cell within the 2-dimensional array of unit vectors
+         * 2. calculate the dot product of the vector between (x, y) and the gradient at
+         *    each corner
+         * 3. use a fade function to interpolate those values. the top left and top right
+         *    are interpolated by dx, then those values are interpolated by dy
+         *
+         * Here's an example cell in the 2-dimensional array of gradients, showing (x, y)
+         * and the four corners of the cell the value is clipped to.
+         *
+         *  (x0, y0)    (x1, y0)
          *     +------------+
          *     |            | \
          *     |  (x, y)    |  } dy
@@ -123,6 +134,11 @@ export const noise = (x, y) => {
          *     |/  dx   \   |
          *     +------------+
          *  (x0, y1)    (x1, y1)
+         *
+         * Each of the corners (top left, top right, etc.) has a pre-computed gradient.
+         * The vectors from (x, y) to each of the four corners are dotted with the gradient
+         * at that corner. For example, perlin2[x0][y0].dot(x - x0, y - y0).
+         *
          */
 
         const x0 = Math.floor(x) % PERLIN_SIZE_2D;
