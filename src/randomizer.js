@@ -115,7 +115,7 @@ export const noise = (x, y) => {
             });
         }
 
-        /*  (x0, y0)    (x1, y1)
+        /*  (x0, y0)    (x1, y0)
          *     +------------+
          *     |            | \
          *     |  (x, y)    |  } dy
@@ -130,13 +130,13 @@ export const noise = (x, y) => {
         const y0 = Math.floor(y) % PERLIN_SIZE_2D;
         const y1 = y0 + 1;
 
+        const dx = x - x0;
+        const dy = y - y0;
+
         const gradientTL = perlin2[x0][y0];
         const gradientTR = perlin2[x1][y0];
         const gradientBL = perlin2[x0][y1];
         const gradientBR = perlin2[x1][y1];
-
-        const dx = x - x0;
-        const dy = y - y0;
 
         const noiseTL = gradientTL.dot(x - x0, y - y0);
         const noiseTR = gradientTR.dot(x - x1, y - y0);
