@@ -1518,6 +1518,148 @@ var CHSJS = (() => {
   };
   var arc_default = Arc;
 
+  // src/datastructures/vector.js
+  var Vector = class {
+    constructor(x = 0, y = 0, z = 0) {
+      this.x = x;
+      this.y = y;
+      this.z = z;
+    }
+    add(x, y, z) {
+      if (x instanceof Vector) {
+        const vector = x;
+        this.x += vector.x;
+        this.y += vector.y;
+        this.z += vector.z;
+      } else if (x instanceof Array) {
+        const array = x;
+        this.x += array[0];
+        this.y += array[1];
+        this.z += array[2];
+      } else {
+        this.x += x;
+        this.y += y;
+        this.z += z;
+      }
+      return this;
+    }
+    subtract(x, y, z) {
+      if (x instanceof Vector) {
+        const vector = x;
+        this.x -= vector.x;
+        this.y -= vector.y;
+        this.z -= vector.z;
+      } else if (x instanceof Array) {
+        const array = x;
+        this.x -= array[0];
+        this.y -= array[1];
+        this.z -= array[2];
+      } else {
+        this.x -= x;
+        this.y -= y;
+        this.z -= z;
+      }
+      return this;
+    }
+    multiply(x, y, z) {
+      if (x instanceof Vector) {
+        const vector = x;
+        this.x *= vector.x;
+        this.y *= vector.y;
+        this.z *= vector.z;
+      } else if (x instanceof Array) {
+        const array = x;
+        if (x.length === 1) {
+          this.x *= array[0];
+          this.y *= array[0];
+          this.z *= array[0];
+        } else if (x.length === 2) {
+          this.x *= array[0];
+          this.y *= array[1];
+        } else if (x.length === 3) {
+          this.x *= array[0];
+          this.y *= array[1];
+          this.z *= array[2];
+        }
+      } else if ([...arguments].every((arg) => typeof arg === "number")) {
+        if (arguments.length === 1) {
+          this.x *= x;
+          this.y *= x;
+          this.z *= x;
+        }
+        if (arguments.length === 2) {
+          this.x *= x;
+          this.y *= y;
+        }
+        if (arguments.length === 3) {
+          this.x *= x;
+          this.y *= y;
+          this.z *= z;
+        }
+      } else {
+        throw new TypeError("Invalid arguments for multiply.");
+      }
+      return this;
+    }
+    clone() {
+      return new Vector(this.x, this.y, this.z);
+    }
+    copy() {
+      return this.clone(arguments);
+    }
+    normalize() {
+      const magnitude = this.magnitude();
+      return this.multiply(1 / magnitude);
+    }
+    magnitude() {
+      const x = this.x;
+      const y = this.y;
+      const z = this.z;
+      return Math.sqrt(x * x + y * y + z * z);
+    }
+    heading() {
+      return radiansToDegrees(Math.atan2(this.y, this.x));
+    }
+    setHeading(heading) {
+      const magnitude = this.magnitude();
+      const radians = degreesToRadians(heading);
+      this.x = magnitude * Math.cos(radians);
+      this.y = magnitude * Math.sin(radians);
+      return this;
+    }
+    rotate(angle) {
+      const heading = this.heading() + angle;
+      const magnitude = this.magnitude();
+      const headingRadians = degreesToRadians(heading);
+      this.x = magnitude * Math.cos(headingRadians);
+      this.y = magnitude * Math.sin(headingRadians);
+      return this;
+    }
+    dot(x, y, z = 1) {
+      if (x instanceof Vector) {
+        const vector = x;
+        return this.dot(vector.x, vector.y, vector.z);
+      }
+      return this.x * x + this.y * y + this.z * z;
+    }
+    cross(v) {
+      const x = this.y * v.z - this.z * v.y;
+      const y = this.z * v.x - this.x * v.z;
+      const z = this.x * v.y - this.y * v.x;
+      return new Vector(x, y, z);
+    }
+    angleBetween(vector) {
+      const clamp2 = (v, min, max) => Math.max(min, Math.min(max, v));
+      let angle = Math.acos(this.dot(vector) / (this.magnitude() * vector.magnitude()));
+      angle = angle * Math.sign(this.cross(vector).z || 1);
+      return radiansToDegrees(angle);
+    }
+    array() {
+      return [this.x, this.y, this.x];
+    }
+  };
+  var vector_default = Vector;
+
   // src/randomizer.js
   var randomizer_exports = {};
   __export(randomizer_exports, {
@@ -1564,25 +1706,53 @@ var CHSJS = (() => {
     return Math.random() < probabilityTrue;
   };
   var perlin;
+  var perlin2;
   var PERLIN_SIZE = 4095;
+  var PERLIN_SIZE_2D = 63;
   var lerp = (a, b, x) => {
     return a * (1 - x) + b * x;
   };
-  var noise = (x) => {
+  var fade = (t) => {
+    return t * t * (3 - 2 * t);
+  };
+  var noise = (x, y) => {
     if (!perlin) {
       perlin = new Array(PERLIN_SIZE + 1);
       for (let i = 0; i < PERLIN_SIZE + 1; i++) {
         perlin[i] = Math.random();
       }
     }
+    if (y !== void 0) {
+      if (!perlin2) {
+        perlin2 = new Array(PERLIN_SIZE_2D + 1).fill(0).map((row) => {
+          return new Array(PERLIN_SIZE_2D + 1).fill(0).map(() => {
+            return new vector_default(1, 0).rotate(Math.random() * 360);
+          });
+        });
+      }
+      const x0 = Math.floor(x) % PERLIN_SIZE_2D;
+      const x1 = x0 + 1;
+      const y0 = Math.floor(y) % PERLIN_SIZE_2D;
+      const y1 = y0 + 1;
+      const dx = x - x0;
+      const dy = y - y0;
+      const gradientTL = perlin2[x0][y0];
+      const gradientTR = perlin2[x1][y0];
+      const gradientBL = perlin2[x0][y1];
+      const gradientBR = perlin2[x1][y1];
+      const noiseTL = gradientTL.dot(x - x0, y - y0);
+      const noiseTR = gradientTR.dot(x - x1, y - y0);
+      const noiseBL = gradientBL.dot(x - x0, y - y1);
+      const noiseBR = gradientBR.dot(x - x1, y - y1);
+      const xFade = fade(dx);
+      return (lerp(lerp(noiseTL, noiseTR, xFade), lerp(noiseBL, noiseBR, xFade), fade(dy)) + 1) / 2;
+    }
     x = Math.abs(x);
     const xFloor = Math.floor(x);
     const t = x - xFloor;
-    const tRemapSmoothstep = t * t * (3 - 2 * t);
-    const xMin = xFloor & PERLIN_SIZE;
-    const xMax = xMin + 1 & PERLIN_SIZE;
-    const y = lerp(perlin[xMin], perlin[xMax], tRemapSmoothstep);
-    return y;
+    const xMin = xFloor % PERLIN_SIZE;
+    const xMax = (xMin + 1) % PERLIN_SIZE;
+    return lerp(perlin[xMin], perlin[xMax], fade(t));
   };
 
   // src/graphics/color.js
@@ -1807,6 +1977,156 @@ var CHSJS = (() => {
     }
   };
   var circle_default = Circle;
+
+  // src/graphics/group.js
+  var Group = class extends thing_default {
+    type = "Group";
+    elements;
+    devicePixelRatio = window.devicePixelRatio ?? 1;
+    constructor(...elements) {
+      super();
+      this.elements = elements;
+      this._hiddenCanvas = document.createElement("canvas");
+      this._hiddenCanvas.width = 1;
+      this._hiddenCanvas.height = 1;
+      this._hiddenContext = this._hiddenCanvas.getContext("2d");
+      this._lastRecordedBounds = {};
+      this.bounds = null;
+    }
+    get x() {
+      return this.getBounds().left;
+    }
+    set x(x) {
+      if (!this.bounds) {
+        return;
+      }
+      this.setPosition(x, this.bounds.top);
+    }
+    get y() {
+      return this.getBounds().top;
+    }
+    set y(y) {
+      if (!this.bounds) {
+        return;
+      }
+      this.setPosition(this.bounds.left, y);
+    }
+    get width() {
+      const bounds = this.getBounds();
+      return bounds.right - bounds.left;
+    }
+    get height() {
+      const bounds = this.getBounds();
+      return bounds.bottom - bounds.top;
+    }
+    getElements() {
+      return this.elements;
+    }
+    add(element) {
+      this.elements.push(element);
+      this._invalidateBounds();
+      element._invalidationDependants.push(this);
+    }
+    remove(element) {
+      element._invalidationDependants.splice(element._invalidationDependants.indexOf(this), 1);
+      const i = this.elements.indexOf(element);
+      if (i < 0) {
+        return;
+      }
+      this.elements.splice(i, 1);
+      this._invalidateBounds();
+    }
+    move(dx, dy) {
+      this.elements.forEach((element) => {
+        element.move(dx, dy);
+      });
+      this._invalidateBounds();
+    }
+    setPosition(x, y) {
+      const bounds = this.getBounds();
+      const dx = x - bounds.left;
+      const dy = y - bounds.top;
+      this.move(dx, dy);
+    }
+    draw(context2) {
+      if (this.elements.length === 0) {
+        return;
+      }
+      super.draw(context2, () => {
+        context2.beginPath();
+        const bounds = this.getBounds();
+        const width = bounds.right - bounds.left;
+        const height = bounds.bottom - bounds.top;
+        if (!width || !height) {
+          return;
+        }
+        this._hiddenContext.clearRect(0, 0, width, height);
+        this._hiddenContext.translate(-bounds.left, -bounds.top);
+        this.elements.filter((element) => element.alive).sort((a, b) => a.layer - b.layer).forEach((element) => {
+          element.draw(this._hiddenContext);
+        });
+        this._hiddenContext.translate(bounds.left, bounds.top);
+        context2.drawImage(this._hiddenCanvas, 0, 0, width, height);
+        context2.closePath();
+      });
+    }
+    describe() {
+      return `A Group at ${this.x}, ${this.y}, containing: ${this.elements.map((element) => element.describe()).join(" ")}`;
+    }
+    _containsPoint(x, y) {
+      x += this.width * this.anchor.horizontal;
+      y += this.height * this.anchor.vertical;
+      return this.elements.some((e) => e.containsPoint(x, y));
+    }
+    _updateBounds() {
+      let maxX = 0;
+      let maxY = 0;
+      let minX = Infinity;
+      let minY = Infinity;
+      this.elements.forEach((element) => {
+        if (element._lastCalculatedBoundsID > (this._lastRecordedBounds[element._id] || 0)) {
+          this._lastRecordedBounds[element._id] = element._lastCalculatedBoundsID;
+        }
+        const elementBounds = element.getBounds();
+        let { left, right, top, bottom } = elementBounds;
+        if (element.rotation) {
+          const rotX = (right - left) / 2 + left;
+          const rotY = (bottom - top) / 2 + top;
+          let topLeft = rotatePointAboutPosition([left, top], [rotX, rotY], element.rotation);
+          let topRight = rotatePointAboutPosition([right, top], [rotX, rotY], element.rotation);
+          let bottomLeft = rotatePointAboutPosition([left, bottom], [rotX, rotY], element.rotation);
+          let bottomRight = rotatePointAboutPosition([right, bottom], [rotX, rotY], element.rotation);
+          const points = [topLeft, topRight, bottomLeft, bottomRight];
+          const xCoordinates = points.map((point) => point[0]);
+          const yCoordinates = points.map((point) => point[1]);
+          left = Math.min(...xCoordinates);
+          right = Math.max(...xCoordinates);
+          top = Math.min(...yCoordinates);
+          bottom = Math.max(...yCoordinates);
+        }
+        minX = Math.min(minX, left);
+        minY = Math.min(minY, top);
+        maxX = Math.max(maxX, right);
+        maxY = Math.max(maxY, bottom);
+      });
+      this.bounds = {
+        left: minX,
+        right: maxX,
+        top: minY,
+        bottom: maxY
+      };
+      const width = maxX - minX;
+      const height = maxY - minY;
+      this._hiddenCanvas.width = this.devicePixelRatio * width;
+      this._hiddenCanvas.height = this.devicePixelRatio * height;
+      this._hiddenCanvas.style.width = `${width}px`;
+      this._hiddenCanvas.style.height = `${height}px`;
+      this._hiddenContext.scale(this.devicePixelRatio, this.devicePixelRatio);
+      this._lastCalculatedBoundsID++;
+      this._boundsInvalidated = false;
+    }
+  };
+  var group_default = Group;
 
   // src/manager.js
   var DEFAULT_UPDATE_INTERVAL = 40;
@@ -2595,10 +2915,44 @@ var CHSJS = (() => {
       this.y1 = y1;
       this.x2 = x2;
       this.y2 = y2;
-      this.width = x2 - x1;
-      this.height = y2 - y1;
       this.lineWidth = 2;
       this.hasBorder = true;
+    }
+    get width() {
+      return Math.abs(this.x2 - this.x1);
+    }
+    get height() {
+      return Math.abs(this.y2 - this.y1);
+    }
+    getWidth() {
+      return this.width;
+    }
+    getHeight() {
+      return this.height;
+    }
+    getX() {
+      return this.x;
+    }
+    get x() {
+      return Math.min(this.x1, this.x2);
+    }
+    getY() {
+      return this.y1;
+    }
+    get y() {
+      return Math.min(this.y1, this.y2);
+    }
+    getStartX() {
+      return this.x1;
+    }
+    getStartY() {
+      return this.y1;
+    }
+    getEndX() {
+      return this.x2;
+    }
+    getEndY() {
+      return this.y2;
     }
     setColor(color) {
       if (arguments.length !== 1) {
@@ -2614,15 +2968,9 @@ var CHSJS = (() => {
     }
     draw(context2) {
       super.draw(context2, () => {
-        let x1 = this.x1;
-        let x2 = this.x2;
-        let y1 = this.y1;
-        let y2 = this.y2;
-        const rotX = (x2 - x1) / 2;
-        const rotY = (y2 - y1) / 2;
         context2.beginPath();
-        context2.moveTo(0, 0);
-        context2.lineTo(x2 - x1, y2 - y1);
+        context2.moveTo(this.x1 - this.x, this.y1 - this.y);
+        context2.lineTo(this.x2 - this.x, this.y2 - this.y);
         context2.closePath();
       });
     }
@@ -2635,12 +2983,6 @@ var CHSJS = (() => {
         const slope = (this.y2 - this.y1) / (this.x2 - this.x1);
         return Math.abs(slope * (x - this.x1) - (y - this.y1)) <= this.lineWidth && betweenXs && betweenYs;
       }
-    }
-    getWidth() {
-      return this.width;
-    }
-    getHeight() {
-      return this.height;
     }
     setLineWidth(width) {
       if (arguments.length !== 1) {
@@ -2703,30 +3045,6 @@ var CHSJS = (() => {
       this.y1 += dy;
       this.x2 += dx;
       this.y2 += dy;
-    }
-    getX() {
-      return this.x1;
-    }
-    get x() {
-      return this.x1;
-    }
-    getY() {
-      return this.y1;
-    }
-    get y() {
-      return this.y1;
-    }
-    getStartX() {
-      return this.x1;
-    }
-    getStartY() {
-      return this.y1;
-    }
-    getEndX() {
-      return this.x2;
-    }
-    getEndY() {
-      return this.y2;
     }
   };
 
@@ -2995,10 +3313,9 @@ var CHSJS = (() => {
       this.resetDimensions();
       super.draw(context2, () => {
         context2.translate(0, this.height);
-        context2.beginPath();
         context2.font = this.font;
+        context2.beginPath();
         context2.fillText(this.label, 0, 0);
-        context2.closePath();
         context2.translate(0, -this.height);
       });
     }
@@ -19292,153 +19609,6 @@ var CHSJS = (() => {
     }
   };
 
-  // src/graphics/group.js
-  var Group = class extends thing_default {
-    type = "Group";
-    elements;
-    devicePixelRatio = window.devicePixelRatio ?? 1;
-    constructor(...elements) {
-      super();
-      this.elements = elements;
-      this._hiddenCanvas = document.createElement("canvas");
-      this._hiddenCanvas.width = 1;
-      this._hiddenCanvas.height = 1;
-      this._hiddenContext = this._hiddenCanvas.getContext("2d");
-      this._lastRecordedBounds = {};
-      this.bounds = null;
-    }
-    get x() {
-      return this.getBounds().left;
-    }
-    set x(x) {
-      if (!this.bounds) {
-        return;
-      }
-      this.setPosition(x, this.bounds.top);
-    }
-    get y() {
-      return this.getBounds().top;
-    }
-    set y(y) {
-      if (!this.bounds) {
-        return;
-      }
-      this.setPosition(this.bounds.left, y);
-    }
-    get width() {
-      const bounds = this.getBounds();
-      return bounds.right - bounds.left;
-    }
-    get height() {
-      const bounds = this.getBounds();
-      return bounds.bottom - bounds.top;
-    }
-    getElements() {
-      return this.elements;
-    }
-    add(element) {
-      this.elements.push(element);
-      this._invalidateBounds();
-      element._invalidationDependants.push(this);
-    }
-    remove(element) {
-      element._invalidationDependants.splice(element._invalidationDependants.indexOf(this), 1);
-      const i = this.elements.indexOf(element);
-      if (i < 0) {
-        return;
-      }
-      this.elements.splice(i, 1);
-      this._invalidateBounds();
-    }
-    move(dx, dy) {
-      this.elements.forEach((element) => {
-        element.move(dx, dy);
-      });
-      this._invalidateBounds();
-    }
-    setPosition(x, y) {
-      const bounds = this.getBounds();
-      const dx = x - bounds.left;
-      const dy = y - bounds.top;
-      this.move(dx, dy);
-    }
-    draw(context2) {
-      super.draw(context2, () => {
-        context2.beginPath();
-        const bounds = this.getBounds();
-        const width = bounds.right - bounds.left;
-        const height = bounds.bottom - bounds.top;
-        if (!width || !height) {
-          return;
-        }
-        this._hiddenContext.clearRect(0, 0, width, height);
-        this._hiddenContext.translate(-bounds.left, -bounds.top);
-        this.elements.filter((element) => element.alive).sort((a, b) => a.layer - b.layer).forEach((element) => {
-          element.draw(this._hiddenContext);
-        });
-        this._hiddenContext.translate(bounds.left, bounds.top);
-        context2.drawImage(this._hiddenCanvas, 0, 0, width, height);
-        context2.closePath();
-      });
-    }
-    describe() {
-      return `A Group at ${this.x}, ${this.y}, containing: ${this.elements.map((element) => element.describe()).join(" ")}`;
-    }
-    _containsPoint(x, y) {
-      x += this.width * this.anchor.horizontal;
-      y += this.height * this.anchor.vertical;
-      return this.elements.some((e) => e.containsPoint(x, y));
-    }
-    _updateBounds() {
-      let maxX = 0;
-      let maxY = 0;
-      let minX = Infinity;
-      let minY = Infinity;
-      this.elements.forEach((element) => {
-        if (element._lastCalculatedBoundsID > (this._lastRecordedBounds[element._id] || 0)) {
-          this._lastRecordedBounds[element._id] = element._lastCalculatedBoundsID;
-        }
-        const elementBounds = element.getBounds();
-        let { left, right, top, bottom } = elementBounds;
-        if (element.rotation) {
-          const rotX = (right - left) / 2 + left;
-          const rotY = (bottom - top) / 2 + top;
-          let topLeft = rotatePointAboutPosition([left, top], [rotX, rotY], element.rotation);
-          let topRight = rotatePointAboutPosition([right, top], [rotX, rotY], element.rotation);
-          let bottomLeft = rotatePointAboutPosition([left, bottom], [rotX, rotY], element.rotation);
-          let bottomRight = rotatePointAboutPosition([right, bottom], [rotX, rotY], element.rotation);
-          const points = [topLeft, topRight, bottomLeft, bottomRight];
-          const xCoordinates = points.map((point) => point[0]);
-          const yCoordinates = points.map((point) => point[1]);
-          left = Math.min(...xCoordinates);
-          right = Math.max(...xCoordinates);
-          top = Math.min(...yCoordinates);
-          bottom = Math.max(...yCoordinates);
-        }
-        minX = Math.min(minX, left);
-        minY = Math.min(minY, top);
-        maxX = Math.max(maxX, right);
-        maxY = Math.max(maxY, bottom);
-      });
-      this.bounds = {
-        left: minX,
-        right: maxX,
-        top: minY,
-        bottom: maxY
-      };
-      const width = maxX - minX;
-      const height = maxY - minY;
-      this._hiddenCanvas.width = this.devicePixelRatio * width;
-      this._hiddenCanvas.height = this.devicePixelRatio * height;
-      this._hiddenCanvas.style.width = `${width}px`;
-      this._hiddenCanvas.style.height = `${height}px`;
-      this._hiddenContext.scale(this.devicePixelRatio, this.devicePixelRatio);
-      this._lastCalculatedBoundsID++;
-      this._boundsInvalidated = false;
-    }
-  };
-  var group_default = Group;
-
   // entrypoints/windowBinder.js
   window.Arc = arc_default;
   window.Audio = CrossOriginAudio;
@@ -19452,14 +19622,15 @@ var CHSJS = (() => {
   window.Oval = Oval;
   window.Polygon = polygon_default;
   window.Queue = Queue;
+  window.Randomizer = randomizer_exports;
   window.Rectangle = rectangle_default;
   window.Sound = Sound;
   window.Stack = Stack;
   window.Text = text_default;
   window.Thing = thing_default;
-  window.WebVideo = webvideo_default;
+  window.Vector = vector_default;
   window.WebImage = webimage_default;
-  window.Randomizer = randomizer_exports;
+  window.WebVideo = webvideo_default;
   var GraphicsInstance = new graphics_default();
   window.__graphics__ = GraphicsInstance;
   window.add = GraphicsInstance.add.bind(GraphicsInstance);
@@ -19475,6 +19646,7 @@ var CHSJS = (() => {
   window.stopTimer = GraphicsInstance.stopTimer.bind(GraphicsInstance);
   window.setTimer = GraphicsInstance.setTimer.bind(GraphicsInstance);
   window.keyDownMethod = GraphicsInstance.keyDownMethod.bind(GraphicsInstance);
+  window.isKeyPressed = GraphicsInstance.isKeyPressed.bind(GraphicsInstance);
   window.removeAll = GraphicsInstance.removeAll.bind(GraphicsInstance);
   window.remove = GraphicsInstance.remove.bind(GraphicsInstance);
   window.setBackgroundColor = GraphicsInstance.setBackgroundColor.bind(GraphicsInstance);
