@@ -190,13 +190,28 @@ class Vector {
         const radians = degreesToRadians(heading);
         this.x = magnitude * Math.cos(radians);
         this.y = magnitude * Math.sin(radians);
+        return this;
+    }
+
+    /**
+     * Rotates the vector by angle degrees.
+     * @param {number} angle - Rotation in degrees
+     * @returns {Vector} this vector
+     */
+    rotate(angle) {
+        const heading = this.heading() + angle;
+        const magnitude = this.magnitude();
+        const headingRadians = degreesToRadians(heading);
+        this.x = magnitude * Math.cos(headingRadians);
+        this.y = magnitude * Math.sin(headingRadians);
+        return this;
     }
 
     /**
      * Calculate the dot product of two vectors.
      * @returns {number} dot product
      */
-    dot(x, y, z) {
+    dot(x, y, z = 1) {
         if (x instanceof Vector) {
             const vector = x;
             return this.dot(vector.x, vector.y, vector.z);
@@ -226,6 +241,14 @@ class Vector {
         let angle = Math.acos(this.dot(vector) / (this.magnitude() * vector.magnitude()));
         angle = angle * Math.sign(this.cross(vector).z || 1);
         return radiansToDegrees(angle);
+    }
+
+    /**
+     * Returns the points of the vector as an array.
+     * @returns {Array.<number>} values as an array
+     */
+    array() {
+        return [this.x, this.y, this.x];
     }
 }
 
