@@ -114,15 +114,17 @@ export const noise = (x, y) => {
                 });
             });
         }
-        /*
-          x0, y0      x1, y1
-            +--------+
-            |        |
-            |        |
-            |        |
-            +--------+
-          x0, y1     x1, y1
-        */
+
+        /*  (x0, y0)    (x1, y1)
+         *     +------------+
+         *     |            | \
+         *     |  (x, y)    |  } dy
+         *     |  _ * _     | /
+         *     |/  dx   \   |
+         *     +------------+
+         *  (x0, y1)    (x1, y1)
+         */
+
         const x0 = Math.floor(x) % PERLIN_SIZE_2D;
         const x1 = x0 + 1;
         const y0 = Math.floor(y) % PERLIN_SIZE_2D;
