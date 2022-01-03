@@ -2,7 +2,7 @@
  * @module Randomizer
  */
 
-import Vector from './datastructures/vector';
+import Vector from './datastructures/vector.js';
 
 /**
  * Get a random integer between low to high, inclusive.

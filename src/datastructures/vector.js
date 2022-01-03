@@ -1,4 +1,4 @@
-import { degreesToRadians, radiansToDegrees } from '../graphics/arc';
+import { degreesToRadians, radiansToDegrees } from '../graphics/arc.js';
 
 class Vector {
     /**
