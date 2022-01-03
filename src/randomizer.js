@@ -2,6 +2,8 @@
  * @module Randomizer
  */
 
+import Vector from './datastructures/vector.js';
+
 /**
  * Get a random integer between low to high, inclusive.
  * If only one parameter is given, a random integer
@@ -74,20 +76,29 @@ export const nextBoolean = probabilityTrue => {
     return Math.random() < probabilityTrue;
 };
 
+// stores numbers 0-1
 let perlin;
+// stores unit vectors
+let perlin2;
 const PERLIN_SIZE = 4095;
+const PERLIN_SIZE_2D = 63;
 
 const lerp = (a, b, x) => {
     return a * (1 - x) + b * x;
+};
+
+const fade = t => {
+    return t * t * (3 - 2 * t);
 };
 
 /**
  * A noise function for generating a smooth, random value between 0 and 1.
  * @param {number} x - Any number. Adjacent numbers will have similar noise values, by definition
  * of Perlin noise.
+ * @param {number} [y] - Any number. If y is present, 2d will be used.
  * @returns {number}
  */
-export const noise = x => {
+export const noise = (x, y) => {
     if (!perlin) {
         perlin = new Array(PERLIN_SIZE + 1);
         for (let i = 0; i < PERLIN_SIZE + 1; i++) {
@@ -95,15 +106,73 @@ export const noise = x => {
         }
     }
 
+    if (y !== undefined) {
+        if (!perlin2) {
+            perlin2 = new Array(PERLIN_SIZE_2D + 1).fill(0).map(row => {
+                return new Array(PERLIN_SIZE_2D + 1).fill(0).map(() => {
+                    return new Vector(1, 0).rotate(Math.random() * 360);
+                });
+            });
+        }
+        /*
+         * 2D perlin noise creates a 2-dimensional array of gradients (random unit vectors)
+         * then calculates the value for an (x, y) pair by doing the following:
+         * 1. clip the (x, y) pair to a cell within the 2-dimensional array of unit vectors
+         * 2. calculate the dot product of the vector between (x, y) and the gradient at
+         *    each corner
+         * 3. use a fade function to interpolate those values. the top left and top right
+         *    are interpolated by dx, then those values are interpolated by dy
+         *
+         * Here's an example cell in the 2-dimensional array of gradients, showing (x, y)
+         * and the four corners of the cell the value is clipped to.
+         *
+         *  (x0, y0)    (x1, y0)
+         *     +------------+
+         *     |            | \
+         *     |  (x, y)    |  } dy
+         *     |  _ * _     | /
+         *     |/  dx   \   |
+         *     +------------+
+         *  (x0, y1)    (x1, y1)
+         *
+         * Each of the corners (top left, top right, etc.) has a pre-computed gradient.
+         * The vectors from (x, y) to each of the four corners are dotted with the gradient
+         * at that corner. For example, perlin2[x0][y0].dot(x - x0, y - y0).
+         *
+         */
+
+        const x0 = Math.floor(x) % PERLIN_SIZE_2D;
+        const x1 = x0 + 1;
+        const y0 = Math.floor(y) % PERLIN_SIZE_2D;
+        const y1 = y0 + 1;
+
+        const dx = x - x0;
+        const dy = y - y0;
+
+        const gradientTL = perlin2[x0][y0];
+        const gradientTR = perlin2[x1][y0];
+        const gradientBL = perlin2[x0][y1];
+        const gradientBR = perlin2[x1][y1];
+
+        const noiseTL = gradientTL.dot(x - x0, y - y0);
+        const noiseTR = gradientTR.dot(x - x1, y - y0);
+        const noiseBL = gradientBL.dot(x - x0, y - y1);
+        const noiseBR = gradientBR.dot(x - x1, y - y1);
+
+        const xFade = fade(dx);
+
+        return (
+            (lerp(lerp(noiseTL, noiseTR, xFade), lerp(noiseBL, noiseBR, xFade), fade(dy)) + 1) / 2
+        );
+    }
+
     x = Math.abs(x);
     const xFloor = Math.floor(x);
     const t = x - xFloor;
-    const tRemapSmoothstep = t * t * (3 - 2 * t);
 
     // get the left and right neighbors of x
-    const xMin = xFloor & PERLIN_SIZE;
-    const xMax = (xMin + 1) & PERLIN_SIZE;
+    const xMin = xFloor % PERLIN_SIZE;
+    const xMax = (xMin + 1) % PERLIN_SIZE;
 
-    const y = lerp(perlin[xMin], perlin[xMax], tRemapSmoothstep);
-    return y;
+    return lerp(perlin[xMin], perlin[xMax], fade(t));
 };

@@ -71,10 +71,9 @@ class Text extends Thing {
             // text always draw above its position, so to keep anchor behavior consistent,
             // translate down by height
             context.translate(0, this.height);
-            context.beginPath();
             context.font = this.font;
+            context.beginPath();
             context.fillText(this.label, 0, 0);
-            context.closePath();
             context.translate(0, -this.height);
         });
     }
