@@ -39,18 +39,18 @@ class Vector {
     add(x, y, z) {
         if (x instanceof Vector) {
             const vector = x;
-            this.x += vector.x;
-            this.y += vector.y;
-            this.z += vector.z;
+            this.x += vector.x || 0;
+            this.y += vector.y || 0;
+            this.z += vector.z || 0;
         } else if (x instanceof Array) {
             const array = x;
-            this.x += array[0];
-            this.y += array[1];
-            this.z += array[2];
+            this.x += array[0] || 0;
+            this.y += array[1] || 0;
+            this.z += array[2] || 0;
         } else {
-            this.x += x;
-            this.y += y;
-            this.z += z;
+            this.x += x || 0;
+            this.y += y || 0;
+            this.z += z || 0;
         }
         return this;
     }
@@ -69,18 +69,18 @@ class Vector {
     subtract(x, y, z) {
         if (x instanceof Vector) {
             const vector = x;
-            this.x -= vector.x;
-            this.y -= vector.y;
-            this.z -= vector.z;
+            this.x -= vector.x || 0;
+            this.y -= vector.y || 0;
+            this.z -= vector.z || 0;
         } else if (x instanceof Array) {
             const array = x;
-            this.x -= array[0];
-            this.y -= array[1];
-            this.z -= array[2];
+            this.x -= array[0] || 0;
+            this.y -= array[1] || 0;
+            this.z -= array[2] || 0;
         } else {
-            this.x -= x;
-            this.y -= y;
-            this.z -= z;
+            this.x -= x || 0;
+            this.y -= y || 0;
+            this.z -= z || 0;
         }
         return this;
     }
@@ -160,7 +160,10 @@ class Vector {
      */
     normalize() {
         const magnitude = this.magnitude();
-        return this.multiply(1 / magnitude);
+        if (magnitude !== 0) {
+            this.multiply(1 / magnitude);
+        }
+        return this;
     }
 
     /**
@@ -248,7 +251,7 @@ class Vector {
      * @returns {Array.<number>} values as an array
      */
     array() {
-        return [this.x, this.y, this.x];
+        return [this.x, this.y, this.z];
     }
 }
 
