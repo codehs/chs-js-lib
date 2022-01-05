@@ -40,6 +40,14 @@ describe('vector', () => {
             expect(v4.z).toEqual(3);
         });
     });
+    describe('subtract', () => {
+        it('Supports calling with numbers', () => {
+            expect(new Vector(1, 2, 3).subtract(1, 1, 1).array()).toEqual([0, 1, 2]);
+        });
+        it('Supports calling with <3 numbers', () => {
+            expect(new Vector(1, 2, 3).subtract(1).array()).toEqual([0, 2, 3]);
+        });
+    });
     describe('add', () => {
         it('Supports calling with numbers', () => {
             const v = new Vector();
@@ -58,9 +66,12 @@ describe('vector', () => {
         it('Supports calling with an array', () => {
             const v = new Vector();
             v.add([1, 2, 3]);
-            expect(v.x).toEqual(1);
-            expect(v.y).toEqual(2);
-            expect(v.z).toEqual(3);
+            expect(v.array()).toEqual([1, 2, 3]);
+        });
+        it('Works for 2d vectors or any case where the number of args is fewer than 3', () => {
+            const v = new Vector(0, 0);
+            v.add(1);
+            expect(v.array()).toEqual([1, 0, 0]);
         });
     });
     describe('multiply', () => {
@@ -151,6 +162,9 @@ describe('vector', () => {
             a.normalize();
             expect(a.x).toBeCloseTo(4 / 5, 5);
             expect(a.y).toBeCloseTo(3 / 5, 5);
+        });
+        it('Prevents division by 0', () => {
+            expect(new Vector().normalize().array()).toEqual([0, 0, 0]);
         });
     });
 });
