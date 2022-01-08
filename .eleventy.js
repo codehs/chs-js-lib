@@ -24,7 +24,7 @@ module.exports = eleventyConfig => {
     return {
         // when distributed on github, all URLs need to be prefixed with /chs-js-lib/. this
         // environment variable is set in the GitHub action workflow `pages-build-and-publish`
-        pathPrefix: process.env.GITHUB_ACTION ? '/chs-js-lib/' : '',
+        pathPrefix: process.env.GITHUB_ACTION ? '/chs-js-lib/' : '/_site/',
         dir: {
             input: 'site',
             output: '_site',
