@@ -7,7 +7,7 @@ for (let i = 0; i < 100; i++) {
     add(rect);
 }
 
-class EraserClass extends Circle {
+class Eraser extends Circle {
     constructor(radius) {
         super(radius);
         this.erasing = true;
