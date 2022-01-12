@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css" />
+        <link rel="stylesheet" href="/chs-js-lib/assets/style.css" />
+        <script type="text/javascript" src="/chs-js-lib/assets/main.js"></script>
+        <title>Compositing</title>
+    </head>
+    <body>
+        <header>
+            <h1>Compositing</h1>
+            <nav>
+                <a href="/chs-js-lib/">Home</a>
+                <a href="/chs-js-lib/examples">Examples</a>
+                <a href="/chs-js-lib/docs">Documentation</a>
+            </nav>
+        </header>
+
+        <main>
+            <div style="display: flex">
+                <canvas id="game" width="480" height="200"></canvas>
+            </div>
+            <script src="/chs-js-lib/assets/chs.iife.js"></script>
+            <script id="code" type="module">
+                setBackgroundColor('white');
+
+                for (let i = 0; i < 100; i++) {
+                    const rect = new Rectangle(50, 50);
+                    rect.setColor(Randomizer.nextColor());
+                    rect.setPosition(
+                        Randomizer.nextInt(0, getWidth()),
+                        Randomizer.nextInt(0, getHeight())
+                    );
+                    add(rect);
+                }
+
+                class Eraser extends Circle {
+                    constructor(radius) {
+                        super(radius);
+                        this.erasing = true;
+                    }
+
+                    draw(context) {
+                        context.save();
+                        if (this.erasing) {
+                            context.globalCompositeOperation = 'destination-out';
+                        } else {
+                            context.globalCompositeOperation = 'destination-in';
+                        }
+                        super.draw(context);
+                        context.restore();
+                    }
+                }
+
+                let mouseX = 0;
+                let mouseY = 0;
+                const eraser = new Eraser(50);
+                add(eraser);
+
+                mouseMoveMethod(e => {
+                    mouseX = e.getX();
+                    mouseY = e.getY();
+                    eraser.setPosition(mouseX, mouseY);
+                });
+
+                mouseClickMethod(e => {
+                    eraser.erasing = !eraser.erasing;
+                });
+            </script>
+            <p>
+                Setting the <code>globalCompositeOperation</code> of an element will cause that
+                operation to be used before drawing it. The options can all be seen on
+                <a
+                    href="https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/globalCompositeOperation"
+                    >MDN</a
+                >.
+            </p>
+            <p>
+                In this example, a subclassed circle with
+                <code>globalCompositeOperation = 'destination-out'</code> is used to act as an
+                &quot;eraser&quot;. When you click or tap the canvas, the circle's
+                <code>globalCompositeOperation</code> becomes <code>destination-in</code>, and will
+                act as whatever the opposite of an eraser is.
+            </p>
+        </main>
+    </body>
+</html>
