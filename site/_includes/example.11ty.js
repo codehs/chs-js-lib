@@ -16,8 +16,9 @@ exports.render = data => {
             <canvas id="game" width="${canvasWidth}" height="${canvasHeight}"></
             canvas>
         </div>
-        <script src="${this.url('/assets/chs.iife.js')}"></script>
-        <script type="text/javascript">window.root = '${this.url('/assets/')}'</script>
+        <script src="${
+            process.env.GITHUB_ACTION ? this.url('/assets/chs.iife.js') : '/dist/chs.iife.js'
+        }"></script>
         <script id="code" type="module">${codeText}</script>
         ${data.content}
     </main>
