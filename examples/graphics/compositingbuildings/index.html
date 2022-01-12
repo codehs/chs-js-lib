@@ -55,29 +55,29 @@
                 }
 
                 const projectRectangle = (rectangle, vanishingPoint, isLeft = false) => {
-                    let top = rectangle.y;
+                    // go off the top a bit for subpixel stuff
+                    let top = rectangle.y - 0.001;
                     let left = rectangle.x;
                     let right = rectangle.x + rectangle.width;
                     if (isLeft) {
-                        left = rectangle.x + rectangle.width;
-                        right = rectangle.x;
+                        // swap left and right since the vector will be pointing left
+                        let temp = right;
+                        right = left;
+                        left = temp;
                     }
                     const v = vanishingPoint.clone().subtract(new Vector(left, top));
                     if (isLeft) {
                         v.multiply(-1, -1);
                     }
 
-                    let theta = toRad(v.heading() % 90);
-                    theta = Math.abs(theta);
+                    let theta = Math.abs(toRad(v.heading() % 90));
                     const dy = rectangle.width * Math.atan(theta);
 
                     const clip = new ClipPolygon();
                     clip.setAnchor({ ...rectangle.anchor });
-                    // go off the top a bit for subpixel stuff
-                    clip.addPoint(left, top - 1);
-                    clip.addPoint(right, top - 1);
-                    clip.addPoint(right, top + dy - 1);
-                    clip.setColor('red');
+                    clip.addPoint(left, top);
+                    clip.addPoint(right, top);
+                    clip.addPoint(right, top + dy);
                     return clip;
                 };
 
@@ -113,17 +113,22 @@
                 }
             </script>
             <p>
-                Setting the <code>globalCompositeOperation</code> of an element will cause that
-                operation to be used before drawing it. The options can all be seen on
+                Setting the <code>globalCompositeOperation</code> of the context will cause elements
+                drawn after its set to be blended with those operations. The options can all be seen
+                on
                 <a
                     href="https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/globalCompositeOperation"
                     >MDN</a
                 >.
             </p>
             <p>
-                In this example, a small Polygon with
-                <code>globalCompositeOperation = 'destination-out'</code> is used to
-                &quot;erase&quot; the content underneath it in the canvas.
+                In this example, a subclass of Polygon is created that will set the context's
+                <code>globalCompositeOperation</code> to be <code>'destination-out'</code>, which
+                will &quot;erase&quot; the content underneath it in the canvas.
+            </p>
+            <p>
+                The argument to the <code>draw</code> function is the <code>context</code>, and can
+                be modified with <code>context.globalCompositeOperation</code>.
             </p>
         </main>
     </body>

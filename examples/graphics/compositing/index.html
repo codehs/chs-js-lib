@@ -70,8 +70,8 @@
                 });
             </script>
             <p>
-                Setting the <code>globalCompositeOperation</code> of an element will cause that
-                operation to be used before drawing it. The options can all be seen on
+                Setting the <code>globalCompositeOperation</code> of the context will cause that
+                operation mode to be used when drawing. The options can all be seen on
                 <a
                     href="https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/globalCompositeOperation"
                     >MDN</a
@@ -80,7 +80,16 @@
             <p>
                 In this example, a subclassed circle with
                 <code>globalCompositeOperation = 'destination-out'</code> is used to act as an
-                &quot;eraser&quot;. When you click or tap the canvas, the circle's
+                &quot;eraser&quot;.
+            </p>
+            <p>
+                The only argument to the <code>draw</code> function is the 2d context, and modifying
+                the <code>globalCompositeOperation</code> before invoking
+                <code>super.draw</code> will modify the context for the duration of the
+                <code>Circle</code>'s draw.
+            </p>
+            <p>
+                When you click or tap the canvas, the circle's
                 <code>globalCompositeOperation</code> becomes <code>destination-in</code>, and will
                 act as whatever the opposite of an eraser is.
             </p>
