@@ -893,7 +893,7 @@ var require_tslib = __commonJS({
 });
 
 // src/console/index.js
-var CodeHSConsole = class {
+var Console = class {
   constructor(options = {}) {
     this.onPrompt = options.onPrompt ?? window.prompt.bind(window);
     this.onPrint = options.onPrint ?? window.console.log.bind(window.console);
@@ -913,19 +913,19 @@ var CodeHSConsole = class {
   clear() {
     this.onClear();
   }
-  print(ln) {
-    if (arguments.length !== 1) {
-      throw new Error("You should pass exactly 1 argument to print");
+  print(...args) {
+    if (args.length < 1) {
+      throw new Error("You should pass at least 1 argument to print");
     }
-    this.onPrint(ln);
+    this.onPrint(...args);
   }
-  println(ln) {
+  println(value) {
     if (arguments.length === 0) {
-      ln = "";
+      value = "";
     } else if (arguments.length !== 1) {
       throw new Error("You should pass exactly 1 argument to println");
     }
-    this.print(ln + "\n");
+    this.print(value, "\n");
   }
   readNumber(str, parseFn, errorMsgType) {
     const DEFAULT = 0;
@@ -19616,7 +19616,7 @@ export {
   AudioManager,
   circle_default as Circle,
   Color,
-  CodeHSConsole as Console,
+  Console,
   graphics_default as Graphics,
   group_default as Group,
   keyboard_default as Keyboard,

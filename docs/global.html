@@ -4531,7 +4531,7 @@ notation: Describes time in BPM and time signature relative values.
 
     
 
-    <h4 class="name" id="print"><span class="type-signature"></span>print<span class="signature">(ln)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="print"><span class="type-signature"></span>print<span class="signature">(&hellip;args)</span><span class="type-signature"></span></h4>
 
     
 
@@ -4583,7 +4583,7 @@ notation: Describes time in BPM and time signature relative values.
 
 
 <div class="description usertext">
-    Print a line to the console.
+    Print a value to the console.
 </div>
 
 
@@ -4609,6 +4609,8 @@ notation: Describes time in BPM and time signature relative values.
         <th>Type</th>
 
         
+        <th>Attributes</th>
+        
 
         
 
@@ -4621,23 +4623,33 @@ notation: Describes time in BPM and time signature relative values.
 
         <tr>
             
-                <td class="name"><code>ln</code></td>
+                <td class="name"><code>args</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">string</span>
+<span class="param-type">any</span>
 
 
             
             </td>
 
             
+                <td class="attributes">
+                
+
+                
+
+                
+                    &lt;repeatable><br>
+                
+                </td>
+            
 
             
 
-            <td class="description last">The string to print.</td>
+            <td class="description last">Anything to print.</td>
         </tr>
 
     
@@ -4667,7 +4679,7 @@ notation: Describes time in BPM and time signature relative values.
 
     
 
-    <h4 class="name" id="println"><span class="type-signature"></span>println<span class="signature">(ln)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="println"><span class="type-signature"></span>println<span class="signature">(value)</span><span class="type-signature"></span></h4>
 
     
 
@@ -4719,7 +4731,7 @@ notation: Describes time in BPM and time signature relative values.
 
 
 <div class="description usertext">
-    Print a line to the console.
+    Print a value to the console, followed by a newline character.
 </div>
 
 
@@ -4757,13 +4769,13 @@ notation: Describes time in BPM and time signature relative values.
 
         <tr>
             
-                <td class="name"><code>ln</code></td>
+                <td class="name"><code>value</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">string</span>
+<span class="param-type">any</span>
 
 
             
@@ -4773,7 +4785,7 @@ notation: Describes time in BPM and time signature relative values.
 
             
 
-            <td class="description last">The string to print.</td>
+            <td class="description last">The value to print.</td>
         </tr>
 
     
@@ -4951,7 +4963,7 @@ notation: Describes time in BPM and time signature relative values.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="console_index.js.html">console/index.js</a>, <a href="console_index.js.html#line169">line 169</a>
+        <a href="console_index.js.html">console/index.js</a>, <a href="console_index.js.html#line168">line 168</a>
     </li></ul></dd>
     
 
@@ -5109,7 +5121,7 @@ notation: Describes time in BPM and time signature relative values.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="console_index.js.html">console/index.js</a>, <a href="console_index.js.html#line223">line 223</a>
+        <a href="console_index.js.html">console/index.js</a>, <a href="console_index.js.html#line222">line 222</a>
     </li></ul></dd>
     
 
@@ -5267,7 +5279,7 @@ notation: Describes time in BPM and time signature relative values.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="console_index.js.html">console/index.js</a>, <a href="console_index.js.html#line198">line 198</a>
+        <a href="console_index.js.html">console/index.js</a>, <a href="console_index.js.html#line197">line 197</a>
     </li></ul></dd>
     
 
@@ -5426,7 +5438,7 @@ though they are successfully parsed as ints.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="console_index.js.html">console/index.js</a>, <a href="console_index.js.html#line156">line 156</a>
+        <a href="console_index.js.html">console/index.js</a>, <a href="console_index.js.html#line155">line 155</a>
     </li></ul></dd>
     
 
@@ -5744,7 +5756,7 @@ other methods for getting user input are called, the prompt string is additional
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="console_index.js.html">console/index.js</a>, <a href="console_index.js.html#line120">line 120</a>
+        <a href="console_index.js.html">console/index.js</a>, <a href="console_index.js.html#line119">line 119</a>
     </li></ul></dd>
     
 
@@ -7854,7 +7866,7 @@ https://tonejs.github.io/docs/13.8.25/OmniOscillator</td>
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.7</a> on Wed Jan 12 2022 05:39:42 GMT+0000 (Coordinated Universal Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.7</a> on Thu Jan 13 2022 22:57:38 GMT+0000 (Coordinated Universal Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>

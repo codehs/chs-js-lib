@@ -894,7 +894,7 @@ var CHSJS = (() => {
   });
 
   // src/console/index.js
-  var CodeHSConsole = class {
+  var Console = class {
     constructor(options = {}) {
       this.onPrompt = options.onPrompt ?? window.prompt.bind(window);
       this.onPrint = options.onPrint ?? window.console.log.bind(window.console);
@@ -914,19 +914,19 @@ var CHSJS = (() => {
     clear() {
       this.onClear();
     }
-    print(ln) {
-      if (arguments.length !== 1) {
-        throw new Error("You should pass exactly 1 argument to print");
+    print(...args) {
+      if (args.length < 1) {
+        throw new Error("You should pass at least 1 argument to print");
       }
-      this.onPrint(ln);
+      this.onPrint(...args);
     }
-    println(ln) {
+    println(value) {
       if (arguments.length === 0) {
-        ln = "";
+        value = "";
       } else if (arguments.length !== 1) {
         throw new Error("You should pass exactly 1 argument to println");
       }
-      this.print(ln + "\n");
+      this.print(value, "\n");
     }
     readNumber(str, parseFn, errorMsgType) {
       const DEFAULT = 0;
@@ -19617,7 +19617,7 @@ var CHSJS = (() => {
   window.Audio = CrossOriginAudio;
   window.Circle = circle_default;
   window.Color = Color;
-  window.Console = CodeHSConsole;
+  window.Console = Console;
   window.Graphics = graphics_default;
   window.Group = group_default;
   window.Keyboard = keyboard_default;
@@ -19657,7 +19657,7 @@ var CHSJS = (() => {
   window.getElementsAt = GraphicsInstance.getElementsAt.bind(GraphicsInstance);
   window.setFullscreen = GraphicsInstance.setFullscreen.bind(GraphicsInstance);
   window.setSize = GraphicsInstance.setSize.bind(GraphicsInstance);
-  var ConsoleInstance = new CodeHSConsole();
+  var ConsoleInstance = new Console();
   window.readLine = ConsoleInstance.readLine.bind(ConsoleInstance);
   window.readInt = ConsoleInstance.readInt.bind(ConsoleInstance);
   var AudioInstance = new AudioManager();
