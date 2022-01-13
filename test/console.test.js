@@ -235,7 +235,7 @@ describe('Console', () => {
                 const c = new Console();
                 expect(() => {
                     c.print();
-                }).toThrow(Error('You should pass exactly 1 argument to print'));
+                }).toThrow(Error('You should pass at least 1 argument to print'));
             });
             it("Doesn't add a newline to its output", () => {
                 const c = new Console();
@@ -262,14 +262,14 @@ describe('Console', () => {
                 const printSpy = jasmine.createSpy();
                 c.configure({ onPrint: printSpy });
                 c.println();
-                expect(printSpy).toHaveBeenCalledOnceWith('\n');
+                expect(printSpy).toHaveBeenCalledOnceWith('', '\n');
             });
             it('Adds a newline to its output', () => {
                 const c = new Console();
                 const printSpy = jasmine.createSpy();
                 c.configure({ onPrint: printSpy });
                 c.println('Hello!');
-                expect(printSpy).toHaveBeenCalledOnceWith('Hello!\n');
+                expect(printSpy).toHaveBeenCalledOnceWith('Hello!', '\n');
             });
         });
     });

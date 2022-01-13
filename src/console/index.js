@@ -10,7 +10,7 @@
  *
  */
 
-export default class CodeHSConsole {
+export default class Console {
     /**
      * Initialize the console class, additionally configuring any event handlers.
      * @constructor
@@ -76,6 +76,9 @@ export default class CodeHSConsole {
      * @param {...any} args - Anything to print.
      */
     print(...args) {
+        if (args.length < 1) {
+            throw new Error('You should pass at least 1 argument to print');
+        }
         this.onPrint(...args);
     }
 
