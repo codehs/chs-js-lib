@@ -9,7 +9,8 @@
         "dist/chs.iife.js",
         "dist/chs.iife.min.js",
         "dist/chs.min.mjs",
-        "dist/chs.mjs"
+        "dist/chs.mjs",
+        "dist/types.d.ts"
     ],
     "scripts": {
         "test": "karma start --single-run",
