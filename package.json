@@ -15,6 +15,7 @@
     "scripts": {
         "test": "karma start --single-run",
         "test:watch": "karma start",
+        "test:dist": "node build.js && env DIST_TESTING=1 karma start --single-run",
         "build": "node build.js",
         "dev": "node build.js watch",
         "dist": "tsc && node build.js dist",

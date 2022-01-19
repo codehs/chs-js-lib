@@ -1,6 +1,24 @@
 // Karma configuration
 // Generated on Thu Sep 23 2021 11:54:30 GMT-0700 (Pacific Daylight Time)
 
+const testFiles = DIST_TESTING => {
+    if (DIST_TESTING) {
+        return [
+            {
+                pattern: 'dist/chs.mjs',
+                type: 'module',
+                included: 'false',
+            },
+            {
+                pattern: 'test/dist/*.js',
+                type: 'module',
+            },
+        ];
+    } else {
+        return [{ pattern: 'test/*.js', type: 'module' }];
+    }
+};
+
 module.exports = function (config) {
     config.set({
         // base path that will be used to resolve all patterns (eg. files, exclude)
@@ -14,7 +32,7 @@ module.exports = function (config) {
         files: [
             { pattern: 'src/**/*.js', type: 'module', included: false },
             { pattern: 'test/setup.js', type: 'module' },
-            { pattern: 'test/*.js', type: 'module' },
+            ...testFiles(process.env.DIST_TESTING),
         ],
 
         // list of files / patterns to exclude
