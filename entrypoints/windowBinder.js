@@ -30,6 +30,7 @@ window.Circle = Circle;
 window.Color = Color;
 window.Console = Console;
 window.Graphics = GraphicsManager;
+window.Grid = Grid;
 window.Group = Group;
 window.Keyboard = Keyboard;
 window.Line = Line;
