@@ -1,7 +1,7 @@
 /** @module Grid */
 
 /**
- * A grid is a two-dimensional array .
+ * A grid is an abstraction around a two-dimensional array.
  */
 class Grid {
     type = 'Grid';
@@ -49,12 +49,13 @@ class Grid {
             );
         }
         for (let i = 0; i < arr.length; i++) {
-            for (let j = 0; j < arr[0].length; j++) {
+            for (let j = 0; j < arr[i].length; j++) {
                 if (this.inBounds(i, j)) {
                     this.set(i, j, arr[i][j]);
                 }
             }
         }
+        return this;
     }
 
     /**
@@ -77,6 +78,7 @@ class Grid {
                 this.grid[i][j] = value;
             }
         }
+        return this;
     }
 
     /**
@@ -126,18 +128,6 @@ class Grid {
                 'Invalid value for `col`. You passed a value of type ' +
                     typeof col +
                     '. Make sure you are passing a number.'
-            );
-        }
-        if (
-            typeof value !== 'boolean' &&
-            typeof value !== 'number' &&
-            typeof value !== 'string' &&
-            typeof value !== 'object'
-        ) {
-            throw new TypeError(
-                'Invalid value passed to `set`. You passed a value of type ' +
-                    typeof value +
-                    '. Make sure you are passing a number, string, object, or boolean value.'
             );
         }
         if (typeof value === 'number' && !isFinite(value)) {
@@ -211,10 +201,7 @@ class Grid {
         let list = [];
         for (let i = 0; i < this.grid.length; i++) {
             for (let j = 0; j < this.grid[0].length; j++) {
-                let value = this.grid[i][j];
-                if (value && value !== 0) {
-                    list.push([i, j, value]);
-                }
+                list.push([i, j, this.grid[i][j]]);
             }
         }
         return list;

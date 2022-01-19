@@ -1,6 +1,8 @@
 export { default as Console } from '../src/console/index.js';
 export { default as Queue } from '../src/datastructures/queue.js';
 export { default as Stack } from '../src/datastructures/stack.js';
+export { default as Grid } from '../src/datastructures/grid.js';
+export { default as ExtendedSet } from '../src/datastructures/set.js';
 export { default as Vector } from '../src/datastructures/vector.js';
 export { default as Arc } from '../src/graphics/arc.js';
 export { default as Circle } from '../src/graphics/circle.js';

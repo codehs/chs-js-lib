@@ -1,6 +1,8 @@
 import { default as Console } from '../src/console/index.js';
 import { default as Queue } from '../src/datastructures/queue.js';
 import { default as Stack } from '../src/datastructures/stack.js';
+import { default as Grid } from '../src/datastructures/grid.js';
+import { default as ExtendedSet } from '../src/datastructures/set.js';
 import { default as Vector } from '../src/datastructures/vector.js';
 import { default as Arc } from '../src/graphics/arc.js';
 import { default as Circle } from '../src/graphics/circle.js';
@@ -36,6 +38,7 @@ window.Polygon = Polygon;
 window.Queue = Queue;
 window.Randomizer = Randomizer;
 window.Rectangle = Rectangle;
+window.Set = ExtendedSet;
 window.Sound = Sound;
 window.Stack = Stack;
 window.Text = Text;
