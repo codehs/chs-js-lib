@@ -1001,68 +1001,195 @@ var CHSJS = (() => {
 
   // src/datastructures/queue.js
   "use strict";
-  var Queue = class {
-    constructor() {
-      this._q = [];
-    }
+  var Queue = class extends Array {
     size() {
-      return this._q.length;
+      return this.length;
     }
     clear() {
-      this._q = [];
+      this.length = 0;
     }
-    enqueue(obj) {
-      this._q.push(obj);
-    }
-    dequeue() {
-      var obj = this._q[0];
-      this._q.splice(0, 1);
-      return obj;
-    }
+    enqueue = this.push;
+    dequeue = this.shift;
     peek() {
-      var obj = this._q[0];
-      return obj;
+      return this[0];
     }
     hasNext() {
-      return this._q.length !== 0;
+      return !this.isEmpty();
     }
     isEmpty() {
-      return this._q.length === 0;
+      return this.length === 0;
     }
   };
 
   // src/datastructures/stack.js
-  var Stack = class {
-    constructor() {
-      this.stack = [];
-    }
+  var Stack = class extends Array {
     size() {
-      return this.stack.length;
+      return this.length;
     }
     clear() {
-      this.stack = [];
-    }
-    push(obj) {
-      this.stack.push(obj);
-    }
-    pop() {
-      var len = this.stack.length;
-      var obj = this.stack[len - 1];
-      this.stack.splice(len - 1, 1);
-      return obj;
+      this.length = 0;
     }
     peek() {
-      var len = this.stack.length;
-      var obj = this.stack[len - 1];
-      return obj;
+      return this[this.length - 1];
     }
     hasNext() {
-      return this.stack.length !== 0;
+      return !this.isEmpty();
     }
     isEmpty() {
-      return this.stack.length === 0;
+      return this.length === 0;
     }
   };
+
+  // src/datastructures/grid.js
+  var Grid = class {
+    type = "Grid";
+    constructor(rows, cols) {
+      if (arguments.length !== 2) {
+        throw new Error("You should pass exactly 2 arguments to `new Grid(rows, cols)`");
+      }
+      if (typeof rows !== "number" || !isFinite(rows)) {
+        throw new TypeError("Invalid value for `rows`. Make sure you are passing finite numbers to `new Grid(rows, cols)`.");
+      }
+      if (typeof cols !== "number" || !isFinite(cols)) {
+        throw new TypeError("Invalid value for `cols`. Make sure you are passing finite numbers to `new Grid(rows, cols)`.");
+      }
+      rows = Math.max(0, rows);
+      cols = Math.max(0, cols);
+      this.grid = new Array(rows);
+      for (let i = 0; i < rows; i++) {
+        this.grid[i] = new Array(cols);
+      }
+    }
+    initFromArray(arr) {
+      if (arguments.length !== 1) {
+        throw new Error("You should pass exactly 1 argument to `initFromArray`");
+      }
+      if (!Array.isArray(arr)) {
+        throw new Error("Invalid value passed to `initFromArray`. Make sure you are passing an array.");
+      }
+      for (let i = 0; i < arr.length; i++) {
+        for (let j = 0; j < arr[i].length; j++) {
+          if (this.inBounds(i, j)) {
+            this.set(i, j, arr[i][j]);
+          }
+        }
+      }
+      return this;
+    }
+    init(value) {
+      if (arguments.length !== 1) {
+        throw new Error("You should pass exactly 1 argument to `init`.");
+      }
+      if (typeof value === "number" && !isFinite(value)) {
+        throw new TypeError("Non finite number passed to `init`. If you are passing a number, make sure it is a finite number.");
+      }
+      for (let i = 0; i < this.numRows(); i++) {
+        for (let j = 0; j < this.numCols(); j++) {
+          this.grid[i][j] = value;
+        }
+      }
+      return this;
+    }
+    get(row, col) {
+      if (arguments.length !== 2) {
+        throw new Error("You should pass exactly 2 arguments to `get(row, col)`.");
+      }
+      if (typeof row !== "number" || !isFinite(row)) {
+        throw new TypeError("Invalid value for `row`. Make sure you are passing finite numbers to `get(row, col)`.");
+      }
+      if (typeof col !== "number" || !isFinite(col)) {
+        throw new TypeError("Invalid value for `col`. Make sure you are passing finite numbers to `get(row, col)`.");
+      }
+      return this.grid[row][col];
+    }
+    set(row, col, value) {
+      if (arguments.length !== 3) {
+        throw new Error("You should pass exactly 3 arguments to `set(row, col, value)`.");
+      }
+      if (typeof row !== "number" || !isFinite(row)) {
+        throw new TypeError("Invalid value for `row`. You passed a value of type " + typeof row + ". Make sure you are passing a number.");
+      }
+      if (typeof col !== "number" || !isFinite(col)) {
+        throw new TypeError("Invalid value for `col`. You passed a value of type " + typeof col + ". Make sure you are passing a number.");
+      }
+      if (typeof value === "number" && !isFinite(value)) {
+        throw new TypeError("Non finite value passed to `set`. If you are passing a number, make sure it is a finite number.");
+      }
+      this.grid[row][col] = value;
+    }
+    numRows() {
+      return this.grid.length;
+    }
+    numCols() {
+      return this.grid[0].length;
+    }
+    inBounds(row, col) {
+      if (arguments.length !== 2) {
+        throw new Error("You should pass exactly 2 arguments to `inBounds(row, col)`.");
+      }
+      if (typeof row !== "number" || !isFinite(row)) {
+        throw new TypeError("Invalid value for `row`. Make sure you are passing finite numbers to `inBounds(row, col)`.");
+      }
+      if (typeof col !== "number" || !isFinite(col)) {
+        throw new TypeError("Invalid value for `col`. Make sure you are passing finite numbers to `inBounds(row, col)`.");
+      }
+      if (row < 0 || col < 0) {
+        return false;
+      }
+      if (row >= this.numRows() || col >= this.numCols()) {
+        return false;
+      }
+      return true;
+    }
+    toList() {
+      let list = [];
+      for (let i = 0; i < this.grid.length; i++) {
+        for (let j = 0; j < this.grid[0].length; j++) {
+          list.push([i, j, this.grid[i][j]]);
+        }
+      }
+      return list;
+    }
+    toString() {
+      let result = "";
+      for (let i = 0; i < this.numRows(); i++) {
+        for (let j = 0; j < this.numCols(); j++) {
+          result += this.get(i, j) + " ";
+        }
+        result += "\n";
+      }
+      return result;
+    }
+  };
+  var grid_default = Grid;
+
+  // src/datastructures/set.js
+  var ExtendedSet = class extends Set {
+    isEmpty() {
+      return this.size === 0;
+    }
+    getKey(elem) {
+      return elem.toString();
+    }
+    remove = this.delete;
+    contains = this.has;
+    elems() {
+      return Array.from(this);
+    }
+    union(other) {
+      return new ExtendedSet([...this, ...other]);
+    }
+    intersect(other) {
+      return new ExtendedSet([...this].filter((el) => other.has(el)));
+    }
+    toString() {
+      return [...this].reduce((str, el, i) => {
+        const lastElement = i === this.size - 1;
+        return str + `${el}${lastElement ? "}" : ", "}`;
+      }, "Set: {");
+    }
+  };
+  var set_default = ExtendedSet;
 
   // src/graphics/thing.js
   var _Thing = class {
@@ -19619,6 +19746,7 @@ var CHSJS = (() => {
   window.Color = Color;
   window.Console = Console;
   window.Graphics = graphics_default;
+  window.Grid = grid_default;
   window.Group = group_default;
   window.Keyboard = keyboard_default;
   window.Line = Line;
@@ -19627,6 +19755,7 @@ var CHSJS = (() => {
   window.Queue = Queue;
   window.Randomizer = randomizer_exports;
   window.Rectangle = rectangle_default;
+  window.Set = set_default;
   window.Sound = Sound;
   window.Stack = Stack;
   window.Text = text_default;
