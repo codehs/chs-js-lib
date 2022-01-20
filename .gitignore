@@ -5,3 +5,8 @@ _site/
 coverage
 site/assets/chs.iife.js
 site/assets/chs.mjs
+site/assets/chs.iife.min.js
+site/assets/chs.min.mjs
+site/assets/types.d.ts
+site/assets/src/
+site/assets/entrypoints/
