@@ -5,7 +5,8 @@ code: exampleproject.js
 ---
 
 This is an example of the files needed for an example.
-The top of the markdown file, `info.md`, has:
+The top of the markdown file, `exampleproject.md`, has:
+If you'd like to create your own example, copy this folder and follow the instructions in the [contributing guide](https://github.com/codehs/chs-js-lib/blob/main/CONTRIBUTING.md).
 
 ```
 ---
