@@ -36,6 +36,8 @@ We want to showcase the great programs our community has created with the librar
     ```
 7. Commit your changes and make a pull request to add your example.
 
+Additionally, you can use a text editor directly in GitHub to make a Pull Request without installing anything! [Here's how](https://www.loom.com/share/2eb75e44381e4008a1c2046ba4992cca)!
+
 ## Local Development
 
 To develop the project locally, follow the instructions here or watch [this video](https://www.loom.com/share/893122a91ec448e8ac0c40d4a3f6868b)!
