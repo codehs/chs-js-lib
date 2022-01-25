@@ -6,6 +6,18 @@ Contributions to open-source are more than just code. You can contribute by crea
 
 If you find a bug or have an idea for a feature improvement, you can create a new "issue" [here](https://github.com/codehs/chs-js-lib/issues). Follow the template's instructions to fill out helpful details for your bug report or request.
 
+## Code Organization
+
+-   `site/` contains the files used for generating the static site at https://codehs.github.io/chs-js-lib
+-   `src/` contains the source code for the library
+    -   `console/` contains the Console implementation, for text input and output
+    -   `datastructures/` contains the implementation of data structures
+    -   `graphics/` contains the implementation of graphical elements
+    -   `sound/` contains the implementation of the Audio and Sound classes
+-   `test/` contains the tests for the project
+
+There are several auto-generated folders that contain only build artifacts: `_site`, `coverage`, and `node_modules` shouldn't be changed.
+
 ## Publishing an Example
 
 We want to showcase the great programs our community has created with the library. To make a pull request to publish your example, follow these instructions:
