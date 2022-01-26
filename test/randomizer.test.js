@@ -48,5 +48,14 @@ describe('Randomizer', () => {
                 expect(Randomizer.noise(x2) - Randomizer.noise(x1)).toBeLessThan(0.2);
             }
         });
+        describe('2d noise', () => {
+            it('Is continuous past PERLIN_SIZE_2D', () => {
+                for (let i = 0; i < 127; i += 0.01) {
+                    const x1 = i;
+                    const x2 = i + 0.01;
+                    expect(Randomizer.noise(x2, x2) - Randomizer.noise(x1, x1)).toBeLessThan(0.1);
+                }
+            });
+        });
     });
 });
