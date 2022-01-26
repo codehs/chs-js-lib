@@ -20,7 +20,7 @@
 
         <main>
             <div style="display: flex">
-                <canvas id="game" width="480" height="200"></canvas>
+                <canvas id="game" width="200" height="200"></canvas>
             </div>
             <script src="/chs-js-lib/assets/chs.iife.js"></script>
             <script id="code" type="module">
@@ -31,11 +31,15 @@
                         const scaledCol = col * 0.02;
                         const pxl = new Rectangle(1, 1);
                         pxl.setPosition(col, row);
-                        const n = Randomizer.noise(scaledCol, scaledRow);
+                        const n = Randomizer.noise(50 + scaledCol, 50 + scaledRow);
                         pxl.setColor(Color.createFromRGB(n * 255, n * 255, n * 255));
                         add(pxl);
                     }
                 }
+
+                // save the CPU from needing to draw so many squares again
+                __graphics__.redraw();
+                __graphics__.shouldUpdate = false;
             </script>
             <p>Passing a second argument to <code>noise</code> will create 2-dimensional noise.</p>
         </main>
