@@ -55,12 +55,9 @@ export default class Console {
     /**
      * Private method used to read a line.
      * @param {string} promptString - The line to be printed before prompting.
-     * @param {boolean} printPrompt - Whether the prompt should be printed. When readLine and
-     * other methods for getting user input are called, the prompt string is additionally printed.
      */
-    readLinePrivate(promptString, printPrompt) {
+    readLinePrivate(promptString) {
         const input = this.onPrompt(promptString);
-        printPrompt && this.println(promptString);
         return input;
     }
 
@@ -101,7 +98,7 @@ export default class Console {
      *
      *    1. If the user checks "Prevent this page from creating additional dialogs," we handle
      *       that gracefully, by checking for a loop, and then returning a DEFAULT value.
-     *    2. That we can properly parse a number according to the parse function PARSEFN passed in
+     *    2. That we can properly parse a number according to the parse function parseFn passed in
      *       as a parameter. For floats it is just parseFloat, but for ints it is our special parseInt
      *       which actually does not even allow floats, even they they can properly be parsed as ints.
      *    3. The errorMsgType is a string helping us figure out what to print if it is not of the right
@@ -120,31 +117,46 @@ export default class Console {
         const DEFAULT = 0; // If we get into an infinite loop, return DEFAULT.
         const INFINITE_LOOP_CHECK = 100;
 
-        let prompt = str;
-        let looping = false;
+        let promptString = str;
         let loopCount = 0;
+        /**
+         * @type {boolean}
+         * indicates whether the parsing has been successful, meaning
+         * it hasn't hit the INFINITE_LOOP_CHECK or null cases, and the input from the user has
+         * satisfied parseFn. in this case, the input should be printed.
+         * */
+        let successful = false;
+        let parsedResult;
         // eslint-disable-next-line no-constant-condition
         while (true) {
-            let result = this.readLinePrivate(prompt, !looping);
+            const result = this.readLinePrivate(promptString);
             if (result === null) {
-                return null;
+                parsedResult = null;
+                successful = false;
+                break;
             }
-            result = parseFn(result);
-
-            if (!isNaN(result)) {
-                return result;
+            parsedResult = parseFn(result);
+            if (!isNaN(parsedResult)) {
+                successful = true;
+                break;
             }
-
-            if (result === null) {
-                return DEFAULT;
+            if (parsedResult === null) {
+                successful = false;
+                break;
             }
             if (loopCount > INFINITE_LOOP_CHECK) {
-                return DEFAULT;
+                successful = false;
+                parsedResult = DEFAULT;
+                break;
             }
-            prompt = 'That was not ' + errorMsgType + '. Please try again. ' + str;
-            looping = true;
+            promptString = `'${result}' was not ${errorMsgType}. Please try again.\n${str}`;
             loopCount++;
         }
+        if (successful) {
+            this.print(str);
+            this.println(parsedResult);
+        }
+        return parsedResult;
     }
 
     /**
@@ -157,7 +169,10 @@ export default class Console {
             throw new Error('You should pass exactly 1 argument to readLine');
         }
 
-        return this.readLinePrivate(str, true);
+        const result = this.readLinePrivate(str);
+        this.print(str);
+        this.println(result);
+        return result;
     }
 
     /**

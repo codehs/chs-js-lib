@@ -1,3 +1,3 @@
-setTimeout(() => {
-    alert(readInt('Give me a number! ') * 12);
-}, 0);
+let x = readInt('Give me an x: ');
+let y = readInt('Give me a y: ');
+println('The y/x = ' + y / x);
