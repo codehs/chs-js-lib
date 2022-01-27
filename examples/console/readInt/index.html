@@ -24,9 +24,9 @@
             </div>
             <script src="/chs-js-lib/assets/chs.iife.js"></script>
             <script id="code" type="module">
-                setTimeout(() => {
-                    alert(readInt('Give me a number! ') * 12);
-                }, 0);
+                let x = readInt('Give me an x: ');
+                let y = readInt('Give me a y: ');
+                println('The y/x = ' + y / x);
             </script>
             <p>This program reads an integer from the user and multiplies it by 12.</p>
         </main>

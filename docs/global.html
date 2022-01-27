@@ -1281,7 +1281,7 @@ being played in a graphics program.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="console_index.js.html">console/index.js</a>, <a href="console_index.js.html#line70">line 70</a>
+        <a href="console_index.js.html">console/index.js</a>, <a href="console_index.js.html#line67">line 67</a>
     </li></ul></dd>
     
 
@@ -4189,7 +4189,7 @@ notation: Describes time in BPM and time signature relative values.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="console_index.js.html">console/index.js</a>, <a href="console_index.js.html#line78">line 78</a>
+        <a href="console_index.js.html">console/index.js</a>, <a href="console_index.js.html#line75">line 75</a>
     </li></ul></dd>
     
 
@@ -4337,7 +4337,7 @@ notation: Describes time in BPM and time signature relative values.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="console_index.js.html">console/index.js</a>, <a href="console_index.js.html#line89">line 89</a>
+        <a href="console_index.js.html">console/index.js</a>, <a href="console_index.js.html#line86">line 86</a>
     </li></ul></dd>
     
 
@@ -4473,7 +4473,7 @@ notation: Describes time in BPM and time signature relative values.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="console_index.js.html">console/index.js</a>, <a href="console_index.js.html#line168">line 168</a>
+        <a href="console_index.js.html">console/index.js</a>, <a href="console_index.js.html#line183">line 183</a>
     </li></ul></dd>
     
 
@@ -4631,7 +4631,7 @@ notation: Describes time in BPM and time signature relative values.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="console_index.js.html">console/index.js</a>, <a href="console_index.js.html#line222">line 222</a>
+        <a href="console_index.js.html">console/index.js</a>, <a href="console_index.js.html#line237">line 237</a>
     </li></ul></dd>
     
 
@@ -4789,7 +4789,7 @@ notation: Describes time in BPM and time signature relative values.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="console_index.js.html">console/index.js</a>, <a href="console_index.js.html#line197">line 197</a>
+        <a href="console_index.js.html">console/index.js</a>, <a href="console_index.js.html#line212">line 212</a>
     </li></ul></dd>
     
 
@@ -4948,7 +4948,7 @@ though they are successfully parsed as ints.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="console_index.js.html">console/index.js</a>, <a href="console_index.js.html#line155">line 155</a>
+        <a href="console_index.js.html">console/index.js</a>, <a href="console_index.js.html#line167">line 167</a>
     </li></ul></dd>
     
 
@@ -5094,7 +5094,7 @@ though they are successfully parsed as ints.
 
     
 
-    <h4 class="name" id="readLinePrivate"><span class="type-signature"></span>readLinePrivate<span class="signature">(promptString, printPrompt)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="readLinePrivate"><span class="type-signature"></span>readLinePrivate<span class="signature">(promptString)</span><span class="type-signature"></span></h4>
 
     
 
@@ -5106,7 +5106,7 @@ though they are successfully parsed as ints.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="console_index.js.html">console/index.js</a>, <a href="console_index.js.html#line61">line 61</a>
+        <a href="console_index.js.html">console/index.js</a>, <a href="console_index.js.html#line59">line 59</a>
     </li></ul></dd>
     
 
@@ -5204,30 +5204,6 @@ though they are successfully parsed as ints.
         </tr>
 
     
-
-        <tr>
-            
-                <td class="name"><code>printPrompt</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">boolean</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Whether the prompt should be printed. When readLine and
-other methods for getting user input are called, the prompt string is additionally printed.</td>
-        </tr>
-
-    
     </tbody>
 </table>
 
@@ -5266,7 +5242,7 @@ other methods for getting user input are called, the prompt string is additional
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="console_index.js.html">console/index.js</a>, <a href="console_index.js.html#line119">line 119</a>
+        <a href="console_index.js.html">console/index.js</a>, <a href="console_index.js.html#line116">line 116</a>
     </li></ul></dd>
     
 
@@ -5311,7 +5287,7 @@ We make sure here to check a few things.
 
    1. If the user checks "Prevent this page from creating additional dialogs," we handle
       that gracefully, by checking for a loop, and then returning a DEFAULT value.
-   2. That we can properly parse a number according to the parse function PARSEFN passed in
+   2. That we can properly parse a number according to the parse function parseFn passed in
       as a parameter. For floats it is just parseFloat, but for ints it is our special parseInt
       which actually does not even allow floats, even they they can properly be parsed as ints.
    3. The errorMsgType is a string helping us figure out what to print if it is not of the right
@@ -7376,7 +7352,7 @@ https://tonejs.github.io/docs/13.8.25/OmniOscillator</td>
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.7</a> on Wed Jan 26 2022 01:20:38 GMT+0000 (Coordinated Universal Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.7</a> on Thu Jan 27 2022 20:49:21 GMT+0000 (Coordinated Universal Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>

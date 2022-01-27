@@ -906,9 +906,8 @@ var CHSJS = (() => {
       this.onPrint = options.onPrint ?? this.onPrint;
       this.onClear = options.onClear ?? this.onClear;
     }
-    readLinePrivate(promptString, printPrompt) {
+    readLinePrivate(promptString) {
       const input = this.onPrompt(promptString);
-      printPrompt && this.println(promptString);
       return input;
     }
     clear() {
@@ -931,34 +930,49 @@ var CHSJS = (() => {
     readNumber(str, parseFn, errorMsgType) {
       const DEFAULT = 0;
       const INFINITE_LOOP_CHECK = 100;
-      let prompt = str;
-      let looping = false;
+      let promptString = str;
       let loopCount = 0;
+      let successful = false;
+      let parsedResult;
       while (true) {
-        let result = this.readLinePrivate(prompt, !looping);
+        const result = this.readLinePrivate(promptString);
         if (result === null) {
-          return null;
+          parsedResult = null;
+          successful = false;
+          break;
         }
-        result = parseFn(result);
-        if (!isNaN(result)) {
-          return result;
+        parsedResult = parseFn(result);
+        if (!isNaN(parsedResult)) {
+          successful = true;
+          break;
         }
-        if (result === null) {
-          return DEFAULT;
+        if (parsedResult === null) {
+          successful = false;
+          break;
         }
         if (loopCount > INFINITE_LOOP_CHECK) {
-          return DEFAULT;
+          successful = false;
+          parsedResult = DEFAULT;
+          break;
         }
-        prompt = "That was not " + errorMsgType + ". Please try again. " + str;
-        looping = true;
+        promptString = `'${result}' was not ${errorMsgType}. Please try again.
+${str}`;
         loopCount++;
       }
+      if (successful) {
+        this.print(str);
+        this.println(parsedResult);
+      }
+      return parsedResult;
     }
     readLine(str) {
       if (arguments.length !== 1) {
         throw new Error("You should pass exactly 1 argument to readLine");
       }
-      return this.readLinePrivate(str, true);
+      const result = this.readLinePrivate(str);
+      this.print(str);
+      this.println(result);
+      return result;
     }
     readBoolean(str) {
       if (arguments.length !== 1) {
@@ -19789,6 +19803,8 @@ var CHSJS = (() => {
   var ConsoleInstance = new Console();
   window.readLine = ConsoleInstance.readLine.bind(ConsoleInstance);
   window.readInt = ConsoleInstance.readInt.bind(ConsoleInstance);
+  window.println = ConsoleInstance.println.bind(ConsoleInstance);
+  window.print = ConsoleInstance.print.bind(ConsoleInstance);
   var AudioInstance = new AudioManager();
   window.audioChangeMethod = AudioInstance.audioChangeMethod.bind(AudioInstance);
   window.map = map;
