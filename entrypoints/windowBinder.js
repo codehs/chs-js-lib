@@ -75,6 +75,8 @@ window.setSize = GraphicsInstance.setSize.bind(GraphicsInstance);
 const ConsoleInstance = new Console();
 window.readLine = ConsoleInstance.readLine.bind(ConsoleInstance);
 window.readInt = ConsoleInstance.readInt.bind(ConsoleInstance);
+window.println = ConsoleInstance.println.bind(ConsoleInstance);
+window.print = ConsoleInstance.print.bind(ConsoleInstance);
 
 const AudioInstance = new AudioManager();
 window.audioChangeMethod = AudioInstance.audioChangeMethod.bind(AudioInstance);
