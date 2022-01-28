@@ -1,0 +1,24 @@
+{
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 100,
+  "commit": false,
+  "contributors": [
+    {
+      "login": "john-kelly",
+      "name": "John Kelly",
+      "avatar_url": "https://avatars.githubusercontent.com/u/4268509?v=4",
+      "profile": "https://github.com/john-kelly",
+      "contributions": [
+        "bug"
+      ]
+    }
+  ],
+  "contributorsPerLine": 7,
+  "projectName": "chs-js-lib",
+  "projectOwner": "codehs",
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "skipCi": true
+}
