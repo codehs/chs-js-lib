@@ -132,8 +132,8 @@ describe('Console', () => {
                 expect(promptSpy).toHaveBeenCalledTimes(3);
                 expect(promptSpy.calls.allArgs()).toEqual([
                     ['Give me a float: '],
-                    ['That was not a float. Please try again. Give me a float: '],
-                    ['That was not a float. Please try again. Give me a float: '],
+                    ["'one' was not a float. Please try again.\nGive me a float: "],
+                    ["'two' was not a float. Please try again.\nGive me a float: "],
                 ]);
                 expect(int).toBe(3.0);
             });
@@ -159,8 +159,8 @@ describe('Console', () => {
                 expect(promptSpy).toHaveBeenCalledTimes(3);
                 expect(promptSpy.calls.allArgs()).toEqual([
                     ['Give me a number: '],
-                    ['That was not an integer. Please try again. Give me a number: '],
-                    ['That was not an integer. Please try again. Give me a number: '],
+                    ["'one' was not an integer. Please try again.\nGive me a number: "],
+                    ["'two' was not an integer. Please try again.\nGive me a number: "],
                 ]);
                 expect(int).toBe(3);
             });
@@ -222,8 +222,8 @@ describe('Console', () => {
                 expect(promptSpy).toHaveBeenCalledTimes(3);
                 expect(promptSpy.calls.allArgs()).toEqual([
                     ['Give me a bool: '],
-                    ['That was not a boolean (true/false). Please try again. Give me a bool: '],
-                    ['That was not a boolean (true/false). Please try again. Give me a bool: '],
+                    ["'nope' was not a boolean (true/false). Please try again.\nGive me a bool: "],
+                    ["'yep' was not a boolean (true/false). Please try again.\nGive me a bool: "],
                 ]);
                 expect(bool).toBeTrue();
             });
