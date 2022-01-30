@@ -104,4 +104,12 @@ describe('Thing', () => {
             expect(fillSpy).not.toHaveBeenCalled();
         });
     });
+    describe('.type', () => {
+        it('Is modified with setType and getType', () => {
+            const t = new Thing();
+            t.setType('newType');
+            expect(t.type).toEqual('newType');
+            expect(t.getType()).toEqual('newType');
+        });
+    });
 });
