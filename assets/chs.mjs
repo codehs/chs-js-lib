@@ -1277,6 +1277,12 @@ var _Thing = class {
   get y() {
     return this._y;
   }
+  setType(type) {
+    this.type = type;
+  }
+  getType() {
+    return this.type;
+  }
   setFilled(filled) {
     if (arguments.length !== 1) {
       throw new Error("You should pass exactly 1 argument to `setFilled`.");
