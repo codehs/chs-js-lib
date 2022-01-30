@@ -149,6 +149,22 @@ class Thing {
     }
 
     /**
+     * Set the .type of the Thing
+     * @param {string} type new type
+     */
+    setType(type) {
+        this.type = type;
+    }
+
+    /**
+     * Get the .type of the Thing
+     * @returns {string}
+     */
+    getType() {
+        return this.type;
+    }
+
+    /**
      * Sets a Thing object to filled.
      * Throws an error if an argument is not passed.
      *
