@@ -1,11 +1,39 @@
 var __create = Object.create;
 var __defProp = Object.defineProperty;
+var __defProps = Object.defineProperties;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
+var __getOwnPropDescs = Object.getOwnPropertyDescriptors;
 var __getOwnPropNames = Object.getOwnPropertyNames;
+var __getOwnPropSymbols = Object.getOwnPropertySymbols;
 var __getProtoOf = Object.getPrototypeOf;
 var __hasOwnProp = Object.prototype.hasOwnProperty;
+var __propIsEnum = Object.prototype.propertyIsEnumerable;
 var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __spreadValues = (a, b) => {
+  for (var prop in b || (b = {}))
+    if (__hasOwnProp.call(b, prop))
+      __defNormalProp(a, prop, b[prop]);
+  if (__getOwnPropSymbols)
+    for (var prop of __getOwnPropSymbols(b)) {
+      if (__propIsEnum.call(b, prop))
+        __defNormalProp(a, prop, b[prop]);
+    }
+  return a;
+};
+var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
 var __markAsModule = (target) => __defProp(target, "__esModule", { value: true });
+var __objRest = (source, exclude) => {
+  var target = {};
+  for (var prop in source)
+    if (__hasOwnProp.call(source, prop) && exclude.indexOf(prop) < 0)
+      target[prop] = source[prop];
+  if (source != null && __getOwnPropSymbols)
+    for (var prop of __getOwnPropSymbols(source)) {
+      if (exclude.indexOf(prop) < 0 && __propIsEnum.call(source, prop))
+        target[prop] = source[prop];
+    }
+  return target;
+};
 var __commonJS = (cb, mod) => function __require() {
   return mod || (0, cb[Object.keys(cb)[0]])((mod = { exports: {} }).exports, mod), mod.exports;
 };
@@ -28,6 +56,26 @@ var __toModule = (module) => {
 var __publicField = (obj, key, value) => {
   __defNormalProp(obj, typeof key !== "symbol" ? key + "" : key, value);
   return value;
+};
+var __async = (__this, __arguments, generator) => {
+  return new Promise((resolve, reject) => {
+    var fulfilled = (value) => {
+      try {
+        step(generator.next(value));
+      } catch (e) {
+        reject(e);
+      }
+    };
+    var rejected = (value) => {
+      try {
+        step(generator.throw(value));
+      } catch (e) {
+        reject(e);
+      }
+    };
+    var step = (x) => x.done ? resolve(x.value) : Promise.resolve(x.value).then(fulfilled, rejected);
+    step((generator = generator.apply(__this, __arguments)).next());
+  });
 };
 
 // node_modules/@babel/runtime/helpers/arrayWithHoles.js
@@ -895,15 +943,17 @@ var require_tslib = __commonJS({
 // src/console/index.js
 var Console = class {
   constructor(options = {}) {
-    this.onPrompt = options.onPrompt ?? window.prompt.bind(window);
-    this.onPrint = options.onPrint ?? window.console.log.bind(window.console);
-    this.onClear = options.onClear ?? (() => {
-    });
+    var _a3, _b, _c;
+    this.onPrompt = (_a3 = options.onPrompt) != null ? _a3 : window.prompt.bind(window);
+    this.onPrint = (_b = options.onPrint) != null ? _b : window.console.log.bind(window.console);
+    this.onClear = (_c = options.onClear) != null ? _c : () => {
+    };
   }
   configure(options = {}) {
-    this.onPrompt = options.onPrompt ?? this.onPrompt;
-    this.onPrint = options.onPrint ?? this.onPrint;
-    this.onClear = options.onClear ?? this.onClear;
+    var _a3, _b, _c;
+    this.onPrompt = (_a3 = options.onPrompt) != null ? _a3 : this.onPrompt;
+    this.onPrint = (_b = options.onPrint) != null ? _b : this.onPrint;
+    this.onClear = (_c = options.onClear) != null ? _c : this.onClear;
   }
   readLinePrivate(promptString) {
     const input = this.onPrompt(promptString);
@@ -1015,14 +1065,17 @@ ${str}`;
 // src/datastructures/queue.js
 "use strict";
 var Queue = class extends Array {
+  constructor() {
+    super(...arguments);
+    __publicField(this, "enqueue", this.push);
+    __publicField(this, "dequeue", this.shift);
+  }
   size() {
     return this.length;
   }
   clear() {
     this.length = 0;
   }
-  enqueue = this.push;
-  dequeue = this.shift;
   peek() {
     return this[0];
   }
@@ -1055,8 +1108,8 @@ var Stack = class extends Array {
 
 // src/datastructures/grid.js
 var Grid = class {
-  type = "Grid";
   constructor(rows, cols) {
+    __publicField(this, "type", "Grid");
     if (arguments.length !== 2) {
       throw new Error("You should pass exactly 2 arguments to `new Grid(rows, cols)`");
     }
@@ -1178,14 +1231,17 @@ var grid_default = Grid;
 
 // src/datastructures/set.js
 var ExtendedSet = class extends Set {
+  constructor() {
+    super(...arguments);
+    __publicField(this, "remove", this.delete);
+    __publicField(this, "contains", this.has);
+  }
   isEmpty() {
     return this.size === 0;
   }
   getKey(elem) {
     return elem.toString();
   }
-  remove = this.delete;
-  contains = this.has;
   elems() {
     return Array.from(this);
   }
@@ -1206,9 +1262,9 @@ var set_default = ExtendedSet;
 
 // src/graphics/thing.js
 var _Thing = class {
-  type = "Thing";
-  anchor = { horizontal: 0, vertical: 0 };
   constructor() {
+    __publicField(this, "type", "Thing");
+    __publicField(this, "anchor", { horizontal: 0, vertical: 0 });
     this._id = _Thing.thingID++;
     this.alive = true;
     this._x = 0;
@@ -1437,7 +1493,7 @@ var _Thing = class {
       context2.rotate(this.rotation);
       context2.translate(-this.width / 2, -this.height / 2);
     }
-    subclassDraw?.();
+    subclassDraw == null ? void 0 : subclassDraw();
     if (this.filled) {
       context2.fill();
     }
@@ -1531,10 +1587,10 @@ var map = (value, start1, end1, start2, end2) => {
 
 // src/graphics/arc.js
 var _Arc = class extends thing_default {
-  type = "Arc";
-  anchor = { vertical: 0.5, horizontal: 0.5 };
   constructor(radius, startAngle, endAngle, angleUnit) {
     super();
+    __publicField(this, "type", "Arc");
+    __publicField(this, "anchor", { vertical: 0.5, horizontal: 0.5 });
     if (arguments.length !== 4) {
       throw new Error("You should pass exactly 4 arguments to `new Arc(radius, startAngle, endAngle, angleUnit)`");
     }
@@ -1551,7 +1607,7 @@ var _Arc = class extends thing_default {
       throw new TypeError("Invalid value for `angleUnit`. Make sure you are passing finite numbers to `new Arc(radius, startAngle, endAngle, angleUnit)`");
     }
     this.radius = radius;
-    this.angleUnit = angleUnit ?? _Arc.RADIANS;
+    this.angleUnit = angleUnit != null ? angleUnit : _Arc.RADIANS;
     this.counterclockwise = _Arc.COUNTER_CLOCKWISE;
     if (this.angleUnit == _Arc.DEGREES) {
       startAngle = degreesToRadians(startAngle);
@@ -1906,8 +1962,8 @@ var noise = (x, y) => {
 
 // src/graphics/color.js
 var _Color = class {
-  type = "Color";
   constructor(r, g, b) {
+    __publicField(this, "type", "Color");
     this.r = r;
     this.g = g;
     this.b = b;
@@ -2060,10 +2116,10 @@ var hue2rgb = (p, q, t) => {
 
 // src/graphics/circle.js
 var Circle = class extends thing_default {
-  type = "Circle";
-  anchor = { horizontal: 0.5, vertical: 0.5 };
   constructor(radius) {
     super();
+    __publicField(this, "type", "Circle");
+    __publicField(this, "anchor", { horizontal: 0.5, vertical: 0.5 });
     if (arguments.length !== 1) {
       throw new Error("You should pass exactly 1 argument to `new Circle(radius)`.");
     }
@@ -2128,12 +2184,13 @@ var Circle = class extends thing_default {
 var circle_default = Circle;
 
 // src/graphics/group.js
+var _a;
 var Group = class extends thing_default {
-  type = "Group";
-  elements;
-  devicePixelRatio = window.devicePixelRatio ?? 1;
   constructor(...elements) {
     super();
+    __publicField(this, "type", "Group");
+    __publicField(this, "elements");
+    __publicField(this, "devicePixelRatio", (_a = window.devicePixelRatio) != null ? _a : 1);
     this.elements = elements;
     this._hiddenCanvas = document.createElement("canvas");
     this._hiddenCanvas.width = 1;
@@ -2287,7 +2344,7 @@ var Manager = class {
   withErrorHandler(fn) {
     return (...args) => {
       try {
-        fn?.(...args);
+        fn == null ? void 0 : fn(...args);
       } catch (e) {
         if (typeof this.onError === "function") {
           this.onError(e);
@@ -2298,8 +2355,8 @@ var Manager = class {
     };
   }
   setTimer(fn, interval, data, name) {
-    interval = interval ?? DEFAULT_UPDATE_INTERVAL;
-    name = name ?? fn.name;
+    interval = interval != null ? interval : DEFAULT_UPDATE_INTERVAL;
+    name = name != null ? name : fn.name;
     const stop = (() => {
       let shouldUpdate = true;
       let lastUpdate = Date.now();
@@ -2326,8 +2383,9 @@ var Manager = class {
     }
   }
   stopTimer(fn) {
+    var _a3;
     const name = typeof fn === "function" ? fn.name : fn;
-    this.timers[name]?.forEach((stopper) => stopper());
+    (_a3 = this.timers[name]) == null ? void 0 : _a3.forEach((stopper) => stopper());
     this.timers[name] = [];
   }
   stopAllTimers() {
@@ -2344,9 +2402,9 @@ var DEFAULT_WIDTH = 150;
 var DEFAULT_HEIGHT = DEFAULT_WIDTH * 3 / 4;
 var WEBCAM_INDICATOR = "WEBCAM";
 var WebVideo = class extends thing_default {
-  type = "WebVideo";
   constructor(filename) {
     super();
+    __publicField(this, "type", "WebVideo");
     if (typeof filename !== "string") {
       throw new TypeError("You must pass a string to `new WebVideo(filename)` that has the video's location.");
     }
@@ -2466,13 +2524,59 @@ var HIDDEN_KEYBOARD_NAVIGATION_DOM_ELEMENT_ID = (id) => `${id}focusbutton`;
 var GraphicsInstances = {};
 var pressedKeys = [];
 var graphicsInstanceID = 0;
+var _a2;
 var GraphicsManager = class extends manager_default {
-  elementPool = [];
-  elementPoolSize = 0;
-  accessibleDOMElements = [];
-  devicePixelRatio = window.devicePixelRatio ?? 1;
   constructor(options = {}) {
     super(options);
+    __publicField(this, "elementPool", []);
+    __publicField(this, "elementPoolSize", 0);
+    __publicField(this, "accessibleDOMElements", []);
+    __publicField(this, "devicePixelRatio", (_a2 = window.devicePixelRatio) != null ? _a2 : 1);
+    __publicField(this, "onKeyDown", (e) => {
+      var _a3;
+      const index = pressedKeys.indexOf(e.keyCode);
+      if (index === -1) {
+        pressedKeys.push(e.keyCode);
+      }
+      if (e.key === "Tab") {
+        for (let i = 0; i < this.elementPoolSize; i++) {
+          const elem = this.elementPool[i];
+          if (!elem._hasAccessibleDOMElement) {
+            this.createAccessibleDOMElement(elem);
+          }
+        }
+        this.userNavigatingWithKeyboard = true;
+        this.showKeyboardNavigationDOMElements();
+      }
+      (_a3 = this.keyDownCallback) == null ? void 0 : _a3.call(this, e);
+      return true;
+    });
+    __publicField(this, "onKeyUp", (e) => {
+      var _a3;
+      const index = pressedKeys.indexOf(e.keyCode);
+      if (index !== -1) {
+        pressedKeys.splice(index, 1);
+      }
+      (_a3 = this.keyUpCallback) == null ? void 0 : _a3.call(this, e);
+    });
+    __publicField(this, "onResize", (e) => {
+      if (!this._resizeTimeout) {
+        this._resizeTimeout = setTimeout(() => {
+          var _a3;
+          this._resizeTimeout = null;
+          this.fullscreenMode && ((_a3 = this.setFullscreen) == null ? void 0 : _a3.call(this));
+        }, DEFAULT_UPDATE_INTERVAL);
+      }
+    });
+    __publicField(this, "onOrientationChange", (e) => {
+      var _a3;
+      (_a3 = this.deviceOrientationCallback) == null ? void 0 : _a3.call(this, e);
+    });
+    __publicField(this, "onDeviceMotion", (e) => {
+      var _a3;
+      (_a3 = this.deviceMotionCallback) == null ? void 0 : _a3.call(this, e);
+    });
+    var _a3;
     this.resetAllState();
     this.setCurrentCanvas(options.canvas);
     this.onError = options.onError || void 0;
@@ -2481,48 +2585,9 @@ var GraphicsManager = class extends manager_default {
     this.lastDrawTime = Date.now();
     this.userNavigatingWithKeyboard = false;
     this.addEventListeners();
-    this.shouldUpdate = options.shouldUpdate ?? true;
+    this.shouldUpdate = (_a3 = options.shouldUpdate) != null ? _a3 : true;
     GraphicsInstances[graphicsInstanceID++] = this;
   }
-  onKeyDown = (e) => {
-    const index = pressedKeys.indexOf(e.keyCode);
-    if (index === -1) {
-      pressedKeys.push(e.keyCode);
-    }
-    if (e.key === "Tab") {
-      for (let i = 0; i < this.elementPoolSize; i++) {
-        const elem = this.elementPool[i];
-        if (!elem._hasAccessibleDOMElement) {
-          this.createAccessibleDOMElement(elem);
-        }
-      }
-      this.userNavigatingWithKeyboard = true;
-      this.showKeyboardNavigationDOMElements();
-    }
-    this.keyDownCallback?.(e);
-    return true;
-  };
-  onKeyUp = (e) => {
-    const index = pressedKeys.indexOf(e.keyCode);
-    if (index !== -1) {
-      pressedKeys.splice(index, 1);
-    }
-    this.keyUpCallback?.(e);
-  };
-  onResize = (e) => {
-    if (!this._resizeTimeout) {
-      this._resizeTimeout = setTimeout(() => {
-        this._resizeTimeout = null;
-        this.fullscreenMode && this.setFullscreen?.();
-      }, DEFAULT_UPDATE_INTERVAL);
-    }
-  };
-  onOrientationChange = (e) => {
-    this.deviceOrientationCallback?.(e);
-  };
-  onDeviceMotion = (e) => {
-    this.deviceMotionCallback?.(e);
-  };
   addEventListeners() {
     window.addEventListener("keydown", this.onKeyDown);
     window.addEventListener("keyup", this.onKeyUp);
@@ -2556,26 +2621,29 @@ var GraphicsManager = class extends manager_default {
     button.style = this.userNavigatingWithKeyboard ? KEYBOARD_NAVIGATION_DOM_ELEMENT_STYLE : HIDDEN_KEYBOARD_NAVIGATION_DOM_ELEMENT_STYLE;
     button.id = HIDDEN_KEYBOARD_NAVIGATION_DOM_ELEMENT_ID(elem._id);
     button.onfocus = () => {
+      var _a3, _b;
       elem.focus();
-      button.textContent = elem.describe?.() ?? "An unknown graphics element";
+      button.textContent = (_b = (_a3 = elem.describe) == null ? void 0 : _a3.call(elem)) != null ? _b : "An unknown graphics element";
     };
     button.onblur = () => {
       elem.unfocus();
     };
     button.onkeydown = (e) => {
+      var _a3;
       if (e.code === "Space" && !e.repeat) {
         const event = new Event("mousedown");
         event.getX = () => elem.x;
         event.getY = () => elem.y;
-        this.mouseDownCallback?.(event);
+        (_a3 = this.mouseDownCallback) == null ? void 0 : _a3.call(this, event);
       }
     };
     button.onkeyup = (e) => {
+      var _a3;
       if (e.code === "Space") {
         const event = new Event("mouseup");
         event.getX = () => elem.x;
         event.getY = () => elem.y;
-        this.mouseUpCallback?.(event);
+        (_a3 = this.mouseUpCallback) == null ? void 0 : _a3.call(this, event);
       }
     };
     document.body.appendChild(button);
@@ -2659,7 +2727,7 @@ var GraphicsManager = class extends manager_default {
         name
       });
     } else {
-      return super.setTimer(this.withErrorHandler(fn), time, data, name ?? fn.name);
+      return super.setTimer(this.withErrorHandler(fn), time, data, name != null ? name : fn.name);
     }
   }
   setBackgroundColor(color) {
@@ -2702,13 +2770,14 @@ var GraphicsManager = class extends manager_default {
     this.accessibleDOMElements = [];
   }
   remove(elem) {
+    var _a3;
     if (elem instanceof webvideo_default) {
       elem.stop();
     }
     elem.alive = false;
     if (elem._hasAccessibleDOMElement) {
       const focusButtonID = HIDDEN_KEYBOARD_NAVIGATION_DOM_ELEMENT_ID(elem._id);
-      document.getElementById(focusButtonID)?.remove();
+      (_a3 = document.getElementById(focusButtonID)) == null ? void 0 : _a3.remove();
       elem._hasAccessibleDOMElement = false;
     }
   }
@@ -2816,7 +2885,8 @@ var GraphicsManager = class extends manager_default {
     }
   }
   getContext() {
-    return this.getCanvas()?.getContext?.("2d");
+    var _a3, _b;
+    return (_b = (_a3 = this.getCanvas()) == null ? void 0 : _a3.getContext) == null ? void 0 : _b.call(_a3, "2d");
   }
   getPixel(x, y) {
     const context2 = this.getContext();
@@ -3052,9 +3122,9 @@ var keyboard_default = Keyboard;
 
 // src/graphics/line.js
 var Line = class extends thing_default {
-  type = "Line";
   constructor(x1, y1, x2, y2) {
     super();
+    __publicField(this, "type", "Line");
     if (arguments.length !== 4) {
       throw new Error("You should pass exactly 4 arguments to `new Line(x1, y1, x2, y2)`.");
     }
@@ -3203,10 +3273,10 @@ var Line = class extends thing_default {
 
 // src/graphics/oval.js
 var Oval = class extends thing_default {
-  type = "Oval";
-  anchor = { vertical: 0.5, horizontal: 0.5 };
   constructor(width, height) {
     super();
+    __publicField(this, "type", "Oval");
+    __publicField(this, "anchor", { vertical: 0.5, horizontal: 0.5 });
     if (arguments.length !== 2) {
       throw new Error("You should pass exactly 2 arguments to `new Oval(width, height)`.");
     }
@@ -3266,9 +3336,9 @@ var Oval = class extends thing_default {
 
 // src/graphics/polygon.js
 var Polygon = class extends thing_default {
-  type = "Polygon";
   constructor() {
     super();
+    __publicField(this, "type", "Polygon");
     if (arguments.length !== 0) {
       throw new Error("You should pass exactly 0 arguments to `new Polygon()`");
     }
@@ -3369,9 +3439,9 @@ var polygon_default = Polygon;
 
 // src/graphics/rectangle.js
 var Rectangle = class extends thing_default {
-  type = "Rectangle";
   constructor(width, height) {
     super();
+    __publicField(this, "type", "Rectangle");
     if (arguments.length !== 2) {
       throw new Error("You should pass exactly 2 arguments to `new Rectangle(width, height)`.");
     }
@@ -3438,10 +3508,10 @@ var rectangle_default = Rectangle;
 
 // src/graphics/text.js
 var Text = class extends thing_default {
-  type = "Text";
-  anchor = { horizontal: 0, vertical: 1 };
   constructor(label, font = "20pt Arial") {
     super();
+    __publicField(this, "type", "Text");
+    __publicField(this, "anchor", { horizontal: 0, vertical: 1 });
     if (arguments.length < 1) {
       throw new Error("You should pass at least one argument to `new Text(label, font)`. `label` is a required parameter.");
     }
@@ -3533,9 +3603,9 @@ var GREEN = 1;
 var BLUE = 2;
 var ALPHA = 3;
 var WebImage = class extends thing_default {
-  type = "WebImage";
   constructor(filename) {
     super();
+    __publicField(this, "type", "WebImage");
     if (typeof filename !== "string") {
       throw new TypeError(`You must pass a string to \`new WebImage(filename)\` that has the image's URL. Received type ${typeof filename}`);
     }
@@ -3711,8 +3781,9 @@ var AudioManager = class extends manager_default {
     super(options);
   }
   cleanup() {
+    var _a3;
     this.audioChangeCallback = null;
-    this.audioContext?.close();
+    (_a3 = this.audioContext) == null ? void 0 : _a3.close();
   }
   getAudioContext() {
     if (this.audioContext) {
@@ -3815,7 +3886,7 @@ var isConstructible = (constructible) => {
   try {
     const proxy = new Proxy(constructible, handler);
     new proxy();
-  } catch {
+  } catch (e) {
     return false;
   }
   return true;
@@ -3921,7 +3992,7 @@ var createAddAudioWorkletModule = (cacheTestResult2, createNotSupportedError2, e
         }
         try {
           new nativeAudioWorkletNodeConstructor2(nativeContextOrBackupOfflineAudioContext, `__sac${currentIndex}`);
-        } catch {
+        } catch (e) {
           throw new SyntaxError();
         }
       }).finally(() => URL.revokeObjectURL(url));
@@ -4124,7 +4195,7 @@ var createAnalyserNodeConstructor = (audionNodeConstructor, createAnalyserNodeRe
   return class AnalyserNode extends audionNodeConstructor {
     constructor(context2, options) {
       const nativeContext = getNativeContext2(context2);
-      const mergedOptions = { ...DEFAULT_OPTIONS, ...options };
+      const mergedOptions = __spreadValues(__spreadValues({}, DEFAULT_OPTIONS), options);
       const nativeAnalyserNode = createNativeAnalyserNode2(nativeContext, mergedOptions);
       const analyserNodeRenderer = isNativeOfflineAudioContext2(nativeContext) ? createAnalyserNodeRenderer2() : null;
       super(context2, false, nativeAnalyserNode, analyserNodeRenderer);
@@ -4191,7 +4262,7 @@ var isOwnedByContext = (nativeAudioNode, nativeContext) => {
 var createAnalyserNodeRendererFactory = (createNativeAnalyserNode2, getNativeAudioNode2, renderInputsOfAudioNode2) => {
   return () => {
     const renderedNativeAnalyserNodes = new WeakMap();
-    const createAnalyserNode = async (proxy, nativeOfflineAudioContext) => {
+    const createAnalyserNode = (proxy, nativeOfflineAudioContext) => __async(void 0, null, function* () {
       let nativeAnalyserNode = getNativeAudioNode2(proxy);
       const nativeAnalyserNodeIsOwnedByContext = isOwnedByContext(nativeAnalyserNode, nativeOfflineAudioContext);
       if (!nativeAnalyserNodeIsOwnedByContext) {
@@ -4207,9 +4278,9 @@ var createAnalyserNodeRendererFactory = (createNativeAnalyserNode2, getNativeAud
         nativeAnalyserNode = createNativeAnalyserNode2(nativeOfflineAudioContext, options);
       }
       renderedNativeAnalyserNodes.set(nativeOfflineAudioContext, nativeAnalyserNode);
-      await renderInputsOfAudioNode2(proxy, nativeOfflineAudioContext, nativeAnalyserNode);
+      yield renderInputsOfAudioNode2(proxy, nativeOfflineAudioContext, nativeAnalyserNode);
       return nativeAnalyserNode;
-    };
+    });
     return {
       render(proxy, nativeOfflineAudioContext) {
         const renderedNativeAnalyserNode = renderedNativeAnalyserNodes.get(nativeOfflineAudioContext);
@@ -4226,7 +4297,7 @@ var createAnalyserNodeRendererFactory = (createNativeAnalyserNode2, getNativeAud
 var testAudioBufferCopyChannelMethodsOutOfBoundsSupport = (nativeAudioBuffer) => {
   try {
     nativeAudioBuffer.copyToChannel(new Float32Array(1), 0, -1);
-  } catch {
+  } catch (e) {
     return false;
   }
   return true;
@@ -4262,7 +4333,7 @@ var createAudioBufferConstructor = (audioBufferStore2, cacheTestResult2, createN
       if (nativeOfflineAudioContextConstructor2 === null) {
         throw new Error("Missing the native OfflineAudioContext constructor.");
       }
-      const { length, numberOfChannels, sampleRate } = { ...DEFAULT_OPTIONS2, ...options };
+      const { length, numberOfChannels, sampleRate } = __spreadValues(__spreadValues({}, DEFAULT_OPTIONS2), options);
       if (nativeOfflineAudioContext === null) {
         nativeOfflineAudioContext = new nativeOfflineAudioContextConstructor2(1, 1, 44100);
       }
@@ -4307,7 +4378,7 @@ var createAudioBufferSourceNodeConstructor = (audioNodeConstructor2, createAudio
   return class AudioBufferSourceNode extends audioNodeConstructor2 {
     constructor(context2, options) {
       const nativeContext = getNativeContext2(context2);
-      const mergedOptions = { ...DEFAULT_OPTIONS3, ...options };
+      const mergedOptions = __spreadValues(__spreadValues({}, DEFAULT_OPTIONS3), options);
       const nativeAudioBufferSourceNode = createNativeAudioBufferSourceNode2(nativeContext, mergedOptions);
       const isOffline = isNativeOfflineAudioContext2(nativeContext);
       const audioBufferSourceNodeRenderer = isOffline ? createAudioBufferSourceNodeRenderer2() : null;
@@ -4395,7 +4466,7 @@ var createAudioBufferSourceNodeRendererFactory = (connectAudioParam2, createNati
     const renderedNativeAudioBufferSourceNodes = new WeakMap();
     let start2 = null;
     let stop = null;
-    const createAudioBufferSourceNode = async (proxy, nativeOfflineAudioContext) => {
+    const createAudioBufferSourceNode = (proxy, nativeOfflineAudioContext) => __async(void 0, null, function* () {
       let nativeAudioBufferSourceNode = getNativeAudioNode2(proxy);
       const nativeAudioBufferSourceNodeIsOwnedByContext = isOwnedByContext(nativeAudioBufferSourceNode, nativeOfflineAudioContext);
       if (!nativeAudioBufferSourceNodeIsOwnedByContext) {
@@ -4419,13 +4490,13 @@ var createAudioBufferSourceNodeRendererFactory = (connectAudioParam2, createNati
       }
       renderedNativeAudioBufferSourceNodes.set(nativeOfflineAudioContext, nativeAudioBufferSourceNode);
       if (!nativeAudioBufferSourceNodeIsOwnedByContext) {
-        await renderAutomation2(nativeOfflineAudioContext, proxy.playbackRate, nativeAudioBufferSourceNode.playbackRate);
+        yield renderAutomation2(nativeOfflineAudioContext, proxy.playbackRate, nativeAudioBufferSourceNode.playbackRate);
       } else {
-        await connectAudioParam2(nativeOfflineAudioContext, proxy.playbackRate, nativeAudioBufferSourceNode.playbackRate);
+        yield connectAudioParam2(nativeOfflineAudioContext, proxy.playbackRate, nativeAudioBufferSourceNode.playbackRate);
       }
-      await renderInputsOfAudioNode2(proxy, nativeOfflineAudioContext, nativeAudioBufferSourceNode);
+      yield renderInputsOfAudioNode2(proxy, nativeOfflineAudioContext, nativeAudioBufferSourceNode);
       return nativeAudioBufferSourceNode;
-    };
+    });
     return {
       set start(value) {
         start2 = value;
@@ -4678,12 +4749,12 @@ var createAudioDestinationNodeConstructor = (audioNodeConstructor2, createAudioD
 // node_modules/standardized-audio-context/build/es2019/factories/audio-destination-node-renderer-factory.js
 var createAudioDestinationNodeRenderer = (renderInputsOfAudioNode2) => {
   const renderedNativeAudioDestinationNodes = new WeakMap();
-  const createAudioDestinationNode = async (proxy, nativeOfflineAudioContext) => {
+  const createAudioDestinationNode = (proxy, nativeOfflineAudioContext) => __async(void 0, null, function* () {
     const nativeAudioDestinationNode = nativeOfflineAudioContext.destination;
     renderedNativeAudioDestinationNodes.set(nativeOfflineAudioContext, nativeAudioDestinationNode);
-    await renderInputsOfAudioNode2(proxy, nativeOfflineAudioContext, nativeAudioDestinationNode);
+    yield renderInputsOfAudioNode2(proxy, nativeOfflineAudioContext, nativeAudioDestinationNode);
     return nativeAudioDestinationNode;
-  };
+  });
   return {
     render(proxy, nativeOfflineAudioContext) {
       const renderedNativeAudioDestinationNode = renderedNativeAudioDestinationNodes.get(nativeOfflineAudioContext);
@@ -5597,14 +5668,14 @@ var DEFAULT_OPTIONS4 = {
 var createAudioWorkletNodeConstructor = (addUnrenderedAudioWorkletNode2, audioNodeConstructor2, createAudioParam2, createAudioWorkletNodeRenderer2, createNativeAudioWorkletNode2, getAudioNodeConnections2, getBackupOfflineAudioContext2, getNativeContext2, isNativeOfflineAudioContext2, nativeAudioWorkletNodeConstructor2, sanitizeAudioWorkletNodeOptions2, setActiveAudioWorkletNodeInputs2, testAudioWorkletNodeOptionsClonability2, wrapEventListener2) => {
   return class AudioWorkletNode extends audioNodeConstructor2 {
     constructor(context2, name, options) {
-      var _a;
+      var _a3;
       const nativeContext = getNativeContext2(context2);
       const isOffline = isNativeOfflineAudioContext2(nativeContext);
-      const mergedOptions = sanitizeAudioWorkletNodeOptions2({ ...DEFAULT_OPTIONS4, ...options });
+      const mergedOptions = sanitizeAudioWorkletNodeOptions2(__spreadValues(__spreadValues({}, DEFAULT_OPTIONS4), options));
       testAudioWorkletNodeOptionsClonability2(mergedOptions);
       const nodeNameToProcessorConstructorMap = NODE_NAME_TO_PROCESSOR_CONSTRUCTOR_MAPS.get(nativeContext);
       const processorConstructor = nodeNameToProcessorConstructorMap === null || nodeNameToProcessorConstructorMap === void 0 ? void 0 : nodeNameToProcessorConstructorMap.get(name);
-      const nativeContextOrBackupOfflineAudioContext = isOffline || nativeContext.state !== "closed" ? nativeContext : (_a = getBackupOfflineAudioContext2(nativeContext)) !== null && _a !== void 0 ? _a : nativeContext;
+      const nativeContextOrBackupOfflineAudioContext = isOffline || nativeContext.state !== "closed" ? nativeContext : (_a3 = getBackupOfflineAudioContext2(nativeContext)) !== null && _a3 !== void 0 ? _a3 : nativeContext;
       const nativeAudioWorkletNode = createNativeAudioWorkletNode2(nativeContextOrBackupOfflineAudioContext, isOffline ? null : context2.baseLatency, nativeAudioWorkletNodeConstructor2, name, processorConstructor, mergedOptions);
       const audioWorkletNodeRenderer = isOffline ? createAudioWorkletNodeRenderer2(name, mergedOptions, processorConstructor) : null;
       super(context2, true, nativeAudioWorkletNode, audioWorkletNodeRenderer);
@@ -5696,7 +5767,7 @@ var getAudioWorkletProcessor = (nativeOfflineAudioContext, proxy) => {
 };
 
 // node_modules/standardized-audio-context/build/es2019/factories/audio-worklet-node-renderer-factory.js
-var processBuffer = async (proxy, renderedBuffer, nativeOfflineAudioContext, options, outputChannelCount, processorConstructor, exposeCurrentFrameAndCurrentTime2) => {
+var processBuffer = (proxy, renderedBuffer, nativeOfflineAudioContext, options, outputChannelCount, processorConstructor, exposeCurrentFrameAndCurrentTime2) => __async(void 0, null, function* () {
   const length = renderedBuffer === null ? Math.ceil(proxy.context.length / 128) * 128 : renderedBuffer.length;
   const numberOfInputChannels = options.channelCount * options.numberOfInputs;
   const numberOfOutputChannels = outputChannelCount.reduce((sum, value) => sum + value, 0);
@@ -5705,10 +5776,10 @@ var processBuffer = async (proxy, renderedBuffer, nativeOfflineAudioContext, opt
     throw new Error("Missing the processor constructor.");
   }
   const audioNodeConnections = getAudioNodeConnections(proxy);
-  const audioWorkletProcessor = await getAudioWorkletProcessor(nativeOfflineAudioContext, proxy);
+  const audioWorkletProcessor = yield getAudioWorkletProcessor(nativeOfflineAudioContext, proxy);
   const inputs = createNestedArrays(options.numberOfInputs, options.channelCount);
   const outputs = createNestedArrays(options.numberOfOutputs, outputChannelCount);
-  const parameters = Array.from(proxy.parameters.keys()).reduce((prmtrs, name) => ({ ...prmtrs, [name]: new Float32Array(128) }), {});
+  const parameters = Array.from(proxy.parameters.keys()).reduce((prmtrs, name) => __spreadProps(__spreadValues({}, prmtrs), { [name]: new Float32Array(128) }), {});
   for (let i = 0; i < length; i += 128) {
     if (options.numberOfInputs > 0 && renderedBuffer !== null) {
       for (let j = 0; j < options.numberOfInputs; j += 1) {
@@ -5759,12 +5830,12 @@ var processBuffer = async (proxy, renderedBuffer, nativeOfflineAudioContext, opt
     }
   }
   return processedBuffer;
-};
+});
 var createAudioWorkletNodeRendererFactory = (connectAudioParam2, connectMultipleOutputs2, createNativeAudioBufferSourceNode2, createNativeChannelMergerNode2, createNativeChannelSplitterNode2, createNativeConstantSourceNode2, createNativeGainNode2, deleteUnrenderedAudioWorkletNode2, disconnectMultipleOutputs2, exposeCurrentFrameAndCurrentTime2, getNativeAudioNode2, nativeAudioWorkletNodeConstructor2, nativeOfflineAudioContextConstructor2, renderAutomation2, renderInputsOfAudioNode2, renderNativeOfflineAudioContext2) => {
   return (name, options, processorConstructor) => {
     const renderedNativeAudioNodes = new WeakMap();
     let processedBufferPromise = null;
-    const createAudioNode = async (proxy, nativeOfflineAudioContext) => {
+    const createAudioNode = (proxy, nativeOfflineAudioContext) => __async(void 0, null, function* () {
       let nativeAudioWorkletNode = getNativeAudioNode2(proxy);
       let nativeOutputNodes = null;
       const nativeAudioWorkletNodeIsOwnedByContext = isOwnedByContext(nativeAudioWorkletNode, nativeOfflineAudioContext);
@@ -5810,7 +5881,7 @@ var createAudioWorkletNodeRendererFactory = (connectAudioParam2, connectMultiple
           const numberOfInputChannels = proxy.channelCount * proxy.numberOfInputs;
           const numberOfParameters = processorConstructor.parameterDescriptors === void 0 ? 0 : processorConstructor.parameterDescriptors.length;
           const numberOfChannels = numberOfInputChannels + numberOfParameters;
-          const renderBuffer = async () => {
+          const renderBuffer = () => __async(void 0, null, function* () {
             const partialOfflineAudioContext = new nativeOfflineAudioContextConstructor2(numberOfChannels, Math.ceil(proxy.context.length / 128) * 128, nativeOfflineAudioContext.sampleRate);
             const gainNodes = [];
             const inputChannelSplitterNodes = [];
@@ -5828,16 +5899,16 @@ var createAudioWorkletNodeRendererFactory = (connectAudioParam2, connectMultiple
                 numberOfOutputs: options.channelCount
               }));
             }
-            const constantSourceNodes = await Promise.all(Array.from(proxy.parameters.values()).map(async (audioParam) => {
+            const constantSourceNodes = yield Promise.all(Array.from(proxy.parameters.values()).map((audioParam) => __async(void 0, null, function* () {
               const constantSourceNode = createNativeConstantSourceNode2(partialOfflineAudioContext, {
                 channelCount: 1,
                 channelCountMode: "explicit",
                 channelInterpretation: "discrete",
                 offset: audioParam.value
               });
-              await renderAutomation2(partialOfflineAudioContext, audioParam, constantSourceNode.offset);
+              yield renderAutomation2(partialOfflineAudioContext, audioParam, constantSourceNode.offset);
               return constantSourceNode;
-            }));
+            })));
             const inputChannelMergerNode = createNativeChannelMergerNode2(partialOfflineAudioContext, {
               channelCount: 1,
               channelCountMode: "explicit",
@@ -5855,12 +5926,12 @@ var createAudioWorkletNodeRendererFactory = (connectAudioParam2, connectMultiple
               constantSourceNode.start(0);
             }
             inputChannelMergerNode.connect(partialOfflineAudioContext.destination);
-            await Promise.all(gainNodes.map((gainNode) => renderInputsOfAudioNode2(proxy, partialOfflineAudioContext, gainNode)));
+            yield Promise.all(gainNodes.map((gainNode) => renderInputsOfAudioNode2(proxy, partialOfflineAudioContext, gainNode)));
             return renderNativeOfflineAudioContext2(partialOfflineAudioContext);
-          };
-          processedBufferPromise = processBuffer(proxy, numberOfChannels === 0 ? null : await renderBuffer(), nativeOfflineAudioContext, options, outputChannelCount, processorConstructor, exposeCurrentFrameAndCurrentTime2);
+          });
+          processedBufferPromise = processBuffer(proxy, numberOfChannels === 0 ? null : yield renderBuffer(), nativeOfflineAudioContext, options, outputChannelCount, processorConstructor, exposeCurrentFrameAndCurrentTime2);
         }
-        const processedBuffer = await processedBufferPromise;
+        const processedBuffer = yield processedBufferPromise;
         const audioBufferSourceNode = createNativeAudioBufferSourceNode2(nativeOfflineAudioContext, {
           buffer: null,
           channelCount: 2,
@@ -5888,16 +5959,16 @@ var createAudioWorkletNodeRendererFactory = (connectAudioParam2, connectMultiple
       }
       if (!nativeAudioWorkletNodeIsOwnedByContext) {
         for (const [nm, audioParam] of proxy.parameters.entries()) {
-          await renderAutomation2(nativeOfflineAudioContext, audioParam, nativeAudioWorkletNode.parameters.get(nm));
+          yield renderAutomation2(nativeOfflineAudioContext, audioParam, nativeAudioWorkletNode.parameters.get(nm));
         }
       } else {
         for (const [nm, audioParam] of proxy.parameters.entries()) {
-          await connectAudioParam2(nativeOfflineAudioContext, audioParam, nativeAudioWorkletNode.parameters.get(nm));
+          yield connectAudioParam2(nativeOfflineAudioContext, audioParam, nativeAudioWorkletNode.parameters.get(nm));
         }
       }
-      await renderInputsOfAudioNode2(proxy, nativeOfflineAudioContext, nativeAudioWorkletNode);
+      yield renderInputsOfAudioNode2(proxy, nativeOfflineAudioContext, nativeAudioWorkletNode);
       return nativeAudioWorkletNode;
-    };
+    });
     return {
       render(proxy, nativeOfflineAudioContext) {
         deleteUnrenderedAudioWorkletNode2(nativeOfflineAudioContext, proxy);
@@ -5969,7 +6040,7 @@ var createBaseAudioContextConstructor = (addAudioWorkletModule2, analyserNodeCon
       return new pannerNodeConstructor2(this);
     }
     createPeriodicWave(real, imag, constraints = { disableNormalization: false }) {
-      return new periodicWaveConstructor2(this, { ...constraints, imag, real });
+      return new periodicWaveConstructor2(this, __spreadProps(__spreadValues({}, constraints), { imag, real }));
     }
     createStereoPanner() {
       return new stereoPannerNodeConstructor2(this);
@@ -6008,7 +6079,7 @@ var createBiquadFilterNodeConstructor = (audioNodeConstructor2, createAudioParam
   return class BiquadFilterNode extends audioNodeConstructor2 {
     constructor(context2, options) {
       const nativeContext = getNativeContext2(context2);
-      const mergedOptions = { ...DEFAULT_OPTIONS5, ...options };
+      const mergedOptions = __spreadValues(__spreadValues({}, DEFAULT_OPTIONS5), options);
       const nativeBiquadFilterNode = createNativeBiquadFilterNode2(nativeContext, mergedOptions);
       const isOffline = isNativeOfflineAudioContext2(nativeContext);
       const biquadFilterNodeRenderer = isOffline ? createBiquadFilterNodeRenderer2() : null;
@@ -6058,7 +6129,7 @@ var createBiquadFilterNodeConstructor = (audioNodeConstructor2, createAudioParam
 var createBiquadFilterNodeRendererFactory = (connectAudioParam2, createNativeBiquadFilterNode2, getNativeAudioNode2, renderAutomation2, renderInputsOfAudioNode2) => {
   return () => {
     const renderedNativeBiquadFilterNodes = new WeakMap();
-    const createBiquadFilterNode = async (proxy, nativeOfflineAudioContext) => {
+    const createBiquadFilterNode = (proxy, nativeOfflineAudioContext) => __async(void 0, null, function* () {
       let nativeBiquadFilterNode = getNativeAudioNode2(proxy);
       const nativeBiquadFilterNodeIsOwnedByContext = isOwnedByContext(nativeBiquadFilterNode, nativeOfflineAudioContext);
       if (!nativeBiquadFilterNodeIsOwnedByContext) {
@@ -6076,19 +6147,19 @@ var createBiquadFilterNodeRendererFactory = (connectAudioParam2, createNativeBiq
       }
       renderedNativeBiquadFilterNodes.set(nativeOfflineAudioContext, nativeBiquadFilterNode);
       if (!nativeBiquadFilterNodeIsOwnedByContext) {
-        await renderAutomation2(nativeOfflineAudioContext, proxy.Q, nativeBiquadFilterNode.Q);
-        await renderAutomation2(nativeOfflineAudioContext, proxy.detune, nativeBiquadFilterNode.detune);
-        await renderAutomation2(nativeOfflineAudioContext, proxy.frequency, nativeBiquadFilterNode.frequency);
-        await renderAutomation2(nativeOfflineAudioContext, proxy.gain, nativeBiquadFilterNode.gain);
+        yield renderAutomation2(nativeOfflineAudioContext, proxy.Q, nativeBiquadFilterNode.Q);
+        yield renderAutomation2(nativeOfflineAudioContext, proxy.detune, nativeBiquadFilterNode.detune);
+        yield renderAutomation2(nativeOfflineAudioContext, proxy.frequency, nativeBiquadFilterNode.frequency);
+        yield renderAutomation2(nativeOfflineAudioContext, proxy.gain, nativeBiquadFilterNode.gain);
       } else {
-        await connectAudioParam2(nativeOfflineAudioContext, proxy.Q, nativeBiquadFilterNode.Q);
-        await connectAudioParam2(nativeOfflineAudioContext, proxy.detune, nativeBiquadFilterNode.detune);
-        await connectAudioParam2(nativeOfflineAudioContext, proxy.frequency, nativeBiquadFilterNode.frequency);
-        await connectAudioParam2(nativeOfflineAudioContext, proxy.gain, nativeBiquadFilterNode.gain);
+        yield connectAudioParam2(nativeOfflineAudioContext, proxy.Q, nativeBiquadFilterNode.Q);
+        yield connectAudioParam2(nativeOfflineAudioContext, proxy.detune, nativeBiquadFilterNode.detune);
+        yield connectAudioParam2(nativeOfflineAudioContext, proxy.frequency, nativeBiquadFilterNode.frequency);
+        yield connectAudioParam2(nativeOfflineAudioContext, proxy.gain, nativeBiquadFilterNode.gain);
       }
-      await renderInputsOfAudioNode2(proxy, nativeOfflineAudioContext, nativeBiquadFilterNode);
+      yield renderInputsOfAudioNode2(proxy, nativeOfflineAudioContext, nativeBiquadFilterNode);
       return nativeBiquadFilterNode;
-    };
+    });
     return {
       render(proxy, nativeOfflineAudioContext) {
         const renderedNativeBiquadFilterNode = renderedNativeBiquadFilterNodes.get(nativeOfflineAudioContext);
@@ -6124,7 +6195,7 @@ var createCacheTestResult = (ongoingTests, testResults) => {
       }
       testResults.set(tester, synchronousTestResult);
       return synchronousTestResult;
-    } catch {
+    } catch (e) {
       testResults.set(tester, false);
       return false;
     }
@@ -6142,7 +6213,7 @@ var createChannelMergerNodeConstructor = (audioNodeConstructor2, createChannelMe
   return class ChannelMergerNode extends audioNodeConstructor2 {
     constructor(context2, options) {
       const nativeContext = getNativeContext2(context2);
-      const mergedOptions = { ...DEFAULT_OPTIONS6, ...options };
+      const mergedOptions = __spreadValues(__spreadValues({}, DEFAULT_OPTIONS6), options);
       const nativeChannelMergerNode = createNativeChannelMergerNode2(nativeContext, mergedOptions);
       const channelMergerNodeRenderer = isNativeOfflineAudioContext2(nativeContext) ? createChannelMergerNodeRenderer2() : null;
       super(context2, false, nativeChannelMergerNode, channelMergerNodeRenderer);
@@ -6154,7 +6225,7 @@ var createChannelMergerNodeConstructor = (audioNodeConstructor2, createChannelMe
 var createChannelMergerNodeRendererFactory = (createNativeChannelMergerNode2, getNativeAudioNode2, renderInputsOfAudioNode2) => {
   return () => {
     const renderedNativeAudioNodes = new WeakMap();
-    const createAudioNode = async (proxy, nativeOfflineAudioContext) => {
+    const createAudioNode = (proxy, nativeOfflineAudioContext) => __async(void 0, null, function* () {
       let nativeAudioNode = getNativeAudioNode2(proxy);
       const nativeAudioNodeIsOwnedByContext = isOwnedByContext(nativeAudioNode, nativeOfflineAudioContext);
       if (!nativeAudioNodeIsOwnedByContext) {
@@ -6167,9 +6238,9 @@ var createChannelMergerNodeRendererFactory = (createNativeChannelMergerNode2, ge
         nativeAudioNode = createNativeChannelMergerNode2(nativeOfflineAudioContext, options);
       }
       renderedNativeAudioNodes.set(nativeOfflineAudioContext, nativeAudioNode);
-      await renderInputsOfAudioNode2(proxy, nativeOfflineAudioContext, nativeAudioNode);
+      yield renderInputsOfAudioNode2(proxy, nativeOfflineAudioContext, nativeAudioNode);
       return nativeAudioNode;
-    };
+    });
     return {
       render(proxy, nativeOfflineAudioContext) {
         const renderedNativeAudioNode = renderedNativeAudioNodes.get(nativeOfflineAudioContext);
@@ -6193,7 +6264,7 @@ var createChannelSplitterNodeConstructor = (audioNodeConstructor2, createChannel
   return class ChannelSplitterNode extends audioNodeConstructor2 {
     constructor(context2, options) {
       const nativeContext = getNativeContext2(context2);
-      const mergedOptions = sanitizeChannelSplitterOptions2({ ...DEFAULT_OPTIONS7, ...options });
+      const mergedOptions = sanitizeChannelSplitterOptions2(__spreadValues(__spreadValues({}, DEFAULT_OPTIONS7), options));
       const nativeChannelSplitterNode = createNativeChannelSplitterNode2(nativeContext, mergedOptions);
       const channelSplitterNodeRenderer = isNativeOfflineAudioContext2(nativeContext) ? createChannelSplitterNodeRenderer2() : null;
       super(context2, false, nativeChannelSplitterNode, channelSplitterNodeRenderer);
@@ -6205,7 +6276,7 @@ var createChannelSplitterNodeConstructor = (audioNodeConstructor2, createChannel
 var createChannelSplitterNodeRendererFactory = (createNativeChannelSplitterNode2, getNativeAudioNode2, renderInputsOfAudioNode2) => {
   return () => {
     const renderedNativeAudioNodes = new WeakMap();
-    const createAudioNode = async (proxy, nativeOfflineAudioContext) => {
+    const createAudioNode = (proxy, nativeOfflineAudioContext) => __async(void 0, null, function* () {
       let nativeAudioNode = getNativeAudioNode2(proxy);
       const nativeAudioNodeIsOwnedByContext = isOwnedByContext(nativeAudioNode, nativeOfflineAudioContext);
       if (!nativeAudioNodeIsOwnedByContext) {
@@ -6218,9 +6289,9 @@ var createChannelSplitterNodeRendererFactory = (createNativeChannelSplitterNode2
         nativeAudioNode = createNativeChannelSplitterNode2(nativeOfflineAudioContext, options);
       }
       renderedNativeAudioNodes.set(nativeOfflineAudioContext, nativeAudioNode);
-      await renderInputsOfAudioNode2(proxy, nativeOfflineAudioContext, nativeAudioNode);
+      yield renderInputsOfAudioNode2(proxy, nativeOfflineAudioContext, nativeAudioNode);
       return nativeAudioNode;
-    };
+    });
     return {
       render(proxy, nativeOfflineAudioContext) {
         const renderedNativeAudioNode = renderedNativeAudioNodes.get(nativeOfflineAudioContext);
@@ -6290,7 +6361,7 @@ var createConstantSourceNodeConstructor = (audioNodeConstructor2, createAudioPar
   return class ConstantSourceNode extends audioNodeConstructor2 {
     constructor(context2, options) {
       const nativeContext = getNativeContext2(context2);
-      const mergedOptions = { ...DEFAULT_OPTIONS8, ...options };
+      const mergedOptions = __spreadValues(__spreadValues({}, DEFAULT_OPTIONS8), options);
       const nativeConstantSourceNode = createNativeConstantSourceNode2(nativeContext, mergedOptions);
       const isOffline = isNativeOfflineAudioContext2(nativeContext);
       const constantSourceNodeRenderer = isOffline ? createConstantSourceNodeRendererFactory2() : null;
@@ -6343,7 +6414,7 @@ var createConstantSourceNodeRendererFactory = (connectAudioParam2, createNativeC
     const renderedNativeConstantSourceNodes = new WeakMap();
     let start2 = null;
     let stop = null;
-    const createConstantSourceNode = async (proxy, nativeOfflineAudioContext) => {
+    const createConstantSourceNode = (proxy, nativeOfflineAudioContext) => __async(void 0, null, function* () {
       let nativeConstantSourceNode = getNativeAudioNode2(proxy);
       const nativeConstantSourceNodeIsOwnedByContext = isOwnedByContext(nativeConstantSourceNode, nativeOfflineAudioContext);
       if (!nativeConstantSourceNodeIsOwnedByContext) {
@@ -6363,13 +6434,13 @@ var createConstantSourceNodeRendererFactory = (connectAudioParam2, createNativeC
       }
       renderedNativeConstantSourceNodes.set(nativeOfflineAudioContext, nativeConstantSourceNode);
       if (!nativeConstantSourceNodeIsOwnedByContext) {
-        await renderAutomation2(nativeOfflineAudioContext, proxy.offset, nativeConstantSourceNode.offset);
+        yield renderAutomation2(nativeOfflineAudioContext, proxy.offset, nativeConstantSourceNode.offset);
       } else {
-        await connectAudioParam2(nativeOfflineAudioContext, proxy.offset, nativeConstantSourceNode.offset);
+        yield connectAudioParam2(nativeOfflineAudioContext, proxy.offset, nativeConstantSourceNode.offset);
       }
-      await renderInputsOfAudioNode2(proxy, nativeOfflineAudioContext, nativeConstantSourceNode);
+      yield renderInputsOfAudioNode2(proxy, nativeOfflineAudioContext, nativeConstantSourceNode);
       return nativeConstantSourceNode;
-    };
+    });
     return {
       set start(value) {
         start2 = value;
@@ -6408,7 +6479,7 @@ var createConvolverNodeConstructor = (audioNodeConstructor2, createConvolverNode
   return class ConvolverNode extends audioNodeConstructor2 {
     constructor(context2, options) {
       const nativeContext = getNativeContext2(context2);
-      const mergedOptions = { ...DEFAULT_OPTIONS9, ...options };
+      const mergedOptions = __spreadValues(__spreadValues({}, DEFAULT_OPTIONS9), options);
       const nativeConvolverNode = createNativeConvolverNode2(nativeContext, mergedOptions);
       const isOffline = isNativeOfflineAudioContext2(nativeContext);
       const convolverNodeRenderer = isOffline ? createConvolverNodeRenderer2() : null;
@@ -6450,7 +6521,7 @@ var createConvolverNodeConstructor = (audioNodeConstructor2, createConvolverNode
 var createConvolverNodeRendererFactory = (createNativeConvolverNode2, getNativeAudioNode2, renderInputsOfAudioNode2) => {
   return () => {
     const renderedNativeConvolverNodes = new WeakMap();
-    const createConvolverNode = async (proxy, nativeOfflineAudioContext) => {
+    const createConvolverNode = (proxy, nativeOfflineAudioContext) => __async(void 0, null, function* () {
       let nativeConvolverNode = getNativeAudioNode2(proxy);
       const nativeConvolverNodeIsOwnedByContext = isOwnedByContext(nativeConvolverNode, nativeOfflineAudioContext);
       if (!nativeConvolverNodeIsOwnedByContext) {
@@ -6465,12 +6536,12 @@ var createConvolverNodeRendererFactory = (createNativeConvolverNode2, getNativeA
       }
       renderedNativeConvolverNodes.set(nativeOfflineAudioContext, nativeConvolverNode);
       if (isNativeAudioNodeFaker(nativeConvolverNode)) {
-        await renderInputsOfAudioNode2(proxy, nativeOfflineAudioContext, nativeConvolverNode.inputs[0]);
+        yield renderInputsOfAudioNode2(proxy, nativeOfflineAudioContext, nativeConvolverNode.inputs[0]);
       } else {
-        await renderInputsOfAudioNode2(proxy, nativeOfflineAudioContext, nativeConvolverNode);
+        yield renderInputsOfAudioNode2(proxy, nativeOfflineAudioContext, nativeConvolverNode);
       }
       return nativeConvolverNode;
-    };
+    });
     return {
       render(proxy, nativeOfflineAudioContext) {
         const renderedNativeConvolverNode = renderedNativeConvolverNodes.get(nativeOfflineAudioContext);
@@ -6532,7 +6603,7 @@ var createDecodeAudioData = (audioBufferStore2, cacheTestResult2, createDataClon
     }
     try {
       detachedArrayBuffers.add(audioData);
-    } catch {
+    } catch (e) {
     }
     if (cacheTestResult2(testPromiseSupport2, () => testPromiseSupport2(nativeContext))) {
       return nativeContext.decodeAudioData(audioData).then((audioBuffer) => {
@@ -6546,12 +6617,12 @@ var createDecodeAudioData = (audioBufferStore2, cacheTestResult2, createDataClon
       });
     }
     return new Promise((resolve, reject) => {
-      const complete = async () => {
+      const complete = () => __async(void 0, null, function* () {
         try {
-          await detachArrayBuffer(audioData);
-        } catch {
+          yield detachArrayBuffer(audioData);
+        } catch (e) {
         }
-      };
+      });
       const fail = (err) => {
         reject(err);
         complete();
@@ -6620,7 +6691,7 @@ var createDelayNodeConstructor = (audioNodeConstructor2, createAudioParam2, crea
   return class DelayNode extends audioNodeConstructor2 {
     constructor(context2, options) {
       const nativeContext = getNativeContext2(context2);
-      const mergedOptions = { ...DEFAULT_OPTIONS10, ...options };
+      const mergedOptions = __spreadValues(__spreadValues({}, DEFAULT_OPTIONS10), options);
       const nativeDelayNode = createNativeDelayNode2(nativeContext, mergedOptions);
       const isOffline = isNativeOfflineAudioContext2(nativeContext);
       const delayNodeRenderer = isOffline ? createDelayNodeRenderer2(mergedOptions.maxDelayTime) : null;
@@ -6638,7 +6709,7 @@ var createDelayNodeConstructor = (audioNodeConstructor2, createAudioParam2, crea
 var createDelayNodeRendererFactory = (connectAudioParam2, createNativeDelayNode2, getNativeAudioNode2, renderAutomation2, renderInputsOfAudioNode2) => {
   return (maxDelayTime) => {
     const renderedNativeDelayNodes = new WeakMap();
-    const createDelayNode = async (proxy, nativeOfflineAudioContext) => {
+    const createDelayNode = (proxy, nativeOfflineAudioContext) => __async(void 0, null, function* () {
       let nativeDelayNode = getNativeAudioNode2(proxy);
       const nativeDelayNodeIsOwnedByContext = isOwnedByContext(nativeDelayNode, nativeOfflineAudioContext);
       if (!nativeDelayNodeIsOwnedByContext) {
@@ -6653,13 +6724,13 @@ var createDelayNodeRendererFactory = (connectAudioParam2, createNativeDelayNode2
       }
       renderedNativeDelayNodes.set(nativeOfflineAudioContext, nativeDelayNode);
       if (!nativeDelayNodeIsOwnedByContext) {
-        await renderAutomation2(nativeOfflineAudioContext, proxy.delayTime, nativeDelayNode.delayTime);
+        yield renderAutomation2(nativeOfflineAudioContext, proxy.delayTime, nativeDelayNode.delayTime);
       } else {
-        await connectAudioParam2(nativeOfflineAudioContext, proxy.delayTime, nativeDelayNode.delayTime);
+        yield connectAudioParam2(nativeOfflineAudioContext, proxy.delayTime, nativeDelayNode.delayTime);
       }
-      await renderInputsOfAudioNode2(proxy, nativeOfflineAudioContext, nativeDelayNode);
+      yield renderInputsOfAudioNode2(proxy, nativeOfflineAudioContext, nativeDelayNode);
       return nativeDelayNode;
-    };
+    });
     return {
       render(proxy, nativeOfflineAudioContext) {
         const renderedNativeDelayNode = renderedNativeDelayNodes.get(nativeOfflineAudioContext);
@@ -6756,7 +6827,7 @@ var createDynamicsCompressorNodeConstructor = (audioNodeConstructor2, createAudi
   return class DynamicsCompressorNode extends audioNodeConstructor2 {
     constructor(context2, options) {
       const nativeContext = getNativeContext2(context2);
-      const mergedOptions = { ...DEFAULT_OPTIONS11, ...options };
+      const mergedOptions = __spreadValues(__spreadValues({}, DEFAULT_OPTIONS11), options);
       const nativeDynamicsCompressorNode = createNativeDynamicsCompressorNode2(nativeContext, mergedOptions);
       const isOffline = isNativeOfflineAudioContext2(nativeContext);
       const dynamicsCompressorNodeRenderer = isOffline ? createDynamicsCompressorNodeRenderer2() : null;
@@ -6819,7 +6890,7 @@ var createDynamicsCompressorNodeConstructor = (audioNodeConstructor2, createAudi
 var createDynamicsCompressorNodeRendererFactory = (connectAudioParam2, createNativeDynamicsCompressorNode2, getNativeAudioNode2, renderAutomation2, renderInputsOfAudioNode2) => {
   return () => {
     const renderedNativeDynamicsCompressorNodes = new WeakMap();
-    const createDynamicsCompressorNode = async (proxy, nativeOfflineAudioContext) => {
+    const createDynamicsCompressorNode = (proxy, nativeOfflineAudioContext) => __async(void 0, null, function* () {
       let nativeDynamicsCompressorNode = getNativeAudioNode2(proxy);
       const nativeDynamicsCompressorNodeIsOwnedByContext = isOwnedByContext(nativeDynamicsCompressorNode, nativeOfflineAudioContext);
       if (!nativeDynamicsCompressorNodeIsOwnedByContext) {
@@ -6837,21 +6908,21 @@ var createDynamicsCompressorNodeRendererFactory = (connectAudioParam2, createNat
       }
       renderedNativeDynamicsCompressorNodes.set(nativeOfflineAudioContext, nativeDynamicsCompressorNode);
       if (!nativeDynamicsCompressorNodeIsOwnedByContext) {
-        await renderAutomation2(nativeOfflineAudioContext, proxy.attack, nativeDynamicsCompressorNode.attack);
-        await renderAutomation2(nativeOfflineAudioContext, proxy.knee, nativeDynamicsCompressorNode.knee);
-        await renderAutomation2(nativeOfflineAudioContext, proxy.ratio, nativeDynamicsCompressorNode.ratio);
-        await renderAutomation2(nativeOfflineAudioContext, proxy.release, nativeDynamicsCompressorNode.release);
-        await renderAutomation2(nativeOfflineAudioContext, proxy.threshold, nativeDynamicsCompressorNode.threshold);
+        yield renderAutomation2(nativeOfflineAudioContext, proxy.attack, nativeDynamicsCompressorNode.attack);
+        yield renderAutomation2(nativeOfflineAudioContext, proxy.knee, nativeDynamicsCompressorNode.knee);
+        yield renderAutomation2(nativeOfflineAudioContext, proxy.ratio, nativeDynamicsCompressorNode.ratio);
+        yield renderAutomation2(nativeOfflineAudioContext, proxy.release, nativeDynamicsCompressorNode.release);
+        yield renderAutomation2(nativeOfflineAudioContext, proxy.threshold, nativeDynamicsCompressorNode.threshold);
       } else {
-        await connectAudioParam2(nativeOfflineAudioContext, proxy.attack, nativeDynamicsCompressorNode.attack);
-        await connectAudioParam2(nativeOfflineAudioContext, proxy.knee, nativeDynamicsCompressorNode.knee);
-        await connectAudioParam2(nativeOfflineAudioContext, proxy.ratio, nativeDynamicsCompressorNode.ratio);
-        await connectAudioParam2(nativeOfflineAudioContext, proxy.release, nativeDynamicsCompressorNode.release);
-        await connectAudioParam2(nativeOfflineAudioContext, proxy.threshold, nativeDynamicsCompressorNode.threshold);
+        yield connectAudioParam2(nativeOfflineAudioContext, proxy.attack, nativeDynamicsCompressorNode.attack);
+        yield connectAudioParam2(nativeOfflineAudioContext, proxy.knee, nativeDynamicsCompressorNode.knee);
+        yield connectAudioParam2(nativeOfflineAudioContext, proxy.ratio, nativeDynamicsCompressorNode.ratio);
+        yield connectAudioParam2(nativeOfflineAudioContext, proxy.release, nativeDynamicsCompressorNode.release);
+        yield connectAudioParam2(nativeOfflineAudioContext, proxy.threshold, nativeDynamicsCompressorNode.threshold);
       }
-      await renderInputsOfAudioNode2(proxy, nativeOfflineAudioContext, nativeDynamicsCompressorNode);
+      yield renderInputsOfAudioNode2(proxy, nativeOfflineAudioContext, nativeDynamicsCompressorNode);
       return nativeDynamicsCompressorNode;
-    };
+    });
     return {
       render(proxy, nativeOfflineAudioContext) {
         const renderedNativeDynamicsCompressorNode = renderedNativeDynamicsCompressorNodes.get(nativeOfflineAudioContext);
@@ -6970,16 +7041,16 @@ var createExposeCurrentFrameAndCurrentTime = (window3) => {
 
 // node_modules/standardized-audio-context/build/es2019/factories/fetch-source.js
 var createFetchSource = (createAbortError2) => {
-  return async (url) => {
+  return (url) => __async(void 0, null, function* () {
     try {
-      const response = await fetch(url);
+      const response = yield fetch(url);
       if (response.ok) {
-        return [await response.text(), response.url];
+        return [yield response.text(), response.url];
       }
-    } catch {
+    } catch (e) {
     }
     throw createAbortError2();
-  };
+  });
 };
 
 // node_modules/standardized-audio-context/build/es2019/factories/gain-node-constructor.js
@@ -6993,7 +7064,7 @@ var createGainNodeConstructor = (audioNodeConstructor2, createAudioParam2, creat
   return class GainNode extends audioNodeConstructor2 {
     constructor(context2, options) {
       const nativeContext = getNativeContext2(context2);
-      const mergedOptions = { ...DEFAULT_OPTIONS12, ...options };
+      const mergedOptions = __spreadValues(__spreadValues({}, DEFAULT_OPTIONS12), options);
       const nativeGainNode = createNativeGainNode2(nativeContext, mergedOptions);
       const isOffline = isNativeOfflineAudioContext2(nativeContext);
       const gainNodeRenderer = isOffline ? createGainNodeRenderer2() : null;
@@ -7010,7 +7081,7 @@ var createGainNodeConstructor = (audioNodeConstructor2, createAudioParam2, creat
 var createGainNodeRendererFactory = (connectAudioParam2, createNativeGainNode2, getNativeAudioNode2, renderAutomation2, renderInputsOfAudioNode2) => {
   return () => {
     const renderedNativeGainNodes = new WeakMap();
-    const createGainNode = async (proxy, nativeOfflineAudioContext) => {
+    const createGainNode = (proxy, nativeOfflineAudioContext) => __async(void 0, null, function* () {
       let nativeGainNode = getNativeAudioNode2(proxy);
       const nativeGainNodeIsOwnedByContext = isOwnedByContext(nativeGainNode, nativeOfflineAudioContext);
       if (!nativeGainNodeIsOwnedByContext) {
@@ -7024,13 +7095,13 @@ var createGainNodeRendererFactory = (connectAudioParam2, createNativeGainNode2, 
       }
       renderedNativeGainNodes.set(nativeOfflineAudioContext, nativeGainNode);
       if (!nativeGainNodeIsOwnedByContext) {
-        await renderAutomation2(nativeOfflineAudioContext, proxy.gain, nativeGainNode.gain);
+        yield renderAutomation2(nativeOfflineAudioContext, proxy.gain, nativeGainNode.gain);
       } else {
-        await connectAudioParam2(nativeOfflineAudioContext, proxy.gain, nativeGainNode.gain);
+        yield connectAudioParam2(nativeOfflineAudioContext, proxy.gain, nativeGainNode.gain);
       }
-      await renderInputsOfAudioNode2(proxy, nativeOfflineAudioContext, nativeGainNode);
+      yield renderInputsOfAudioNode2(proxy, nativeOfflineAudioContext, nativeGainNode);
       return nativeGainNode;
-    };
+    });
     return {
       render(proxy, nativeOfflineAudioContext) {
         const renderedNativeGainNode = renderedNativeGainNodes.get(nativeOfflineAudioContext);
@@ -7062,8 +7133,8 @@ var createGetAudioNodeRenderer = (getAudioNodeConnections2) => {
 // node_modules/standardized-audio-context/build/es2019/factories/get-audio-node-tail-time.js
 var createGetAudioNodeTailTime = (audioNodeTailTimeStore2) => {
   return (audioNode) => {
-    var _a;
-    return (_a = audioNodeTailTimeStore2.get(audioNode)) !== null && _a !== void 0 ? _a : 0;
+    var _a3;
+    return (_a3 = audioNodeTailTimeStore2.get(audioNode)) !== null && _a3 !== void 0 ? _a3 : 0;
   };
 };
 
@@ -7152,7 +7223,7 @@ var createIIRFilterNodeConstructor = (audioNodeConstructor2, createNativeIIRFilt
     constructor(context2, options) {
       const nativeContext = getNativeContext2(context2);
       const isOffline = isNativeOfflineAudioContext2(nativeContext);
-      const mergedOptions = { ...DEFAULT_OPTIONS13, ...options };
+      const mergedOptions = __spreadValues(__spreadValues({}, DEFAULT_OPTIONS13), options);
       const nativeIIRFilterNode = createNativeIIRFilterNode2(nativeContext, isOffline ? null : context2.baseLatency, mergedOptions);
       const iirFilterNodeRenderer = isOffline ? createIIRFilterNodeRenderer2(mergedOptions.feedback, mergedOptions.feedforward) : null;
       super(context2, false, nativeIIRFilterNode, iirFilterNodeRenderer);
@@ -7224,7 +7295,7 @@ var createIIRFilterNodeRendererFactory = (createNativeAudioBufferSourceNode2, ge
   return (feedback, feedforward) => {
     const renderedNativeAudioNodes = new WeakMap();
     let filteredBufferPromise = null;
-    const createAudioNode = async (proxy, nativeOfflineAudioContext) => {
+    const createAudioNode = (proxy, nativeOfflineAudioContext) => __async(void 0, null, function* () {
       let nativeAudioBufferSourceNode = null;
       let nativeIIRFilterNode = getNativeAudioNode2(proxy);
       const nativeIIRFilterNodeIsOwnedByContext = isOwnedByContext(nativeIIRFilterNode, nativeOfflineAudioContext);
@@ -7249,20 +7320,20 @@ var createIIRFilterNodeRendererFactory = (createNativeAudioBufferSourceNode2, ge
             throw new Error("Missing the native OfflineAudioContext constructor.");
           }
           const partialOfflineAudioContext = new nativeOfflineAudioContextConstructor2(proxy.context.destination.channelCount, proxy.context.length, nativeOfflineAudioContext.sampleRate);
-          filteredBufferPromise = (async () => {
-            await renderInputsOfAudioNode2(proxy, partialOfflineAudioContext, partialOfflineAudioContext.destination);
-            const renderedBuffer = await renderNativeOfflineAudioContext2(partialOfflineAudioContext);
+          filteredBufferPromise = (() => __async(void 0, null, function* () {
+            yield renderInputsOfAudioNode2(proxy, partialOfflineAudioContext, partialOfflineAudioContext.destination);
+            const renderedBuffer = yield renderNativeOfflineAudioContext2(partialOfflineAudioContext);
             return filterFullBuffer(renderedBuffer, nativeOfflineAudioContext, feedback, feedforward);
-          })();
+          }))();
         }
-        const filteredBuffer = await filteredBufferPromise;
+        const filteredBuffer = yield filteredBufferPromise;
         nativeAudioBufferSourceNode.buffer = filteredBuffer;
         nativeAudioBufferSourceNode.start(0);
         return nativeAudioBufferSourceNode;
       }
-      await renderInputsOfAudioNode2(proxy, nativeOfflineAudioContext, nativeIIRFilterNode);
+      yield renderInputsOfAudioNode2(proxy, nativeOfflineAudioContext, nativeIIRFilterNode);
       return nativeIIRFilterNode;
-    };
+    });
     return {
       render(proxy, nativeOfflineAudioContext) {
         const renderedNativeAudioNode = renderedNativeAudioNodes.get(nativeOfflineAudioContext);
@@ -7397,7 +7468,7 @@ var createMediaStreamAudioDestinationNodeConstructor = (audioNodeConstructor2, c
       if (isNativeOfflineAudioContext2(nativeContext)) {
         throw new TypeError();
       }
-      const mergedOptions = { ...DEFAULT_OPTIONS14, ...options };
+      const mergedOptions = __spreadValues(__spreadValues({}, DEFAULT_OPTIONS14), options);
       const nativeMediaStreamAudioDestinationNode = createNativeMediaStreamAudioDestinationNode2(nativeContext, mergedOptions);
       super(context2, false, nativeMediaStreamAudioDestinationNode, null);
       this._nativeMediaStreamAudioDestinationNode = nativeMediaStreamAudioDestinationNode;
@@ -7598,7 +7669,7 @@ var testPromiseSupport = (nativeContext) => {
     promise.catch(() => {
     });
     return true;
-  } catch {
+  } catch (e) {
   }
   return false;
 };
@@ -7610,7 +7681,7 @@ var DEFAULT_OPTIONS15 = {
 var createMinimalOfflineAudioContextConstructor = (cacheTestResult2, createInvalidStateError2, createNativeOfflineAudioContext2, minimalBaseAudioContextConstructor2, startRendering2) => {
   return class MinimalOfflineAudioContext extends minimalBaseAudioContextConstructor2 {
     constructor(options) {
-      const { length, numberOfChannels, sampleRate } = { ...DEFAULT_OPTIONS15, ...options };
+      const { length, numberOfChannels, sampleRate } = __spreadValues(__spreadValues({}, DEFAULT_OPTIONS15), options);
       const nativeOfflineAudioContext = createNativeOfflineAudioContext2(numberOfChannels, length, sampleRate);
       if (!cacheTestResult2(testPromiseSupport, () => testPromiseSupport(nativeOfflineAudioContext))) {
         nativeOfflineAudioContext.addEventListener("statechange", (() => {
@@ -7881,7 +7952,7 @@ var createNativeAudioDestinationNodeFactory = (createNativeGainNode2, overwriteA
     if (nativeAudioDestinationNode.channelCount !== channelCount) {
       try {
         nativeAudioDestinationNode.channelCount = channelCount;
-      } catch {
+      } catch (e) {
       }
     }
     if (isNodeOfNativeOfflineAudioContext && nativeAudioDestinationNode.channelCountMode !== "explicit") {
@@ -7992,7 +8063,7 @@ var createNativeAudioWorkletNodeFactory = (createInvalidStateError2, createNativ
                       });
                       unpatchedEventListener(event);
                     } else {
-                      unpatchedEventListener(new ErrorEvent(args[0], { ...event }));
+                      unpatchedEventListener(new ErrorEvent(args[0], __spreadValues({}, event)));
                     }
                   };
                   patchedEventListeners.set(unpatchedEventListener, args[1]);
@@ -8071,10 +8142,10 @@ var cloneAudioWorkletNodeOptions = (audioWorkletNodeOptions) => {
 };
 
 // node_modules/standardized-audio-context/build/es2019/helpers/create-audio-worklet-processor-promise.js
-var createAudioWorkletProcessorPromise = async (processorConstructor, audioWorkletNodeOptions) => {
-  const clonedAudioWorkletNodeOptions = await cloneAudioWorkletNodeOptions(audioWorkletNodeOptions);
+var createAudioWorkletProcessorPromise = (processorConstructor, audioWorkletNodeOptions) => __async(void 0, null, function* () {
+  const clonedAudioWorkletNodeOptions = yield cloneAudioWorkletNodeOptions(audioWorkletNodeOptions);
   return new processorConstructor(clonedAudioWorkletNodeOptions);
-};
+});
 
 // node_modules/standardized-audio-context/build/es2019/helpers/create-audio-worklet-processor.js
 var createAudioWorkletProcessor = (nativeContext, nativeAudioWorkletNode, processorConstructor, audioWorkletNodeOptions) => {
@@ -8308,7 +8379,7 @@ var createNativeAudioWorkletNodeFakerFactory = (connectMultipleOutputs2, createI
     audioWorkletProcessorPromise.then((dWrkltPrcssr) => audioWorkletProcessor = dWrkltPrcssr);
     const inputs = createNestedArrays(options.numberOfInputs, options.channelCount);
     const outputs = createNestedArrays(options.numberOfOutputs, outputChannelCount);
-    const parameters = processorConstructor.parameterDescriptors === void 0 ? [] : processorConstructor.parameterDescriptors.reduce((prmtrs, { name }) => ({ ...prmtrs, [name]: new Float32Array(128) }), {});
+    const parameters = processorConstructor.parameterDescriptors === void 0 ? [] : processorConstructor.parameterDescriptors.reduce((prmtrs, { name }) => __spreadProps(__spreadValues({}, prmtrs), { [name]: new Float32Array(128) }), {});
     let isActive = true;
     const disconnectOutputsGraph = () => {
       if (options.numberOfOutputs > 0) {
@@ -8538,7 +8609,8 @@ var interceptConnections = (original, interceptor) => {
 
 // node_modules/standardized-audio-context/build/es2019/factories/native-constant-source-node-faker-factory.js
 var createNativeConstantSourceNodeFakerFactory = (addSilentConnection2, createNativeAudioBufferSourceNode2, createNativeGainNode2, monitorConnections2) => {
-  return (nativeContext, { offset, ...audioNodeOptions }) => {
+  return (nativeContext, _a3) => {
+    var _b = _a3, { offset } = _b, audioNodeOptions = __objRest(_b, ["offset"]);
     const audioBuffer = nativeContext.createBuffer(1, 2, 44100);
     const audioBufferSourceNode = createNativeAudioBufferSourceNode2(nativeContext, {
       buffer: null,
@@ -8550,7 +8622,7 @@ var createNativeConstantSourceNodeFakerFactory = (addSilentConnection2, createNa
       loopStart: 0,
       playbackRate: 1
     });
-    const gainNode = createNativeGainNode2(nativeContext, { ...audioNodeOptions, gain: offset });
+    const gainNode = createNativeGainNode2(nativeContext, __spreadProps(__spreadValues({}, audioNodeOptions), { gain: offset }));
     const channelData = audioBuffer.getChannelData(0);
     channelData[0] = 1;
     channelData[1] = 1;
@@ -8944,7 +9016,8 @@ var createNativePannerNodeFactory = (createNativePannerNodeFaker2) => {
 
 // node_modules/standardized-audio-context/build/es2019/factories/native-panner-node-faker-factory.js
 var createNativePannerNodeFakerFactory = (connectNativeAudioNodeToNativeAudioNode2, createInvalidStateError2, createNativeChannelMergerNode2, createNativeGainNode2, createNativeScriptProcessorNode2, createNativeWaveShaperNode2, createNotSupportedError2, disconnectNativeAudioNodeFromNativeAudioNode2, getFirstSample2, monitorConnections2) => {
-  return (nativeContext, { coneInnerAngle, coneOuterAngle, coneOuterGain, distanceModel, maxDistance, orientationX, orientationY, orientationZ, panningModel, positionX, positionY, positionZ, refDistance, rolloffFactor, ...audioNodeOptions }) => {
+  return (nativeContext, _a3) => {
+    var _b = _a3, { coneInnerAngle, coneOuterAngle, coneOuterGain, distanceModel, maxDistance, orientationX, orientationY, orientationZ, panningModel, positionX, positionY, positionZ, refDistance, rolloffFactor } = _b, audioNodeOptions = __objRest(_b, ["coneInnerAngle", "coneOuterAngle", "coneOuterGain", "distanceModel", "maxDistance", "orientationX", "orientationY", "orientationZ", "panningModel", "positionX", "positionY", "positionZ", "refDistance", "rolloffFactor"]);
     const pannerNode = nativeContext.createPanner();
     if (audioNodeOptions.channelCount > 2) {
       throw createNotSupportedError2();
@@ -8958,24 +9031,22 @@ var createNativePannerNodeFakerFactory = (connectNativeAudioNodeToNativeAudioNod
       channelCountMode: "explicit",
       channelInterpretation: "discrete"
     };
-    const channelMergerNode = createNativeChannelMergerNode2(nativeContext, {
-      ...SINGLE_CHANNEL_OPTIONS,
+    const channelMergerNode = createNativeChannelMergerNode2(nativeContext, __spreadProps(__spreadValues({}, SINGLE_CHANNEL_OPTIONS), {
       channelInterpretation: "speakers",
       numberOfInputs: 6
-    });
-    const inputGainNode = createNativeGainNode2(nativeContext, { ...audioNodeOptions, gain: 1 });
-    const orientationXGainNode = createNativeGainNode2(nativeContext, { ...SINGLE_CHANNEL_OPTIONS, gain: 1 });
-    const orientationYGainNode = createNativeGainNode2(nativeContext, { ...SINGLE_CHANNEL_OPTIONS, gain: 0 });
-    const orientationZGainNode = createNativeGainNode2(nativeContext, { ...SINGLE_CHANNEL_OPTIONS, gain: 0 });
-    const positionXGainNode = createNativeGainNode2(nativeContext, { ...SINGLE_CHANNEL_OPTIONS, gain: 0 });
-    const positionYGainNode = createNativeGainNode2(nativeContext, { ...SINGLE_CHANNEL_OPTIONS, gain: 0 });
-    const positionZGainNode = createNativeGainNode2(nativeContext, { ...SINGLE_CHANNEL_OPTIONS, gain: 0 });
+    }));
+    const inputGainNode = createNativeGainNode2(nativeContext, __spreadProps(__spreadValues({}, audioNodeOptions), { gain: 1 }));
+    const orientationXGainNode = createNativeGainNode2(nativeContext, __spreadProps(__spreadValues({}, SINGLE_CHANNEL_OPTIONS), { gain: 1 }));
+    const orientationYGainNode = createNativeGainNode2(nativeContext, __spreadProps(__spreadValues({}, SINGLE_CHANNEL_OPTIONS), { gain: 0 }));
+    const orientationZGainNode = createNativeGainNode2(nativeContext, __spreadProps(__spreadValues({}, SINGLE_CHANNEL_OPTIONS), { gain: 0 }));
+    const positionXGainNode = createNativeGainNode2(nativeContext, __spreadProps(__spreadValues({}, SINGLE_CHANNEL_OPTIONS), { gain: 0 }));
+    const positionYGainNode = createNativeGainNode2(nativeContext, __spreadProps(__spreadValues({}, SINGLE_CHANNEL_OPTIONS), { gain: 0 }));
+    const positionZGainNode = createNativeGainNode2(nativeContext, __spreadProps(__spreadValues({}, SINGLE_CHANNEL_OPTIONS), { gain: 0 }));
     const scriptProcessorNode = createNativeScriptProcessorNode2(nativeContext, 256, 6, 1);
-    const waveShaperNode = createNativeWaveShaperNode2(nativeContext, {
-      ...SINGLE_CHANNEL_OPTIONS,
+    const waveShaperNode = createNativeWaveShaperNode2(nativeContext, __spreadProps(__spreadValues({}, SINGLE_CHANNEL_OPTIONS), {
       curve: new Float32Array([1, 1]),
       oversample: "none"
-    });
+    }));
     let lastOrientation = [orientationX, orientationY, orientationZ];
     let lastPosition = [positionX, positionY, positionZ];
     const buffer = new Float32Array(1);
@@ -9265,7 +9336,7 @@ var createNativeStereoPannerNodeFakerFactory = (createNativeChannelMergerNode2, 
   const DC_CURVE = new Float32Array([1, 1]);
   const HALF_PI = Math.PI / 2;
   const SINGLE_CHANNEL_OPTIONS = { channelCount: 1, channelCountMode: "explicit", channelInterpretation: "discrete" };
-  const SINGLE_CHANNEL_WAVE_SHAPER_OPTIONS = { ...SINGLE_CHANNEL_OPTIONS, oversample: "none" };
+  const SINGLE_CHANNEL_WAVE_SHAPER_OPTIONS = __spreadProps(__spreadValues({}, SINGLE_CHANNEL_OPTIONS), { oversample: "none" });
   const buildInternalGraphForMono = (nativeContext, inputGainNode, panGainNode, channelMergerNode) => {
     const leftWaveShaperCurve = new Float32Array(CURVE_SIZE);
     const rightWaveShaperCurve = new Float32Array(CURVE_SIZE);
@@ -9274,11 +9345,11 @@ var createNativeStereoPannerNodeFakerFactory = (createNativeChannelMergerNode2, 
       leftWaveShaperCurve[i] = Math.cos(x);
       rightWaveShaperCurve[i] = Math.sin(x);
     }
-    const leftGainNode = createNativeGainNode2(nativeContext, { ...SINGLE_CHANNEL_OPTIONS, gain: 0 });
-    const leftWaveShaperNode = createNativeWaveShaperNode2(nativeContext, { ...SINGLE_CHANNEL_WAVE_SHAPER_OPTIONS, curve: leftWaveShaperCurve });
-    const panWaveShaperNode = createNativeWaveShaperNode2(nativeContext, { ...SINGLE_CHANNEL_WAVE_SHAPER_OPTIONS, curve: DC_CURVE });
-    const rightGainNode = createNativeGainNode2(nativeContext, { ...SINGLE_CHANNEL_OPTIONS, gain: 0 });
-    const rightWaveShaperNode = createNativeWaveShaperNode2(nativeContext, { ...SINGLE_CHANNEL_WAVE_SHAPER_OPTIONS, curve: rightWaveShaperCurve });
+    const leftGainNode = createNativeGainNode2(nativeContext, __spreadProps(__spreadValues({}, SINGLE_CHANNEL_OPTIONS), { gain: 0 }));
+    const leftWaveShaperNode = createNativeWaveShaperNode2(nativeContext, __spreadProps(__spreadValues({}, SINGLE_CHANNEL_WAVE_SHAPER_OPTIONS), { curve: leftWaveShaperCurve }));
+    const panWaveShaperNode = createNativeWaveShaperNode2(nativeContext, __spreadProps(__spreadValues({}, SINGLE_CHANNEL_WAVE_SHAPER_OPTIONS), { curve: DC_CURVE }));
+    const rightGainNode = createNativeGainNode2(nativeContext, __spreadProps(__spreadValues({}, SINGLE_CHANNEL_OPTIONS), { gain: 0 }));
+    const rightWaveShaperNode = createNativeWaveShaperNode2(nativeContext, __spreadProps(__spreadValues({}, SINGLE_CHANNEL_WAVE_SHAPER_OPTIONS), { curve: rightWaveShaperCurve }));
     return {
       connectGraph() {
         inputGainNode.connect(leftGainNode);
@@ -9333,27 +9404,23 @@ var createNativeStereoPannerNodeFakerFactory = (createNativeChannelMergerNode2, 
       channelInterpretation: "discrete",
       numberOfOutputs: 2
     });
-    const leftInputForLeftOutputGainNode = createNativeGainNode2(nativeContext, { ...SINGLE_CHANNEL_OPTIONS, gain: 0 });
-    const leftInputForLeftOutputWaveShaperNode = createNativeWaveShaperNode2(nativeContext, {
-      ...SINGLE_CHANNEL_WAVE_SHAPER_OPTIONS,
+    const leftInputForLeftOutputGainNode = createNativeGainNode2(nativeContext, __spreadProps(__spreadValues({}, SINGLE_CHANNEL_OPTIONS), { gain: 0 }));
+    const leftInputForLeftOutputWaveShaperNode = createNativeWaveShaperNode2(nativeContext, __spreadProps(__spreadValues({}, SINGLE_CHANNEL_WAVE_SHAPER_OPTIONS), {
       curve: leftInputForLeftOutputWaveShaperCurve
-    });
-    const leftInputForRightOutputGainNode = createNativeGainNode2(nativeContext, { ...SINGLE_CHANNEL_OPTIONS, gain: 0 });
-    const leftInputForRightOutputWaveShaperNode = createNativeWaveShaperNode2(nativeContext, {
-      ...SINGLE_CHANNEL_WAVE_SHAPER_OPTIONS,
+    }));
+    const leftInputForRightOutputGainNode = createNativeGainNode2(nativeContext, __spreadProps(__spreadValues({}, SINGLE_CHANNEL_OPTIONS), { gain: 0 }));
+    const leftInputForRightOutputWaveShaperNode = createNativeWaveShaperNode2(nativeContext, __spreadProps(__spreadValues({}, SINGLE_CHANNEL_WAVE_SHAPER_OPTIONS), {
       curve: leftInputForRightOutputWaveShaperCurve
-    });
-    const panWaveShaperNode = createNativeWaveShaperNode2(nativeContext, { ...SINGLE_CHANNEL_WAVE_SHAPER_OPTIONS, curve: DC_CURVE });
-    const rightInputForLeftOutputGainNode = createNativeGainNode2(nativeContext, { ...SINGLE_CHANNEL_OPTIONS, gain: 0 });
-    const rightInputForLeftOutputWaveShaperNode = createNativeWaveShaperNode2(nativeContext, {
-      ...SINGLE_CHANNEL_WAVE_SHAPER_OPTIONS,
+    }));
+    const panWaveShaperNode = createNativeWaveShaperNode2(nativeContext, __spreadProps(__spreadValues({}, SINGLE_CHANNEL_WAVE_SHAPER_OPTIONS), { curve: DC_CURVE }));
+    const rightInputForLeftOutputGainNode = createNativeGainNode2(nativeContext, __spreadProps(__spreadValues({}, SINGLE_CHANNEL_OPTIONS), { gain: 0 }));
+    const rightInputForLeftOutputWaveShaperNode = createNativeWaveShaperNode2(nativeContext, __spreadProps(__spreadValues({}, SINGLE_CHANNEL_WAVE_SHAPER_OPTIONS), {
       curve: rightInputForLeftOutputWaveShaperCurve
-    });
-    const rightInputForRightOutputGainNode = createNativeGainNode2(nativeContext, { ...SINGLE_CHANNEL_OPTIONS, gain: 0 });
-    const rightInputForRightOutputWaveShaperNode = createNativeWaveShaperNode2(nativeContext, {
-      ...SINGLE_CHANNEL_WAVE_SHAPER_OPTIONS,
+    }));
+    const rightInputForRightOutputGainNode = createNativeGainNode2(nativeContext, __spreadProps(__spreadValues({}, SINGLE_CHANNEL_OPTIONS), { gain: 0 }));
+    const rightInputForRightOutputWaveShaperNode = createNativeWaveShaperNode2(nativeContext, __spreadProps(__spreadValues({}, SINGLE_CHANNEL_WAVE_SHAPER_OPTIONS), {
       curve: rightInputForRightOutputWaveShaperCurve
-    });
+    }));
     return {
       connectGraph() {
         inputGainNode.connect(channelSplitterNode);
@@ -9408,17 +9475,17 @@ var createNativeStereoPannerNodeFakerFactory = (createNativeChannelMergerNode2, 
     }
     throw createNotSupportedError2();
   };
-  return (nativeContext, { channelCount, channelCountMode, pan, ...audioNodeOptions }) => {
+  return (nativeContext, _a3) => {
+    var _b = _a3, { channelCount, channelCountMode, pan } = _b, audioNodeOptions = __objRest(_b, ["channelCount", "channelCountMode", "pan"]);
     if (channelCountMode === "max") {
       throw createNotSupportedError2();
     }
-    const channelMergerNode = createNativeChannelMergerNode2(nativeContext, {
-      ...audioNodeOptions,
+    const channelMergerNode = createNativeChannelMergerNode2(nativeContext, __spreadProps(__spreadValues({}, audioNodeOptions), {
       channelCount: 1,
       channelCountMode,
       numberOfInputs: 2
-    });
-    const inputGainNode = createNativeGainNode2(nativeContext, { ...audioNodeOptions, channelCount, channelCountMode, gain: 1 });
+    }));
+    const inputGainNode = createNativeGainNode2(nativeContext, __spreadProps(__spreadValues({}, audioNodeOptions), { channelCount, channelCountMode, gain: 1 }));
     const panGainNode = createNativeGainNode2(nativeContext, {
       channelCount: 1,
       channelCountMode: "explicit",
@@ -9548,15 +9615,16 @@ var createNativeWaveShaperNodeFactory = (createConnectedNativeAudioBufferSourceN
 
 // node_modules/standardized-audio-context/build/es2019/factories/native-wave-shaper-node-faker-factory.js
 var createNativeWaveShaperNodeFakerFactory = (createConnectedNativeAudioBufferSourceNode2, createInvalidStateError2, createNativeGainNode2, isDCCurve2, monitorConnections2) => {
-  return (nativeContext, { curve, oversample, ...audioNodeOptions }) => {
+  return (nativeContext, _a3) => {
+    var _b = _a3, { curve, oversample } = _b, audioNodeOptions = __objRest(_b, ["curve", "oversample"]);
     const negativeWaveShaperNode = nativeContext.createWaveShaper();
     const positiveWaveShaperNode = nativeContext.createWaveShaper();
     assignNativeAudioNodeOptions(negativeWaveShaperNode, audioNodeOptions);
     assignNativeAudioNodeOptions(positiveWaveShaperNode, audioNodeOptions);
-    const inputGainNode = createNativeGainNode2(nativeContext, { ...audioNodeOptions, gain: 1 });
-    const invertGainNode = createNativeGainNode2(nativeContext, { ...audioNodeOptions, gain: -1 });
-    const outputGainNode = createNativeGainNode2(nativeContext, { ...audioNodeOptions, gain: 1 });
-    const revertGainNode = createNativeGainNode2(nativeContext, { ...audioNodeOptions, gain: -1 });
+    const inputGainNode = createNativeGainNode2(nativeContext, __spreadProps(__spreadValues({}, audioNodeOptions), { gain: 1 }));
+    const invertGainNode = createNativeGainNode2(nativeContext, __spreadProps(__spreadValues({}, audioNodeOptions), { gain: -1 }));
+    const outputGainNode = createNativeGainNode2(nativeContext, __spreadProps(__spreadValues({}, audioNodeOptions), { gain: 1 }));
+    const revertGainNode = createNativeGainNode2(nativeContext, __spreadProps(__spreadValues({}, audioNodeOptions), { gain: -1 }));
     let disconnectNativeAudioBufferSourceNode = null;
     let isConnected = false;
     let unmodifiedCurve = null;
@@ -9714,7 +9782,7 @@ var createOfflineAudioContextConstructor = (baseAudioContextConstructor2, cacheT
       } else {
         throw new Error("The given parameters are not valid.");
       }
-      const { length, numberOfChannels, sampleRate } = { ...DEFAULT_OPTIONS16, ...options };
+      const { length, numberOfChannels, sampleRate } = __spreadValues(__spreadValues({}, DEFAULT_OPTIONS16), options);
       const nativeOfflineAudioContext = createNativeOfflineAudioContext2(numberOfChannels, length, sampleRate);
       if (!cacheTestResult2(testPromiseSupport, () => testPromiseSupport(nativeOfflineAudioContext))) {
         nativeOfflineAudioContext.addEventListener("statechange", (() => {
@@ -9781,7 +9849,7 @@ var createOscillatorNodeConstructor = (audioNodeConstructor2, createAudioParam2,
   return class OscillatorNode extends audioNodeConstructor2 {
     constructor(context2, options) {
       const nativeContext = getNativeContext2(context2);
-      const mergedOptions = { ...DEFAULT_OPTIONS17, ...options };
+      const mergedOptions = __spreadValues(__spreadValues({}, DEFAULT_OPTIONS17), options);
       const nativeOscillatorNode = createNativeOscillatorNode2(nativeContext, mergedOptions);
       const isOffline = isNativeOfflineAudioContext2(nativeContext);
       const oscillatorNodeRenderer = isOffline ? createOscillatorNodeRenderer2() : null;
@@ -9858,7 +9926,7 @@ var createOscillatorNodeRendererFactory = (connectAudioParam2, createNativeOscil
     let periodicWave = null;
     let start2 = null;
     let stop = null;
-    const createOscillatorNode = async (proxy, nativeOfflineAudioContext) => {
+    const createOscillatorNode = (proxy, nativeOfflineAudioContext) => __async(void 0, null, function* () {
       let nativeOscillatorNode = getNativeAudioNode2(proxy);
       const nativeOscillatorNodeIsOwnedByContext = isOwnedByContext(nativeOscillatorNode, nativeOfflineAudioContext);
       if (!nativeOscillatorNodeIsOwnedByContext) {
@@ -9881,15 +9949,15 @@ var createOscillatorNodeRendererFactory = (connectAudioParam2, createNativeOscil
       }
       renderedNativeOscillatorNodes.set(nativeOfflineAudioContext, nativeOscillatorNode);
       if (!nativeOscillatorNodeIsOwnedByContext) {
-        await renderAutomation2(nativeOfflineAudioContext, proxy.detune, nativeOscillatorNode.detune);
-        await renderAutomation2(nativeOfflineAudioContext, proxy.frequency, nativeOscillatorNode.frequency);
+        yield renderAutomation2(nativeOfflineAudioContext, proxy.detune, nativeOscillatorNode.detune);
+        yield renderAutomation2(nativeOfflineAudioContext, proxy.frequency, nativeOscillatorNode.frequency);
       } else {
-        await connectAudioParam2(nativeOfflineAudioContext, proxy.detune, nativeOscillatorNode.detune);
-        await connectAudioParam2(nativeOfflineAudioContext, proxy.frequency, nativeOscillatorNode.frequency);
+        yield connectAudioParam2(nativeOfflineAudioContext, proxy.detune, nativeOscillatorNode.detune);
+        yield connectAudioParam2(nativeOfflineAudioContext, proxy.frequency, nativeOscillatorNode.frequency);
       }
-      await renderInputsOfAudioNode2(proxy, nativeOfflineAudioContext, nativeOscillatorNode);
+      yield renderInputsOfAudioNode2(proxy, nativeOfflineAudioContext, nativeOscillatorNode);
       return nativeOscillatorNode;
-    };
+    });
     return {
       set periodicWave(value) {
         periodicWave = value;
@@ -9935,7 +10003,7 @@ var createPannerNodeConstructor = (audioNodeConstructor2, createAudioParam2, cre
   return class PannerNode extends audioNodeConstructor2 {
     constructor(context2, options) {
       const nativeContext = getNativeContext2(context2);
-      const mergedOptions = { ...DEFAULT_OPTIONS18, ...options };
+      const mergedOptions = __spreadValues(__spreadValues({}, DEFAULT_OPTIONS18), options);
       const nativePannerNode = createNativePannerNode2(nativeContext, mergedOptions);
       const isOffline = isNativeOfflineAudioContext2(nativeContext);
       const pannerNodeRenderer = isOffline ? createPannerNodeRenderer2() : null;
@@ -10023,7 +10091,7 @@ var createPannerNodeRendererFactory = (connectAudioParam2, createNativeChannelMe
   return () => {
     const renderedNativeAudioNodes = new WeakMap();
     let renderedBufferPromise = null;
-    const createAudioNode = async (proxy, nativeOfflineAudioContext) => {
+    const createAudioNode = (proxy, nativeOfflineAudioContext) => __async(void 0, null, function* () {
       let nativeGainNode = null;
       let nativePannerNode = getNativeAudioNode2(proxy);
       const commonAudioNodeOptions = {
@@ -10031,8 +10099,7 @@ var createPannerNodeRendererFactory = (connectAudioParam2, createNativeChannelMe
         channelCountMode: nativePannerNode.channelCountMode,
         channelInterpretation: nativePannerNode.channelInterpretation
       };
-      const commonNativePannerNodeOptions = {
-        ...commonAudioNodeOptions,
+      const commonNativePannerNodeOptions = __spreadProps(__spreadValues({}, commonAudioNodeOptions), {
         coneInnerAngle: nativePannerNode.coneInnerAngle,
         coneOuterAngle: nativePannerNode.coneOuterAngle,
         coneOuterGain: nativePannerNode.coneOuterGain,
@@ -10041,20 +10108,19 @@ var createPannerNodeRendererFactory = (connectAudioParam2, createNativeChannelMe
         panningModel: nativePannerNode.panningModel,
         refDistance: nativePannerNode.refDistance,
         rolloffFactor: nativePannerNode.rolloffFactor
-      };
+      });
       const nativePannerNodeIsOwnedByContext = isOwnedByContext(nativePannerNode, nativeOfflineAudioContext);
       if ("bufferSize" in nativePannerNode) {
-        nativeGainNode = createNativeGainNode2(nativeOfflineAudioContext, { ...commonAudioNodeOptions, gain: 1 });
+        nativeGainNode = createNativeGainNode2(nativeOfflineAudioContext, __spreadProps(__spreadValues({}, commonAudioNodeOptions), { gain: 1 }));
       } else if (!nativePannerNodeIsOwnedByContext) {
-        const options = {
-          ...commonNativePannerNodeOptions,
+        const options = __spreadProps(__spreadValues({}, commonNativePannerNodeOptions), {
           orientationX: nativePannerNode.orientationX.value,
           orientationY: nativePannerNode.orientationY.value,
           orientationZ: nativePannerNode.orientationZ.value,
           positionX: nativePannerNode.positionX.value,
           positionY: nativePannerNode.positionY.value,
           positionZ: nativePannerNode.positionZ.value
-        };
+        });
         nativePannerNode = createNativePannerNode2(nativeOfflineAudioContext, options);
       }
       renderedNativeAudioNodes.set(nativeOfflineAudioContext, nativeGainNode === null ? nativePannerNode : nativeGainNode);
@@ -10071,50 +10137,49 @@ var createPannerNodeRendererFactory = (connectAudioParam2, createNativeChannelMe
             numberOfInputs: 6
           });
           nativeChannelMergerNode.connect(partialOfflineAudioContext.destination);
-          renderedBufferPromise = (async () => {
-            const nativeConstantSourceNodes = await Promise.all([
+          renderedBufferPromise = (() => __async(void 0, null, function* () {
+            const nativeConstantSourceNodes = yield Promise.all([
               proxy.orientationX,
               proxy.orientationY,
               proxy.orientationZ,
               proxy.positionX,
               proxy.positionY,
               proxy.positionZ
-            ].map(async (audioParam, index) => {
+            ].map((audioParam, index) => __async(void 0, null, function* () {
               const nativeConstantSourceNode = createNativeConstantSourceNode2(partialOfflineAudioContext, {
                 channelCount: 1,
                 channelCountMode: "explicit",
                 channelInterpretation: "discrete",
                 offset: index === 0 ? 1 : 0
               });
-              await renderAutomation2(partialOfflineAudioContext, audioParam, nativeConstantSourceNode.offset);
+              yield renderAutomation2(partialOfflineAudioContext, audioParam, nativeConstantSourceNode.offset);
               return nativeConstantSourceNode;
-            }));
+            })));
             for (let i = 0; i < 6; i += 1) {
               nativeConstantSourceNodes[i].connect(nativeChannelMergerNode, 0, i);
               nativeConstantSourceNodes[i].start(0);
             }
             return renderNativeOfflineAudioContext2(partialOfflineAudioContext);
-          })();
+          }))();
         }
-        const renderedBuffer = await renderedBufferPromise;
-        const inputGainNode = createNativeGainNode2(nativeOfflineAudioContext, { ...commonAudioNodeOptions, gain: 1 });
-        await renderInputsOfAudioNode2(proxy, nativeOfflineAudioContext, inputGainNode);
+        const renderedBuffer = yield renderedBufferPromise;
+        const inputGainNode = createNativeGainNode2(nativeOfflineAudioContext, __spreadProps(__spreadValues({}, commonAudioNodeOptions), { gain: 1 }));
+        yield renderInputsOfAudioNode2(proxy, nativeOfflineAudioContext, inputGainNode);
         const channelDatas = [];
         for (let i = 0; i < renderedBuffer.numberOfChannels; i += 1) {
           channelDatas.push(renderedBuffer.getChannelData(i));
         }
         let lastOrientation = [channelDatas[0][0], channelDatas[1][0], channelDatas[2][0]];
         let lastPosition = [channelDatas[3][0], channelDatas[4][0], channelDatas[5][0]];
-        let gateGainNode = createNativeGainNode2(nativeOfflineAudioContext, { ...commonAudioNodeOptions, gain: 1 });
-        let partialPannerNode = createNativePannerNode2(nativeOfflineAudioContext, {
-          ...commonNativePannerNodeOptions,
+        let gateGainNode = createNativeGainNode2(nativeOfflineAudioContext, __spreadProps(__spreadValues({}, commonAudioNodeOptions), { gain: 1 }));
+        let partialPannerNode = createNativePannerNode2(nativeOfflineAudioContext, __spreadProps(__spreadValues({}, commonNativePannerNodeOptions), {
           orientationX: lastOrientation[0],
           orientationY: lastOrientation[1],
           orientationZ: lastOrientation[2],
           positionX: lastPosition[0],
           positionY: lastPosition[1],
           positionZ: lastPosition[2]
-        });
+        }));
         inputGainNode.connect(gateGainNode).connect(partialPannerNode.inputs[0]);
         partialPannerNode.connect(nativeGainNode);
         for (let i = 128; i < renderedBuffer.length; i += 128) {
@@ -10125,16 +10190,15 @@ var createPannerNodeRendererFactory = (connectAudioParam2, createNativeChannelMe
             lastPosition = positon;
             const currentTime = i / nativeOfflineAudioContext.sampleRate;
             gateGainNode.gain.setValueAtTime(0, currentTime);
-            gateGainNode = createNativeGainNode2(nativeOfflineAudioContext, { ...commonAudioNodeOptions, gain: 0 });
-            partialPannerNode = createNativePannerNode2(nativeOfflineAudioContext, {
-              ...commonNativePannerNodeOptions,
+            gateGainNode = createNativeGainNode2(nativeOfflineAudioContext, __spreadProps(__spreadValues({}, commonAudioNodeOptions), { gain: 0 }));
+            partialPannerNode = createNativePannerNode2(nativeOfflineAudioContext, __spreadProps(__spreadValues({}, commonNativePannerNodeOptions), {
               orientationX: lastOrientation[0],
               orientationY: lastOrientation[1],
               orientationZ: lastOrientation[2],
               positionX: lastPosition[0],
               positionY: lastPosition[1],
               positionZ: lastPosition[2]
-            });
+            }));
             gateGainNode.gain.setValueAtTime(1, currentTime);
             inputGainNode.connect(gateGainNode).connect(partialPannerNode.inputs[0]);
             partialPannerNode.connect(nativeGainNode);
@@ -10143,27 +10207,27 @@ var createPannerNodeRendererFactory = (connectAudioParam2, createNativeChannelMe
         return nativeGainNode;
       }
       if (!nativePannerNodeIsOwnedByContext) {
-        await renderAutomation2(nativeOfflineAudioContext, proxy.orientationX, nativePannerNode.orientationX);
-        await renderAutomation2(nativeOfflineAudioContext, proxy.orientationY, nativePannerNode.orientationY);
-        await renderAutomation2(nativeOfflineAudioContext, proxy.orientationZ, nativePannerNode.orientationZ);
-        await renderAutomation2(nativeOfflineAudioContext, proxy.positionX, nativePannerNode.positionX);
-        await renderAutomation2(nativeOfflineAudioContext, proxy.positionY, nativePannerNode.positionY);
-        await renderAutomation2(nativeOfflineAudioContext, proxy.positionZ, nativePannerNode.positionZ);
+        yield renderAutomation2(nativeOfflineAudioContext, proxy.orientationX, nativePannerNode.orientationX);
+        yield renderAutomation2(nativeOfflineAudioContext, proxy.orientationY, nativePannerNode.orientationY);
+        yield renderAutomation2(nativeOfflineAudioContext, proxy.orientationZ, nativePannerNode.orientationZ);
+        yield renderAutomation2(nativeOfflineAudioContext, proxy.positionX, nativePannerNode.positionX);
+        yield renderAutomation2(nativeOfflineAudioContext, proxy.positionY, nativePannerNode.positionY);
+        yield renderAutomation2(nativeOfflineAudioContext, proxy.positionZ, nativePannerNode.positionZ);
       } else {
-        await connectAudioParam2(nativeOfflineAudioContext, proxy.orientationX, nativePannerNode.orientationX);
-        await connectAudioParam2(nativeOfflineAudioContext, proxy.orientationY, nativePannerNode.orientationY);
-        await connectAudioParam2(nativeOfflineAudioContext, proxy.orientationZ, nativePannerNode.orientationZ);
-        await connectAudioParam2(nativeOfflineAudioContext, proxy.positionX, nativePannerNode.positionX);
-        await connectAudioParam2(nativeOfflineAudioContext, proxy.positionY, nativePannerNode.positionY);
-        await connectAudioParam2(nativeOfflineAudioContext, proxy.positionZ, nativePannerNode.positionZ);
+        yield connectAudioParam2(nativeOfflineAudioContext, proxy.orientationX, nativePannerNode.orientationX);
+        yield connectAudioParam2(nativeOfflineAudioContext, proxy.orientationY, nativePannerNode.orientationY);
+        yield connectAudioParam2(nativeOfflineAudioContext, proxy.orientationZ, nativePannerNode.orientationZ);
+        yield connectAudioParam2(nativeOfflineAudioContext, proxy.positionX, nativePannerNode.positionX);
+        yield connectAudioParam2(nativeOfflineAudioContext, proxy.positionY, nativePannerNode.positionY);
+        yield connectAudioParam2(nativeOfflineAudioContext, proxy.positionZ, nativePannerNode.positionZ);
       }
       if (isNativeAudioNodeFaker(nativePannerNode)) {
-        await renderInputsOfAudioNode2(proxy, nativeOfflineAudioContext, nativePannerNode.inputs[0]);
+        yield renderInputsOfAudioNode2(proxy, nativeOfflineAudioContext, nativePannerNode.inputs[0]);
       } else {
-        await renderInputsOfAudioNode2(proxy, nativeOfflineAudioContext, nativePannerNode);
+        yield renderInputsOfAudioNode2(proxy, nativeOfflineAudioContext, nativePannerNode);
       }
       return nativePannerNode;
-    };
+    });
     return {
       render(proxy, nativeOfflineAudioContext) {
         const renderedNativeGainNodeOrNativePannerNode = renderedNativeAudioNodes.get(nativeOfflineAudioContext);
@@ -10184,7 +10248,7 @@ var createPeriodicWaveConstructor = (createNativePeriodicWave2, getNativeContext
   return class PeriodicWave {
     constructor(context2, options) {
       const nativeContext = getNativeContext2(context2);
-      const mergedOptions = sanitizePeriodicWaveOptions2({ ...DEFAULT_OPTIONS19, ...options });
+      const mergedOptions = sanitizePeriodicWaveOptions2(__spreadValues(__spreadValues({}, DEFAULT_OPTIONS19), options));
       const periodicWave = createNativePeriodicWave2(nativeContext, mergedOptions);
       periodicWaveStore.add(periodicWave);
       return periodicWave;
@@ -10206,31 +10270,31 @@ var createRenderAutomation = (getAudioParamRenderer, renderInputsOfAudioParam2) 
 
 // node_modules/standardized-audio-context/build/es2019/factories/render-inputs-of-audio-node.js
 var createRenderInputsOfAudioNode = (getAudioNodeConnections2, getAudioNodeRenderer2, isPartOfACycle2) => {
-  return async (audioNode, nativeOfflineAudioContext, nativeAudioNode) => {
+  return (audioNode, nativeOfflineAudioContext, nativeAudioNode) => __async(void 0, null, function* () {
     const audioNodeConnections = getAudioNodeConnections2(audioNode);
-    await Promise.all(audioNodeConnections.activeInputs.map((connections, input) => Array.from(connections).map(async ([source, output]) => {
+    yield Promise.all(audioNodeConnections.activeInputs.map((connections, input) => Array.from(connections).map((_0) => __async(void 0, [_0], function* ([source, output]) {
       const audioNodeRenderer = getAudioNodeRenderer2(source);
-      const renderedNativeAudioNode = await audioNodeRenderer.render(source, nativeOfflineAudioContext);
+      const renderedNativeAudioNode = yield audioNodeRenderer.render(source, nativeOfflineAudioContext);
       const destination = audioNode.context.destination;
       if (!isPartOfACycle2(source) && (audioNode !== destination || !isPartOfACycle2(audioNode))) {
         renderedNativeAudioNode.connect(nativeAudioNode, output, input);
       }
-    })).reduce((allRenderingPromises, renderingPromises) => [...allRenderingPromises, ...renderingPromises], []));
-  };
+    }))).reduce((allRenderingPromises, renderingPromises) => [...allRenderingPromises, ...renderingPromises], []));
+  });
 };
 
 // node_modules/standardized-audio-context/build/es2019/factories/render-inputs-of-audio-param.js
 var createRenderInputsOfAudioParam = (getAudioNodeRenderer2, getAudioParamConnections2, isPartOfACycle2) => {
-  return async (audioParam, nativeOfflineAudioContext, nativeAudioParam) => {
+  return (audioParam, nativeOfflineAudioContext, nativeAudioParam) => __async(void 0, null, function* () {
     const audioParamConnections = getAudioParamConnections2(audioParam);
-    await Promise.all(Array.from(audioParamConnections.activeInputs).map(async ([source, output]) => {
+    yield Promise.all(Array.from(audioParamConnections.activeInputs).map((_0) => __async(void 0, [_0], function* ([source, output]) {
       const audioNodeRenderer = getAudioNodeRenderer2(source);
-      const renderedNativeAudioNode = await audioNodeRenderer.render(source, nativeOfflineAudioContext);
+      const renderedNativeAudioNode = yield audioNodeRenderer.render(source, nativeOfflineAudioContext);
       if (!isPartOfACycle2(source)) {
         renderedNativeAudioNode.connect(nativeAudioParam, output);
       }
-    }));
-  };
+    })));
+  });
 };
 
 // node_modules/standardized-audio-context/build/es2019/factories/render-native-offline-audio-context.js
@@ -10304,7 +10368,7 @@ var createStereoPannerNodeConstructor = (audioNodeConstructor2, createAudioParam
   return class StereoPannerNode extends audioNodeConstructor2 {
     constructor(context2, options) {
       const nativeContext = getNativeContext2(context2);
-      const mergedOptions = { ...DEFAULT_OPTIONS20, ...options };
+      const mergedOptions = __spreadValues(__spreadValues({}, DEFAULT_OPTIONS20), options);
       const nativeStereoPannerNode = createNativeStereoPannerNode2(nativeContext, mergedOptions);
       const isOffline = isNativeOfflineAudioContext2(nativeContext);
       const stereoPannerNodeRenderer = isOffline ? createStereoPannerNodeRenderer2() : null;
@@ -10321,7 +10385,7 @@ var createStereoPannerNodeConstructor = (audioNodeConstructor2, createAudioParam
 var createStereoPannerNodeRendererFactory = (connectAudioParam2, createNativeStereoPannerNode2, getNativeAudioNode2, renderAutomation2, renderInputsOfAudioNode2) => {
   return () => {
     const renderedNativeStereoPannerNodes = new WeakMap();
-    const createStereoPannerNode = async (proxy, nativeOfflineAudioContext) => {
+    const createStereoPannerNode = (proxy, nativeOfflineAudioContext) => __async(void 0, null, function* () {
       let nativeStereoPannerNode = getNativeAudioNode2(proxy);
       const nativeStereoPannerNodeIsOwnedByContext = isOwnedByContext(nativeStereoPannerNode, nativeOfflineAudioContext);
       if (!nativeStereoPannerNodeIsOwnedByContext) {
@@ -10335,17 +10399,17 @@ var createStereoPannerNodeRendererFactory = (connectAudioParam2, createNativeSte
       }
       renderedNativeStereoPannerNodes.set(nativeOfflineAudioContext, nativeStereoPannerNode);
       if (!nativeStereoPannerNodeIsOwnedByContext) {
-        await renderAutomation2(nativeOfflineAudioContext, proxy.pan, nativeStereoPannerNode.pan);
+        yield renderAutomation2(nativeOfflineAudioContext, proxy.pan, nativeStereoPannerNode.pan);
       } else {
-        await connectAudioParam2(nativeOfflineAudioContext, proxy.pan, nativeStereoPannerNode.pan);
+        yield connectAudioParam2(nativeOfflineAudioContext, proxy.pan, nativeStereoPannerNode.pan);
       }
       if (isNativeAudioNodeFaker(nativeStereoPannerNode)) {
-        await renderInputsOfAudioNode2(proxy, nativeOfflineAudioContext, nativeStereoPannerNode.inputs[0]);
+        yield renderInputsOfAudioNode2(proxy, nativeOfflineAudioContext, nativeStereoPannerNode.inputs[0]);
       } else {
-        await renderInputsOfAudioNode2(proxy, nativeOfflineAudioContext, nativeStereoPannerNode);
+        yield renderInputsOfAudioNode2(proxy, nativeOfflineAudioContext, nativeStereoPannerNode);
       }
       return nativeStereoPannerNode;
-    };
+    });
     return {
       render(proxy, nativeOfflineAudioContext) {
         const renderedNativeStereoPannerNode = renderedNativeStereoPannerNodes.get(nativeOfflineAudioContext);
@@ -10366,7 +10430,7 @@ var createTestAudioBufferConstructorSupport = (nativeAudioBufferConstructor2) =>
     }
     try {
       new nativeAudioBufferConstructor2({ length: 1, sampleRate: 44100 });
-    } catch {
+    } catch (e) {
       return false;
     }
     return true;
@@ -10375,7 +10439,7 @@ var createTestAudioBufferConstructorSupport = (nativeAudioBufferConstructor2) =>
 
 // node_modules/standardized-audio-context/build/es2019/factories/test-audio-worklet-processor-post-message-support.js
 var createTestAudioWorkletProcessorPostMessageSupport = (nativeAudioWorkletNodeConstructor2, nativeOfflineAudioContextConstructor2) => {
-  return async () => {
+  return () => __async(void 0, null, function* () {
     if (nativeAudioWorkletNodeConstructor2 === null) {
       return true;
     }
@@ -10390,20 +10454,20 @@ var createTestAudioWorkletProcessorPostMessageSupport = (nativeAudioWorkletNodeC
     let isEmittingMessageEvents = false;
     let isEmittingProcessorErrorEvents = false;
     try {
-      await offlineAudioContext.audioWorklet.addModule(url);
+      yield offlineAudioContext.audioWorklet.addModule(url);
       const audioWorkletNode = new nativeAudioWorkletNodeConstructor2(offlineAudioContext, "a", { numberOfOutputs: 0 });
       const oscillator = offlineAudioContext.createOscillator();
       audioWorkletNode.port.onmessage = () => isEmittingMessageEvents = true;
       audioWorkletNode.onprocessorerror = () => isEmittingProcessorErrorEvents = true;
       oscillator.connect(audioWorkletNode);
       oscillator.start(0);
-      await offlineAudioContext.startRendering();
-    } catch {
+      yield offlineAudioContext.startRendering();
+    } catch (e) {
     } finally {
       URL.revokeObjectURL(url);
     }
     return isEmittingMessageEvents && !isEmittingProcessorErrorEvents;
-  };
+  });
 };
 
 // node_modules/standardized-audio-context/build/es2019/factories/test-offline-audio-context-current-time-support.js
@@ -10444,7 +10508,7 @@ var createWaveShaperNodeConstructor = (audioNodeConstructor2, createInvalidState
   return class WaveShaperNode extends audioNodeConstructor2 {
     constructor(context2, options) {
       const nativeContext = getNativeContext2(context2);
-      const mergedOptions = { ...DEFAULT_OPTIONS21, ...options };
+      const mergedOptions = __spreadValues(__spreadValues({}, DEFAULT_OPTIONS21), options);
       const nativeWaveShaperNode = createNativeWaveShaperNode2(nativeContext, mergedOptions);
       const isOffline = isNativeOfflineAudioContext2(nativeContext);
       const waveShaperNodeRenderer = isOffline ? createWaveShaperNodeRenderer2() : null;
@@ -10484,7 +10548,7 @@ var createWaveShaperNodeConstructor = (audioNodeConstructor2, createInvalidState
 var createWaveShaperNodeRendererFactory = (createNativeWaveShaperNode2, getNativeAudioNode2, renderInputsOfAudioNode2) => {
   return () => {
     const renderedNativeWaveShaperNodes = new WeakMap();
-    const createWaveShaperNode = async (proxy, nativeOfflineAudioContext) => {
+    const createWaveShaperNode = (proxy, nativeOfflineAudioContext) => __async(void 0, null, function* () {
       let nativeWaveShaperNode = getNativeAudioNode2(proxy);
       const nativeWaveShaperNodeIsOwnedByContext = isOwnedByContext(nativeWaveShaperNode, nativeOfflineAudioContext);
       if (!nativeWaveShaperNodeIsOwnedByContext) {
@@ -10499,12 +10563,12 @@ var createWaveShaperNodeRendererFactory = (createNativeWaveShaperNode2, getNativ
       }
       renderedNativeWaveShaperNodes.set(nativeOfflineAudioContext, nativeWaveShaperNode);
       if (isNativeAudioNodeFaker(nativeWaveShaperNode)) {
-        await renderInputsOfAudioNode2(proxy, nativeOfflineAudioContext, nativeWaveShaperNode.inputs[0]);
+        yield renderInputsOfAudioNode2(proxy, nativeOfflineAudioContext, nativeWaveShaperNode.inputs[0]);
       } else {
-        await renderInputsOfAudioNode2(proxy, nativeOfflineAudioContext, nativeWaveShaperNode);
+        yield renderInputsOfAudioNode2(proxy, nativeOfflineAudioContext, nativeWaveShaperNode);
       }
       return nativeWaveShaperNode;
-    };
+    });
     return {
       render(proxy, nativeOfflineAudioContext) {
         const renderedNativeWaveShaperNode = renderedNativeWaveShaperNodes.get(nativeOfflineAudioContext);
@@ -10654,15 +10718,14 @@ var overwriteAccessors = (object, property, createGetter, createSetter) => {
 
 // node_modules/standardized-audio-context/build/es2019/helpers/sanitize-audio-worklet-node-options.js
 var sanitizeAudioWorkletNodeOptions = (options) => {
-  return {
-    ...options,
+  return __spreadProps(__spreadValues({}, options), {
     outputChannelCount: options.outputChannelCount !== void 0 ? options.outputChannelCount : options.numberOfInputs === 1 && options.numberOfOutputs === 1 ? [options.channelCount] : Array.from({ length: options.numberOfOutputs }, () => 1)
-  };
+  });
 };
 
 // node_modules/standardized-audio-context/build/es2019/helpers/sanitize-channel-splitter-options.js
 var sanitizeChannelSplitterOptions = (options) => {
-  return { ...options, channelCount: options.numberOfOutputs };
+  return __spreadProps(__spreadValues({}, options), { channelCount: options.numberOfOutputs });
 };
 
 // node_modules/standardized-audio-context/build/es2019/helpers/sanitize-periodic-wave-options.js
@@ -10670,14 +10733,14 @@ var sanitizePeriodicWaveOptions = (options) => {
   const { imag, real } = options;
   if (imag === void 0) {
     if (real === void 0) {
-      return { ...options, imag: [0, 0], real: [0, 0] };
+      return __spreadProps(__spreadValues({}, options), { imag: [0, 0], real: [0, 0] });
     }
-    return { ...options, imag: Array.from(real, () => 0), real };
+    return __spreadProps(__spreadValues({}, options), { imag: Array.from(real, () => 0), real });
   }
   if (real === void 0) {
-    return { ...options, imag, real: Array.from(imag, () => 0) };
+    return __spreadProps(__spreadValues({}, options), { imag, real: Array.from(imag, () => 0) });
   }
-  return { ...options, imag, real };
+  return __spreadProps(__spreadValues({}, options), { imag, real });
 };
 
 // node_modules/standardized-audio-context/build/es2019/helpers/set-value-at-time-until-possible.js
@@ -10698,7 +10761,7 @@ var testAudioBufferSourceNodeStartMethodConsecutiveCallsSupport = (nativeContext
   nativeAudioBufferSourceNode.start();
   try {
     nativeAudioBufferSourceNode.start();
-  } catch {
+  } catch (e) {
     return true;
   }
   return false;
@@ -10711,7 +10774,7 @@ var testAudioBufferSourceNodeStartMethodOffsetClampingSupport = (nativeContext) 
   nativeAudioBufferSourceNode.buffer = nativeAudioBuffer;
   try {
     nativeAudioBufferSourceNode.start(0, 1);
-  } catch {
+  } catch (e) {
     return false;
   }
   return true;
@@ -10723,7 +10786,7 @@ var testAudioBufferSourceNodeStopMethodNullifiedBufferSupport = (nativeContext) 
   nativeAudioBufferSourceNode.start();
   try {
     nativeAudioBufferSourceNode.stop();
-  } catch {
+  } catch (e) {
     return false;
   }
   return true;
@@ -10750,7 +10813,7 @@ var testAudioScheduledSourceNodeStopMethodConsecutiveCallsSupport = (nativeConte
   try {
     nativeAudioBufferSourceNode.stop();
     return true;
-  } catch {
+  } catch (e) {
     return false;
   }
 };
@@ -10810,7 +10873,7 @@ var wrapAudioScheduledSourceNodeStopMethodConsecutiveCalls = (nativeAudioSchedul
       if (isStopped) {
         try {
           stop.call(nativeAudioScheduledSourceNode, when);
-        } catch {
+        } catch (e) {
           nativeGainNode.gain.setValueAtTime(0, when);
         }
       } else {
@@ -19653,8 +19716,8 @@ var context = getContext();
 
 // src/sound/sound.js
 var Sound = class {
-  type = "Sound";
   constructor(frequency, oscillatorType) {
+    __publicField(this, "type", "Sound");
     setContext(getAudioContext());
     this.volume = 1;
     this.frequency = frequency || 440;
