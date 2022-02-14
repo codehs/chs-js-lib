@@ -11,6 +11,7 @@ class Manager {
      */
     constructor(options = {}) {
         this.onError = options.onError;
+        /** @type {Object.<string, Array.<Function>>} */
         this.timers = {};
     }
 
@@ -76,7 +77,11 @@ class Manager {
             };
         })();
 
-        this.timers[name] = stop;
+        if (this.timers[name]) {
+            this.timers[name].push(stop);
+        } else {
+            this.timers[name] = [stop];
+        }
     }
 
     /**
@@ -86,8 +91,8 @@ class Manager {
      */
     stopTimer(fn) {
         const name = typeof fn === 'function' ? fn.name : fn;
-        this.timers[name]?.();
-        this.timers[name] = null;
+        this.timers[name]?.forEach(stopper => stopper());
+        this.timers[name] = [];
     }
 
     /**

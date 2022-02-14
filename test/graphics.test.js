@@ -395,6 +395,24 @@ describe('Graphics', () => {
                         });
                     });
                 });
+                describe('Timer collision', () => {
+                    it('Multiple timers with the same name will all be stopped', () => {
+                        const timerOneSpy = jasmine.createSpy();
+                        const timerTwoSpy = jasmine.createSpy();
+                        const g = new Graphics();
+                        g.setTimer(timerOneSpy, 15, {}, 'sharedname');
+                        g.setTimer(timerTwoSpy, 15, {}, 'sharedname');
+                        g.stopAllTimers();
+                        return new Promise(resolve => {
+                            setTimeout(() => {
+                                expect(timerOneSpy).not.toHaveBeenCalled();
+                                expect(timerTwoSpy).not.toHaveBeenCalled();
+                                resolve();
+                            }, 100);
+                        });
+                        expect();
+                    });
+                });
             });
         });
     });
