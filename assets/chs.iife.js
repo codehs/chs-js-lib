@@ -2709,10 +2709,9 @@ ${str}`;
         elem._hasAccessibleDOMElement = false;
       }
     }
-    setSize(w, h) {
+    _resize(w, h) {
       w = Math.floor(w);
       h = Math.floor(h);
-      this.fullscreenMode = false;
       const canvas = this.getCanvas();
       const temporaryCanvas = document.createElement("canvas");
       temporaryCanvas.width = canvas.width;
@@ -2730,15 +2729,16 @@ ${str}`;
       context2.scale(this.devicePixelRatio, this.devicePixelRatio);
       temporaryCanvas.remove();
     }
+    setSize(w, h) {
+      this.fullscreenMode = false;
+      this._resize(w, h);
+    }
     setFullscreen() {
       this.fullscreenMode = true;
-      var canvas = this.getCanvas();
+      const canvas = this.getCanvas();
       const width = canvas.parentElement.offsetWidth - FULLSCREEN_PADDING;
       const height = canvas.parentElement.offsetHeight - FULLSCREEN_PADDING;
-      canvas.width = this.devicePixelRatio * width;
-      canvas.height = this.devicePixelRatio * height;
-      canvas.style.width = `${width}px`;
-      canvas.style.height = `${height}px`;
+      this._resize(width, height);
     }
     resetAllTimers() {
       for (var cur in this.timers) {
