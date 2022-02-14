@@ -9,6 +9,7 @@ import {
     Circle,
     Color,
     map,
+    getDistance,
     Group,
     Graphics,
     Keyboard,
@@ -84,6 +85,16 @@ describe('Distributed build', () => {
         }).not.toThrow();
         expect(() => {
             new Sound('C5');
+        }).not.toThrow();
+        expect(() => {
+            let c = new Console();
+            c.clear();
+        }).not.toThrow();
+        expect(getDistance(0, 0, 1, 0)).toEqual(1);
+        expect(map(1, 0, 1, 0, 100)).toEqual(100);
+        expect(() => {
+            let g = new Graphics();
+            g.fullReset();
         }).not.toThrow();
     });
 });

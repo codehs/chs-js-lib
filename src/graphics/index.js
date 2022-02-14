@@ -550,9 +550,7 @@ class GraphicsManager extends Manager {
      */
     resetAllState() {
         this.backgroundColor = null;
-        this.elementPool = [];
-        this.accessibleDOMElements.forEach(element => element.remove);
-        this.accessibleDOMElements = [];
+        this.removeAll();
         this.clickCallback = null;
         this.moveCallback = null;
         this.mouseDownCallback = null;

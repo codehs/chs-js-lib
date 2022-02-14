@@ -303,6 +303,18 @@ describe('Graphics', () => {
             expect(g.elementPoolSize).toEqual(4);
         });
     });
+    describe('fullReset', () => {
+        it('Clears all elements', () => {
+            const g = new Graphics({ shouldUpdate: false });
+            g.add(new Circle(20));
+            expect(g.elementPoolSize).toEqual(1);
+            g.fullReset();
+            expect(g.elementPoolSize).toEqual(0);
+            expect(() => {
+                g.redraw();
+            }).not.toThrow();
+        });
+    });
     describe('setBackgroundColor', () => {
         it('Causes drawBackground to be invoked in redraw()', () => {
             const g = new Graphics();
