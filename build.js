@@ -5,6 +5,7 @@ const watch = process.argv.length >= 3 && process.argv[2] === 'watch';
 const defaultConfig = {
     logLevel: 'info',
     bundle: true,
+    target: 'es2015',
 };
 let configs = [
     {
