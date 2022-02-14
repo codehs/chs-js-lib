@@ -472,15 +472,16 @@ class GraphicsManager extends Manager {
             elem._hasAccessibleDOMElement = false;
         }
     }
+
     /**
-     * Set the size of the canvas.
-     * @param {number} w - Desired width of the canvas.
-     * @param {number} h - Desired height of the canvas.
+     * Resizes the canvas, creating a temporary canvas to prevent flickering and
+     * perform size adjustments based on the devices's devicePixelRatio.
+     * @param {number} w
+     * @param {number} h
      */
-    setSize(w, h) {
+    _resize(w, h) {
         w = Math.floor(w);
         h = Math.floor(h);
-        this.fullscreenMode = false;
         const canvas = this.getCanvas();
         // prevent flickering effect by saving the canvas and immediately drawing back.
         // this will be cleared in redraw(), but it prevents a jarring
@@ -504,17 +505,24 @@ class GraphicsManager extends Manager {
     }
 
     /**
+     * Set the size of the canvas.
+     * @param {number} w - Desired width of the canvas.
+     * @param {number} h - Desired height of the canvas.
+     */
+    setSize(w, h) {
+        this.fullscreenMode = false;
+        this._resize(w, h);
+    }
+
+    /**
      * Set the canvas to take up the entire parent element
      */
     setFullscreen() {
         this.fullscreenMode = true; // when this is true, canvas will resize with parent
-        var canvas = this.getCanvas();
+        const canvas = this.getCanvas();
         const width = canvas.parentElement.offsetWidth - FULLSCREEN_PADDING;
         const height = canvas.parentElement.offsetHeight - FULLSCREEN_PADDING;
-        canvas.width = this.devicePixelRatio * width;
-        canvas.height = this.devicePixelRatio * height;
-        canvas.style.width = `${width}px`;
-        canvas.style.height = `${height}px`;
+        this._resize(width, height);
     }
 
     /**
