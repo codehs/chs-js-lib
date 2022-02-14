@@ -2320,12 +2320,16 @@ ${str}`;
           shouldUpdate = false;
         };
       })();
-      this.timers[name] = stop;
+      if (this.timers[name]) {
+        this.timers[name].push(stop);
+      } else {
+        this.timers[name] = [stop];
+      }
     }
     stopTimer(fn) {
       const name = typeof fn === "function" ? fn.name : fn;
-      this.timers[name]?.();
-      this.timers[name] = null;
+      this.timers[name]?.forEach((stopper) => stopper());
+      this.timers[name] = [];
     }
     stopAllTimers() {
       Object.keys(this.timers).map((name) => {
