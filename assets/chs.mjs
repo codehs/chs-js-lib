@@ -2827,9 +2827,7 @@ var GraphicsManager = class extends manager_default {
   }
   resetAllState() {
     this.backgroundColor = null;
-    this.elementPool = [];
-    this.accessibleDOMElements.forEach((element) => element.remove);
-    this.accessibleDOMElements = [];
+    this.removeAll();
     this.clickCallback = null;
     this.moveCallback = null;
     this.mouseDownCallback = null;
@@ -19855,6 +19853,7 @@ export {
   vector_default as Vector,
   webimage_default as WebImage,
   webvideo_default as WebVideo,
+  getDistance,
   map
 };
 /*! *****************************************************************************

@@ -2828,9 +2828,7 @@ ${str}`;
     }
     resetAllState() {
       this.backgroundColor = null;
-      this.elementPool = [];
-      this.accessibleDOMElements.forEach((element) => element.remove);
-      this.accessibleDOMElements = [];
+      this.removeAll();
       this.clickCallback = null;
       this.moveCallback = null;
       this.mouseDownCallback = null;
@@ -19879,14 +19877,17 @@ ${str}`;
   window.getElementsAt = GraphicsInstance.getElementsAt.bind(GraphicsInstance);
   window.setFullscreen = GraphicsInstance.setFullscreen.bind(GraphicsInstance);
   window.setSize = GraphicsInstance.setSize.bind(GraphicsInstance);
+  window.fullReset = GraphicsInstance.fullReset.bind(GraphicsInstance);
   var ConsoleInstance = new Console();
   window.readLine = ConsoleInstance.readLine.bind(ConsoleInstance);
   window.readInt = ConsoleInstance.readInt.bind(ConsoleInstance);
   window.println = ConsoleInstance.println.bind(ConsoleInstance);
   window.print = ConsoleInstance.print.bind(ConsoleInstance);
+  window.clear = ConsoleInstance.clear.bind(ConsoleInstance);
   var AudioInstance = new AudioManager();
   window.audioChangeMethod = AudioInstance.audioChangeMethod.bind(AudioInstance);
   window.map = map;
+  window.getDistance = getDistance;
 })();
 /*! *****************************************************************************
 Copyright (c) Microsoft Corporation.
