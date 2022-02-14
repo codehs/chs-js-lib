@@ -7,7 +7,7 @@ export { default as Vector } from '../src/datastructures/vector.js';
 export { default as Arc } from '../src/graphics/arc.js';
 export { default as Circle } from '../src/graphics/circle.js';
 export { default as Color } from '../src/graphics/color.js';
-export { map as map } from '../src/graphics/graphics-utils.js';
+export { map, getDistance } from '../src/graphics/graphics-utils.js';
 export { default as Group } from '../src/graphics/group.js';
 export { default as Graphics } from '../src/graphics/index.js';
 export { default as Keyboard } from '../src/graphics/keyboard.js';
