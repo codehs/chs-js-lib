@@ -466,6 +466,9 @@ class GraphicsManager extends Manager {
             elem.stop();
         }
         elem.alive = false;
+        // mark the element as having invalidated sort, so in the case that it's
+        // add()ed later, a re-sort will happen and trigger an update in the pool size
+        elem._sortInvalidated = true;
         if (elem._hasAccessibleDOMElement) {
             const focusButtonID = HIDDEN_KEYBOARD_NAVIGATION_DOM_ELEMENT_ID(elem._id);
             document.getElementById(focusButtonID)?.remove();
@@ -679,7 +682,6 @@ class GraphicsManager extends Manager {
         let elem;
         let sortPool;
         const context = this.getContext();
-        let numberRemovedElementsFound = 0;
         for (let i = 0; i < this.elementPoolSize; i++) {
             elem = this.elementPool[i];
 
@@ -691,15 +693,21 @@ class GraphicsManager extends Manager {
                 elem.draw(context);
             } else {
                 sortPool = true;
-                numberRemovedElementsFound++;
             }
         }
         // sort all dead elements to the end of the pool
         // and all elements with lower layer before elements
         // with higher layer
         if (sortPool) {
-            this.elementPoolSize -= numberRemovedElementsFound;
             this.elementPool.sort((a, b) => b.alive - a.alive || a.layer - b.layer);
+            let lastAliveElementIndex = -1;
+            for (let i = this.elementPool.length - 1; i >= 0; i--) {
+                if (this.elementPool[i].alive) {
+                    lastAliveElementIndex = i;
+                    break;
+                }
+            }
+            this.elementPoolSize = lastAliveElementIndex + 1;
         }
     }
 
