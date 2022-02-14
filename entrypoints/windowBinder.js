@@ -7,7 +7,7 @@ import { default as Vector } from '../src/datastructures/vector.js';
 import { default as Arc } from '../src/graphics/arc.js';
 import { default as Circle } from '../src/graphics/circle.js';
 import { default as Color } from '../src/graphics/color.js';
-import { map } from '../src/graphics/graphics-utils.js';
+import { map, getDistance } from '../src/graphics/graphics-utils.js';
 import { default as Group } from '../src/graphics/group.js';
 import { default as GraphicsManager } from '../src/graphics/index.js';
 import { default as Keyboard } from '../src/graphics/keyboard.js';
@@ -71,14 +71,17 @@ window.getElementAt = GraphicsInstance.getElementAt.bind(GraphicsInstance);
 window.getElementsAt = GraphicsInstance.getElementsAt.bind(GraphicsInstance);
 window.setFullscreen = GraphicsInstance.setFullscreen.bind(GraphicsInstance);
 window.setSize = GraphicsInstance.setSize.bind(GraphicsInstance);
+window.fullReset = GraphicsInstance.fullReset.bind(GraphicsInstance);
 
 const ConsoleInstance = new Console();
 window.readLine = ConsoleInstance.readLine.bind(ConsoleInstance);
 window.readInt = ConsoleInstance.readInt.bind(ConsoleInstance);
 window.println = ConsoleInstance.println.bind(ConsoleInstance);
 window.print = ConsoleInstance.print.bind(ConsoleInstance);
+window.clear = ConsoleInstance.clear.bind(ConsoleInstance);
 
 const AudioInstance = new AudioManager();
 window.audioChangeMethod = AudioInstance.audioChangeMethod.bind(AudioInstance);
 
 window.map = map;
+window.getDistance = getDistance;
