@@ -2775,6 +2775,7 @@ var GraphicsManager = class extends manager_default {
       elem.stop();
     }
     elem.alive = false;
+    elem._sortInvalidated = true;
     if (elem._hasAccessibleDOMElement) {
       const focusButtonID = HIDDEN_KEYBOARD_NAVIGATION_DOM_ELEMENT_ID(elem._id);
       (_a3 = document.getElementById(focusButtonID)) == null ? void 0 : _a3.remove();
@@ -2907,7 +2908,6 @@ var GraphicsManager = class extends manager_default {
     let elem;
     let sortPool;
     const context2 = this.getContext();
-    let numberRemovedElementsFound = 0;
     for (let i = 0; i < this.elementPoolSize; i++) {
       elem = this.elementPool[i];
       if (elem._sortInvalidated) {
@@ -2918,12 +2918,18 @@ var GraphicsManager = class extends manager_default {
         elem.draw(context2);
       } else {
         sortPool = true;
-        numberRemovedElementsFound++;
       }
     }
     if (sortPool) {
-      this.elementPoolSize -= numberRemovedElementsFound;
       this.elementPool.sort((a, b) => b.alive - a.alive || a.layer - b.layer);
+      let lastAliveElementIndex = -1;
+      for (let i = this.elementPool.length - 1; i >= 0; i--) {
+        if (this.elementPool[i].alive) {
+          lastAliveElementIndex = i;
+          break;
+        }
+      }
+      this.elementPoolSize = lastAliveElementIndex + 1;
     }
   }
   setMainTimer() {
