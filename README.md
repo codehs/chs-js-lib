@@ -1,12 +1,14 @@
 [![npm version](https://badge.fury.io/js/chs-js-lib.svg)](https://www.npmjs.com/package/chs-js-lib)
+
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
+
 [![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors-)
+
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 # [The CodeHS JavaScript Library](https://codehs.github.io/chs-js-lib)
 
-This is a JavaScript library for creating interactive programs with text, graphics, and sound. The library is designed for education and has been used to teach JavaScript in [CodeHS](codehs.com) since 2012. The library is designed
-This library is structured as
+This is a JavaScript library for creating interactive programs with text, graphics, and sound. The library is designed for education and has been used to teach JavaScript in [CodeHS](codehs.com) since 2012.
 
 ## Contributing
 
