@@ -1,0 +1,35 @@
+# This workflow will run tests using node and then publish the built package to the CodeHS s3 bucket,
+# so it can be loaded from behind a firewall.
+
+name: Publish Package to S3
+
+on:
+  release:
+    types: [released]
+
+jobs:
+  publish-s3:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 14
+          registry-url: https://registry.npmjs.org/
+
+      - run: npm ci
+      - run: npm run dist
+
+      - name: Package Version
+        id: pkgversion
+        run: echo "::set-output name=PKG_VERSION::`npm view . version`"
+
+      - uses: shallwefootball/s3-upload-action@master
+        name: Upload S3
+        id: S3
+        with:
+          aws_key_id: ${{ secrets.AWS_KEY_ID }}
+          aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY}}
+          aws_bucket: ${{ secrets.AWS_BUCKET }}
+          source_dir: 'dist'
+          destination_dir: 'chs-js-lib/${{ steps.pkgversion.outputs.PKG_VERSION }}/dist/'
