@@ -49,13 +49,20 @@ class Polygon extends Thing {
 
         super.draw(context, () => {
             context.save();
-            context.beginPath();
             const first = this.points[0];
             let current;
+            const bounds = this.getBounds();
+            const width = bounds.right - bounds.left;
+            const height = bounds.bottom - bounds.top;
+            context.translate(
+                -(bounds.left + width * this.anchor.horizontal),
+                -(bounds.top + height * this.anchor.vertical)
+            );
             context.moveTo(first.x, first.y);
-            for (let i = 1; i < this.points.length; i++) {
+            context.beginPath();
+            for (let i = 0; i < this.points.length; i++) {
                 current = this.points[i];
-                context.lineTo(current.x, current.y);
+                context.lineTo(this.x + current.x, this.y + current.y);
             }
             context.closePath();
             context.restore();
@@ -206,6 +213,37 @@ class Polygon extends Thing {
     setPosition(x, y) {
         this.x = x;
         this.y = y;
+    }
+
+    /**
+     * Calculate the bounds of the Polygon.
+     * Polygon is the only subclass of Thing that needs to have its bounds manually calculated,
+     * since it has the unusual property of having its geometry exist entirely separate from its
+     * position.
+     */
+    _updateBounds() {
+        let minX = Infinity;
+        let maxX = -Infinity;
+        let minY = Infinity;
+        let maxY = -Infinity;
+
+        this.points.forEach(({ x, y }) => {
+            minX = Math.min(x, minX);
+            minY = Math.min(y, minY);
+            maxX = Math.max(x, maxX);
+            maxY = Math.max(y, maxY);
+        });
+
+        const width = maxX - minX;
+        const height = maxY - minY;
+        this.bounds = {
+            left: this.x + minX - this.anchor.horizontal * width,
+            right: this.x + maxX - this.anchor.horizontal * width,
+            top: this.y + minY - this.anchor.vertical * height,
+            bottom: this.y + maxY - this.anchor.vertical * height,
+        };
+        this._lastCalculatedBoundsID++;
+        this._boundsInvalidated = false;
     }
 }
 
