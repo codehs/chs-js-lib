@@ -280,10 +280,12 @@ class Group extends Thing {
         };
         const width = maxX - minX;
         const height = maxY - minY;
-        this._hiddenCanvas.width = this.devicePixelRatio * width;
-        this._hiddenCanvas.height = this.devicePixelRatio * height;
-        this._hiddenCanvas.style.width = `${width}px`;
-        this._hiddenCanvas.style.height = `${height}px`;
+        const canvasWidth = Math.ceil(width);
+        const canvasHeight = Math.ceil(height);
+        this._hiddenCanvas.width = this.devicePixelRatio * canvasWidth;
+        this._hiddenCanvas.height = this.devicePixelRatio * canvasHeight;
+        this._hiddenCanvas.style.width = `${canvasWidth}px`;
+        this._hiddenCanvas.style.height = `${canvasHeight}px`;
         this._hiddenContext.scale(this.devicePixelRatio, this.devicePixelRatio);
         this._lastCalculatedBoundsID++;
         this._boundsInvalidated = false;

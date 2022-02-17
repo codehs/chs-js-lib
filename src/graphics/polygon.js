@@ -49,7 +49,6 @@ class Polygon extends Thing {
 
         super.draw(context, () => {
             context.save();
-            context.translate(-this.x, -this.y);
             context.beginPath();
             const first = this.points[0];
             let current;
@@ -79,8 +78,8 @@ class Polygon extends Thing {
      * @returns {boolean}
      */
     _containsPoint(x, y) {
-        x += this.width * this.anchor.horizontal;
-        y += this.height * this.anchor.vertical;
+        x += this.width * this.anchor.horizontal - this.x;
+        y += this.height * this.anchor.vertical - this.y;
         // https://www.eecs.umich.edu/courses/eecs380/HANDOUTS/PROJ2/InsidePoly.html
         // solution 3 from above
         let previousOrientation = -1;
@@ -172,15 +171,13 @@ class Polygon extends Thing {
 
     /**
      * Moves the entire polygon.
-     * This shifts each vertex in the Polygon by dx, dy.
      * @example
      * const p = new Polygon();
      * p.addPoint(20, 20);
      * p.move(10, 10);
-     * p.points[0] === {x: 30, y: 30};
      *
-     * @param {number} dx - The change in x coordinate of all starting and ending points.
-     * @param {number} dy - The change in y coordinate of all starting and ending points.
+     * @param {number} dx - The change in x coordinate of the polygon.
+     * @param {number} dy - The change in y coordinate of the polygon.
      */
     move(dx, dy) {
         if (arguments.length !== 2) {
@@ -197,23 +194,18 @@ class Polygon extends Thing {
             );
         }
 
-        for (let i = 0; i < this.points.length; i++) {
-            this.points[i].x += dx;
-            this.points[i].y += dy;
-        }
         this.x += dx;
         this.y += dy;
     }
 
     /**
-     * Set the position of the polygon by moving all of its points.
+     * Set the position of the Polygon.
      * @param {number} x
      * @param {number} y
      */
     setPosition(x, y) {
-        const dx = x - this.x;
-        const dy = y - this.y;
-        this.move(dx, dy);
+        this.x = x;
+        this.y = y;
     }
 }
 
