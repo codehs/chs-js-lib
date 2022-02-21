@@ -1509,7 +1509,8 @@ ${str}`;
         context2.strokeStyle = "red";
         context2.fill();
         const bounds = this.getBounds();
-        context2.strokeRect(0, 0, bounds.right - bounds.left, bounds.bottom - bounds.top);
+        context2.translate(-drawX, -drawY);
+        context2.strokeRect(bounds.left, bounds.top, bounds.right - bounds.left, bounds.bottom - bounds.top);
       }
       context2.restore();
     }
@@ -3441,6 +3442,28 @@ ${str}`;
       const dx = x - this.x;
       const dy = y - this.y;
       this.move(dx, dy);
+    }
+    _updateBounds() {
+      let minX = Infinity;
+      let maxX = -Infinity;
+      let minY = Infinity;
+      let maxY = -Infinity;
+      this.points.forEach(({ x, y }) => {
+        minX = Math.min(minX, x);
+        maxX = Math.max(maxX, x);
+        minY = Math.min(minY, y);
+        maxY = Math.max(maxY, y);
+      });
+      const width = maxX - minX;
+      const height = maxY - minY;
+      this.bounds = {
+        left: minX - this.anchor.horizontal * width,
+        right: maxX - this.anchor.horizontal * width,
+        top: minY - this.anchor.vertical * height,
+        bottom: maxY - this.anchor.vertical * height
+      };
+      this._boundsInvalidated = false;
+      this._lastCalculatedBoundsID++;
     }
   };
   var polygon_default = Polygon;
