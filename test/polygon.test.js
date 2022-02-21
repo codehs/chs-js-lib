@@ -88,4 +88,26 @@ describe('Polygon', () => {
             ]);
         });
     });
+    describe('Bounds', () => {
+        it('Handles negative points', () => {
+            const p = new Polygon();
+            p.addPoint(-30, 0);
+            p.addPoint(0, 30);
+            p.addPoint(30, 30);
+
+            expect(p.getBounds()).toEqual({
+                top: 0,
+                left: -30,
+                bottom: 30,
+                right: 30,
+            });
+            p.setAnchor({ vertical: 0.5, horizontal: 0.5 });
+            expect(p.getBounds()).toEqual({
+                top: -15,
+                left: -60,
+                bottom: 15,
+                right: 0,
+            });
+        });
+    });
 });
