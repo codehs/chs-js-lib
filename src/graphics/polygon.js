@@ -215,6 +215,35 @@ class Polygon extends Thing {
         const dy = y - this.y;
         this.move(dx, dy);
     }
+
+    /**
+     * Polygons manually calculate their bounds with their own implementation of _updateBounds
+     * (rather than the implementation in the Thing superclass) because Polygon's can have
+     * negative points which draw to the left of their x value or above their y value.
+     * @private
+     */
+    _updateBounds() {
+        let minX = Infinity;
+        let maxX = -Infinity;
+        let minY = Infinity;
+        let maxY = -Infinity;
+        this.points.forEach(({ x, y }) => {
+            minX = Math.min(minX, x);
+            maxX = Math.max(maxX, x);
+            minY = Math.min(minY, y);
+            maxY = Math.max(maxY, y);
+        });
+        const width = maxX - minX;
+        const height = maxY - minY;
+        this.bounds = {
+            left: minX - this.anchor.horizontal * width,
+            right: maxX - this.anchor.horizontal * width,
+            top: minY - this.anchor.vertical * height,
+            bottom: maxY - this.anchor.vertical * height,
+        };
+        this._boundsInvalidated = false;
+        this._lastCalculatedBoundsID++;
+    }
 }
 
 export default Polygon;

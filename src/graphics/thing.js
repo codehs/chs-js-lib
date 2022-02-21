@@ -482,7 +482,13 @@ class Thing {
             context.strokeStyle = 'red';
             context.fill();
             const bounds = this.getBounds();
-            context.strokeRect(0, 0, bounds.right - bounds.left, bounds.bottom - bounds.top);
+            context.translate(-drawX, -drawY);
+            context.strokeRect(
+                bounds.left,
+                bounds.top,
+                bounds.right - bounds.left,
+                bounds.bottom - bounds.top
+            );
         }
 
         context.restore();
