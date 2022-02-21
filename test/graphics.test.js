@@ -302,6 +302,19 @@ describe('Graphics', () => {
             expect(g.elementPool).toEqual([a, a, b, c]);
             expect(g.elementPoolSize).toEqual(4);
         });
+        it('Removing an undefined element does not throw', () => {
+            const g = new Graphics({ shouldUpdate: false });
+            let el;
+            expect(() => {
+                g.remove(el);
+            }).not.toThrow();
+        });
+        it('Removing a non-Thing does not throw', () => {
+            const g = new Graphics({ shouldUpdate: false });
+            expect(() => {
+                g.remove(Circle);
+            }).not.toThrow();
+        });
     });
     describe('fullReset', () => {
         it('Clears all elements', () => {

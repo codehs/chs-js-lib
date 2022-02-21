@@ -462,6 +462,10 @@ class GraphicsManager extends Manager {
      * @param {Thing} elem - The element to be removed from the canvas.
      */
     remove(elem) {
+        if (!(elem instanceof Thing)) {
+            return;
+        }
+
         if (elem instanceof WebVideo) {
             elem.stop();
         }
