@@ -2771,6 +2771,9 @@ var GraphicsManager = class extends manager_default {
   }
   remove(elem) {
     var _a3;
+    if (!(elem instanceof thing_default)) {
+      return;
+    }
     if (elem instanceof webvideo_default) {
       elem.stop();
     }
