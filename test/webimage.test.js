@@ -182,6 +182,32 @@ describe('WebImage', () => {
             expect(topLeftPixel).toEqual([0, 0, 255, 255]);
         });
     });
+    describe('setImage', () => {
+        it('Allows replacing the image of the WebImage', () => {
+            const g = new Graphics({ shouldUpdate: false });
+            const img = new WebImage('www.codehs.com/doesnt-matter.gif');
+            img.setImage(RGBURL);
+            g.add(img);
+            img.loaded(() => {
+                g.redraw();
+                expect(g.getPixel(0, 0)).toEqual([255, 0, 0, 255]);
+            });
+        });
+        it('Cancels the original onload of the image', () => {
+            const g = new Graphics({ shouldUpdate: false });
+            const img = new WebImage('www.codehs.com/doesnt-matter.gif');
+            const firstLoadedSpy = jasmine.createSpy();
+            // we have to inspect here to get the actual onload event
+            img.image.onload = firstLoadedSpy;
+            img.setImage(RGBURL);
+            g.add(img);
+            img.loaded(() => {
+                g.redraw();
+                expect(g.getPixel(0, 0)).toEqual([255, 0, 0, 255]);
+                expect(firstLoadedSpy).not.toHaveBeenCalled();
+            });
+        });
+    });
     describe('setRed/Blue/Green/Alpha', () => {
         it('Updates the underlying data', () => {
             const img = new WebImage(RGBURL);
