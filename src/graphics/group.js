@@ -1,7 +1,5 @@
 import Thing, { rotatePointAboutPosition } from './thing.js';
 
-/** @module Group */
-
 /**
  * Represents a collection of graphical elements that can be acted on together.
  * @class

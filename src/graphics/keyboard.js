@@ -1,56 +1,123 @@
 /** @module Keyboard */
-// TODO: make this a class for JSdoc purposes
-// and consistency within the lib
 
-/** Constants for key values. */
-const Keyboard = {
-    LEFT: 37,
-    UP: 38,
-    RIGHT: 39,
-    DOWN: 40,
-    ENTER: 13,
-    SHIFT: 16,
-    SPACE: 32,
-    BACKSPACE: 8,
-    TAB: 9,
-    CTRL: 17,
-    ALT: 18,
-    CAPS_LOCK: 20,
-    LEFT_COMMAND: 91,
-    LEFT_WINDOW: 91,
-    RIGHT_WINDOW: 92,
-    RIGHT_COMMAND: 93,
-    SELECT: 93,
-};
+/**
+ * Constant for the left arrow key
+ * @type {number}
+ */
+export const LEFT = 37;
+/**
+ * Constant for the up arrow key
+ * @type {number}
+ */
+export const UP = 38;
+/**
+ * Constant for the right arrow key
+ * @type {number}
+ */
+export const RIGHT = 39;
+/**
+ * Constant for the down arrow key
+ * @type {number}
+ */
+export const DOWN = 40;
+/**
+ * Constant for the enter key
+ * @type {number}
+ */
+export const ENTER = 13;
+/**
+ * Constant for the shift key
+ * @type {number}
+ */
+export const SHIFT = 16;
+/**
+ * Constant for the space key
+ * @type {number}
+ */
+export const SPACE = 32;
+/**
+ * Constant for the backspace key
+ * @type {number}
+ */
+export const BACKSPACE = 8;
+/**
+ * Constant for the tab key
+ * @type {number}
+ */
+export const TAB = 9;
+/**
+ * Constant for the control key
+ * @type {number}
+ */
+export const CTRL = 17;
+/**
+ * Constant for the alt key
+ * @type {number}
+ */
+export const ALT = 18;
+/**
+ * Constant for the caps lock key
+ * @type {number}
+ */
+export const CAPS_LOCK = 20;
+/**
+ * Constant for the left command key
+ * @type {number}
+ */
+export const LEFT_COMMAND = 91;
+/**
+ * Constant for the left window key
+ * @type {number}
+ */
+export const LEFT_WINDOW = 91;
+/**
+ * Constant for the right windowkey
+ * @type {number}
+ */
+export const RIGHT_WINDOW = 92;
+/**
+ * Constant for the right command key
+ * @type {number}
+ */
+export const RIGHT_COMMAND = 93;
+/**
+ * Constant for the select key
+ * @type {number}
+ */
+export const SELECT = 93;
 
-/** Modifiers and keys that don't produce or change input. */
-Keyboard.nonEditingKeys = [
-    Keyboard.LEFT,
-    Keyboard.RIGHT,
-    Keyboard.UP,
-    Keyboard.DOWN,
-    Keyboard.CTRL,
-    Keyboard.SHIFT,
-    Keyboard.ALT,
-    Keyboard.CAPS_LOCK,
-    Keyboard.LEFT_COMMAND,
-    Keyboard.RIGHT_COMMAND,
-    Keyboard.SELECT,
-    Keyboard.LEFT_WINDOW,
-    Keyboard.RIGHT_WINDOW,
+/**
+ * Modifiers and keys that don't produce or change input.
+ * @type {Array.<number>}
+ */
+export const nonEditingKeys = [
+    LEFT,
+    RIGHT,
+    UP,
+    DOWN,
+    CTRL,
+    SHIFT,
+    ALT,
+    CAPS_LOCK,
+    LEFT_COMMAND,
+    RIGHT_COMMAND,
+    SELECT,
+    LEFT_WINDOW,
+    RIGHT_WINDOW,
 ];
 
 /**
  * Get the keyboard code for a numeric digit.
- * @example
- * const code3 = Keyboard.digit(3);
  * @param {number} digit - The number value to be converted to key code.
  * @return {number} Key code corresponding to digit.
+ * @example
+ * const code3 = Keyboard.digit(3);
+ *
  */
-Keyboard.digit = function (dig) {
+export function digit(dig) {
     dig = dig % 10;
     return dig + 48;
-};
+}
 
 /**
  * Get the keyboard code for a character.
@@ -61,12 +128,12 @@ Keyboard.digit = function (dig) {
  * @param {string} letter - The letter to be converted to key code.
  * @return {number} Key code corresponding to letter.
  */
-Keyboard.letter = function (letter) {
+export function letter(letter) {
     if (letter.length !== 1) {
         return -1;
     }
     return letter.toUpperCase().charCodeAt(0);
-};
+}
 
 /**
  * Check if a key is an editing key.
@@ -74,8 +141,6 @@ Keyboard.letter = function (letter) {
  * @param {number} keyCode - Key code corresponding to key pressed.
  * @return {boolean} Whether or not the key is an editing key.
  */
-Keyboard.isEditingKey = function (keyCode) {
-    return Keyboard.nonEditingKeys.indexOf(keyCode) === -1;
-};
-
-export default Keyboard;
+export function isEditingKey(keyCode) {
+    return nonEditingKeys.indexOf(keyCode) === -1;
+}

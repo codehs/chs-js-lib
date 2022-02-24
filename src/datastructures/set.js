@@ -1,3 +1,7 @@
+/**
+ * @class
+ * @extends Set
+ */
 class ExtendedSet extends Set {
     /**
      * Returns whether the set is empty.

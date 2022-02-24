@@ -8,7 +8,7 @@ import Thing, { rotatePointAboutPosition } from './thing.js';
  * @param {number} x2 - x coordinate of end point of line.
  * @param {number} y2 - y coordinate of end point of line.
  */
-export default class Line extends Thing {
+class Line extends Thing {
     type = 'Line';
 
     constructor(x1, y1, x2, y2) {
@@ -129,7 +129,6 @@ export default class Line extends Thing {
 
     /**
      * Sets the color of a line.
-     *
      * @param {Color} color - Sets the color of the line.
      */
     setColor(color) {
@@ -322,7 +321,7 @@ export default class Line extends Thing {
  * @param  {number} rotation radians rotated (Expected in radians)
  * @return {array}          List of coordinates of both points.
  */
-export const getRotatedPoints = function (x1, y1, x2, y2, rotation) {
+export function getRotatedPoints(x1, y1, x2, y2, rotation) {
     var midX = (x1 + x2) / 2;
     var midY = (y1 + y2) / 2;
     var sinAngle = Math.sin(rotation);
@@ -346,4 +345,6 @@ export const getRotatedPoints = function (x1, y1, x2, y2, rotation) {
     y2 = newY + midY;
 
     return [x1, y1, x2, y2];
-};
+}
+
+export default Line;

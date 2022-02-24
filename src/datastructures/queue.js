@@ -1,6 +1,8 @@
-'use strict';
-
-export default class Queue extends Array {
+/**
+ @class
+ @extends Array
+ */
+class Queue extends Array {
     /**
      * Get the number of objects in the queue.
      * @returns {number} Number of elements in the queue.
@@ -52,3 +54,5 @@ export default class Queue extends Array {
         return this.length === 0;
     }
 }
+
+export default Queue;

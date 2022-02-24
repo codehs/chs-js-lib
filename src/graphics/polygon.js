@@ -1,7 +1,5 @@
 import Thing from './thing.js';
 
-/** @module Polygon */
-
 /**
  * A polygon is a shape with any number of points, and will
  * be drawn as a continuous shape contained by those points.

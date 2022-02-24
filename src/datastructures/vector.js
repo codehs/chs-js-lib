@@ -1,5 +1,8 @@
 import { degreesToRadians, radiansToDegrees } from '../graphics/arc.js';
 
+/**
+ * @class
+ */
 class Vector {
     /**
      * @constructor
@@ -27,13 +30,10 @@ class Vector {
 
     /**
      * Add a vector to this one, modifying this one.
-     * @method add
-     * @param {number} x   the x component of the vector to be added
+     * @param {number|Vector|number[]} x   the x component of the vector to be added.
+     *  Alternatively, a Vector or list of numbers to add.
      * @param {number} [y] the y component of the vector to be added
      * @param {number} [z] the z component of the vector to be added
-     *
-     * @method add
-     * @param {Vector|number[]} vector vector or array to add
      * @returns {Vector} this vector, modified
      */
     add(x, y, z) {
@@ -57,13 +57,11 @@ class Vector {
 
     /**
      * Subtract a vector from this one, modifying this one.
-     * @method subtract
-     * @param {number} x   the x component of the vector to be subtracted
+     * @param {number|Vector|number[]} x   the x component of the vector to be subtracted
+     *  Alternatively, a Vector or list of numbers to substract.
      * @param {number} [y] the y component of the vector to be subtracted
      * @param {number} [z] the z component of the vector to be subtracted
      *
-     * @method subtract
-     * @param {Vector|number[]} vector vector or array to subtract
      * @returns {Vector} this vector, modified
      */
     subtract(x, y, z) {
@@ -87,13 +85,12 @@ class Vector {
 
     /**
      * Multiply this vector by a vector, scalar, or array, modifying it in place and returning it.
-     * @method multiply
-     * @param {number} x   scalar to multiply the x component by
+     * @param {number|Vector|number[]} x   scalar to multiply the x component by
+     *  Alternatively, a Vector or list of numbers to multiply
      * @param {number} [y] scalar to multiply the y component by
      * @param {number} [z] scalar to multiply the z component by
      *
-     * @method add
-     * @param {Vector|number[]} vector vector or array to multiply
+     k
      * @returns {Vector} this vector, modified
      */
     multiply(x, y, z) {

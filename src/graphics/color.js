@@ -38,6 +38,7 @@ export default class Color {
     /**
      * Construct a new color.
      *
+     * @constructor
      * @param {number} r
      * @param {number} g
      * @param {number} b

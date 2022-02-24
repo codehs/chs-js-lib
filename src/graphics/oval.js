@@ -1,12 +1,10 @@
 import Thing from './thing.js';
 
-/** @module Oval */
-
 /**
  * @class Oval
  * @extends Thing
  */
-export default class Oval extends Thing {
+class Oval extends Thing {
     type = 'Oval';
     anchor = { vertical: 0.5, horizontal: 0.5 };
 
@@ -130,3 +128,5 @@ export default class Oval extends Thing {
         return result <= 1;
     }
 }
+
+export default Oval;

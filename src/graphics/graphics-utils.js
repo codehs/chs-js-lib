@@ -6,9 +6,9 @@
  * @param {number} y2
  * @returns {number} Distance between the two points.
  */
-export const getDistance = function (x1, y1, x2, y2) {
+export function getDistance(x1, y1, x2, y2) {
     return Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2));
-};
+}
 
 /**
  *
@@ -19,6 +19,6 @@ export const getDistance = function (x1, y1, x2, y2) {
  * @param {number} end2 - Upper bound of the desired range
  * @returns {number}
  */
-export const map = (value, start1, end1, start2, end2) => {
+export function map(value, start1, end1, start2, end2) {
     return ((value - start1) / (end1 - start1)) * (end2 - start2) + start2;
-};
+}

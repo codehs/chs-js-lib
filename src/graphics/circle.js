@@ -2,8 +2,6 @@ import Thing from './thing.js';
 import Color from './color.js';
 import { getDistance } from './graphics-utils.js';
 
-/** @module Circle */
-
 /**
  * A circle defined by its radius.
  * @extends Thing

@@ -618,11 +618,11 @@ class Thing {
  * @param {number} angle - angle in radians
  * @returns {number[]} - [x, y] rotated point
  */
-export const rotatePointAboutPosition = ([x, y], [rotX, rotY], angle) => {
+export function rotatePointAboutPosition([x, y], [rotX, rotY], angle) {
     return [
         (x - rotX) * Math.cos(angle) - (y - rotY) * Math.sin(angle) + rotX,
         (x - rotX) * Math.sin(angle) + (y - rotY) * Math.cos(angle) + rotY,
     ];
-};
+}
 
 export default Thing;

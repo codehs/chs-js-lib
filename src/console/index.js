@@ -10,7 +10,7 @@
  *
  */
 
-export default class Console {
+class Console {
     /**
      * Initialize the console class, additionally configuring any event handlers.
      * @constructor
@@ -242,3 +242,5 @@ export default class Console {
         return this.readNumber(str, parseFloat, 'a float');
     }
 }
+
+export default Console;

@@ -1,8 +1,6 @@
 import Thing from './thing.js';
 import { getDistance } from './graphics-utils.js';
 
-/** @module Arc */
-
 /**
  * An arc is a continuous slice of a circle described by the position of its center, its radius,
  * and the angles it is drawn between
