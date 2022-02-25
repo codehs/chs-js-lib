@@ -58,6 +58,7 @@ window.mouseDownMethod = GraphicsInstance.mouseDownMethod.bind(GraphicsInstance)
 window.mouseDragMethod = GraphicsInstance.mouseDragMethod.bind(GraphicsInstance);
 window.mouseUpMethod = GraphicsInstance.mouseUpMethod.bind(GraphicsInstance);
 window.mouseMoveMethod = GraphicsInstance.mouseMoveMethod.bind(GraphicsInstance);
+window.waitForClick = GraphicsInstance.waitForClick.bind(GraphicsInstance);
 window.stopAllTimers = GraphicsInstance.stopAllTimers.bind(GraphicsInstance);
 window.setMainTimer = GraphicsInstance.setMainTimer.bind(GraphicsInstance);
 window.stopTimer = GraphicsInstance.stopTimer.bind(GraphicsInstance);

@@ -11,11 +11,15 @@ import {
 } from 'tone';
 import { getAudioContext } from './audioContext';
 
-export default class Sound {
+/**
+ * @class
+ */
+class Sound {
     type = 'Sound';
 
     /**
      * Construct a new Sound.
+     * @constructor
      * Optionally set the frequency and the oscillator type.
      *
      * @param {number|string} frequency - Either a number (Hertz) or note ("C#4" for middle C Sharp)
@@ -220,3 +224,5 @@ export default class Sound {
         }
     }
 }
+
+export default Sound;
