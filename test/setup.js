@@ -14,6 +14,7 @@ beforeEach(() => {
 
 afterEach(() => {
     document.body.innerHTML = '';
+    window.devicePixelRatio = 1;
     Object.entries(GraphicsInstances).forEach(([id, instance]) => {
         instance.cleanup();
     });

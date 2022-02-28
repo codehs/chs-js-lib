@@ -23,7 +23,7 @@ class Group extends Thing {
      * @private
      * @type {number}
      */
-    devicePixelRatio = window.devicePixelRatio ?? 1;
+    devicePixelRatio = Math.ceil(window.devicePixelRatio) ?? 1;
 
     /**
      * Constructs a new Group.
