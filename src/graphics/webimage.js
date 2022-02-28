@@ -72,9 +72,14 @@ class WebImage extends Thing {
         this._hiddenCanvas = document.createElement('canvas');
         this._hiddenCanvas.width = 1;
         this._hiddenCanvas.height = 1;
-
+        if (this.image) {
+            // if this WebImage had an existing image, it may have an unresolved onload callback.
+            // dont allow original callback to resolve, since it might attempt to load pixel data
+            // from a potentially empty canvas.
+            this.image.onload = null;
+        }
         this.image = new Image();
-        this.image.crossOrigin = true;
+        this.image.crossOrigin = 'anonymous';
         this.image.src = filename;
         this.filename = filename;
         this.width = null;
