@@ -2192,7 +2192,7 @@ ${str}`;
       super();
       __publicField(this, "type", "Group");
       __publicField(this, "elements");
-      __publicField(this, "devicePixelRatio", (_a = window.devicePixelRatio) != null ? _a : 1);
+      __publicField(this, "devicePixelRatio", (_a = Math.ceil(window.devicePixelRatio)) != null ? _a : 1);
       this.elements = elements;
       this._hiddenCanvas = document.createElement("canvas");
       this._hiddenCanvas.width = 1;
@@ -2533,7 +2533,7 @@ ${str}`;
       __publicField(this, "elementPool", []);
       __publicField(this, "elementPoolSize", 0);
       __publicField(this, "accessibleDOMElements", []);
-      __publicField(this, "devicePixelRatio", (_a2 = window.devicePixelRatio) != null ? _a2 : 1);
+      __publicField(this, "devicePixelRatio", (_a2 = Math.ceil(window.devicePixelRatio)) != null ? _a2 : 1);
       __publicField(this, "onKeyDown", (e) => {
         var _a3;
         const index = pressedKeys.indexOf(e.keyCode);
