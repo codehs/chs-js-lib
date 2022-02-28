@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css" />
+        <link rel="stylesheet" href="/chs-js-lib/assets/style.css" />
+        <script type="text/javascript" src="/chs-js-lib/assets/main.js"></script>
+        <title>WebImage - setImage</title>
+    </head>
+    <body>
+        <header>
+            <h1>WebImage - setImage</h1>
+            <nav>
+                <a href="/chs-js-lib/">Home</a>
+                <a href="/chs-js-lib/examples">Examples</a>
+                <a href="/chs-js-lib/docs">Documentation</a>
+            </nav>
+        </header>
+
+        <main>
+            <div style="display: flex">
+                <canvas id="game" width="500" height="500"></canvas>
+            </div>
+            <script src="/chs-js-lib/assets/chs.iife.js"></script>
+            <script id="code" type="module">
+                var img = new WebImage(
+                    'https://codehs.com/uploads/056e56f7b32cdc9ed21c681c31166108'
+                );
+                img.setAnchor({ vertical: 0.5, horizontal: 0.5 });
+                img.setPosition(getWidth() / 2, getHeight() / 2);
+                add(img);
+
+                img.setImage('https://codehs.com/uploads/1e38851d76e7691d923a3d3f3f7eae1d');
+            </script>
+            <p>
+                You can replace the image content of a <code>WebImage</code> using
+                <code>setImage()</code>
+            </p>
+        </main>
+    </body>
+</html>

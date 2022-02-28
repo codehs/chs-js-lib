@@ -3657,8 +3657,11 @@ ${str}`;
       this._hiddenCanvas = document.createElement("canvas");
       this._hiddenCanvas.width = 1;
       this._hiddenCanvas.height = 1;
+      if (this.image) {
+        this.image.onload = null;
+      }
       this.image = new Image();
-      this.image.crossOrigin = true;
+      this.image.crossOrigin = "anonymous";
       this.image.src = filename;
       this.filename = filename;
       this.width = null;
