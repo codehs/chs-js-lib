@@ -20,6 +20,14 @@ describe('Graphics', () => {
             expect(canvas.width).toEqual(20 * window.devicePixelRatio);
             expect(canvas.height).toEqual(20 * window.devicePixelRatio);
         });
+        it('Rounds devicePixelRatio to prevent floating point sizes', () => {
+            window.devicePixelRatio = 0.89999;
+            const g = new Graphics({ shouldUpdate: false });
+            g.setSize(20, 20);
+            const canvas = document.querySelector('canvas');
+            expect(canvas.width).toEqual(20);
+            expect(canvas.height).toEqual(20);
+        });
     });
     describe('setFullscreen', () => {
         it("Updates the canvas' size to the parent's size less padding less border", () => {

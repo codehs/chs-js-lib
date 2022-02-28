@@ -34,7 +34,7 @@ class GraphicsManager extends Manager {
      * @private
      * @type {number}
      */
-    devicePixelRatio = window.devicePixelRatio ?? 1;
+    devicePixelRatio = Math.ceil(window.devicePixelRatio) ?? 1;
 
     /**
      * Set up an instance of the graphics library.
