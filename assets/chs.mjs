@@ -3792,6 +3792,28 @@ var WebImage = class extends thing_default {
 };
 var webimage_default = WebImage;
 
+// src/graphics/imagelibrary.js
+var imagelibrary_default = {
+  Characters: {
+    penguin: "https://static.codehs.com/img/library/characters/penguin.png",
+    monkey: "https://static.codehs.com/img/library/characters/monkey.jpg",
+    leopard: "https://static.codehs.com/img/library/characters/leopard.jpg",
+    chameleon: "https://static.codehs.com/img/library/characters/chameleon.jpg",
+    lizard: "https://static.codehs.com/img/library/characters/lizard.jpg",
+    butterfly: "https://static.codehs.com/img/library/characters/butterfly.jpg",
+    secretMessage: "https://static.codehs.com/img/library/characters/secretMessage.png"
+  },
+  Objects: {
+    icicle: "https://static.codehs.com/img/library/objects/icicle.png",
+    helicopter: "https://static.codehs.com/img/library/objects/helicopter.png",
+    asteroid: "https://static.codehs.com/img/library/objects/asteroid.png",
+    soccerBall: "https://static.codehs.com/img/library/objects/soccerBall.png"
+  },
+  Landscapes: {
+    flowers: "https://static.codehs.com/img/library/landscapes/flowers.jpg"
+  }
+};
+
 // src/sound/audioContext.js
 var getAudioContext = () => {
   const ContextClass = window.AudioContext || window.webkitAudioContext || window.mozAudioContext || window.oAudioContext || window.msAudioContext;
@@ -19868,6 +19890,7 @@ export {
   graphics_default as Graphics,
   grid_default as Grid,
   group_default as Group,
+  imagelibrary_default as ImageLibrary,
   keyboard_default as Keyboard,
   Line,
   Oval,

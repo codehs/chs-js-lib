@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css" />
+        <link rel="stylesheet" href="/chs-js-lib/assets/style.css" />
+        <script type="text/javascript" src="/chs-js-lib/assets/main.js"></script>
+        <title>WebImage - ImageLibrary</title>
+    </head>
+    <body>
+        <header>
+            <h1>WebImage - ImageLibrary</h1>
+            <nav>
+                <a href="/chs-js-lib/">Home</a>
+                <a href="/chs-js-lib/examples">Examples</a>
+                <a href="/chs-js-lib/docs">Documentation</a>
+            </nav>
+        </header>
+
+        <main>
+            <div style="display: flex">
+                <canvas id="game" width="480" height="200"></canvas>
+            </div>
+            <script src="/chs-js-lib/assets/chs.iife.js"></script>
+            <script id="code" type="module">
+                const soccerBall = new WebImage(ImageLibrary.Objects.soccerBall);
+                add(soccerBall);
+            </script>
+            <p>
+                The library provides some images in the <code>ImageLibrary</code> which you can use
+                to construct WebImages.
+            </p>
+        </main>
+    </body>
+</html>
