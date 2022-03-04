@@ -1,4 +1,5 @@
 import Graphics from '../src/graphics/index.js';
+import Rectangle from '../src/graphics/rectangle.js';
 import Thing from '../src/graphics/thing.js';
 
 describe('Thing', () => {
@@ -19,6 +20,22 @@ describe('Thing', () => {
             g.redraw();
             expect(g.elementPool.indexOf(t1)).toBe(1);
             expect(g.elementPool.indexOf(t2)).toBe(0);
+        });
+        it('Forces a re-sort before the next draw', () => {
+            const g = new Graphics({ shouldUpdate: false });
+            const rRed = new Rectangle(5, 5);
+            const rBlue = new Rectangle(5, 5);
+            rRed.setColor('red');
+            rBlue.setColor('blue');
+            g.add(rRed);
+            g.add(rBlue);
+            g.redraw();
+            // before changing layer, the blue square is on top
+            expect(g.getPixel(0, 0)).toEqual([0, 0, 255, 255]);
+            rRed.layer = 2;
+            g.redraw();
+            // after changing layer, on very next draw the red square is on top
+            expect(g.getPixel(0, 0)).toEqual([255, 0, 0, 255]);
         });
         it('Layering works through removal', () => {
             const g = new Graphics();

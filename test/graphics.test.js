@@ -238,6 +238,18 @@ describe('Graphics', () => {
             g.add(c);
             expect(g.elementPool[0]).toBe(c);
         });
+        it('Forces a re-sort on next draw', () => {
+            const g = new Graphics({ shouldUpdate: false });
+            const rTop = new Rectangle(5, 5);
+            const rBottom = new Rectangle(5, 5);
+            rTop.layer = 2;
+            rTop.setColor('red');
+            rBottom.setColor('blue');
+            g.add(rTop);
+            g.add(rBottom);
+            g.redraw();
+            expect(g.getPixel(0, 0)).toEqual([255, 0, 0, 255]);
+        });
     });
     describe('Removing', () => {
         it("Doesn't remove the element from the internal element pool, only marks it as not alive", () => {
@@ -322,6 +334,20 @@ describe('Graphics', () => {
             expect(() => {
                 g.remove(Circle);
             }).not.toThrow();
+        });
+        it('Removing an element causes it to be gone in the very next draw', () => {
+            const g = new Graphics({ shouldUpdate: false });
+            const rRed = new Rectangle(5, 5);
+            const rBlue = new Rectangle(5, 5);
+            rRed.setColor('red');
+            rBlue.setColor('blue');
+            g.add(rRed);
+            g.add(rBlue);
+            g.redraw();
+            expect(g.getPixel(0, 0)).toEqual([0, 0, 255, 255]);
+            g.remove(rBlue);
+            g.redraw();
+            expect(g.getPixel(0, 0)).toEqual([255, 0, 0, 255]);
         });
     });
     describe('fullReset', () => {

@@ -35,6 +35,14 @@ class GraphicsManager extends Manager {
      * @type {number}
      */
     devicePixelRatio = Math.ceil(window.devicePixelRatio) ?? 1;
+    /**
+     * Used to record when a resort is necessary as a result of adding an element with
+     * an invalidated sort. Sorting will be performed on next redraw when _sortInvalidated
+     * is true.
+     * @type {boolean}
+     * @private
+     */
+    _sortInvalidated = false;
 
     /**
      * Set up an instance of the graphics library.
@@ -162,6 +170,9 @@ class GraphicsManager extends Manager {
     add(elem) {
         elem.alive = true;
         this.elementPool[this.elementPoolSize++] = elem;
+        if (elem._sortInvalidated) {
+            this._sortInvalidated = true;
+        }
     }
 
     /**
@@ -676,40 +687,50 @@ class GraphicsManager extends Manager {
     }
 
     /**
+     * Sort the element pool, putting all elements with .alive=false at the end and
+     * all elements with lower layer before elements with higher layer.
+     * @private
+     */
+    sortElementPool() {
+        this.elementPool.sort((a, b) => b.alive - a.alive || a.layer - b.layer);
+        let lastAliveElementIndex = -1;
+        for (let i = this.elementPool.length - 1; i >= 0; i--) {
+            if (this.elementPool[i].alive) {
+                lastAliveElementIndex = i;
+                break;
+            }
+        }
+        this.elementPoolSize = lastAliveElementIndex + 1;
+        this._sortInvalidated = false;
+    }
+
+    /**
      * Redraw this graphics canvas.
      */
     redraw() {
         this.clear();
         this.drawBackground();
         let elem;
-        let sortPool;
+        let sortPool = this._sortInvalidated;
+        for (let i = 0; i < this.elementPoolSize; i++) {
+            elem = this.elementPool[i];
+            // the pool needs to be resorted if:
+            // - the graphics manager has an invalid sort (as a result of adding a new element),
+            // - if an element has an invalid sort (as a result of having its layer changed),
+            // - or if an element has been removed, which will be true if .alive is false and it
+            //   is within the elementPool < elementPoolSize
+            sortPool = sortPool || elem._sortInvalidated || !elem.alive;
+            // mark the element as having valid sort, even though it has not yet been sorted.
+            // it will be sorted immediately after in sortElementPool
+            elem._sortInvalidated = false;
+        }
+        if (sortPool) {
+            this.sortElementPool();
+        }
         const context = this.getContext();
         for (let i = 0; i < this.elementPoolSize; i++) {
             elem = this.elementPool[i];
-
-            if (elem._sortInvalidated) {
-                sortPool = true;
-                elem._sortInvalidated = false;
-            }
-            if (elem.alive) {
-                elem.draw(context);
-            } else {
-                sortPool = true;
-            }
-        }
-        // sort all dead elements to the end of the pool
-        // and all elements with lower layer before elements
-        // with higher layer
-        if (sortPool) {
-            this.elementPool.sort((a, b) => b.alive - a.alive || a.layer - b.layer);
-            let lastAliveElementIndex = -1;
-            for (let i = this.elementPool.length - 1; i >= 0; i--) {
-                if (this.elementPool[i].alive) {
-                    lastAliveElementIndex = i;
-                    break;
-                }
-            }
-            this.elementPoolSize = lastAliveElementIndex + 1;
+            elem.draw(context);
         }
     }
 
