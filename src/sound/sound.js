@@ -19,7 +19,6 @@ class Sound {
 
     /**
      * Construct a new Sound.
-     * @constructor
      * Optionally set the frequency and the oscillator type.
      *
      * @param {number|string} frequency - Either a number (Hertz) or note ("C#4" for middle C Sharp)
@@ -33,6 +32,7 @@ class Sound {
      * cymbal instrument: "metal"
      * https://tonejs.github.io/docs/13.8.25/OmniOscillator
      * @param {AudioContext} - context
+     * @constructor
      */
     constructor(frequency, oscillatorType) {
         setContext(getAudioContext());

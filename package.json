@@ -19,7 +19,7 @@
         "build": "node build.js",
         "dev": "node build.js watch",
         "dist": "tsc && node build.js dist",
-        "docs": "npm run build && cp -r dist/* ./site/assets/ && jsdoc src/**/*.js src/*.js --template node_modules/docdash --destination _site/docs",
+        "docs": "npm run build && cp -r dist/* ./site/assets/ && jsdoc --readme src/DOCSREADME.md src/**/*.js src/*.js --template node_modules/docdash --destination _site/docs",
         "prepare": "husky install",
         "site": "npm run docs && npx @11ty/eleventy",
         "site:watch": "npm run docs && npx @11ty/eleventy --watch"

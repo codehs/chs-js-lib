@@ -3,7 +3,7 @@ import Color from './color.js';
 import { getDistance } from './graphics-utils.js';
 
 /**
- * A circle defined by its radius.
+ * A Circle defined by its radius. Circles draw with their center at their x, y position.
  * @extends Thing
  */
 class Circle extends Thing {
@@ -15,8 +15,10 @@ class Circle extends Thing {
      * @constructor
      * @param {number} radius - Radius of the circle.
      * @example
+     * // create a circle with radius 20
      * const c = new Circle(20);
-     *
+     * c.setPosition(25, 25);
+     * add(c);
      */
     constructor(radius) {
         super();

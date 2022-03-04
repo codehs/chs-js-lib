@@ -2,8 +2,9 @@ import Thing from './thing.js';
 import { getDistance } from './graphics-utils.js';
 
 /**
- * An arc is a continuous slice of a circle described by the position of its center, its radius,
- * and the angles it is drawn between
+ * An Arc is a continuous slice of a circle described by the position of its center, its radius,
+ * and the angles it is drawn between.
+ * An Arc draws relative to its center, just like a {@link Circle}.
  * @extends Thing
  */
 class Arc extends Thing {
@@ -19,8 +20,9 @@ class Arc extends Thing {
      * Constructs a new arc.
      * @constructor
      * @example
-     * const a = new Arc(30, 0, 90, 0);
-     *
+     * // create an Arc with radius 30 with an angle from 0 to -90
+     * const arc = new Arc(30, 0, 90, Arc.DEGREES);
+     * add(arc);
      * @param {number} radius - Desired radius of the arc.
      * @param {number} startAngle - Start angle of the arc.
      * @param {number} endAngle - End angle of the arc.
