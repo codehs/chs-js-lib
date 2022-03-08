@@ -1,7 +1,8 @@
 import Thing from './thing.js';
 
 /**
- * @class Oval
+ * An Oval is an ellipse, with its horizontal width defined by its .width property and its height defined by its .height property.
+ * @class
  * @extends Thing
  */
 class Oval extends Thing {

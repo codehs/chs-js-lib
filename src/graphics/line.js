@@ -1,16 +1,20 @@
 import Thing, { rotatePointAboutPosition } from './thing.js';
 
 /**
- * @class Line
- * @augments Thing
- * @param {number} x1 - x coordinate of starting point of line.
- * @param {number} y1 - y coordinate of starting point of line.
- * @param {number} x2 - x coordinate of end point of line.
- * @param {number} y2 - y coordinate of end point of line.
+ * A Line is a line segment from its start point to end point, stored as x1, y1, and x2, y2 respectively.
+ * @class
+ * @extends Thing
  */
 class Line extends Thing {
     type = 'Line';
 
+    /**
+     * @constructor
+     * @param {number} x1 - x coordinate of starting point of line.
+     * @param {number} y1 - y coordinate of starting point of line.
+     * @param {number} x2 - x coordinate of end point of line.
+     * @param {number} y2 - y coordinate of end point of line.
+     */
     constructor(x1, y1, x2, y2) {
         super();
         if (arguments.length !== 4) {

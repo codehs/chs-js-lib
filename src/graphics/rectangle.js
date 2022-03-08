@@ -1,7 +1,8 @@
 import Thing from './thing.js';
 
 /**
- * @class Rectangle
+ * A Rectangle is defined by its width and height.
+ * @class
  * @extends Thing
  */
 class Rectangle extends Thing {

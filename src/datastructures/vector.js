@@ -1,6 +1,7 @@
 import { degreesToRadians, radiansToDegrees } from '../graphics/arc.js';
 
 /**
+ * The Vector class is ued to model a 2 or 3 dimensional vector.
  * @class
  */
 class Vector {

@@ -1,7 +1,8 @@
 import Thing from './thing.js';
 
 /**
- * @class Text
+ * Text is used to display words on the canvas.
+ * @class
  * @extends Thing
  */
 class Text extends Thing {

@@ -1,4 +1,5 @@
 /**
+ * The ExtendedSet extends the native Set implementation, adding some functionality.
  * @class
  * @extends Set
  */

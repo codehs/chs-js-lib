@@ -1,4 +1,5 @@
 /**
+ * A Stack is a subclass of an Array that implements First In, Last Out ordering.
  * @class
  * @extends Array
  */

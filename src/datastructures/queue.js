@@ -1,6 +1,7 @@
 /**
- @class
- @extends Array
+ * A Queue is an Array subclass that implements First In, First Out ordering
+ * @class
+ * @extends Array
  */
 class Queue extends Array {
     /**
