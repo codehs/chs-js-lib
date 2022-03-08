@@ -25,7 +25,9 @@ import {
     AudioManager,
     Audio,
     Sound,
+    ImageLibrary,
 } from '../../dist/chs.mjs';
+import ImportedImageLibrary from '../../src/graphics/imagelibrary.js';
 
 describe('Distributed build', () => {
     it('Constructors', () => {
@@ -96,5 +98,7 @@ describe('Distributed build', () => {
             let g = new Graphics();
             g.fullReset();
         }).not.toThrow();
+        expect(ImageLibrary.Characters.penguin).not.toBeUndefined();
+        expect(ImageLibrary.Characters.penguin).toEqual(ImportedImageLibrary.Characters.penguin);
     });
 });
