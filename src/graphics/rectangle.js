@@ -52,6 +52,15 @@ class Rectangle extends Thing {
     }
 
     /**
+     * Describes the rectangle for use with screen readers.
+     */
+    describe() {
+        return `A ${this.type} at ${this.x}, ${this.y}. Width: ${this.width}. Height: ${
+            this.height
+        }. Colored: ${this.color.toUpperCase()}.`;
+    }
+
+    /**
      * Sets the size of the Rectangle.
      *
      * @param {number} width - The desired width of the resulting Rectangle.

@@ -607,7 +607,7 @@ class Thing {
      * to print a text descriptino of the Thing.
      */
     describe() {
-        return `A ${this.type} at ${this.x}, ${this.y}. Colored: ${this.color}.`;
+        return `A ${this.type} at ${this.x}, ${this.y}. Colored: ${this.color.toUpperCase()}.`;
     }
 
     /**
