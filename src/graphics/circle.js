@@ -51,6 +51,12 @@ class Circle extends Thing {
             context.translate(-this.radius, -this.radius);
         });
     }
+    /**
+     * Describes the circle for use with screen readers.
+     */
+    describe() {
+        return `A ${this.type} at ${this.x}, ${this.y} with radius ${this.radius}. Colored: ${this.color}.`;
+    }
 
     /**
      * Gets the radius of the circle
