@@ -12,7 +12,7 @@ import Vector from './datastructures/vector.js';
  * @param {number} max - Upper bound on range of random int.
  * @returns {number} Random number between low and high, inclusive.
  */
-export const nextInt = function (min, max) {
+export function nextInt(min, max) {
     if (max === undefined) {
         max = min - 1;
         min = 0;
@@ -21,7 +21,7 @@ export const nextInt = function (min, max) {
     min = Math.floor(min);
     var r = Math.random();
     return min + Math.floor(r * (max - min + 1));
-};
+}
 
 /**
  * Get a random float between low to high, inclusive.
@@ -31,36 +31,36 @@ export const nextInt = function (min, max) {
  * @param {number} max - Upper bound on range of random int.
  * @returns {number} Random number between low and high, inclusive.
  */
-export const nextFloat = function (min, max) {
+export function nextFloat(min, max) {
     if (max === undefined) {
         max = min;
         min = 0;
     }
     return min + (max - min) * Math.random();
-};
+}
 
 /**
  * Generates a random number in range (0,255) in hexadecimal.
  * @returns {string} Random number in hexadecimal form.
  */
-export const nextHex = function () {
+export function nextHex() {
     var val = nextInt(0, 255);
     if (val < 16) {
         return '0' + val.toString(16);
     }
     return val.toString(16);
-};
+}
 
 /**
  * Generate a random hexadecimal color code of the format #RRGGBB.
  * @returns {string} Hexadecimal representation of random color.
  */
-export const nextColor = function () {
+export function nextColor() {
     var r = nextHex();
     var g = nextHex();
     var b = nextHex();
     return '#' + r + g + b;
-};
+}
 
 /**
  * Generate a random boolean via fair probability coin toss.
@@ -68,13 +68,13 @@ export const nextColor = function () {
  * @param {number} probabilityTrue - Skewed probability of true.
  * @returns {boolean} Result of coin flip skewed toward `probabilityTrue`.
  */
-export const nextBoolean = probabilityTrue => {
+export function nextBoolean(probabilityTrue) {
     if (probabilityTrue === undefined) {
         probabilityTrue = 0.5;
     }
 
     return Math.random() < probabilityTrue;
-};
+}
 
 // stores numbers 0-1
 let perlin;
@@ -98,7 +98,7 @@ const fade = t => {
  * @param {number} [y] - Any number. If y is present, 2d will be used.
  * @returns {number}
  */
-export const noise = (x, y) => {
+export function noise(x, y) {
     if (!perlin) {
         perlin = new Array(PERLIN_SIZE + 1);
         for (let i = 0; i < PERLIN_SIZE + 1; i++) {
@@ -176,4 +176,4 @@ export const noise = (x, y) => {
     const xMax = (xMin + 1) % PERLIN_SIZE;
 
     return lerp(perlin[xMin], perlin[xMax], fade(t));
-};
+}

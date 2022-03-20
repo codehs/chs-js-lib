@@ -1,7 +1,5 @@
 import Thing from './thing.js';
 
-/** @module Polygon */
-
 /**
  * A polygon is a shape with any number of points, and will
  * be drawn as a continuous shape contained by those points.
@@ -65,6 +63,7 @@ class Polygon extends Thing {
 
     /**
      * Checks if the coordinates are contained in the Polygon.
+     * @alias Polygon#containsPoint
      * @example
      * const p = new Polygon();
      * p.addPoint(10, 10);

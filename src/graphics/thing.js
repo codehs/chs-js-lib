@@ -114,6 +114,8 @@ class Thing {
 
     /**
      * Gets the x position of the Thing.
+     * @example
+     * thing.x === thing.getX();
      *
      * @return {number} The x position of the Thing.
      */
@@ -123,6 +125,9 @@ class Thing {
 
     /**
      * Gets the y position of the Thing.
+     *
+     * @example
+     * thing.y === thing.getY();
      *
      * @return {number} The y position of the Thing.
      */
@@ -168,6 +173,11 @@ class Thing {
      * Sets a Thing object to filled.
      * Throws an error if an argument is not passed.
      *
+     * @example
+     * // this method is on every Shape
+     * let thing = new Thing();
+     * thing.setFilled(false);
+     *
      * @param {bool} filled - A boolean of whether or not Thing is filled.
      */
     setFilled(filled) {
@@ -184,6 +194,11 @@ class Thing {
     /**
      * Returns if a Thing is filled.
      *
+     * @example
+     * // this method is on every Shape
+     * let thing = new Thing();
+     * thing.isFilled();
+     *
      * @return {boolean} True if the Thing is filled.
      */
     isFilled() {
@@ -193,6 +208,11 @@ class Thing {
     /**
      * Sets a Thing object to filled.
      * Throws an error if an argument is not passed.
+     *
+     * @example
+     * // this method is on every Shape
+     * let thing = new Thing();
+     * thing.setBorder(true);
      *
      * @param {bool} hasBorder - A boolean of whether or not Thing has a border.
      */
@@ -211,6 +231,11 @@ class Thing {
     /**
      * Returns if a Thing has a border.
      *
+     * @example
+     * // this method is on every Shape
+     * let thing = new Thing();
+     * thing.hasBorder();
+     *
      * @return {boolean} True if the Thing has a border.
      */
     hasBorder() {
@@ -219,6 +244,11 @@ class Thing {
 
     /**
      * Set the opacity of the Thing.
+     *
+     * @example
+     * // this method is on every Shape
+     * let thing = new Thing();
+     * thing.setOpacity(0.5);
      *
      * @param {number} opacity
      */
@@ -230,6 +260,11 @@ class Thing {
      * Sets the position of a Thing.
      * Throws an error if there are fewer than 2 params or if
      * they are not numbers.
+     *
+     * @example
+     * // this method is on every Shape
+     * let thing = new Thing();
+     * thing.setPosition(30, 30);
      *
      * @param {number} x - The destination x coordinate of this Thing.
      * @param {number} y - The destination y coordinate of this Thing.
@@ -256,6 +291,12 @@ class Thing {
      * Sets the rotation of a Thing in degrees.
      * Throws an error if there are fewer than 1 params or if they
      * are not numbers.
+     *
+     * @example
+     * // this method is on every Shape
+     * let thing = new Thing();
+     * thing.setRotation(90);
+     * thing.setRotation(Math.PI / 2, Thing.RADIANS);
      *
      * @param {number} degrees - The degrees to rotate degrees.
      * @param {number} angleUnit - Whether it is degrees or radians. Defaults to
@@ -289,6 +330,12 @@ class Thing {
 
     /**
      * Rotates a Thing an additional amount of degrees.
+     *
+     * @example
+     * // this method is on every Shape
+     * let thing = new Thing();
+     * thing.rotate(90);
+     * thing.rotate(Math.PI / 2, Thing.RADIANS);
      *
      * @param {number} degrees - The degrees to rotate degrees.
      * @param {number} angleUnit - Whether it is degrees or radians. Defaults to
@@ -324,6 +371,13 @@ class Thing {
      * Throws an error if there are fewer than 1 params or if
      * the param is undefined.
      *
+     * @example
+     * // this method is on every Shape
+     * let thing = new Thing();
+     * thing.setColor('red');
+     * thing.setColor(Color.orange);
+     * thing.setColor('#ff0000');
+     *
      * @param {Color} color - The resulting color of Thing.
      */
     setColor(color) {
@@ -341,6 +395,11 @@ class Thing {
     /**
      * Gets the color of a Thing.
      *
+     * @example
+     * // this method is on every Shape
+     * let thing = new Thing();
+     * thing.getColor(); // #000000, by default
+     *
      * @return {Color} The destination y coordinate of this Thing.
      */
     getColor() {
@@ -351,6 +410,14 @@ class Thing {
      * Sets the border color of a Thing.
      * Throws an error if there are fewer than 1 params or if
      * the param is undefined.
+     * This will automatically give the Thing a border, as if you had called
+     * thing.setBorder(true);
+     *
+     * @example
+     * // this method is on every Shape
+     * let thing = new Thing();
+     * thing.setBorderColor('orange');
+     *
      *
      * @param {Color} color - The resulting color of the Thing's border.
      */
@@ -368,6 +435,11 @@ class Thing {
     /**
      * Gets the border color of a Thing.
      *
+     * @example
+     * // this method is on every Shape
+     * let thing = new Thing();
+     * thing.getBorderColor();
+     *
      * @return {Color} The color of the Thing's border.
      */
     getBorderColor() {
@@ -377,6 +449,13 @@ class Thing {
     /**
      * Sets the width of a Thing's border.
      * Throws an error if there is not 1 argument.
+     * This will automatically set the Thing to draw with a border, as if you had called
+     * thing.setBorder(true);
+     *
+     * @example
+     * // this method is on every Shape
+     * let thing = new Thing();
+     * thing.setBorderWidth(5);
      *
      * @param {number} width - The resulting width of the Thing's border.
      */
@@ -396,6 +475,11 @@ class Thing {
     /**
      * Gets the width of the Thing's border.
      *
+     * @example
+     * // this method is on every Shape
+     * let thing = new Thing();
+     * thing.getBorderWidth();
+     *
      * @return {number} The width of the Thing's border.
      */
     getBorderWidth() {
@@ -404,6 +488,11 @@ class Thing {
 
     /**
      * Changes the possition of a thing by a specified x and y amount.
+     *
+     * @example
+     * // this method is on every Shape
+     * let thing = new Thing();
+     * thing.move(10, 10);
      *
      * @param {number} dx - The resulting change in the Thing's x position.
      * @param {number} dy - The resulting change in the Thing's y position.
@@ -496,6 +585,8 @@ class Thing {
 
     /**
      * Focuses the element for use with screen readers.
+     * This isn't something you should need to call manually, but you can if you'd
+     * like to provide focus to an element even if it wasn't navigated to with the keyboard.
      */
     focus() {
         this.focused = true;
@@ -503,6 +594,8 @@ class Thing {
 
     /**
      * Unfocuses the element for use with screen readers.
+     * This isn't something you should need to call manually, but you can if you'd
+     * like to unfocus to an element even if it wasn't navigated from with the keyboard.
      */
     unfocus() {
         this.focused = false;
@@ -510,6 +603,8 @@ class Thing {
 
     /**
      * Describes the element for use with screen readers.
+     * This isn't something you should need to call manually, but you can if you'd like
+     * to print a text descriptino of the Thing.
      */
     describe() {
         return `A ${this.type} at ${this.x}, ${this.y}. Colored: ${this.color}.`;
@@ -518,6 +613,13 @@ class Thing {
     /**
      * Check if a given point is within the Thing.
      * This function only works in subclasses of Thing.
+     *
+     * @example
+     * // this method is on every Shape
+     * let thing = new Thing();
+     * if (thing.containsPoint(100, 100)) {
+     *     alert('contains 100, 100!');
+     * }
      *
      * @param {number} x - The x coordinate of the point being checked.
      * @param {number} y - The y coordinate of the point being checked.
@@ -536,6 +638,16 @@ class Thing {
 
     /**
      * Sets the Anchor for the object.
+     * This alters how the shape will draw relative to its position.
+     * An anchor of 0, 0 will cause the shape to draw with its position at its top left corner.
+     * An anchor of 1, 1 will cause the shape to draw with its position at its bottom right corner.
+     *
+     * @example
+     * // this method is on every Shape
+     * let thing = new Thing();
+     * // center the object around its position
+     * thing.setPosition({vertical: 0.5, horizontal: 0.5});
+     *
      * @param {{vertical: number, horizontal: number}} anchor
      */
     setAnchor(anchor) {
@@ -544,7 +656,7 @@ class Thing {
     }
 
     /**
-     * Gets the jelement's anchor.
+     * Gets the element's anchor.
      * @returns {{vertical: number, horizontal: number}}
      */
     getAnchor() {
@@ -553,6 +665,13 @@ class Thing {
 
     /**
      * Get the elements bounds.
+     * This is an internal property that you shouldn't need to use, but it can be useful
+     * for doing quick calculations for the bounding box of a shape.
+     * @example
+     * // this method is on every Shape
+     * let thing = new Thing();
+     * let height = thing.getBounds().bottom - this.getBounds().top;
+     *
      * @returns {{top: number, bottom: number, left: number, right: number}}
      */
     getBounds() {
@@ -564,6 +683,7 @@ class Thing {
 
     /**
      * Mark this element's bounds as invalidated.
+     * @private
      */
     _invalidateBounds() {
         this._boundsInvalidated = true;
@@ -581,25 +701,6 @@ class Thing {
         let right = Math.ceil(this.x + (1 - this.anchor.horizontal) * this.width);
         let top = Math.ceil(this.y - this.anchor.vertical * this.height);
         let bottom = Math.ceil(this.y + (1 - this.anchor.vertical) * this.height);
-        //if (this.rotation) {
-        //    const rotX = (right - left) / 2 + left;
-        //    const rotY = (bottom - top) / 2 + top;
-        //    let topLeft = rotatePointAboutPosition([left, top], [rotX, rotY], this.rotation);
-        //    let topRight = rotatePointAboutPosition([right, top], [rotX, rotY], this.rotation);
-        //    let bottomLeft = rotatePointAboutPosition([left, bottom], [rotX, rotY], this.rotation);
-        //    let bottomRight = rotatePointAboutPosition(
-        //        [right, bottom],
-        //        [rotX, rotY],
-        //        this.rotation
-        //    );
-        //    const points = [topLeft, topRight, bottomLeft, bottomRight];
-        //    const xCoordinates = points.map(point => point[0]);
-        //    const yCoordinates = points.map(point => point[1]);
-        //    left = Math.min(...xCoordinates);
-        //    right = Math.max(...xCoordinates);
-        //    top = Math.min(...yCoordinates);
-        //    bottom = Math.max(...yCoordinates);
-        //}
         this.bounds = {
             left,
             right,
@@ -612,17 +713,23 @@ class Thing {
 }
 
 /**
+ * Rotate a point defined by an [x, y] pair around another point defined by an [x, y] pair by
+ * an angle in radians.
+ * @example
+ * let center = [100, 100];
+ * let point = [20, 30];
+ * let rotated = rotatePointAboutPosition(center, point, Math.PI / 2);
  *
  * @param {number[]} point - [x, y] of the point to rotate
  * @param {number[]} origin - [x, y] point of rotation
  * @param {number} angle - angle in radians
  * @returns {number[]} - [x, y] rotated point
  */
-export const rotatePointAboutPosition = ([x, y], [rotX, rotY], angle) => {
+export function rotatePointAboutPosition([x, y], [rotX, rotY], angle) {
     return [
         (x - rotX) * Math.cos(angle) - (y - rotY) * Math.sin(angle) + rotX,
         (x - rotX) * Math.sin(angle) + (y - rotY) * Math.cos(angle) + rotY,
     ];
-};
+}
 
 export default Thing;

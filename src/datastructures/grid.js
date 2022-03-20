@@ -1,13 +1,13 @@
-/** @module Grid */
-
 /**
  * A grid is an abstraction around a two-dimensional array.
+ * @class
  */
 class Grid {
     type = 'Grid';
 
     /**
      * Constructs a grid.
+     * @constructor
      * @param {number} rows
      * @param {number} cols
      */

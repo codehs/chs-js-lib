@@ -1,16 +1,36 @@
-/* Console
+/**
+ * Console provides utilities for interacting with a text console.
+ * {@link Console#readInt}, {@link Console#readFloat}, {@link Console#readBoolean}, and {@link Console#readLine}
+ * prompt the user for input and parse it to the corresponding type. This prompt will use the blocking
+ * browser prompt by default, but can be configured using {@link Console#onPrompt}.
  *
- * A console represents a text console that allows the user to print, println,
- * and read an integer using readInt, and read a float using readFloat. These
- * functions pop up prompt dialogs and make sure that the results are actually
- * of the desired type.
- *
- * @author  Jeremy Keeshin    July 9, 2012
- * @author  Andy Bayer        Fall 2021
- *
+ * Console also exposes {@link Console#print} and {@link Console#println}, which are used for
+ * emitting output. By default the output will print to the console, but can be configured using
+ * {@link Console#onPrint}.
  */
+class Console {
+    /**
+     * Function invoked when asking for user input.
+     * This function is invoked with the string of the prompt, i.e. readInt('give me an int!').
+     * The result of invoking onPrompt will be subjected to parsing functions for confirming
+     * it's an appropriate data type (a float, in the case of readFloat, for example). If
+     * onPrompt is undefined, window.prompt is used as a fallback.
+     * @type {function}
+     */
+    onPrompt = window.prompt.bind(window);
+    /**
+     * Function invoked when printing.
+     * This function is invoked with any output, either in the case of explicit calls to `print`
+     * or `println` or internal calls within the library. If onPrint is undefined, console.log
+     * is used as a fallback.
+     * @type {function}
+     */
+    onPrint = window.console.log.bind(window.console);
+    /**
+     * Function invoked when {@link Console#clear} is called.
+     */
+    onClear = window.console.clear.bind(window.console);
 
-export default class Console {
     /**
      * Initialize the console class, additionally configuring any event handlers.
      * @constructor
@@ -28,7 +48,7 @@ export default class Console {
     constructor(options = {}) {
         this.onPrompt = options.onPrompt ?? window.prompt.bind(window);
         this.onPrint = options.onPrint ?? window.console.log.bind(window.console);
-        this.onClear = options.onClear ?? (() => {});
+        this.onClear = options.onClear ?? window.console.clear.bind(window.console);
     }
 
     /**
@@ -63,6 +83,7 @@ export default class Console {
 
     /**
      * Clear the console.
+     * @global
      */
     clear() {
         this.onClear();
@@ -71,6 +92,7 @@ export default class Console {
     /**
      * Print a value to the console.
      * @param {...any} args - Anything to print.
+     * @global
      */
     print(...args) {
         if (args.length < 1) {
@@ -82,6 +104,7 @@ export default class Console {
     /**
      * Print a value to the console, followed by a newline character.
      * @param {any} value - The value to print.
+     * @global
      */
     println(value) {
         if (arguments.length === 0) {
@@ -112,6 +135,7 @@ export default class Console {
      * why a given input was rejected. For example, the errorMsgType "an integer," would result in
      * printing "That was not an integer. Please try again." if parseFn failed.
      * @returns {number}
+     * @global
      */
     readNumber(str, parseFn, errorMsgType) {
         const DEFAULT = 0; // If we get into an infinite loop, return DEFAULT.
@@ -120,10 +144,10 @@ export default class Console {
         let promptString = str;
         let loopCount = 0;
         /**
-         * @type {boolean}
          * indicates whether the parsing has been successful, meaning
          * it hasn't hit the INFINITE_LOOP_CHECK or null cases, and the input from the user has
          * satisfied parseFn. in this case, the input should be printed.
+         * @type {boolean}
          * */
         let successful = false;
         let parsedResult;
@@ -163,6 +187,7 @@ export default class Console {
      * Read a line from the user.
      * @param {str} str - A message associated with the modal asking for input.
      * @returns {str} The result of the readLine prompt.
+     * @global
      */
     readLine(str) {
         if (arguments.length !== 1) {
@@ -179,6 +204,7 @@ export default class Console {
      * Read a bool from the user.
      * @param {str} str - A message associated with the modal asking for input.
      * @returns {str} The result of the readBoolean prompt.
+     * @global
      */
     readBoolean(str) {
         if (arguments.length !== 1) {
@@ -208,6 +234,7 @@ export default class Console {
      * though they are successfully parsed as ints.
      * @param {str} str - A message associated with the modal asking for input.
      * @returns {str} The result of the readInt prompt.
+     * @global
      */
     readInt(str) {
         if (arguments.length !== 1) {
@@ -233,6 +260,7 @@ export default class Console {
      * Read a float with our safe helper function.
      * @param {str} str - A message associated with the modal asking for input.
      * @returns {str} The result of the readFloat prompt.
+     * @global
      */
     readFloat(str) {
         if (arguments.length !== 1) {
@@ -242,3 +270,5 @@ export default class Console {
         return this.readNumber(str, parseFloat, 'a float');
     }
 }
+
+export default Console;

@@ -11,9 +11,18 @@ export const HIDDEN_KEYBOARD_NAVIGATION_DOM_ELEMENT_STYLE =
 
 export const HIDDEN_KEYBOARD_NAVIGATION_DOM_ELEMENT_ID = id => `${id}focusbutton`;
 
-/** @type {Object.<string, GraphicsManager>} */
+/**
+ * @type {Object.<string, GraphicsManager>}
+ * @private
+ */
 export let GraphicsInstances = {};
-/** @type {Array.<any>} */
+/**
+ * @type {Array.<any>}
+ * @example
+ * if (pressedKeys.indexOf(Keyboard.SPACE) > -1) {
+ *     alert('you are pressing space!');
+ * }
+ */
 export let pressedKeys = [];
 let graphicsInstanceID = 0;
 
@@ -158,6 +167,8 @@ class GraphicsManager extends Manager {
 
     /**
      * Get all living elements.
+     * @global
+     * @returns {Array.<Thing>}
      */
     getElements() {
         return this.elementPool.filter(element => element.alive);
@@ -165,6 +176,11 @@ class GraphicsManager extends Manager {
 
     /**
      * Add an element to the graphics instance.
+     * @example
+     * let circle = new Circle(20);
+     * add(circle);
+     *
+     * @global
      * @param {Thing} elem - A subclass of Thing to be added to the graphics instance.
      */
     add(elem) {
@@ -177,6 +193,7 @@ class GraphicsManager extends Manager {
 
     /**
      * Creates a hidden DOM element that can be navigated with a screen reader.
+     * @private
      * @param {Thing} elem
      */
     createAccessibleDOMElement(elem) {
@@ -216,17 +233,30 @@ class GraphicsManager extends Manager {
         elem._hasAccessibleDOMElement = true;
     }
 
+    /**
+     * Exits keyboard navigation mode.
+     * @private
+     */
     exitKeyboardNavigation() {
         this.userNavigatingWithKeyboard = false;
         this.hideKeyboardNavigationDOMElements();
     }
 
+    /**
+     * Makes DOM elements designed to be navigated with keyboard visible so they can be tabbed.
+     * @private
+     */
     showKeyboardNavigationDOMElements() {
         this.accessibleDOMElements.forEach(
             element => (element.style = KEYBOARD_NAVIGATION_DOM_ELEMENT_STYLE)
         );
     }
 
+    /**
+     * Makes DOM elements designed to be navigated with keyboard invisible.
+     * This is to make sure they don't accidentally appear and affect layout if they are not needed.
+     * @private
+     */
     hideKeyboardNavigationDOMElements() {
         this.accessibleDOMElements.forEach(
             element => (element.style = HIDDEN_KEYBOARD_NAVIGATION_DOM_ELEMENT_STYLE)
@@ -235,6 +265,9 @@ class GraphicsManager extends Manager {
 
     /**
      * Record a click.
+     * This will cause all timers to be postponed until a click event happens.
+     * @deprecated
+     * @global
      */
     waitForClick() {
         this.clickCount++;
@@ -242,6 +275,11 @@ class GraphicsManager extends Manager {
 
     /**
      * Assign a function as a callback for click (mouse down, mouse up) events.
+     * @example
+     * mouseClickMethod(e => {
+     *   alert('You just clicked at ' + e.getX() + ', ' + e.getY());
+     * });
+     * @global
      * @param {function} fn - A callback to be triggered on click events.
      */
     mouseClickMethod(fn) {
@@ -250,6 +288,11 @@ class GraphicsManager extends Manager {
 
     /**
      * Assign a function as a callback for mouse move events.
+     * @example
+     * mouseMoveMethod(e => {
+     *   alert('You moved your mouse to ' + e.getX() + ', ' + e.getY());
+     * });
+     * @global
      * @param {function} fn - A callback to be triggered on mouse move events.
      */
     mouseMoveMethod(fn) {
@@ -258,6 +301,11 @@ class GraphicsManager extends Manager {
 
     /**
      * Assign a function as a callback for mouse down events.
+     * @example
+     * mouseDownMethod(e => {
+     *   alert('You depressed your mouse button at ' + e.getX() + ', ' + e.getY());
+     * });
+     * @global
      * @param {function} fn - A callback to be triggered on mouse down.
      */
     mouseDownMethod(fn) {
@@ -266,6 +314,11 @@ class GraphicsManager extends Manager {
 
     /**
      * Assign a function as a callback for mouse up events.
+     * @example
+     * mouseUpMethod(e => {
+     *   alert('You lifted your mouse button at ' + e.getX() + ', ' + e.getY());
+     * });
+     * @global
      * @param {function} fn - A callback to be triggered on mouse up events.
      */
     mouseUpMethod(fn) {
@@ -274,6 +327,11 @@ class GraphicsManager extends Manager {
 
     /**
      * Assign a function as a callback for drag events.
+     * @example
+     * mouseDragMethod(e => {
+     *   alert('You dragged your mouse to' + e.getX() + ', ' + e.getY());
+     * });
+     * @global
      * @param {function} fn - A callback to be triggered on drag events.
      */
     mouseDragMethod(fn) {
@@ -282,6 +340,13 @@ class GraphicsManager extends Manager {
 
     /**
      * Assign a function as a callback for keydown events.
+     * @example
+     * keyDownMethod(e => {
+     *     if (e.keyCode === Keyboard.letter('A')) {
+     *         alert('You just pushed the a key!');
+     *     }
+     * })
+     * @global
      * @param {function} fn - A callback to be triggered on keydown events.
      */
     keyDownMethod(fn) {
@@ -290,6 +355,13 @@ class GraphicsManager extends Manager {
 
     /**
      * Assign a function as a callback for key up events.
+     * @example
+     * keyUpMethod(e => {
+     *     if (e.keyCode === Keyboard.letter('A')) {
+     *         alert('You just lifted the a key!');
+     *     }
+     * })
+     * @global
      * @param {function} fn - A callback to be triggered on key up events.
      */
     keyUpMethod(fn) {
@@ -298,6 +370,7 @@ class GraphicsManager extends Manager {
 
     /**
      * Assign a function as a callback for device orientation events.
+     * @global
      * @param {function} fn - A callback to be triggered on device orientation
      *                        events.
      */
@@ -307,6 +380,7 @@ class GraphicsManager extends Manager {
 
     /**
      * Assign a function as a callback for device motion events.
+     * @global
      * @param {function} fn - A callback to be triggered device motion events.
      */
     deviceMotionMethod(fn) {
@@ -315,6 +389,11 @@ class GraphicsManager extends Manager {
 
     /**
      * Check if a key is currently pressed
+     * @example
+     * if (isKeyPressed(Keyboard.letter('a'))) {
+     *     alert('Youre currently pressing A!');
+     * }
+     * @global
      * @param {integer} keyCode - Key code of key being checked.
      * @returns {boolean} Whether or not that key is being pressed.
      */
@@ -324,6 +403,11 @@ class GraphicsManager extends Manager {
 
     /**
      * Get the width of the entire graphics canvas.
+     * @example
+     * if (getWidth() > 200) {
+     *     alert('The canvas is wider than 200 pixels!');
+     * }
+     * @global
      * @returns {float} The width of the canvas.
      */
     getWidth() {
@@ -333,6 +417,11 @@ class GraphicsManager extends Manager {
 
     /**
      * Get the height of the entire graphics canvas.
+     * @example
+     * if (getHeight() > 200) {
+     *     alert('The canvas is taller than 200 pixels!');
+     * }
+     * @global
      * @returns {float} The height of the canvas.
      */
     getHeight() {
@@ -342,6 +431,7 @@ class GraphicsManager extends Manager {
 
     /**
      * Stop all timers.
+     * @global
      */
     stopAllTimers() {
         for (let i = 1; i < 99999; i++) {
@@ -354,6 +444,7 @@ class GraphicsManager extends Manager {
     /**
      * Create a new timer.
      * {@link Manager#setTimer}
+     * @global
      * @param {function} fn - Function to be called at intervals.
      * @param {integer} time - Time interval to call function `fn`
      * @param {dictionary} data - Any data associated with the timer.
@@ -401,6 +492,7 @@ class GraphicsManager extends Manager {
 
     /**
      * Set the background color of the canvas.
+     * @global
      * @param {Color} color - The desired color of the canvas.
      */
     setBackgroundColor(color) {
@@ -409,6 +501,7 @@ class GraphicsManager extends Manager {
 
     /**
      * Clear everything from the canvas.
+     * @private
      */
     clear(context) {
         var ctx = context || this.getContext();
@@ -418,6 +511,13 @@ class GraphicsManager extends Manager {
     /**
      * Get an element at a specific point.
      * If several elements are present at the position, return the one put there first.
+     * @example
+     * let circle = new Circle(20);
+     * circle.setPosition(100, 100);
+     * add(circle);
+     *
+     * getElementAt(100, 100) === circle;
+     * @global
      * @param {number} x - The x coordinate of a point to get element at.
      * @param {number} y - The y coordinate of a point to get element at.
      * @returns {Thing|null} The object at the point (x, y), if there is one (else null).
@@ -431,6 +531,23 @@ class GraphicsManager extends Manager {
         return null;
     }
 
+    /**
+     * Get all elements at a specific point.
+     * @example
+     * let circle = new Circle(20);
+     * circle.setPosition(100, 100);
+     * add(circle);
+     *
+     * let rectangle = new Rectangle(30, 30);
+     * rectangle.setPosition(80, 80);
+     * add(rectangle);
+     *
+     * getElementsAt(100, 100)[1] === rectangle;
+     * @global
+     * @param {number} x - The x coordinate of a point to get element at.
+     * @param {number} y - The y coordinate of a point to get element at.
+     * @returns {Array.<Thing>} The objects at the point (x, y).
+     */
     getElementsAt(x, y) {
         return this.elementPool.filter(e => {
             return e.alive && e.containsPoint(x, y);
@@ -439,6 +556,7 @@ class GraphicsManager extends Manager {
 
     /**
      * Check if an element exists with the given paramenters.
+     * @global
      * @param {object} params - Dictionary of parameters for the object.
      *      Includes x, y, heigh, width, color, radius, label and type.
      * @returns {boolean}
@@ -459,6 +577,12 @@ class GraphicsManager extends Manager {
 
     /**
      * Remove all elements from the canvas.
+     * @example
+     * add(new Circle(10));
+     * add(new Rectangle(30, 30));
+     * removeAll();
+     *
+     * @global
      */
     removeAll() {
         this.stopAllVideo();
@@ -470,6 +594,7 @@ class GraphicsManager extends Manager {
 
     /**
      * Remove a specific element from the canvas.
+     * @global
      * @param {Thing} elem - The element to be removed from the canvas.
      */
     remove(elem) {
@@ -494,6 +619,7 @@ class GraphicsManager extends Manager {
     /**
      * Resizes the canvas, creating a temporary canvas to prevent flickering and
      * perform size adjustments based on the devices's devicePixelRatio.
+     * @private
      * @param {number} w
      * @param {number} h
      */
@@ -524,6 +650,7 @@ class GraphicsManager extends Manager {
 
     /**
      * Set the size of the canvas.
+     * @global
      * @param {number} w - Desired width of the canvas.
      * @param {number} h - Desired height of the canvas.
      */
@@ -534,6 +661,7 @@ class GraphicsManager extends Manager {
 
     /**
      * Set the canvas to take up the entire parent element
+     * @global
      */
     setFullscreen() {
         this.fullscreenMode = true; // when this is true, canvas will resize with parent
@@ -545,6 +673,7 @@ class GraphicsManager extends Manager {
 
     /**
      * Resets all the timers to time 0.
+     * @global
      */
     resetAllTimers() {
         for (var cur in this.timers) {
@@ -552,6 +681,10 @@ class GraphicsManager extends Manager {
         }
     }
 
+    /**
+     * Stop all video elements.
+     * @private
+     */
     stopAllVideo() {
         for (var i = this.elementPool.length; i--; ) {
             if (this.elementPool[i] instanceof WebVideo) {
@@ -562,6 +695,7 @@ class GraphicsManager extends Manager {
 
     /**
      * Resets the graphics instance to a clean slate.
+     * @private
      */
     resetAllState() {
         this.backgroundColor = null;
@@ -590,6 +724,7 @@ class GraphicsManager extends Manager {
 
     /**
      * Reset all timers to 0 and clear timers and canvas.
+     * @private
      */
     fullReset() {
         this.stopAllVideo();
@@ -600,6 +735,7 @@ class GraphicsManager extends Manager {
 
     /**
      * Return if the graphics canvas exists.
+     * @private
      * @returns {boolean} Whether or not the canvas exists.
      */
     canvasExists() {
@@ -645,6 +781,7 @@ class GraphicsManager extends Manager {
 
     /**
      * Draw the background color for the current object.
+     * @private
      */
     drawBackground() {
         if (this.backgroundColor) {
@@ -706,6 +843,7 @@ class GraphicsManager extends Manager {
 
     /**
      * Redraw this graphics canvas.
+     * @private
      */
     redraw() {
         this.clear();
@@ -736,12 +874,17 @@ class GraphicsManager extends Manager {
 
     /**
      * Set the main timer for graphics.
+     * @private
      */
     setMainTimer() {
         this.shouldUpdate = true;
         this.update();
     }
 
+    /**
+     * The main update loop for the Graphics manager.
+     * @private
+     */
     update() {
         if (this.shouldUpdate) {
             requestAnimationFrame(this.update.bind(this));
@@ -764,6 +907,7 @@ class GraphicsManager extends Manager {
 
     /**
      * Whether the selected canvas already has an instance associated.
+     * @private
      */
     canvasHasInstance(canvas) {
         let instance;
@@ -778,6 +922,7 @@ class GraphicsManager extends Manager {
 
     /**
      * Set up the graphics instance to prepare for interaction
+     * @private
      */
     setup() {
         var drawingCanvas = this.getCanvas();

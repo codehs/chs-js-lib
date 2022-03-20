@@ -1,3 +1,8 @@
+/**
+ * The ExtendedSet extends the native Set implementation, adding some functionality.
+ * @class
+ * @extends Set
+ */
 class ExtendedSet extends Set {
     /**
      * Returns whether the set is empty.

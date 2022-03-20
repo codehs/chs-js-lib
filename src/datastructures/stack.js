@@ -1,4 +1,9 @@
-export default class Stack extends Array {
+/**
+ * A Stack is a subclass of an Array that implements First In, Last Out ordering.
+ * @class
+ * @extends Array
+ */
+class Stack extends Array {
     /**
      * Get the number of objects in the stack.
      * @returns {number} Number of elements in the stack.
@@ -38,3 +43,5 @@ export default class Stack extends Array {
         return this.length === 0;
     }
 }
+
+export default Stack;
