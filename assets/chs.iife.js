@@ -2561,6 +2561,7 @@ ${str}`;
       __publicField(this, "elementPoolSize", 0);
       __publicField(this, "accessibleDOMElements", []);
       __publicField(this, "devicePixelRatio", (_a2 = Math.ceil(window.devicePixelRatio)) != null ? _a2 : 1);
+      __publicField(this, "_sortInvalidated", false);
       __publicField(this, "onKeyDown", (e) => {
         var _a3;
         const index = pressedKeys.indexOf(e.keyCode);
@@ -2644,6 +2645,9 @@ ${str}`;
     add(elem) {
       elem.alive = true;
       this.elementPool[this.elementPoolSize++] = elem;
+      if (elem._sortInvalidated) {
+        this._sortInvalidated = true;
+      }
     }
     createAccessibleDOMElement(elem) {
       const button = document.createElement("button");
@@ -2932,34 +2936,35 @@ ${str}`;
         pixelData[index + 3]
       ];
     }
+    sortElementPool() {
+      this.elementPool.sort((a, b) => b.alive - a.alive || a.layer - b.layer);
+      let lastAliveElementIndex = -1;
+      for (let i = this.elementPool.length - 1; i >= 0; i--) {
+        if (this.elementPool[i].alive) {
+          lastAliveElementIndex = i;
+          break;
+        }
+      }
+      this.elementPoolSize = lastAliveElementIndex + 1;
+      this._sortInvalidated = false;
+    }
     redraw() {
       this.clear();
       this.drawBackground();
       let elem;
-      let sortPool;
+      let sortPool = this._sortInvalidated;
+      for (let i = 0; i < this.elementPoolSize; i++) {
+        elem = this.elementPool[i];
+        sortPool = sortPool || elem._sortInvalidated || !elem.alive;
+        elem._sortInvalidated = false;
+      }
+      if (sortPool) {
+        this.sortElementPool();
+      }
       const context2 = this.getContext();
       for (let i = 0; i < this.elementPoolSize; i++) {
         elem = this.elementPool[i];
-        if (elem._sortInvalidated) {
-          sortPool = true;
-          elem._sortInvalidated = false;
-        }
-        if (elem.alive) {
-          elem.draw(context2);
-        } else {
-          sortPool = true;
-        }
-      }
-      if (sortPool) {
-        this.elementPool.sort((a, b) => b.alive - a.alive || a.layer - b.layer);
-        let lastAliveElementIndex = -1;
-        for (let i = this.elementPool.length - 1; i >= 0; i--) {
-          if (this.elementPool[i].alive) {
-            lastAliveElementIndex = i;
-            break;
-          }
-        }
-        this.elementPoolSize = lastAliveElementIndex + 1;
+        elem.draw(context2);
       }
     }
     setMainTimer() {
