@@ -19,6 +19,7 @@ export { default as Text } from '../src/graphics/text.js';
 export { default as Thing } from '../src/graphics/thing.js';
 export { default as WebImage } from '../src/graphics/webimage.js';
 export { default as WebVideo } from '../src/graphics/webvideo.js';
+export { default as ImageLibrary } from '../src/graphics/imagelibrary.js';
 export * as Randomizer from '../src/randomizer.js';
 export { default as AudioManager } from '../src/sound/';
 export { default as Audio } from '../src/sound/audio.js';
