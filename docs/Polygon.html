@@ -3,7 +3,7 @@
 <head>
     
     <meta charset="utf-8">
-    <title>Text - Documentation</title>
+    <title>Polygon - Documentation</title>
     
     
     <script src="scripts/prettify/prettify.js"></script>
@@ -32,7 +32,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">Text</h1>
+    <h1 class="page-title">Polygon</h1>
     
 
     
@@ -45,10 +45,11 @@
 <header>
     
         <h2>
-        Text
+        Polygon
         </h2>
         
-            <div class="class-description usertext">Text is used to display words on the canvas.</div>
+            <div class="class-description usertext">A polygon is a shape with any number of points, and will
+be drawn as a continuous shape contained by those points.</div>
         
     
 </header>
@@ -63,7 +64,7 @@
     <h2>Constructor</h2>
     
 
-    <h4 class="name" id="Text"><span class="type-signature"></span>new Text<span class="signature">(label, font)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="Polygon"><span class="type-signature"></span>new Polygon<span class="signature">()</span><span class="type-signature"></span></h4>
 
     
 
@@ -75,7 +76,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="graphics_text.js.html">graphics/text.js</a>, <a href="graphics_text.js.html#line8">line 8</a>
+        <a href="graphics_polygon.js.html">graphics/polygon.js</a>, <a href="graphics_polygon.js.html#line8">line 8</a>
     </li></ul></dd>
     
 
@@ -115,7 +116,9 @@
 
 
 <div class="description usertext">
-    Constructs a text object.
+    Constructs a new Polygon.
+The Polygon constructor takes no arguments, and only prepares a Polygon to have points
+added later with addPoint.
 </div>
 
 
@@ -126,98 +129,6 @@
 
 
 
-    <h5>Example</h5>
-    
-    <pre class="prettyprint"><code>const label = new Text('Hello, World', '15pt Arial);</code></pre>
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-        <th>Default</th>
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>label</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-|
-
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-                <td class="default">
-                
-                </td>
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>font</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-                <td class="default">
-                
-                    <code>20pt Arial</code>
-                
-                </td>
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-    </tbody>
-</table>
 
 
 
@@ -337,10 +248,258 @@ so any Graphics instances drawing it know to re-sort.
 
 
         
+            
+<h4 class="name" id="points"><span class="type-signature"></span>points<span class="type-signature"> :Array.&lt;{x: number, y: number}></span></h4>
+
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="graphics_polygon.js.html">graphics/polygon.js</a>, <a href="graphics_polygon.js.html#line32">line 32</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+<div class="description usertext">
+    An array of points in the Polygon.
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">Array.&lt;{x: number, y: number}></span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>const p = new Polygon();
+for (let i = 0; i &lt; p.points.length; i++) {
+    println(p.points[i]);
+}</code></pre>
+
+
+
+        
     
 
     
         <h3 class="subsection-title">Methods</h3>
+
+        
+            
+
+    
+
+    <h4 class="name" id="addPoint"><span class="type-signature"></span>addPoint<span class="signature">(x, y)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="graphics_polygon.js.html">graphics/polygon.js</a>, <a href="graphics_polygon.js.html#line146">line 146</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+<div class="description usertext">
+    Adds a vertex to the polygon.
+This also updates the width and height of the Polygon, expanding the width and height
+to the maximum distance between two points along the x and y axes, respectively.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>const p = new Polygon();
+p.addPoint(10, 10);</code></pre>
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>x</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The x coordinate of the desired new vertex.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>y</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The y coordinate of the desired new vertex.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         
             
@@ -359,7 +518,7 @@ so any Graphics instances drawing it know to re-sort.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="graphics_text.js.html">graphics/text.js</a>, <a href="graphics_text.js.html#line194">line 194</a>
+        <a href="graphics_polygon.js.html">graphics/polygon.js</a>, <a href="graphics_polygon.js.html#line80">line 80</a>
     </li></ul></dd>
     
 
@@ -404,7 +563,7 @@ so any Graphics instances drawing it know to re-sort.
 
 
 <div class="description usertext">
-    Checks if the passed point is contained in the text.
+    Checks if the coordinates are contained in the Polygon.
 </div>
 
 
@@ -413,6 +572,17 @@ so any Graphics instances drawing it know to re-sort.
 
 
 
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>const p = new Polygon();
+p.addPoint(10, 10);
+p.addPoint(20, 10);
+p.addPoint(15, 15);
+if (p.containsPoint(12, 12)) {
+    p.setColor(Color.RED);
+}</code></pre>
 
 
 
@@ -506,10 +676,6 @@ so any Graphics instances drawing it know to re-sort.
 <h5>Returns:</h5>
 
         
-<div class="param-desc">
-    Whether the passed point is contained in the text.
-</div>
-
 
 
 <dl class="param-type">
@@ -1325,7 +1491,7 @@ thing.getColor(); // #000000, by default</code></pre>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="graphics_text.js.html">graphics/text.js</a>, <a href="graphics_text.js.html#line182">line 182</a>
+        <a href="graphics_polygon.js.html">graphics/polygon.js</a>, <a href="graphics_polygon.js.html#line131">line 131</a>
     </li></ul></dd>
     
 
@@ -1365,7 +1531,8 @@ thing.getColor(); // #000000, by default</code></pre>
 
 
 <div class="description usertext">
-    Returns the height of a Text object.
+    Gets the width of the Polygon.
+The width is the greatest distance between two points in the Polygon along the x axis.
 </div>
 
 
@@ -1374,6 +1541,15 @@ thing.getColor(); // #000000, by default</code></pre>
 
 
 
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>const p = new Polygon();
+p.addPoint(50, 0);
+p.addPoint(30, 100);
+p.addPoint(10, 200);
+p.getHeight() === 200;</code></pre>
 
 
 
@@ -1396,7 +1572,7 @@ thing.getColor(); // #000000, by default</code></pre>
 
         
 <div class="param-desc">
-    The height of the text.
+    height of the rectangle.
 </div>
 
 
@@ -1408,226 +1584,6 @@ thing.getColor(); // #000000, by default</code></pre>
     <dd>
         
 <span class="param-type">number</span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-        
-            
-
-    
-
-    <h4 class="name" id="getLabel"><span class="type-signature"></span>getLabel<span class="signature">()</span><span class="type-signature"> &rarr; {string}</span></h4>
-
-    
-
-
-
-
-<dl class="details">
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="graphics_text.js.html">graphics/text.js</a>, <a href="graphics_text.js.html#line153">line 153</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-<div class="description usertext">
-    Returns the label of a Text object.
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    String of the Text's current label.
-</div>
-
-
-
-<dl class="param-type">
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">string</span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-        
-            
-
-    
-
-    <h4 class="name" id="getText"><span class="type-signature"></span>getText<span class="signature">()</span><span class="type-signature"> &rarr; {string}</span></h4>
-
-    
-
-
-
-
-<dl class="details">
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="graphics_text.js.html">graphics/text.js</a>, <a href="graphics_text.js.html#line164">line 164</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-<div class="description usertext">
-    Equivalent to `getLabel`.  Likely created to prevent errors on accidental
-calls.
-Returns the label of a Text object.
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    String of the Text's current label.
-</div>
-
-
-
-<dl class="param-type">
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">string</span>
 
 
     </dd>
@@ -1764,7 +1720,7 @@ Returns the label of a Text object.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="graphics_text.js.html">graphics/text.js</a>, <a href="graphics_text.js.html#line173">line 173</a>
+        <a href="graphics_polygon.js.html">graphics/polygon.js</a>, <a href="graphics_polygon.js.html#line115">line 115</a>
     </li></ul></dd>
     
 
@@ -1804,7 +1760,8 @@ Returns the label of a Text object.
 
 
 <div class="description usertext">
-    Returns the width of a Text object.
+    Gets the width of the Polygon.
+The width is the greatest distance between two points in the Polygon along the x axis.
 </div>
 
 
@@ -1813,6 +1770,14 @@ Returns the label of a Text object.
 
 
 
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>const p = new Polygon();
+p.addPoint(0, 50);
+p.addPoint(200, 30);
+p.getWidth() === 200;</code></pre>
 
 
 
@@ -1835,7 +1800,7 @@ Returns the label of a Text object.
 
         
 <div class="param-desc">
-    The width of the text.
+    Width of the rectangle.
 </div>
 
 
@@ -2353,7 +2318,7 @@ thing.isFilled();</code></pre>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="graphics_thing.js.html">graphics/thing.js</a>, <a href="graphics_thing.js.html#line500">line 500</a>
+        <a href="graphics_polygon.js.html">graphics/polygon.js</a>, <a href="graphics_polygon.js.html#line184">line 184</a>
     </li></ul></dd>
     
 
@@ -2398,7 +2363,8 @@ thing.isFilled();</code></pre>
 
 
 <div class="description usertext">
-    Changes the possition of a thing by a specified x and y amount.
+    Moves the entire polygon.
+This shifts each vertex in the Polygon by dx, dy.
 </div>
 
 
@@ -2411,9 +2377,10 @@ thing.isFilled();</code></pre>
 
     <h5>Example</h5>
     
-    <pre class="prettyprint"><code>// this method is on every Shape
-let thing = new Thing();
-thing.move(10, 10);</code></pre>
+    <pre class="prettyprint"><code>const p = new Polygon();
+p.addPoint(20, 20);
+p.move(10, 10);
+p.points[0] === {x: 30, y: 30};</code></pre>
 
 
 
@@ -2459,7 +2426,7 @@ thing.move(10, 10);</code></pre>
 
             
 
-            <td class="description last">The resulting change in the Thing's x position.</td>
+            <td class="description last">The change in x coordinate of all starting and ending points.</td>
         </tr>
 
     
@@ -2482,99 +2449,12 @@ thing.move(10, 10);</code></pre>
 
             
 
-            <td class="description last">The resulting change in the Thing's y position.</td>
+            <td class="description last">The change in y coordinate of all starting and ending points.</td>
         </tr>
 
     
     </tbody>
 </table>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-            
-
-    
-
-    <h4 class="name" id="resetDimensions"><span class="type-signature"></span>resetDimensions<span class="signature">()</span><span class="type-signature"></span></h4>
-
-    
-
-
-
-
-<dl class="details">
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="graphics_text.js.html">graphics/text.js</a>, <a href="graphics_text.js.html#line55">line 55</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-<div class="description usertext">
-    Reset the dimensions of the text to the size in the context.
-</div>
-
-
-
-
-
-
-
-
-
 
 
 
@@ -3677,283 +3557,6 @@ thing.setFilled(false);</code></pre>
 
     
 
-    <h4 class="name" id="setFont"><span class="type-signature"></span>setFont<span class="signature">(font)</span><span class="type-signature"></span></h4>
-
-    
-
-
-
-
-<dl class="details">
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="graphics_text.js.html">graphics/text.js</a>, <a href="graphics_text.js.html#line92">line 92</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-<div class="description usertext">
-    Set the font of the text.
-Re-calculates the dimensions of the font after font change.
-</div>
-
-
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>font</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">String of the desired font for the text.</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-            
-
-    
-
-    <h4 class="name" id="setLabel"><span class="type-signature"></span>setLabel<span class="signature">(label)</span><span class="type-signature"></span></h4>
-
-    
-
-
-
-
-<dl class="details">
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="graphics_text.js.html">graphics/text.js</a>, <a href="graphics_text.js.html#line113">line 113</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-<div class="description usertext">
-    Set the label of the text.
-Re-calculates the dimensions of the font after font change.
-</div>
-
-
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>label</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-|
-
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">The words of the text.</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-            
-
-    
-
     <h4 class="name" id="setOpacity"><span class="type-signature"></span>setOpacity<span class="signature">(opacity)</span><span class="type-signature"></span></h4>
 
     
@@ -4114,7 +3717,7 @@ thing.setOpacity(0.5);</code></pre>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="graphics_thing.js.html">graphics/thing.js</a>, <a href="graphics_thing.js.html#line272">line 272</a>
+        <a href="graphics_polygon.js.html">graphics/polygon.js</a>, <a href="graphics_polygon.js.html#line212">line 212</a>
     </li></ul></dd>
     
 
@@ -4159,9 +3762,7 @@ thing.setOpacity(0.5);</code></pre>
 
 
 <div class="description usertext">
-    Sets the position of a Thing.
-Throws an error if there are fewer than 2 params or if
-they are not numbers.
+    Set the position of the polygon by moving all of its points.
 </div>
 
 
@@ -4170,13 +3771,6 @@ they are not numbers.
 
 
 
-
-
-    <h5>Example</h5>
-    
-    <pre class="prettyprint"><code>// this method is on every Shape
-let thing = new Thing();
-thing.setPosition(30, 30);</code></pre>
 
 
 
@@ -4222,7 +3816,7 @@ thing.setPosition(30, 30);</code></pre>
 
             
 
-            <td class="description last">The destination x coordinate of this Thing.</td>
+            <td class="description last"></td>
         </tr>
 
     
@@ -4245,7 +3839,7 @@ thing.setPosition(30, 30);</code></pre>
 
             
 
-            <td class="description last">The destination y coordinate of this Thing.</td>
+            <td class="description last"></td>
         </tr>
 
     
@@ -4421,147 +4015,6 @@ thing.setRotation(Math.PI / 2, Thing.RADIANS);</code></pre>
 
             <td class="description last">Whether it is degrees or radians. Defaults to
                             degrees.</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-            
-
-    
-
-    <h4 class="name" id="setText"><span class="type-signature"></span>setText<span class="signature">(label)</span><span class="type-signature"></span></h4>
-
-    
-
-
-
-
-<dl class="details">
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="graphics_text.js.html">graphics/text.js</a>, <a href="graphics_text.js.html#line134">line 134</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-<div class="description usertext">
-    Equivalent to `setLabel`. Likely created to prevent errors on
-accidental calls.
-Re-calculates the dimensions of the font after font change.
-</div>
-
-
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>label</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-|
-
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">The words of the text.</td>
         </tr>
 
     

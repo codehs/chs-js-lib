@@ -3,7 +3,7 @@
 <head>
     
     <meta charset="utf-8">
-    <title>datastructures/stack.js - Documentation</title>
+    <title>manager.js - Documentation</title>
     
     
     <script src="scripts/prettify/prettify.js"></script>
@@ -32,7 +32,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">datastructures/stack.js</h1>
+    <h1 class="page-title">manager.js</h1>
     
 
     
@@ -42,53 +42,116 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>/**
- * A Stack is a subclass of an Array that implements First In, Last Out ordering.
+            <pre class="prettyprint source linenums"><code>export const DEFAULT_UPDATE_INTERVAL = 40;
+
+/**
+ * Internal superclass for managing sound and graphics.
  * @class
- * @extends Array
  */
-class Stack extends Array {
+class Manager {
     /**
-     * Get the number of objects in the stack.
-     * @returns {number} Number of elements in the stack.
+     * @constructor
+     * @param {Object} options
      */
-    size() {
-        return this.length;
+    constructor(options = {}) {
+        this.onError = options.onError;
+        /** @type {Object.&lt;string, Array.&lt;Function>>} */
+        this.timers = {};
+    }
+
+    withErrorHandler(fn) {
+        return (...args) => {
+            try {
+                fn?.(...args);
+            } catch (e) {
+                if (typeof this.onError === 'function') {
+                    this.onError(e);
+                } else {
+                    throw e;
+                }
+            }
+        };
     }
 
     /**
-     * Clear the contents of the stack.
+     * Set a timer.
+     * A timer can be set a few different ways based on the parameters `data` and `name`.
+     * By default, calling `setTimer(fn)` will create a timer with the name of the function.
+     * This means that you can't create two timers for the same function, because they'll have
+     * the same name. To get around this, you can create a new name and pass it as the
+     * fourth parameter to the `setTimer` function:
+     * @example
+     * const timerID = Randomizer.nextInt(1000);
+     * setTimer(() => {
+     *   console.log('50 milliseconds has elapsed');
+     * }, 50, {}, timerID);
+     * //...
+     * stopTimer(timerID);
+     *
+     * @private
+     * @param {function} fn - The function to be executed on the timer.
+     * @param {number} interval - The time interval for the function.
+     * @param {object} data - Any arguments to be passed into `fn`.
+     * @param {string} name - The name of the timer.
      */
-    clear() {
-        this.length = 0;
+    setTimer(fn, interval, data, name) {
+        interval = interval ?? DEFAULT_UPDATE_INTERVAL;
+        name = name ?? fn.name;
+        // this is an immediately invoked function expression:
+        // it creates a function, then immediately calls it. this is done to create a new closure,
+        // which is used to keep variables encapsulated in the scope.
+        // the one variable being returned from this expression
+        // is a function that we call "stop" that will cause the timer to stop updating.
+        const stop = (() => {
+            let shouldUpdate = true;
+            let lastUpdate = Date.now();
+            const timer = () => {
+                if (!shouldUpdate) {
+                    return;
+                }
+                const now = Date.now();
+                if (now - lastUpdate > interval) {
+                    fn(data);
+                    lastUpdate = now;
+                }
+                requestAnimationFrame(timer);
+            };
+            requestAnimationFrame(timer);
+
+            return () => {
+                shouldUpdate = false;
+            };
+        })();
+
+        if (this.timers[name]) {
+            this.timers[name].push(stop);
+        } else {
+            this.timers[name] = [stop];
+        }
     }
 
     /**
-     * Get the front element of the stack without removing it from the stack.
-     * @returns {any} Front element from the stack.
+     * Remove a timer associated with a function.
+     * @param {function} fn - Function whose timer is removed.
+     * note 'fn' may also be the name of the function.
      */
-    peek() {
-        return this[this.length - 1];
+    stopTimer(fn) {
+        const name = typeof fn === 'function' ? fn.name : fn;
+        this.timers[name]?.forEach(stopper => stopper());
+        this.timers[name] = [];
     }
 
     /**
-     * Checks if the stack isn't empty.
-     * @returns {boolean} Whether or not the stack has another element. True if yes.
+     * Stop all timers.
      */
-    hasNext() {
-        return !this.isEmpty();
-    }
-
-    /**
-     * Checks if the stack is empty.
-     * @returns {boolean} Whether or not the stack is empty. True if yes.
-     */
-    isEmpty() {
-        return this.length === 0;
+    stopAllTimers() {
+        Object.keys(this.timers).map(name => {
+            this.stopTimer(name);
+        });
     }
 }
 
-export default Stack;
+export default Manager;
 </code></pre>
         </article>
     </section>

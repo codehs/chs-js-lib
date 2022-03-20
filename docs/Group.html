@@ -3,7 +3,7 @@
 <head>
     
     <meta charset="utf-8">
-    <title>Text - Documentation</title>
+    <title>Group - Documentation</title>
     
     
     <script src="scripts/prettify/prettify.js"></script>
@@ -32,7 +32,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">Text</h1>
+    <h1 class="page-title">Group</h1>
     
 
     
@@ -45,10 +45,10 @@
 <header>
     
         <h2>
-        Text
+        Group
         </h2>
         
-            <div class="class-description usertext">Text is used to display words on the canvas.</div>
+            <div class="class-description usertext">Represents a collection of graphical elements that can be acted on together.</div>
         
     
 </header>
@@ -63,7 +63,7 @@
     <h2>Constructor</h2>
     
 
-    <h4 class="name" id="Text"><span class="type-signature"></span>new Text<span class="signature">(label, font)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="Group"><span class="type-signature"></span>new Group<span class="signature">(&hellip;elements)</span><span class="type-signature"></span></h4>
 
     
 
@@ -75,7 +75,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="graphics_text.js.html">graphics/text.js</a>, <a href="graphics_text.js.html#line8">line 8</a>
+        <a href="graphics_group.js.html">graphics/group.js</a>, <a href="graphics_group.js.html#line8">line 8</a>
     </li></ul></dd>
     
 
@@ -115,7 +115,7 @@
 
 
 <div class="description usertext">
-    Constructs a text object.
+    Constructs a new Group.
 </div>
 
 
@@ -128,7 +128,8 @@
 
     <h5>Example</h5>
     
-    <pre class="prettyprint"><code>const label = new Text('Hello, World', '15pt Arial);</code></pre>
+    <pre class="prettyprint"><code>const group = new Group(new Circle(20), new Rectangle(20, 20));
+add(group);</code></pre>
 
 
 
@@ -146,9 +147,9 @@
         <th>Type</th>
 
         
-
+        <th>Attributes</th>
         
-        <th>Default</th>
+
         
 
         <th class="last">Description</th>
@@ -160,59 +161,33 @@
 
         <tr>
             
-                <td class="name"><code>label</code></td>
+                <td class="name"><code>elements</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">string</span>
-|
-
-<span class="param-type">number</span>
+<span class="param-type"><a href="Thing.html">Thing</a></span>
 
 
             
             </td>
 
             
+                <td class="attributes">
+                
 
-            
-                <td class="default">
+                
+
+                
+                    &lt;repeatable><br>
                 
                 </td>
             
 
-            <td class="description last"></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>font</code></td>
             
 
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-                <td class="default">
-                
-                    <code>20pt Arial</code>
-                
-                </td>
-            
-
-            <td class="description last"></td>
+            <td class="description last">Any number of elements to initialize the group with.</td>
         </tr>
 
     
@@ -266,6 +241,79 @@
 
     
         <h3 class="subsection-title">Members</h3>
+
+        
+            
+<h4 class="name" id="height"><span class="type-signature"></span>height<span class="type-signature"> :number</span></h4>
+
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="graphics_group.js.html">graphics/group.js</a>, <a href="graphics_group.js.html#line95">line 95</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+<div class="description usertext">
+    Height of the group, meaning the difference between bottom and top bounds.
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">number</span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
 
         
             
@@ -337,10 +385,372 @@ so any Graphics instances drawing it know to re-sort.
 
 
         
+            
+<h4 class="name" id="width"><span class="type-signature"></span>width<span class="type-signature"> :number</span></h4>
+
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="graphics_group.js.html">graphics/group.js</a>, <a href="graphics_group.js.html#line86">line 86</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+<div class="description usertext">
+    Width of the group, meaning the difference between right and left bounds.
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">number</span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="x"><span class="type-signature"></span>x<span class="type-signature"> :number</span></h4>
+
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="graphics_group.js.html">graphics/group.js</a>, <a href="graphics_group.js.html#line56">line 56</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+<div class="description usertext">
+    X position of the group, indicated by its left bound.
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">number</span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="y"><span class="type-signature"></span>y<span class="type-signature"> :number</span></h4>
+
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="graphics_group.js.html">graphics/group.js</a>, <a href="graphics_group.js.html#line71">line 71</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+<div class="description usertext">
+    X position of the group, indicated by its top bound.
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">number</span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+
+        
     
 
     
         <h3 class="subsection-title">Methods</h3>
+
+        
+            
+
+    
+
+    <h4 class="name" id="add"><span class="type-signature"></span>add<span class="signature">(element)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="graphics_group.js.html">graphics/group.js</a>, <a href="graphics_group.js.html#line117">line 117</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+<div class="description usertext">
+    Add an element to the group.
+This will cause the group's bounds to recalculate to include this element.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>const g = new Group();
+g.add(new Circle(10));</code></pre>
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>element</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Thing.html">Thing</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         
             
@@ -359,7 +769,7 @@ so any Graphics instances drawing it know to re-sort.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="graphics_text.js.html">graphics/text.js</a>, <a href="graphics_text.js.html#line194">line 194</a>
+        <a href="graphics_group.js.html">graphics/group.js</a>, <a href="graphics_group.js.html#line218">line 218</a>
     </li></ul></dd>
     
 
@@ -404,7 +814,8 @@ so any Graphics instances drawing it know to re-sort.
 
 
 <div class="description usertext">
-    Checks if the passed point is contained in the text.
+    Return whether this group contains the point, which is true if any element in this group
+contains it.
 </div>
 
 
@@ -458,7 +869,7 @@ so any Graphics instances drawing it know to re-sort.
 
             
 
-            <td class="description last">The x coordinate of the point being tested.</td>
+            <td class="description last"></td>
         </tr>
 
     
@@ -481,7 +892,7 @@ so any Graphics instances drawing it know to re-sort.
 
             
 
-            <td class="description last">The y coordinate of the point being tested.</td>
+            <td class="description last"></td>
         </tr>
 
     
@@ -506,10 +917,6 @@ so any Graphics instances drawing it know to re-sort.
 <h5>Returns:</h5>
 
         
-<div class="param-desc">
-    Whether the passed point is contained in the text.
-</div>
-
 
 
 <dl class="param-type">
@@ -545,7 +952,7 @@ so any Graphics instances drawing it know to re-sort.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="graphics_thing.js.html">graphics/thing.js</a>, <a href="graphics_thing.js.html#line609">line 609</a>
+        <a href="graphics_group.js.html">graphics/group.js</a>, <a href="graphics_group.js.html#line203">line 203</a>
     </li></ul></dd>
     
 
@@ -590,9 +997,7 @@ so any Graphics instances drawing it know to re-sort.
 
 
 <div class="description usertext">
-    Describes the element for use with screen readers.
-This isn't something you should need to call manually, but you can if you'd like
-to print a text descriptino of the Thing.
+    Describe the element for screen readers.
 </div>
 
 
@@ -603,6 +1008,147 @@ to print a text descriptino of the Thing.
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="draw"><span class="type-signature"></span>draw<span class="signature">(context)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="graphics_group.js.html">graphics/group.js</a>, <a href="graphics_group.js.html#line170">line 170</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-overrides">Overrides:</dt>
+    <dd class="tag-overrides"><ul class="dummy"><li>
+        <a href="Thing.html#draw">Thing#draw</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+<div class="description usertext">
+    Draws the group, which draws all of its elements.
+</div>
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>context</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">CanvasRenderingContext2D</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
 
 
 
@@ -1313,7 +1859,7 @@ thing.getColor(); // #000000, by default</code></pre>
 
     
 
-    <h4 class="name" id="getHeight"><span class="type-signature"></span>getHeight<span class="signature">()</span><span class="type-signature"> &rarr; {number}</span></h4>
+    <h4 class="name" id="getElements"><span class="type-signature"></span>getElements<span class="signature">()</span><span class="type-signature"> &rarr; {Array.&lt;<a href="Thing.html">Thing</a>>}</span></h4>
 
     
 
@@ -1325,7 +1871,7 @@ thing.getColor(); // #000000, by default</code></pre>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="graphics_text.js.html">graphics/text.js</a>, <a href="graphics_text.js.html#line182">line 182</a>
+        <a href="graphics_group.js.html">graphics/group.js</a>, <a href="graphics_group.js.html#line104">line 104</a>
     </li></ul></dd>
     
 
@@ -1365,7 +1911,7 @@ thing.getColor(); // #000000, by default</code></pre>
 
 
 <div class="description usertext">
-    Returns the height of a Text object.
+    Get all elements in the group.
 </div>
 
 
@@ -1395,10 +1941,6 @@ thing.getColor(); // #000000, by default</code></pre>
 <h5>Returns:</h5>
 
         
-<div class="param-desc">
-    The height of the text.
-</div>
-
 
 
 <dl class="param-type">
@@ -1407,227 +1949,7 @@ thing.getColor(); // #000000, by default</code></pre>
     </dt>
     <dd>
         
-<span class="param-type">number</span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-        
-            
-
-    
-
-    <h4 class="name" id="getLabel"><span class="type-signature"></span>getLabel<span class="signature">()</span><span class="type-signature"> &rarr; {string}</span></h4>
-
-    
-
-
-
-
-<dl class="details">
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="graphics_text.js.html">graphics/text.js</a>, <a href="graphics_text.js.html#line153">line 153</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-<div class="description usertext">
-    Returns the label of a Text object.
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    String of the Text's current label.
-</div>
-
-
-
-<dl class="param-type">
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">string</span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-        
-            
-
-    
-
-    <h4 class="name" id="getText"><span class="type-signature"></span>getText<span class="signature">()</span><span class="type-signature"> &rarr; {string}</span></h4>
-
-    
-
-
-
-
-<dl class="details">
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="graphics_text.js.html">graphics/text.js</a>, <a href="graphics_text.js.html#line164">line 164</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-<div class="description usertext">
-    Equivalent to `getLabel`.  Likely created to prevent errors on accidental
-calls.
-Returns the label of a Text object.
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    String of the Text's current label.
-</div>
-
-
-
-<dl class="param-type">
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">string</span>
+<span class="param-type">Array.&lt;<a href="Thing.html">Thing</a>></span>
 
 
     </dd>
@@ -1738,115 +2060,6 @@ Returns the label of a Text object.
     <dd>
         
 <span class="param-type">string</span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-        
-            
-
-    
-
-    <h4 class="name" id="getWidth"><span class="type-signature"></span>getWidth<span class="signature">()</span><span class="type-signature"> &rarr; {number}</span></h4>
-
-    
-
-
-
-
-<dl class="details">
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="graphics_text.js.html">graphics/text.js</a>, <a href="graphics_text.js.html#line173">line 173</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-<div class="description usertext">
-    Returns the width of a Text object.
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    The width of the text.
-</div>
-
-
-
-<dl class="param-type">
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">number</span>
 
 
     </dd>
@@ -2353,7 +2566,7 @@ thing.isFilled();</code></pre>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="graphics_thing.js.html">graphics/thing.js</a>, <a href="graphics_thing.js.html#line500">line 500</a>
+        <a href="graphics_group.js.html">graphics/group.js</a>, <a href="graphics_group.js.html#line144">line 144</a>
     </li></ul></dd>
     
 
@@ -2398,7 +2611,8 @@ thing.isFilled();</code></pre>
 
 
 <div class="description usertext">
-    Changes the possition of a thing by a specified x and y amount.
+    Moves all elements in the group by dx, dy.
+The .move method of each element in the group will be called with dx, dy.
 </div>
 
 
@@ -2407,13 +2621,6 @@ thing.isFilled();</code></pre>
 
 
 
-
-
-    <h5>Example</h5>
-    
-    <pre class="prettyprint"><code>// this method is on every Shape
-let thing = new Thing();
-thing.move(10, 10);</code></pre>
 
 
 
@@ -2459,7 +2666,7 @@ thing.move(10, 10);</code></pre>
 
             
 
-            <td class="description last">The resulting change in the Thing's x position.</td>
+            <td class="description last"></td>
         </tr>
 
     
@@ -2482,7 +2689,7 @@ thing.move(10, 10);</code></pre>
 
             
 
-            <td class="description last">The resulting change in the Thing's y position.</td>
+            <td class="description last"></td>
         </tr>
 
     
@@ -2512,7 +2719,7 @@ thing.move(10, 10);</code></pre>
 
     
 
-    <h4 class="name" id="resetDimensions"><span class="type-signature"></span>resetDimensions<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="remove"><span class="type-signature"></span>remove<span class="signature">(element)</span><span class="type-signature"></span></h4>
 
     
 
@@ -2524,7 +2731,7 @@ thing.move(10, 10);</code></pre>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="graphics_text.js.html">graphics/text.js</a>, <a href="graphics_text.js.html#line55">line 55</a>
+        <a href="graphics_group.js.html">graphics/group.js</a>, <a href="graphics_group.js.html#line128">line 128</a>
     </li></ul></dd>
     
 
@@ -2564,7 +2771,8 @@ thing.move(10, 10);</code></pre>
 
 
 <div class="description usertext">
-    Reset the dimensions of the text to the size in the context.
+    Removes `element` from the group.
+This will cause the group's bounds to recalculate to remove this element.
 </div>
 
 
@@ -2575,6 +2783,55 @@ thing.move(10, 10);</code></pre>
 
 
 
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>element</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Thing.html">Thing</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
 
 
 
@@ -3677,283 +3934,6 @@ thing.setFilled(false);</code></pre>
 
     
 
-    <h4 class="name" id="setFont"><span class="type-signature"></span>setFont<span class="signature">(font)</span><span class="type-signature"></span></h4>
-
-    
-
-
-
-
-<dl class="details">
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="graphics_text.js.html">graphics/text.js</a>, <a href="graphics_text.js.html#line92">line 92</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-<div class="description usertext">
-    Set the font of the text.
-Re-calculates the dimensions of the font after font change.
-</div>
-
-
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>font</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">String of the desired font for the text.</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-            
-
-    
-
-    <h4 class="name" id="setLabel"><span class="type-signature"></span>setLabel<span class="signature">(label)</span><span class="type-signature"></span></h4>
-
-    
-
-
-
-
-<dl class="details">
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="graphics_text.js.html">graphics/text.js</a>, <a href="graphics_text.js.html#line113">line 113</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-<div class="description usertext">
-    Set the label of the text.
-Re-calculates the dimensions of the font after font change.
-</div>
-
-
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>label</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-|
-
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">The words of the text.</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-            
-
-    
-
     <h4 class="name" id="setOpacity"><span class="type-signature"></span>setOpacity<span class="signature">(opacity)</span><span class="type-signature"></span></h4>
 
     
@@ -4114,7 +4094,7 @@ thing.setOpacity(0.5);</code></pre>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="graphics_thing.js.html">graphics/thing.js</a>, <a href="graphics_thing.js.html#line272">line 272</a>
+        <a href="graphics_group.js.html">graphics/group.js</a>, <a href="graphics_group.js.html#line159">line 159</a>
     </li></ul></dd>
     
 
@@ -4159,9 +4139,9 @@ thing.setOpacity(0.5);</code></pre>
 
 
 <div class="description usertext">
-    Sets the position of a Thing.
-Throws an error if there are fewer than 2 params or if
-they are not numbers.
+    Set the position of the group.
+This will calculate the difference between the current and desired position
+and .move() the group and all its elements by that distance.
 </div>
 
 
@@ -4170,13 +4150,6 @@ they are not numbers.
 
 
 
-
-
-    <h5>Example</h5>
-    
-    <pre class="prettyprint"><code>// this method is on every Shape
-let thing = new Thing();
-thing.setPosition(30, 30);</code></pre>
 
 
 
@@ -4222,7 +4195,7 @@ thing.setPosition(30, 30);</code></pre>
 
             
 
-            <td class="description last">The destination x coordinate of this Thing.</td>
+            <td class="description last"></td>
         </tr>
 
     
@@ -4245,7 +4218,7 @@ thing.setPosition(30, 30);</code></pre>
 
             
 
-            <td class="description last">The destination y coordinate of this Thing.</td>
+            <td class="description last"></td>
         </tr>
 
     
@@ -4421,147 +4394,6 @@ thing.setRotation(Math.PI / 2, Thing.RADIANS);</code></pre>
 
             <td class="description last">Whether it is degrees or radians. Defaults to
                             degrees.</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-            
-
-    
-
-    <h4 class="name" id="setText"><span class="type-signature"></span>setText<span class="signature">(label)</span><span class="type-signature"></span></h4>
-
-    
-
-
-
-
-<dl class="details">
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="graphics_text.js.html">graphics/text.js</a>, <a href="graphics_text.js.html#line134">line 134</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-<div class="description usertext">
-    Equivalent to `setLabel`. Likely created to prevent errors on
-accidental calls.
-Re-calculates the dimensions of the font after font change.
-</div>
-
-
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>label</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-|
-
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">The words of the text.</td>
         </tr>
 
     

@@ -3,7 +3,7 @@
 <head>
     
     <meta charset="utf-8">
-    <title>Text - Documentation</title>
+    <title>Arc - Documentation</title>
     
     
     <script src="scripts/prettify/prettify.js"></script>
@@ -32,7 +32,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">Text</h1>
+    <h1 class="page-title">Arc</h1>
     
 
     
@@ -45,10 +45,12 @@
 <header>
     
         <h2>
-        Text
+        Arc
         </h2>
         
-            <div class="class-description usertext">Text is used to display words on the canvas.</div>
+            <div class="class-description usertext">An Arc is a continuous slice of a circle described by the position of its center, its radius,
+and the angles it is drawn between.
+An Arc draws relative to its center, just like a <a href="Circle.html">Circle</a>.</div>
         
     
 </header>
@@ -63,7 +65,7 @@
     <h2>Constructor</h2>
     
 
-    <h4 class="name" id="Text"><span class="type-signature"></span>new Text<span class="signature">(label, font)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="Arc"><span class="type-signature"></span>new Arc<span class="signature">(radius, startAngle, endAngle, angleUnit)</span><span class="type-signature"></span></h4>
 
     
 
@@ -75,7 +77,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="graphics_text.js.html">graphics/text.js</a>, <a href="graphics_text.js.html#line8">line 8</a>
+        <a href="graphics_arc.js.html">graphics/arc.js</a>, <a href="graphics_arc.js.html#line10">line 10</a>
     </li></ul></dd>
     
 
@@ -115,7 +117,7 @@
 
 
 <div class="description usertext">
-    Constructs a text object.
+    Constructs a new arc.
 </div>
 
 
@@ -128,7 +130,9 @@
 
     <h5>Example</h5>
     
-    <pre class="prettyprint"><code>const label = new Text('Hello, World', '15pt Arial);</code></pre>
+    <pre class="prettyprint"><code>// create an Arc with radius 30 with an angle from 0 to -90
+const arc = new Arc(30, 0, 90, Arc.DEGREES);
+add(arc);</code></pre>
 
 
 
@@ -148,8 +152,6 @@
         
 
         
-        <th>Default</th>
-        
 
         <th class="last">Description</th>
     </tr>
@@ -160,15 +162,12 @@
 
         <tr>
             
-                <td class="name"><code>label</code></td>
+                <td class="name"><code>radius</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">string</span>
-|
-
 <span class="param-type">number</span>
 
 
@@ -178,25 +177,21 @@
             
 
             
-                <td class="default">
-                
-                </td>
-            
 
-            <td class="description last"></td>
+            <td class="description last">Desired radius of the arc.</td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>font</code></td>
+                <td class="name"><code>startAngle</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">string</span>
+<span class="param-type">number</span>
 
 
             
@@ -205,14 +200,54 @@
             
 
             
-                <td class="default">
-                
-                    <code>20pt Arial</code>
-                
-                </td>
+
+            <td class="description last">Start angle of the arc.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>endAngle</code></td>
             
 
-            <td class="description last"></td>
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">End angle of the arc.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>angleUnit</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Integer representing unit: Degrees:0, Radians:1</td>
         </tr>
 
     
@@ -337,6 +372,79 @@ so any Graphics instances drawing it know to re-sort.
 
 
         
+            
+<h4 class="name" id="radius"><span class="type-signature"></span>radius<span class="type-signature"> :number</span></h4>
+
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="graphics_arc.js.html">graphics/arc.js</a>, <a href="graphics_arc.js.html#line70">line 70</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+<div class="description usertext">
+    The radius of the arc
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">number</span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+
+        
     
 
     
@@ -359,7 +467,7 @@ so any Graphics instances drawing it know to re-sort.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="graphics_text.js.html">graphics/text.js</a>, <a href="graphics_text.js.html#line194">line 194</a>
+        <a href="graphics_arc.js.html">graphics/arc.js</a>, <a href="graphics_arc.js.html#line215">line 215</a>
     </li></ul></dd>
     
 
@@ -404,7 +512,7 @@ so any Graphics instances drawing it know to re-sort.
 
 
 <div class="description usertext">
-    Checks if the passed point is contained in the text.
+    Checks if a given point is contained within the arc.
 </div>
 
 
@@ -458,7 +566,7 @@ so any Graphics instances drawing it know to re-sort.
 
             
 
-            <td class="description last">The x coordinate of the point being tested.</td>
+            <td class="description last">x coordinate of the point being tested.</td>
         </tr>
 
     
@@ -481,7 +589,7 @@ so any Graphics instances drawing it know to re-sort.
 
             
 
-            <td class="description last">The y coordinate of the point being tested.</td>
+            <td class="description last">y coordinate of the point being tested.</td>
         </tr>
 
     
@@ -506,10 +614,6 @@ so any Graphics instances drawing it know to re-sort.
 <h5>Returns:</h5>
 
         
-<div class="param-desc">
-    Whether the passed point is contained in the text.
-</div>
-
 
 
 <dl class="param-type">
@@ -1313,7 +1417,7 @@ thing.getColor(); // #000000, by default</code></pre>
 
     
 
-    <h4 class="name" id="getHeight"><span class="type-signature"></span>getHeight<span class="signature">()</span><span class="type-signature"> &rarr; {number}</span></h4>
+    <h4 class="name" id="getEndAngle"><span class="type-signature"></span>getEndAngle<span class="signature">()</span><span class="type-signature"> &rarr; {number}</span></h4>
 
     
 
@@ -1325,7 +1429,7 @@ thing.getColor(); // #000000, by default</code></pre>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="graphics_text.js.html">graphics/text.js</a>, <a href="graphics_text.js.html#line182">line 182</a>
+        <a href="graphics_arc.js.html">graphics/arc.js</a>, <a href="graphics_arc.js.html#line182">line 182</a>
     </li></ul></dd>
     
 
@@ -1365,7 +1469,7 @@ thing.getColor(); // #000000, by default</code></pre>
 
 
 <div class="description usertext">
-    Returns the height of a Text object.
+    Gets the end angle of the arc.
 </div>
 
 
@@ -1395,10 +1499,6 @@ thing.getColor(); // #000000, by default</code></pre>
 <h5>Returns:</h5>
 
         
-<div class="param-desc">
-    The height of the text.
-</div>
-
 
 
 <dl class="param-type">
@@ -1422,7 +1522,7 @@ thing.getColor(); // #000000, by default</code></pre>
 
     
 
-    <h4 class="name" id="getLabel"><span class="type-signature"></span>getLabel<span class="signature">()</span><span class="type-signature"> &rarr; {string}</span></h4>
+    <h4 class="name" id="getStartAngle"><span class="type-signature"></span>getStartAngle<span class="signature">()</span><span class="type-signature"> &rarr; {number}</span></h4>
 
     
 
@@ -1434,7 +1534,7 @@ thing.getColor(); // #000000, by default</code></pre>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="graphics_text.js.html">graphics/text.js</a>, <a href="graphics_text.js.html#line153">line 153</a>
+        <a href="graphics_arc.js.html">graphics/arc.js</a>, <a href="graphics_arc.js.html#line170">line 170</a>
     </li></ul></dd>
     
 
@@ -1474,7 +1574,7 @@ thing.getColor(); // #000000, by default</code></pre>
 
 
 <div class="description usertext">
-    Returns the label of a Text object.
+    Gets the starting angle of the arc.
 </div>
 
 
@@ -1504,10 +1604,6 @@ thing.getColor(); // #000000, by default</code></pre>
 <h5>Returns:</h5>
 
         
-<div class="param-desc">
-    String of the Text's current label.
-</div>
-
 
 
 <dl class="param-type">
@@ -1516,118 +1612,7 @@ thing.getColor(); // #000000, by default</code></pre>
     </dt>
     <dd>
         
-<span class="param-type">string</span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-        
-            
-
-    
-
-    <h4 class="name" id="getText"><span class="type-signature"></span>getText<span class="signature">()</span><span class="type-signature"> &rarr; {string}</span></h4>
-
-    
-
-
-
-
-<dl class="details">
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="graphics_text.js.html">graphics/text.js</a>, <a href="graphics_text.js.html#line164">line 164</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-<div class="description usertext">
-    Equivalent to `getLabel`.  Likely created to prevent errors on accidental
-calls.
-Returns the label of a Text object.
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    String of the Text's current label.
-</div>
-
-
-
-<dl class="param-type">
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">string</span>
+<span class="param-type">number</span>
 
 
     </dd>
@@ -1738,115 +1723,6 @@ Returns the label of a Text object.
     <dd>
         
 <span class="param-type">string</span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-        
-            
-
-    
-
-    <h4 class="name" id="getWidth"><span class="type-signature"></span>getWidth<span class="signature">()</span><span class="type-signature"> &rarr; {number}</span></h4>
-
-    
-
-
-
-
-<dl class="details">
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="graphics_text.js.html">graphics/text.js</a>, <a href="graphics_text.js.html#line173">line 173</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-<div class="description usertext">
-    Returns the width of a Text object.
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    The width of the text.
-</div>
-
-
-
-<dl class="param-type">
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">number</span>
 
 
     </dd>
@@ -2488,93 +2364,6 @@ thing.move(10, 10);</code></pre>
     
     </tbody>
 </table>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-            
-
-    
-
-    <h4 class="name" id="resetDimensions"><span class="type-signature"></span>resetDimensions<span class="signature">()</span><span class="type-signature"></span></h4>
-
-    
-
-
-
-
-<dl class="details">
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="graphics_text.js.html">graphics/text.js</a>, <a href="graphics_text.js.html#line55">line 55</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-<div class="description usertext">
-    Reset the dimensions of the text to the size in the context.
-</div>
-
-
-
-
-
-
-
-
-
 
 
 
@@ -3528,6 +3317,288 @@ thing.setColor('#ff0000');</code></pre>
 
     
 
+    <h4 class="name" id="setDirection"><span class="type-signature"></span>setDirection<span class="signature">(val)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="graphics_arc.js.html">graphics/arc.js</a>, <a href="graphics_arc.js.html#line195">line 195</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+<div class="description usertext">
+    Gets the direction of the arc (CW or CCW).
+</div>
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>val</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Boolean representing CW or CCW.
+`True` sets counterclockwise to true.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="setEndAngle"><span class="type-signature"></span>setEndAngle<span class="signature">(angle)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="graphics_arc.js.html">graphics/arc.js</a>, <a href="graphics_arc.js.html#line151">line 151</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+<div class="description usertext">
+    Sets the ending angle of the arc.
+Note: All angles are stored in radians, so we must first convert
+to radians (if the unit is degrees) before storing the new angle.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>const a = new Arc(30, 0, 180, 0);
+a.setEndAngle(90);
+a.endAngle === Math.PI / 2;</code></pre>
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>angle</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The desired end angle of the arc.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
     <h4 class="name" id="setFilled"><span class="type-signature"></span>setFilled<span class="signature">(filled)</span><span class="type-signature"></span></h4>
 
     
@@ -3648,283 +3719,6 @@ thing.setFilled(false);</code></pre>
             
 
             <td class="description last">A boolean of whether or not Thing is filled.</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-            
-
-    
-
-    <h4 class="name" id="setFont"><span class="type-signature"></span>setFont<span class="signature">(font)</span><span class="type-signature"></span></h4>
-
-    
-
-
-
-
-<dl class="details">
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="graphics_text.js.html">graphics/text.js</a>, <a href="graphics_text.js.html#line92">line 92</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-<div class="description usertext">
-    Set the font of the text.
-Re-calculates the dimensions of the font after font change.
-</div>
-
-
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>font</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">String of the desired font for the text.</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-            
-
-    
-
-    <h4 class="name" id="setLabel"><span class="type-signature"></span>setLabel<span class="signature">(label)</span><span class="type-signature"></span></h4>
-
-    
-
-
-
-
-<dl class="details">
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="graphics_text.js.html">graphics/text.js</a>, <a href="graphics_text.js.html#line113">line 113</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-<div class="description usertext">
-    Set the label of the text.
-Re-calculates the dimensions of the font after font change.
-</div>
-
-
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>label</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-|
-
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">The words of the text.</td>
         </tr>
 
     
@@ -4450,7 +4244,7 @@ thing.setRotation(Math.PI / 2, Thing.RADIANS);</code></pre>
 
     
 
-    <h4 class="name" id="setText"><span class="type-signature"></span>setText<span class="signature">(label)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="setStartAngle"><span class="type-signature"></span>setStartAngle<span class="signature">(angle)</span><span class="type-signature"></span></h4>
 
     
 
@@ -4462,7 +4256,7 @@ thing.setRotation(Math.PI / 2, Thing.RADIANS);</code></pre>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="graphics_text.js.html">graphics/text.js</a>, <a href="graphics_text.js.html#line134">line 134</a>
+        <a href="graphics_arc.js.html">graphics/arc.js</a>, <a href="graphics_arc.js.html#line126">line 126</a>
     </li></ul></dd>
     
 
@@ -4502,9 +4296,9 @@ thing.setRotation(Math.PI / 2, Thing.RADIANS);</code></pre>
 
 
 <div class="description usertext">
-    Equivalent to `setLabel`. Likely created to prevent errors on
-accidental calls.
-Re-calculates the dimensions of the font after font change.
+    Sets the starting angle of the arc.
+Note: All angles are stored in radians, so we must first convert
+to radians (if the unit is degrees) before storing the new angle.
 </div>
 
 
@@ -4513,6 +4307,13 @@ Re-calculates the dimensions of the font after font change.
 
 
 
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>const a = new Arc(30, 0, 180, 0);
+a.setStartAngle(90);
+a.startAngle === Math.PI / 2;</code></pre>
 
 
 
@@ -4542,15 +4343,12 @@ Re-calculates the dimensions of the font after font change.
 
         <tr>
             
-                <td class="name"><code>label</code></td>
+                <td class="name"><code>angle</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">string</span>
-|
-
 <span class="param-type">number</span>
 
 
@@ -4561,7 +4359,7 @@ Re-calculates the dimensions of the font after font change.
 
             
 
-            <td class="description last">The words of the text.</td>
+            <td class="description last">The desired start angle of the arc.</td>
         </tr>
 
     

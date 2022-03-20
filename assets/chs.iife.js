@@ -944,11 +944,13 @@ var CHSJS = (() => {
   // src/console/index.js
   var Console = class {
     constructor(options = {}) {
+      __publicField(this, "onPrompt", window.prompt.bind(window));
+      __publicField(this, "onPrint", window.console.log.bind(window.console));
+      __publicField(this, "onClear", window.console.clear.bind(window.console));
       var _a3, _b, _c;
       this.onPrompt = (_a3 = options.onPrompt) != null ? _a3 : window.prompt.bind(window);
       this.onPrint = (_b = options.onPrint) != null ? _b : window.console.log.bind(window.console);
-      this.onClear = (_c = options.onClear) != null ? _c : () => {
-      };
+      this.onClear = (_c = options.onClear) != null ? _c : window.console.clear.bind(window.console);
     }
     configure(options = {}) {
       var _a3, _b, _c;
@@ -1062,50 +1064,7 @@ ${str}`;
       return this.readNumber(str, parseFloat, "a float");
     }
   };
-
-  // src/datastructures/queue.js
-  "use strict";
-  var Queue = class extends Array {
-    constructor() {
-      super(...arguments);
-      __publicField(this, "enqueue", this.push);
-      __publicField(this, "dequeue", this.shift);
-    }
-    size() {
-      return this.length;
-    }
-    clear() {
-      this.length = 0;
-    }
-    peek() {
-      return this[0];
-    }
-    hasNext() {
-      return !this.isEmpty();
-    }
-    isEmpty() {
-      return this.length === 0;
-    }
-  };
-
-  // src/datastructures/stack.js
-  var Stack = class extends Array {
-    size() {
-      return this.length;
-    }
-    clear() {
-      this.length = 0;
-    }
-    peek() {
-      return this[this.length - 1];
-    }
-    hasNext() {
-      return !this.isEmpty();
-    }
-    isEmpty() {
-      return this.length === 0;
-    }
-  };
+  var console_default = Console;
 
   // src/datastructures/grid.js
   var Grid = class {
@@ -1230,6 +1189,31 @@ ${str}`;
   };
   var grid_default = Grid;
 
+  // src/datastructures/queue.js
+  var Queue = class extends Array {
+    constructor() {
+      super(...arguments);
+      __publicField(this, "enqueue", this.push);
+      __publicField(this, "dequeue", this.shift);
+    }
+    size() {
+      return this.length;
+    }
+    clear() {
+      this.length = 0;
+    }
+    peek() {
+      return this[0];
+    }
+    hasNext() {
+      return !this.isEmpty();
+    }
+    isEmpty() {
+      return this.length === 0;
+    }
+  };
+  var queue_default = Queue;
+
   // src/datastructures/set.js
   var ExtendedSet = class extends Set {
     constructor() {
@@ -1260,6 +1244,26 @@ ${str}`;
     }
   };
   var set_default = ExtendedSet;
+
+  // src/datastructures/stack.js
+  var Stack = class extends Array {
+    size() {
+      return this.length;
+    }
+    clear() {
+      this.length = 0;
+    }
+    peek() {
+      return this[this.length - 1];
+    }
+    hasNext() {
+      return !this.isEmpty();
+    }
+    isEmpty() {
+      return this.length === 0;
+    }
+  };
+  var stack_default = Stack;
 
   // src/graphics/thing.js
   var _Thing = class {
@@ -1571,21 +1575,21 @@ ${str}`;
   __publicField(Thing, "DEGREES", 0);
   __publicField(Thing, "RADIANS", 1);
   __publicField(Thing, "thingID", 0);
-  var rotatePointAboutPosition = ([x, y], [rotX, rotY], angle) => {
+  function rotatePointAboutPosition([x, y], [rotX, rotY], angle) {
     return [
       (x - rotX) * Math.cos(angle) - (y - rotY) * Math.sin(angle) + rotX,
       (x - rotX) * Math.sin(angle) + (y - rotY) * Math.cos(angle) + rotY
     ];
-  };
+  }
   var thing_default = Thing;
 
   // src/graphics/graphics-utils.js
-  var getDistance = function(x1, y1, x2, y2) {
+  function getDistance(x1, y1, x2, y2) {
     return Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2));
-  };
-  var map = (value, start1, end1, start2, end2) => {
+  }
+  function map(value, start1, end1, start2, end2) {
     return (value - start1) / (end1 - start1) * (end2 - start2) + start2;
-  };
+  }
 
   // src/graphics/arc.js
   var _Arc = class extends thing_default {
@@ -1877,7 +1881,7 @@ ${str}`;
     nextInt: () => nextInt,
     noise: () => noise
   });
-  var nextInt = function(min, max) {
+  function nextInt(min, max) {
     if (max === void 0) {
       max = min - 1;
       min = 0;
@@ -1885,33 +1889,33 @@ ${str}`;
     min = Math.floor(min);
     var r = Math.random();
     return min + Math.floor(r * (max - min + 1));
-  };
-  var nextFloat = function(min, max) {
+  }
+  function nextFloat(min, max) {
     if (max === void 0) {
       max = min;
       min = 0;
     }
     return min + (max - min) * Math.random();
-  };
-  var nextHex = function() {
+  }
+  function nextHex() {
     var val = nextInt(0, 255);
     if (val < 16) {
       return "0" + val.toString(16);
     }
     return val.toString(16);
-  };
-  var nextColor = function() {
+  }
+  function nextColor() {
     var r = nextHex();
     var g = nextHex();
     var b = nextHex();
     return "#" + r + g + b;
-  };
-  var nextBoolean = (probabilityTrue) => {
+  }
+  function nextBoolean(probabilityTrue) {
     if (probabilityTrue === void 0) {
       probabilityTrue = 0.5;
     }
     return Math.random() < probabilityTrue;
-  };
+  }
   var perlin;
   var perlin2;
   var PERLIN_SIZE = 4095;
@@ -1922,7 +1926,7 @@ ${str}`;
   var fade = (t) => {
     return t * t * (3 - 2 * t);
   };
-  var noise = (x, y) => {
+  function noise(x, y) {
     if (!perlin) {
       perlin = new Array(PERLIN_SIZE + 1);
       for (let i = 0; i < PERLIN_SIZE + 1; i++) {
@@ -1960,7 +1964,7 @@ ${str}`;
     const xMin = xFloor % PERLIN_SIZE;
     const xMax = (xMin + 1) % PERLIN_SIZE;
     return lerp(perlin[xMin], perlin[xMax], fade(t));
-  };
+  }
 
   // src/graphics/color.js
   var _Color = class {
@@ -2090,7 +2094,7 @@ ${str}`;
   __publicField(Color, "GREY", "#cccccc");
   __publicField(Color, "purple", "#9B30FF");
   __publicField(Color, "PURPLE", "#9B30FF");
-  var rgbToHex = (r, g, b) => {
+  function rgbToHex(r, g, b) {
     r = Math.floor(r);
     g = Math.floor(g);
     b = Math.floor(b);
@@ -2098,11 +2102,11 @@ ${str}`;
       throw "Invalid color component";
     }
     return (r << 16 | g << 8 | b).toString(16);
-  };
-  var getColor = (r, g, b) => {
+  }
+  function getColor(r, g, b) {
     return "#" + ("000000" + rgbToHex(r, g, b)).slice(-6);
-  };
-  var hue2rgb = (p, q, t) => {
+  }
+  function hue2rgb(p, q, t) {
     if (t < 0)
       t += 1;
     if (t > 1)
@@ -2114,7 +2118,8 @@ ${str}`;
     if (t < 2 / 3)
       return p + (q - p) * (2 / 3 - t) * 6;
     return p;
-  };
+  }
+  var color_default = Color;
 
   // src/graphics/circle.js
   var Circle = class extends thing_default {
@@ -2129,7 +2134,7 @@ ${str}`;
         throw new TypeError("You must pass a finite number to `new Circle(radius)`. Did you forget the parentheses in `getWidth()` or `getHeight()`? Or did you perform a calculation on a variable that is not a number?");
       }
       this.radius = Math.max(0, radius);
-      this.color = Color.black;
+      this.color = color_default.black;
       this.lineWidth = 3;
     }
     draw(context2) {
@@ -2335,6 +2340,28 @@ ${str}`;
     }
   };
   var group_default = Group;
+
+  // src/graphics/imagelibrary.js
+  var imagelibrary_default = {
+    Characters: {
+      penguin: "https://static.codehs.com/img/library/characters/penguin.png",
+      monkey: "https://static.codehs.com/img/library/characters/monkey.jpg",
+      leopard: "https://static.codehs.com/img/library/characters/leopard.jpg",
+      chameleon: "https://static.codehs.com/img/library/characters/chameleon.jpg",
+      lizard: "https://static.codehs.com/img/library/characters/lizard.jpg",
+      butterfly: "https://static.codehs.com/img/library/characters/butterfly.jpg",
+      secretMessage: "https://static.codehs.com/img/library/characters/secretMessage.png"
+    },
+    Objects: {
+      icicle: "https://static.codehs.com/img/library/objects/icicle.png",
+      helicopter: "https://static.codehs.com/img/library/objects/helicopter.png",
+      asteroid: "https://static.codehs.com/img/library/objects/asteroid.png",
+      soccerBall: "https://static.codehs.com/img/library/objects/soccerBall.png"
+    },
+    Landscapes: {
+      flowers: "https://static.codehs.com/img/library/landscapes/flowers.jpg"
+    }
+  };
 
   // src/manager.js
   var DEFAULT_UPDATE_INTERVAL = 40;
@@ -3080,54 +3107,75 @@ ${str}`;
   var graphics_default = GraphicsManager;
 
   // src/graphics/keyboard.js
-  var Keyboard = {
-    LEFT: 37,
-    UP: 38,
-    RIGHT: 39,
-    DOWN: 40,
-    ENTER: 13,
-    SHIFT: 16,
-    SPACE: 32,
-    BACKSPACE: 8,
-    TAB: 9,
-    CTRL: 17,
-    ALT: 18,
-    CAPS_LOCK: 20,
-    LEFT_COMMAND: 91,
-    LEFT_WINDOW: 91,
-    RIGHT_WINDOW: 92,
-    RIGHT_COMMAND: 93,
-    SELECT: 93
-  };
-  Keyboard.nonEditingKeys = [
-    Keyboard.LEFT,
-    Keyboard.RIGHT,
-    Keyboard.UP,
-    Keyboard.DOWN,
-    Keyboard.CTRL,
-    Keyboard.SHIFT,
-    Keyboard.ALT,
-    Keyboard.CAPS_LOCK,
-    Keyboard.LEFT_COMMAND,
-    Keyboard.RIGHT_COMMAND,
-    Keyboard.SELECT,
-    Keyboard.LEFT_WINDOW,
-    Keyboard.RIGHT_WINDOW
+  var keyboard_exports = {};
+  __export(keyboard_exports, {
+    ALT: () => ALT,
+    BACKSPACE: () => BACKSPACE,
+    CAPS_LOCK: () => CAPS_LOCK,
+    CTRL: () => CTRL,
+    DOWN: () => DOWN,
+    ENTER: () => ENTER,
+    LEFT: () => LEFT,
+    LEFT_COMMAND: () => LEFT_COMMAND,
+    LEFT_WINDOW: () => LEFT_WINDOW,
+    RIGHT: () => RIGHT,
+    RIGHT_COMMAND: () => RIGHT_COMMAND,
+    RIGHT_WINDOW: () => RIGHT_WINDOW,
+    SELECT: () => SELECT,
+    SHIFT: () => SHIFT,
+    SPACE: () => SPACE,
+    TAB: () => TAB,
+    UP: () => UP,
+    digit: () => digit,
+    isEditingKey: () => isEditingKey,
+    letter: () => letter,
+    nonEditingKeys: () => nonEditingKeys
+  });
+  var LEFT = 37;
+  var UP = 38;
+  var RIGHT = 39;
+  var DOWN = 40;
+  var ENTER = 13;
+  var SHIFT = 16;
+  var SPACE = 32;
+  var BACKSPACE = 8;
+  var TAB = 9;
+  var CTRL = 17;
+  var ALT = 18;
+  var CAPS_LOCK = 20;
+  var LEFT_COMMAND = 91;
+  var LEFT_WINDOW = 91;
+  var RIGHT_WINDOW = 92;
+  var RIGHT_COMMAND = 93;
+  var SELECT = 93;
+  var nonEditingKeys = [
+    LEFT,
+    RIGHT,
+    UP,
+    DOWN,
+    CTRL,
+    SHIFT,
+    ALT,
+    CAPS_LOCK,
+    LEFT_COMMAND,
+    RIGHT_COMMAND,
+    SELECT,
+    LEFT_WINDOW,
+    RIGHT_WINDOW
   ];
-  Keyboard.digit = function(dig) {
+  function digit(dig) {
     dig = dig % 10;
     return dig + 48;
-  };
-  Keyboard.letter = function(letter) {
-    if (letter.length !== 1) {
+  }
+  function letter(letter2) {
+    if (letter2.length !== 1) {
       return -1;
     }
-    return letter.toUpperCase().charCodeAt(0);
-  };
-  Keyboard.isEditingKey = function(keyCode) {
-    return Keyboard.nonEditingKeys.indexOf(keyCode) === -1;
-  };
-  var keyboard_default = Keyboard;
+    return letter2.toUpperCase().charCodeAt(0);
+  }
+  function isEditingKey(keyCode) {
+    return nonEditingKeys.indexOf(keyCode) === -1;
+  }
 
   // src/graphics/line.js
   var Line = class extends thing_default {
@@ -3279,6 +3327,7 @@ ${str}`;
       this.y2 += dy;
     }
   };
+  var line_default = Line;
 
   // src/graphics/oval.js
   var Oval = class extends thing_default {
@@ -3342,6 +3391,7 @@ ${str}`;
       return result <= 1;
     }
   };
+  var oval_default = Oval;
 
   // src/graphics/polygon.js
   var Polygon = class extends thing_default {
@@ -3793,28 +3843,6 @@ ${str}`;
   };
   var webimage_default = WebImage;
 
-  // src/graphics/imagelibrary.js
-  var imagelibrary_default = {
-    Characters: {
-      penguin: "https://static.codehs.com/img/library/characters/penguin.png",
-      monkey: "https://static.codehs.com/img/library/characters/monkey.jpg",
-      leopard: "https://static.codehs.com/img/library/characters/leopard.jpg",
-      chameleon: "https://static.codehs.com/img/library/characters/chameleon.jpg",
-      lizard: "https://static.codehs.com/img/library/characters/lizard.jpg",
-      butterfly: "https://static.codehs.com/img/library/characters/butterfly.jpg",
-      secretMessage: "https://static.codehs.com/img/library/characters/secretMessage.png"
-    },
-    Objects: {
-      icicle: "https://static.codehs.com/img/library/objects/icicle.png",
-      helicopter: "https://static.codehs.com/img/library/objects/helicopter.png",
-      asteroid: "https://static.codehs.com/img/library/objects/asteroid.png",
-      soccerBall: "https://static.codehs.com/img/library/objects/soccerBall.png"
-    },
-    Landscapes: {
-      flowers: "https://static.codehs.com/img/library/landscapes/flowers.jpg"
-    }
-  };
-
   // src/sound/audio.js
   var NativeAudio = Audio;
   var CrossOriginAudio = class {
@@ -3824,6 +3852,7 @@ ${str}`;
       return audioElement;
     }
   };
+  var audio_default = CrossOriginAudio;
 
   // src/sound/audioContext.js
   var getAudioContext = () => {
@@ -3880,6 +3909,7 @@ ${str}`;
       });
     }
   };
+  var sound_default = AudioManager;
 
   // node_modules/tone/build/esm/version.js
   var version = "14.7.77";
@@ -19880,27 +19910,28 @@ ${str}`;
       }
     }
   };
+  var sound_default2 = Sound;
 
   // entrypoints/windowBinder.js
   window.Arc = arc_default;
-  window.Audio = CrossOriginAudio;
+  window.Audio = audio_default;
   window.Circle = circle_default;
-  window.Color = Color;
-  window.Console = Console;
+  window.Color = color_default;
+  window.Console = console_default;
   window.Graphics = graphics_default;
   window.Grid = grid_default;
   window.Group = group_default;
   window.ImageLibrary = imagelibrary_default;
-  window.Keyboard = keyboard_default;
-  window.Line = Line;
-  window.Oval = Oval;
+  window.Keyboard = keyboard_exports;
+  window.Line = line_default;
+  window.Oval = oval_default;
   window.Polygon = polygon_default;
-  window.Queue = Queue;
+  window.Queue = queue_default;
   window.Randomizer = randomizer_exports;
   window.Rectangle = rectangle_default;
   window.Set = set_default;
-  window.Sound = Sound;
-  window.Stack = Stack;
+  window.Sound = sound_default2;
+  window.Stack = stack_default;
   window.Text = text_default;
   window.Thing = thing_default;
   window.Vector = vector_default;
@@ -19916,6 +19947,7 @@ ${str}`;
   window.mouseDragMethod = GraphicsInstance.mouseDragMethod.bind(GraphicsInstance);
   window.mouseUpMethod = GraphicsInstance.mouseUpMethod.bind(GraphicsInstance);
   window.mouseMoveMethod = GraphicsInstance.mouseMoveMethod.bind(GraphicsInstance);
+  window.waitForClick = GraphicsInstance.waitForClick.bind(GraphicsInstance);
   window.stopAllTimers = GraphicsInstance.stopAllTimers.bind(GraphicsInstance);
   window.setMainTimer = GraphicsInstance.setMainTimer.bind(GraphicsInstance);
   window.stopTimer = GraphicsInstance.stopTimer.bind(GraphicsInstance);
@@ -19930,13 +19962,13 @@ ${str}`;
   window.setFullscreen = GraphicsInstance.setFullscreen.bind(GraphicsInstance);
   window.setSize = GraphicsInstance.setSize.bind(GraphicsInstance);
   window.fullReset = GraphicsInstance.fullReset.bind(GraphicsInstance);
-  var ConsoleInstance = new Console();
+  var ConsoleInstance = new console_default();
   window.readLine = ConsoleInstance.readLine.bind(ConsoleInstance);
   window.readInt = ConsoleInstance.readInt.bind(ConsoleInstance);
   window.println = ConsoleInstance.println.bind(ConsoleInstance);
   window.print = ConsoleInstance.print.bind(ConsoleInstance);
   window.clear = ConsoleInstance.clear.bind(ConsoleInstance);
-  var AudioInstance = new AudioManager();
+  var AudioInstance = new sound_default();
   window.audioChangeMethod = AudioInstance.audioChangeMethod.bind(AudioInstance);
   window.map = map;
   window.getDistance = getDistance;
