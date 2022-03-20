@@ -210,6 +210,7 @@ class Group extends Thing {
      * Return whether this group contains the point, which is true if any element in this group
      * contains it.
      *
+     * @alias Group#containsPoint
      * @param {number} x
      * @param {number} y
      * @returns {boolean}

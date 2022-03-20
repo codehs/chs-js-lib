@@ -63,6 +63,7 @@ class Polygon extends Thing {
 
     /**
      * Checks if the coordinates are contained in the Polygon.
+     * @alias Polygon#containsPoint
      * @example
      * const p = new Polygon();
      * p.addPoint(10, 10);

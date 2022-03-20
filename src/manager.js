@@ -38,7 +38,9 @@ class Manager {
      * fourth parameter to the `setTimer` function:
      * @example
      * const timerID = Randomizer.nextInt(1000);
-     * setTimer(fn, 50, {}, timerID);
+     * setTimer(() => {
+     *   console.log('50 milliseconds has elapsed');
+     * }, 50, {}, timerID);
      * //...
      * stopTimer(timerID);
      *

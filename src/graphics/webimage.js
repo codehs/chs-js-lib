@@ -154,6 +154,7 @@ class WebImage extends Thing {
     /**
      * Checks if the passed point is contained in the WebImage.
      *
+     * @alias WebImage#containsPoint
      * @param {number} x - The x coordinate of the point being tested.
      * @param {number} y - The y coordinate of the point being tested.
      * @returns {boolean} Whether the passed point is contained in the WebImage.

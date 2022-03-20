@@ -16,7 +16,13 @@ export const HIDDEN_KEYBOARD_NAVIGATION_DOM_ELEMENT_ID = id => `${id}focusbutton
  * @private
  */
 export let GraphicsInstances = {};
-/** @type {Array.<any>} */
+/**
+ * @type {Array.<any>}
+ * @example
+ * if (pressedKeys.indexOf(Keyboard.SPACE) > -1) {
+ *     alert('you are pressing space!');
+ * }
+ */
 export let pressedKeys = [];
 let graphicsInstanceID = 0;
 
@@ -162,6 +168,10 @@ class GraphicsManager extends Manager {
 
     /**
      * Add an element to the graphics instance.
+     * @example
+     * let circle = new Circle(20);
+     * add(circle);
+     *
      * @global
      * @param {Thing} elem - A subclass of Thing to be added to the graphics instance.
      */
@@ -254,6 +264,10 @@ class GraphicsManager extends Manager {
 
     /**
      * Assign a function as a callback for click (mouse down, mouse up) events.
+     * @example
+     * mouseClickMethod(e => {
+     *   alert('You just clicked at ' + e.getX() + ', ' + e.getY());
+     * });
      * @global
      * @param {function} fn - A callback to be triggered on click events.
      */
@@ -263,6 +277,10 @@ class GraphicsManager extends Manager {
 
     /**
      * Assign a function as a callback for mouse move events.
+     * @example
+     * mouseMoveMethod(e => {
+     *   alert('You moved your mouse to ' + e.getX() + ', ' + e.getY());
+     * });
      * @global
      * @param {function} fn - A callback to be triggered on mouse move events.
      */
@@ -272,6 +290,11 @@ class GraphicsManager extends Manager {
 
     /**
      * Assign a function as a callback for mouse down events.
+     * @example
+     * mouseDownMethod(e => {
+     *   alert('You depressed your mouse button at ' + e.getX() + ', ' + e.getY());
+     * });
+     * @global
      * @param {function} fn - A callback to be triggered on mouse down.
      */
     mouseDownMethod(fn) {
@@ -280,6 +303,10 @@ class GraphicsManager extends Manager {
 
     /**
      * Assign a function as a callback for mouse up events.
+     * @example
+     * mouseUpMethod(e => {
+     *   alert('You lifted your mouse button at ' + e.getX() + ', ' + e.getY());
+     * });
      * @global
      * @param {function} fn - A callback to be triggered on mouse up events.
      */
@@ -289,6 +316,10 @@ class GraphicsManager extends Manager {
 
     /**
      * Assign a function as a callback for drag events.
+     * @example
+     * mouseDragMethod(e => {
+     *   alert('You dragged your mouse to' + e.getX() + ', ' + e.getY());
+     * });
      * @global
      * @param {function} fn - A callback to be triggered on drag events.
      */
@@ -298,6 +329,12 @@ class GraphicsManager extends Manager {
 
     /**
      * Assign a function as a callback for keydown events.
+     * @example
+     * keyDownMethod(e => {
+     *     if (e.keyCode === Keyboard.letter('A')) {
+     *         alert('You just pushed the a key!');
+     *     }
+     * })
      * @global
      * @param {function} fn - A callback to be triggered on keydown events.
      */
@@ -307,6 +344,13 @@ class GraphicsManager extends Manager {
 
     /**
      * Assign a function as a callback for key up events.
+     * @example
+     * keyUpMethod(e => {
+     *     if (e.keyCode === Keyboard.letter('A')) {
+     *         alert('You just lifted the a key!');
+     *     }
+     * })
+     * @global
      * @param {function} fn - A callback to be triggered on key up events.
      */
     keyUpMethod(fn) {
@@ -334,6 +378,10 @@ class GraphicsManager extends Manager {
 
     /**
      * Check if a key is currently pressed
+     * @example
+     * if (isKeyPressed(Keyboard.letter('a'))) {
+     *     alert('Youre currently pressing A!');
+     * }
      * @global
      * @param {integer} keyCode - Key code of key being checked.
      * @returns {boolean} Whether or not that key is being pressed.
@@ -344,6 +392,10 @@ class GraphicsManager extends Manager {
 
     /**
      * Get the width of the entire graphics canvas.
+     * @example
+     * if (getWidth() > 200) {
+     *     alert('The canvas is wider than 200 pixels!');
+     * }
      * @global
      * @returns {float} The width of the canvas.
      */
@@ -354,6 +406,10 @@ class GraphicsManager extends Manager {
 
     /**
      * Get the height of the entire graphics canvas.
+     * @example
+     * if (getHeight() > 200) {
+     *     alert('The canvas is taller than 200 pixels!');
+     * }
      * @global
      * @returns {float} The height of the canvas.
      */
@@ -444,6 +500,12 @@ class GraphicsManager extends Manager {
     /**
      * Get an element at a specific point.
      * If several elements are present at the position, return the one put there first.
+     * @example
+     * let circle = new Circle(20);
+     * circle.setPosition(100, 100);
+     * add(circle);
+     *
+     * getElementAt(100, 100) === circle;
      * @global
      * @param {number} x - The x coordinate of a point to get element at.
      * @param {number} y - The y coordinate of a point to get element at.
@@ -460,6 +522,16 @@ class GraphicsManager extends Manager {
 
     /**
      * Get all elements at a specific point.
+     * @example
+     * let circle = new Circle(20);
+     * circle.setPosition(100, 100);
+     * add(circle);
+     *
+     * let rectangle = new Rectangle(30, 30);
+     * rectangle.setPosition(80, 80);
+     * add(rectangle);
+     *
+     * getElementsAt(100, 100)[1] === rectangle;
      * @global
      * @param {number} x - The x coordinate of a point to get element at.
      * @param {number} y - The y coordinate of a point to get element at.
@@ -494,6 +566,11 @@ class GraphicsManager extends Manager {
 
     /**
      * Remove all elements from the canvas.
+     * @example
+     * add(new Circle(10));
+     * add(new Rectangle(30, 30));
+     * removeAll();
+     *
      * @global
      */
     removeAll() {

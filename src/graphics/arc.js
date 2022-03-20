@@ -207,6 +207,7 @@ class Arc extends Thing {
     /**
      * Checks if a given point is contained within the arc.
      *
+     * @alias Arc#containsPoint
      * @param {number} x - x coordinate of the point being tested.
      * @param {number} y - y coordinate of the point being tested.
      * @return {boolean}

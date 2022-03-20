@@ -130,6 +130,7 @@ class Circle extends Thing {
     /**
      * Checks if the passed point is contained in the circle.
      *
+     * @alias Circle#containsPoint
      * @example
      * const c = new Circle(20);
      * c.setPosition(0, 0);

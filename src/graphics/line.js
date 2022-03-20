@@ -317,7 +317,7 @@ class Line extends Thing {
 }
 /**
  * Gets the new points based on their rotated values.
- *
+ * @private
  * @param  {number} x1       X coordinate of start point
  * @param  {number} y1       Y coordinate of start point
  * @param  {number} x2       X coordinate of end point

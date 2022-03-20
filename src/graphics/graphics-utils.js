@@ -11,7 +11,10 @@ export function getDistance(x1, y1, x2, y2) {
 }
 
 /**
- *
+ * Maps a value from one range to another.
+ * @example
+ * // maps the sine of 1 from the range of sine (-1, 1) to the range (0, getHeight());
+ * map(Math.sin(1), -1, 1, 0, getHeight());
  * @param {number} value - Value to remap to a range
  * @param {number} start1 - Lower bound of the current range
  * @param {number} end1 - Upper bound of the current range
