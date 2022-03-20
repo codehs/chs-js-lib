@@ -1,12 +1,11 @@
 import Thing from './thing.js';
 
-/** @module Oval */
-
 /**
- * @class Oval
+ * An Oval is an ellipse, with its horizontal width defined by its .width property and its height defined by its .height property.
+ * @class
  * @extends Thing
  */
-export default class Oval extends Thing {
+class Oval extends Thing {
     type = 'Oval';
     anchor = { vertical: 0.5, horizontal: 0.5 };
 
@@ -113,6 +112,7 @@ export default class Oval extends Thing {
      * Checks if the passed point is contained in the oval.
      * Uses the equation for an oval.
      *
+     * @alias Oval#containsPoint
      * @param {number} x - The x coordinate of the point being tested.
      * @param {number} y - The y coordinate of the point being tested.
      * @returns {boolean} Whether the passed point is contained in the circle.
@@ -130,3 +130,5 @@ export default class Oval extends Thing {
         return result <= 1;
     }
 }
+
+export default Oval;

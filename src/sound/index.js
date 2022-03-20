@@ -1,7 +1,10 @@
 import Manager from '../manager';
 import { getAudioContext } from './audioContext';
 
-export default class AudioManager extends Manager {
+/**
+ * @class
+ */
+class AudioManager extends Manager {
     /**
      * @constructor
      * @param {{onError: function}} options
@@ -52,3 +55,5 @@ export default class AudioManager extends Manager {
         });
     }
 }
+
+export default AudioManager;

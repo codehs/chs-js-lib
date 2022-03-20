@@ -5,6 +5,7 @@
 
 /**
  * Gets an audiocontext for the browser if possible.
+ * @private
  * @returns {AudioContext}
  */
 export const getAudioContext = () => {

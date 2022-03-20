@@ -6,12 +6,15 @@
  * @param {number} y2
  * @returns {number} Distance between the two points.
  */
-export const getDistance = function (x1, y1, x2, y2) {
+export function getDistance(x1, y1, x2, y2) {
     return Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2));
-};
+}
 
 /**
- *
+ * Maps a value from one range to another.
+ * @example
+ * // maps the sine of 1 from the range of sine (-1, 1) to the range (0, getHeight());
+ * map(Math.sin(1), -1, 1, 0, getHeight());
  * @param {number} value - Value to remap to a range
  * @param {number} start1 - Lower bound of the current range
  * @param {number} end1 - Upper bound of the current range
@@ -19,6 +22,6 @@ export const getDistance = function (x1, y1, x2, y2) {
  * @param {number} end2 - Upper bound of the desired range
  * @returns {number}
  */
-export const map = (value, start1, end1, start2, end2) => {
+export function map(value, start1, end1, start2, end2) {
     return ((value - start1) / (end1 - start1)) * (end2 - start2) + start2;
-};
+}

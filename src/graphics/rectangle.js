@@ -1,7 +1,8 @@
 import Thing from './thing.js';
 
 /**
- * @class Rectangle
+ * A Rectangle is defined by its width and height.
+ * @class
  * @extends Thing
  */
 class Rectangle extends Thing {
@@ -111,6 +112,7 @@ class Rectangle extends Thing {
     /**
      * Checks if the passed point is contained in the rectangle.
      *
+     * @alias Rectangle#containsPoint
      * @param {number} x - The x coordinate of the point being tested.
      * @param {number} y - The y coordinate of the point being tested.
      * @returns {boolean} Whether the passed point is contained in the rectangle.

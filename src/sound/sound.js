@@ -11,7 +11,10 @@ import {
 } from 'tone';
 import { getAudioContext } from './audioContext';
 
-export default class Sound {
+/**
+ * @class
+ */
+class Sound {
     type = 'Sound';
 
     /**
@@ -29,6 +32,7 @@ export default class Sound {
      * cymbal instrument: "metal"
      * https://tonejs.github.io/docs/13.8.25/OmniOscillator
      * @param {AudioContext} - context
+     * @constructor
      */
     constructor(frequency, oscillatorType) {
         setContext(getAudioContext());
@@ -220,3 +224,5 @@ export default class Sound {
         }
     }
 }
+
+export default Sound;

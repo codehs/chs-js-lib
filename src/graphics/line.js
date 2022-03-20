@@ -1,16 +1,20 @@
 import Thing, { rotatePointAboutPosition } from './thing.js';
 
 /**
- * @class Line
- * @augments Thing
- * @param {number} x1 - x coordinate of starting point of line.
- * @param {number} y1 - y coordinate of starting point of line.
- * @param {number} x2 - x coordinate of end point of line.
- * @param {number} y2 - y coordinate of end point of line.
+ * A Line is a line segment from its start point to end point, stored as x1, y1, and x2, y2 respectively.
+ * @class
+ * @extends Thing
  */
-export default class Line extends Thing {
+class Line extends Thing {
     type = 'Line';
 
+    /**
+     * @constructor
+     * @param {number} x1 - x coordinate of starting point of line.
+     * @param {number} y1 - y coordinate of starting point of line.
+     * @param {number} x2 - x coordinate of end point of line.
+     * @param {number} y2 - y coordinate of end point of line.
+     */
     constructor(x1, y1, x2, y2) {
         super();
         if (arguments.length !== 4) {
@@ -129,7 +133,6 @@ export default class Line extends Thing {
 
     /**
      * Sets the color of a line.
-     *
      * @param {Color} color - Sets the color of the line.
      */
     setColor(color) {
@@ -314,7 +317,7 @@ export default class Line extends Thing {
 }
 /**
  * Gets the new points based on their rotated values.
- *
+ * @private
  * @param  {number} x1       X coordinate of start point
  * @param  {number} y1       Y coordinate of start point
  * @param  {number} x2       X coordinate of end point
@@ -322,7 +325,7 @@ export default class Line extends Thing {
  * @param  {number} rotation radians rotated (Expected in radians)
  * @return {array}          List of coordinates of both points.
  */
-export const getRotatedPoints = function (x1, y1, x2, y2, rotation) {
+export function getRotatedPoints(x1, y1, x2, y2, rotation) {
     var midX = (x1 + x2) / 2;
     var midY = (y1 + y2) / 2;
     var sinAngle = Math.sin(rotation);
@@ -346,4 +349,6 @@ export const getRotatedPoints = function (x1, y1, x2, y2, rotation) {
     y2 = newY + midY;
 
     return [x1, y1, x2, y2];
-};
+}
+
+export default Line;

@@ -1,14 +1,12 @@
-/** @module Color */
+/**
+ * @module Color
+ * @global
+ * The Color module is available globally, and provides both constants for colors as well as utilities for working with colors.
+ */
 
 import * as Randomizer from '../randomizer.js';
 
-/**
- * @class Color
- * @param {number} r - Red value.
- * @param {number} g - Green value.
- * @param {number} b - Blue value.
- */
-export default class Color {
+class Color {
     static random = Randomizer.nextColor;
     static red = '#FF0000';
     static RED = '#FF0000';
@@ -38,6 +36,7 @@ export default class Color {
     /**
      * Construct a new color.
      *
+     * @constructor
      * @param {number} r
      * @param {number} g
      * @param {number} b
@@ -249,13 +248,12 @@ export default class Color {
 /**
  * Convert RGB to a hex string.
  *
- * @memberof Color
  * @param {number} r - Red component.
  * @param {number} g - Green component.
  * @param {number} b - Blue component.
  * @returns {string} Hex representation.
  */
-export const rgbToHex = (r, g, b) => {
+export function rgbToHex(r, g, b) {
     r = Math.floor(r);
     g = Math.floor(g);
     b = Math.floor(b);
@@ -263,7 +261,7 @@ export const rgbToHex = (r, g, b) => {
         throw 'Invalid color component';
     }
     return ((r << 16) | (g << 8) | b).toString(16);
-};
+}
 
 /**
  * Get an [r, g, b] array from a hex string.
@@ -271,14 +269,14 @@ export const rgbToHex = (r, g, b) => {
  * @param {string} hexString - Hex string (#RRGGBB)
  * @returns {Array.<number>} An array of [r, g, b]
  */
-export const hexToRgb = hexString => {
+export function hexToRgb(hexString) {
     hexString = hexString.slice(1);
     return [
         parseInt(hexString.slice(0, 2), 16),
         parseInt(hexString.slice(2, 4), 16),
         parseInt(hexString.slice(4, 6), 16),
     ];
-};
+}
 
 /**
  * Get a hex string (#RRGGBB) from r, g, b components.
@@ -288,24 +286,25 @@ export const hexToRgb = hexString => {
  * @param {number} b
  * @returns {string} - Hex color (#RRGGBB)
  */
-export const getColor = (r, g, b) => {
+export function getColor(r, g, b) {
     return '#' + ('000000' + rgbToHex(r, g, b)).slice(-6);
-};
+}
 
 /**
  * Converts an HSL (?) representation to RGB.
  *
- * @memberof Color
  * @param {number} p
  * @param {number} q
  * @param {number} t
  * @returns {number} RGB representation of component.
  */
-export const hue2rgb = (p, q, t) => {
+export function hue2rgb(p, q, t) {
     if (t < 0) t += 1;
     if (t > 1) t -= 1;
     if (t < 1 / 6) return p + (q - p) * 6 * t;
     if (t < 1 / 2) return q;
     if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
     return p;
-};
+}
+
+export default Color;

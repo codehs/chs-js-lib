@@ -10,7 +10,8 @@ const BLUE = 2;
 const ALPHA = 3;
 
 /**
- * @class WebImage
+ * A WebImage is used to display an image from a URL or underlying image data.
+ * @class
  * @extends Thing
  */
 class WebImage extends Thing {
@@ -153,6 +154,7 @@ class WebImage extends Thing {
     /**
      * Checks if the passed point is contained in the WebImage.
      *
+     * @alias WebImage#containsPoint
      * @param {number} x - The x coordinate of the point being tested.
      * @param {number} y - The y coordinate of the point being tested.
      * @returns {boolean} Whether the passed point is contained in the WebImage.
