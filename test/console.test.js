@@ -173,7 +173,7 @@ describe('Console', () => {
                     },
                 });
                 const int = c.readInt('Give me a number: ');
-                expect(promptSpy).toHaveBeenCalledTimes(102);
+                expect(promptSpy).toHaveBeenCalledTimes(100);
                 expect(int).toBe(0);
             });
         });
@@ -270,6 +270,124 @@ describe('Console', () => {
                 c.configure({ onPrint: printSpy });
                 c.println('Hello!');
                 expect(printSpy).toHaveBeenCalledOnceWith('Hello!', '\n');
+            });
+        });
+    });
+    describe('Asynchronous inputs', () => {
+        describe('readLineAsync', () => {
+            it('Returns a promise', () => {
+                const c = new Console();
+                expect(typeof c.readLineAsync().then).toBe('function');
+            });
+            it('Will not reprompt', async () => {
+                const c = new Console({
+                    onPromptAsync: promptMessage => {
+                        return promptMessage;
+                    },
+                });
+                expect(await c.readLineAsync('echo')).toEqual('echo');
+            });
+        });
+        describe('readIntAsync', () => {
+            it('Returns a promise', () => {
+                const c = new Console();
+                expect(typeof c.readIntAsync().then).toBe('function');
+            });
+            it('Will reprompt', async () => {
+                let i = 0;
+                const promptSpy = jasmine.createSpy();
+                const c = new Console({
+                    onPromptAsync: promptMessage => {
+                        promptSpy(promptMessage);
+                        i += 1;
+                        if (i < 3) {
+                            return 'huh?';
+                        }
+                        return 12321;
+                    },
+                });
+                expect(await c.readIntAsync('input pls')).toEqual(12321);
+                expect(promptSpy.calls.allArgs()).toEqual([
+                    ['input pls'],
+                    ["'huh?' was not an integer. Please try again.\ninput pls"],
+                    ["'huh?' was not an integer. Please try again.\ninput pls"],
+                ]);
+            });
+            it('Will default after 100 loops', async () => {
+                const promptSpy = jasmine.createSpy();
+                const c = new Console({
+                    onPromptAsync: promptMessage => {
+                        promptSpy(promptMessage);
+                        return 'ack';
+                    },
+                });
+                expect(await c.readIntAsync('input pls')).toEqual(0);
+                expect(promptSpy).toHaveBeenCalledTimes(100);
+            });
+        });
+        describe('readFloatAsync', () => {
+            it('Returns a promise', () => {
+                const c = new Console();
+                expect(typeof c.readFloatAsync().then).toBe('function');
+            });
+            it('Will reprompt', async () => {
+                let i = 0;
+                const promptSpy = jasmine.createSpy();
+                const c = new Console({
+                    onPromptAsync: promptMessage => {
+                        promptSpy(promptMessage);
+                        i += 1;
+                        if (i < 3) {
+                            return 'huh?';
+                        }
+                        return 12.1212;
+                    },
+                });
+                expect(await c.readFloatAsync('input pls')).toEqual(12.1212);
+                expect(promptSpy.calls.allArgs()).toEqual([
+                    ['input pls'],
+                    ["'huh?' was not a float. Please try again.\ninput pls"],
+                    ["'huh?' was not a float. Please try again.\ninput pls"],
+                ]);
+            });
+        });
+        describe('readBooleanAsync', () => {
+            it('Returns a promise', () => {
+                const c = new Console();
+                expect(typeof c.readBooleanAsync('Give me a boolean').then).toBe('function');
+            });
+            it('Will reprompt', async () => {
+                let i = 0;
+                const promptSpy = jasmine.createSpy();
+                const c = new Console({
+                    onPromptAsync: promptMessage => {
+                        promptSpy(promptMessage);
+                        i += 1;
+                        if (i < 3) {
+                            return 'huh?';
+                        }
+                        return 'true';
+                    },
+                });
+                expect(await c.readBooleanAsync('input pls')).toEqual(true);
+                expect(promptSpy.calls.allArgs()).toEqual([
+                    ['input pls'],
+                    ["'huh?' was not a boolean (true/false). Please try again.\ninput pls"],
+                    ["'huh?' was not a boolean (true/false). Please try again.\ninput pls"],
+                ]);
+            });
+        });
+        describe('Not configuring an onPromptAsync', () => {
+            it('Will still return a promise', () => {
+                const c = new Console();
+                const result = c.readLineAsync('Give me a line!');
+                // this is how you check that something is a Promise!
+                expect(Promise.resolve(result)).toEqual(result);
+            });
+            it('Will still reprompt', async () => {
+                const c = new Console();
+                const result = c.readIntAsync('Give me an int!');
+                expect(await result).toEqual(0);
             });
         });
     });
