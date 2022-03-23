@@ -277,7 +277,7 @@ describe('Console', () => {
         describe('readLineAsync', () => {
             it('Returns a promise', () => {
                 const c = new Console();
-                expect(typeof c.readLineAsync().then).toBe('function');
+                expect(typeof c.readLineAsync('give me a line!').then).toBe('function');
             });
             it('Will not reprompt', async () => {
                 const c = new Console({
@@ -328,7 +328,7 @@ describe('Console', () => {
         describe('readFloatAsync', () => {
             it('Returns a promise', () => {
                 const c = new Console();
-                expect(typeof c.readFloatAsync().then).toBe('function');
+                expect(typeof c.readFloatAsync('give me a float!').then).toBe('function');
             });
             it('Will reprompt', async () => {
                 let i = 0;
