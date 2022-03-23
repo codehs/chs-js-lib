@@ -291,7 +291,7 @@ describe('Console', () => {
         describe('readIntAsync', () => {
             it('Returns a promise', () => {
                 const c = new Console();
-                expect(typeof c.readIntAsync().then).toBe('function');
+                expect(typeof c.readIntAsync('Give me an int!').then).toBe('function');
             });
             it('Will reprompt', async () => {
                 let i = 0;
