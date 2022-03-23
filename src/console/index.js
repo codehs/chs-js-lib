@@ -26,7 +26,7 @@ class Console {
      * onPromptAsync is undefined, window.prompt is used as a fallback.
      * @type {function}
      */
-    onPromptAsync = window.prompt.bind(window);
+    onPromptAsync = async promptString => await window.prompt(promptString);
     /**
      * Function invoked when printing.
      * This function is invoked with any output, either in the case of explicit calls to `print`
