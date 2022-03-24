@@ -10,23 +10,14 @@
  */
 class Console {
     /**
-     * Function invoked when asking for user input.
-     * This function is invoked with the string of the prompt, i.e. readInt('give me an int!').
-     * The result of invoking onPrompt will be subjected to parsing functions for confirming
-     * it's an appropriate data type (a float, in the case of readFloat, for example). If
+     * Function invoked when asking for asynchronous user input with the read*Async functions.
+     * This function is invoked with the string of the prompt, i.e. readIntAsync('give me an int!').
+     * The result of invoking onPrompt will be awaited, then parsed to configrm it's the
+     * appropriate data type (a float, in the case of readFloat, for example). If
      * onPrompt is undefined, window.prompt is used as a fallback.
      * @type {function}
      */
-    onPrompt = window.prompt.bind(window);
-    /**
-     * Function invoked when asking for asynchronous user input with the read*Async functions.
-     * This function is invoked with the string of the prompt, i.e. readIntAsync('give me an int!').
-     * The result of invoking onPromptAsync will be awaited, then parsed to configrm it's the
-     * appropriate data type (a float, in the case of readFloat, for example). If
-     * onPromptAsync is undefined, window.prompt is used as a fallback.
-     * @type {function}
-     */
-    onPromptAsync = async promptString => await window.prompt(promptString);
+    onPrompt = async promptString => await prompt(promptString);
     /**
      * Function invoked when printing.
      * This function is invoked with any output, either in the case of explicit calls to `print`
@@ -44,16 +35,11 @@ class Console {
      * Initialize the console class, additionally configuring any event handlers.
      * @constructor
      * @param {Object} options
-     * @param {function} options.onPrompt Function invoked when asking for user input.
-     * This function is invoked with the string of the prompt, i.e. readInt('give me an int!').
-     * The result of invoking onPrompt will be subjected to parsing functions for confirming
-     * it's an appropriate data type (a float, in the case of readFloat, for example). If
-     * onPrompt is undefined, window.prompt is used as a fallback.
-     * @param {function} options.onPromptAsync Function invoked when asking for user input asynchronously.
+     * @param {function} options.onPrompt Function invoked when asking for user input asynchronously.
      * This function is invoked with the string of the prompt, i.e. readIntAsync('give me an int!').
-     * The result of invoking onPromptAsync will be awaited, then parsed to configrm it's the
+     * The result of invoking onPrompt will be awaited, then parsed to configrm it's the
      * appropriate data type (a float, in the case of readFloat, for example). If
-     * onPromptAsync is undefined, window.prompt is used as a fallback.
+     * onPrompt is undefined, window.prompt is used as a fallback.
      * @param {function} options.onPrint Function invoked when printing.
      * This function is invoked with any output, either in the case of explicit calls to `print`
      * or `println` or internal calls within the library. If onPrint is undefined, console.log
@@ -61,8 +47,7 @@ class Console {
      * @param {function} options.onClear Function invoked when clear() is called.
      */
     constructor(options = {}) {
-        this.onPrompt = options.onPrompt ?? window.prompt.bind(window);
-        this.onPromptAsync = options.onPromptAsync ?? window.prompt.bind(window);
+        this.onPrompt = options.onPrompt ?? (async promptString => await prompt(promptString));
         this.onPrint = options.onPrint ?? window.console.log.bind(window.console);
         this.onClear = options.onClear ?? window.console.clear.bind(window.console);
     }
@@ -71,16 +56,11 @@ class Console {
      * Configure the Console instance, providing methods it invokes
      * when prompting for input and emitting output.
      *
-     * @param {function} options.onPrompt Function invoked when asking for user input.
-     * This function is invoked with the string of the prompt, i.e. readInt('give me an int!').
-     * The result of invoking onPrompt will be subjected to parsing functions for confirming
-     * it's an appropriate data type (a float, in the case of readFloat, for example). If
-     * onPrompt is undefined, window.prompt is used as a fallback.
-     * @param {function} options.onPromptAsync Function invoked when asking for user input asynchronously.
+     * @param {function} options.onPrompt Function invoked when asking for user input asynchronously.
      * This function is invoked with the string of the prompt, i.e. readIntAsync('give me an int!').
-     * The result of invoking onPromptAsync will be awaited, then parsed to configrm it's the
+     * The result of invoking onPrompt will be awaited, then parsed to configrm it's the
      * appropriate data type (a float, in the case of readFloat, for example). If
-     * onPromptAsync is undefined, window.prompt is used as a fallback.
+     * onPrompt is undefined, window.prompt is used as a fallback.
      * @param {function} options.onPrint Function invoked when printing.
      * This function is invoked with any output, either in the case of explicit calls to `print`
      * or `println` or internal calls within the library. If onPrint is undefined, console.log
@@ -89,7 +69,6 @@ class Console {
      */
     configure(options = {}) {
         this.onPrompt = options.onPrompt ?? this.onPrompt;
-        this.onPromptAsync = options.onPromptAsync ?? this.onPromptAsync;
         this.onPrint = options.onPrint ?? this.onPrint;
         this.onClear = options.onClear ?? this.onClear;
     }
@@ -99,16 +78,16 @@ class Console {
      * @param {string} promptString - The line to be printed before prompting.
      */
     readLinePrivate(promptString) {
-        const input = this.onPrompt(promptString);
+        const input = prompt(promptString);
         return input;
     }
 
     /**
-     * Private method used to read a line using the onPromptAsync methods.
+     * Private method used to read a line using the read*Async methods.
      * @param {string} promptString - The line to be printed before prompting.
      */
     readLinePrivateAsync(promptString) {
-        const input = this.onPromptAsync(promptString);
+        const input = this.onPrompt(promptString);
         return input;
     }
 
@@ -147,7 +126,7 @@ class Console {
     }
 
     /**
-     * Read a number from the user using the Console's `onPrompt` or `onPromptAsync` function, depending
+     * Read a number from the user using `prompt` or the Console's `onPrompt` function, depending
      * on whether the caller was an async method (readLineAsync) or not (readLine)
      * We make sure here to check a few things.
      *
@@ -167,7 +146,7 @@ class Console {
      * why a given input was rejected. For example, the errorMsgType "an integer," would result in
      * printing "That was not an integer. Please try again." if parseFn failed.
      * @param {boolean} asynchronous A boolean indicating whether this function is being invoked asynchronously.
-     * If it is, then {@link readLinePrivateAsync} will be used to read input, which calls {@link onPromptAsync}.
+     * If it is, then {@link readLinePrivateAsync} will be used to read input, which calls {@link onPrompt}.
      * @returns {number}
      * @global
      */
@@ -194,7 +173,7 @@ class Console {
             const result = asynchronous
                 ? this.readLinePrivateAsync(promptString)
                 : this.readLinePrivate(promptString);
-            const next = () => {
+            const next = result => {
                 return attemptInput(
                     `'${result}' was not ${errorMsgType}. Please try again.\n${str}`,
                     depth + 1,
@@ -205,7 +184,7 @@ class Console {
                 return result.then(result => {
                     const parsedResult = parseInput(result);
                     if (parsedResult === null) {
-                        return next();
+                        return next(result);
                     } else {
                         return parsedResult;
                     }
@@ -213,7 +192,7 @@ class Console {
             } else {
                 const parsedResult = parseInput(result);
                 if (parsedResult === null) {
-                    return next();
+                    return next(result);
                 } else {
                     return parsedResult;
                 }
