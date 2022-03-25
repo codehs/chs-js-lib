@@ -37,7 +37,7 @@ const console = new Console({
 
 const run = async () => {
     rerunButton.disabled = true;
-    const x = await console.readIntAsync('Give me an integer in the input box!!');
+    const x = await console.readBooleanAsync('Give me a boolean in the input box!!');
     alert(`You input ${x}!`);
     rerunButton.disabled = false;
     rerunButton.addEventListener('click', run, { once: true });

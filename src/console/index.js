@@ -15,7 +15,7 @@ class Console {
      * The result of invoking onPrompt will be awaited, then parsed to configrm it's the
      * appropriate data type (a float, in the case of readFloat, for example). If
      * onPrompt is undefined, window.prompt is used as a fallback.
-     * @type {function}
+     * @type {Function}
      */
     onPrompt = async promptString => await prompt(promptString);
     /**
@@ -126,7 +126,7 @@ class Console {
     }
 
     /**
-     * Read a number from the user using `prompt` or the Console's `onPrompt` function, depending
+     * Read a number from the user using `prompt` or the Console's {@link Console#onPrompt} function, depending
      * on whether the caller was an async method (readLineAsync) or not (readLine)
      * We make sure here to check a few things.
      *
@@ -146,19 +146,21 @@ class Console {
      * why a given input was rejected. For example, the errorMsgType "an integer," would result in
      * printing "That was not an integer. Please try again." if parseFn failed.
      * @param {boolean} asynchronous A boolean indicating whether this function is being invoked asynchronously.
-     * If it is, then {@link readLinePrivateAsync} will be used to read input, which calls {@link onPrompt}.
+     * If it is, then {@link readLinePrivateAsync} will be used to read input, which calls {@link Console#onPrompt}.
      * @returns {number}
-     * @global
+     * @private
      */
     readNumber(str, parseFn, errorMsgType, asynchronous) {
         const DEFAULT = 0; // If we get into an infinite recursion, return DEFAULT.
         const MAX_RECURSION_DEPTH = 100;
+        // a special indicator that th program should be exiting
+        const ABORT = Symbol('ABORT');
 
         let promptString = str;
         let parsedResult;
         const parseInput = result => {
             if (result === null) {
-                return null;
+                return ABORT;
             }
             parsedResult = parseFn(result);
             if (!isNaN(parsedResult)) {
@@ -183,6 +185,9 @@ class Console {
             if (Promise.resolve(result) === result) {
                 return result.then(result => {
                     const parsedResult = parseInput(result);
+                    if (parsedResult === ABORT) {
+                        return null;
+                    }
                     if (parsedResult === null) {
                         return next(result);
                     } else {
@@ -191,6 +196,9 @@ class Console {
                 });
             } else {
                 const parsedResult = parseInput(result);
+                if (parsedResult === ABORT) {
+                    return null;
+                }
                 if (parsedResult === null) {
                     return next(result);
                 } else {
@@ -220,7 +228,9 @@ class Console {
 
     /**
      * Read a line asynchronously from the user.
-     * The Console's `onPrompt` function will need to be configured to return a Promise.
+     * This will receive input via the Console's configured {@link Console#onPrompt} function, which by default
+     * will return a Promise that resolves with the result of using `window.prompt`, which will
+     * block the browser.
      * @param {str} str - A message associated with the modal asking for input.
      * @returns {Promise<string>} The result of the prompt.
      * @global
@@ -267,7 +277,9 @@ class Console {
 
     /**
      * Read a bool from the user asynchronously.
-     * The Console's `onPrompt` function will need to be configured to return a Promise.
+     * This will receive input via the Console's configured {@link Console#onPrompt} function, which by default
+     * will return a Promise that resolves with the result of using `window.prompt`, which will
+     * block the browser.
      * @param {str} str - A message associated with the modal asking for input.
      * @returns {Promise<boolean>} The result of the onPrompt function if it's a boolean, or 0.
      * @global
@@ -325,7 +337,9 @@ class Console {
 
     /**
      * Read an int from the user asynchronously.
-     * The Console's `onPrompt` function will need to be configured to return a Promise.
+     * This will receive input via the Console's configured {@link Console#onPrompt} function, which by default
+     * will return a Promise that resolves with the result of using `window.prompt`, which will
+     * block the browser.
      * @param {str} str - A message associated with the modal asking for input.
      * @returns {Promise<number>} The result of the onPrompt function if it's an int, or 0.
      * @global
@@ -366,7 +380,9 @@ class Console {
 
     /**
      * Read a float from the user asynchronously.
-     * The Console's `onPrompt` function will need to be configured to return a Promise.
+     * This will receive input via the Console's configured {@link Console#onPrompt} function, which by default
+     * will return a Promise that resolves with the result of using `window.prompt`, which will
+     * block the browser.
      * @param {str} str - A message associated with the modal asking for input.
      * @returns {Promise<number>} The result of the onPrompt function if it's a float, or 0.
      * @global

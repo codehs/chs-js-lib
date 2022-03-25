@@ -4,6 +4,6 @@ code: readIntAsync.js
 layout: example.11ty.js
 ---
 
-Console can be configured to use async/await input methods.
-If the Console's `onPrompt` is configured to return a Promise, then both `readInt` and `readIntAsync` will return a promise.
-`readIntAsync` will always return a Promise, even if `onPrompt` is synchronous.
+`readIntAsync` will return a Promise that resolves with the input.
+By default, `readIntAsync` will use `prompt` and block the window, but it can be configured to receive input other ways, like via an input.
+In this case, it's configured to get input from an input box.

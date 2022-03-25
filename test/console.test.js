@@ -108,6 +108,10 @@ describe('Console', () => {
                     c.readLine('Next line? ', 'Oops');
                 }).toThrow(Error('You should pass exactly 1 argument to readLine'));
             });
+            it('Defaults to null if the prompt is aborted', () => {
+                const c = new Console();
+                expect(c.readLine('Next line?')).toBeNull();
+            });
         });
         describe('readFloat', () => {
             it('Errors for >1 argument', () => {
@@ -365,10 +369,10 @@ describe('Console', () => {
                 // this is how you check that something is a Promise!
                 expect(Promise.resolve(result)).toEqual(result);
             });
-            it('Will still reprompt', async () => {
+            it('Will still abort with null', async () => {
                 const c = new Console();
                 const result = c.readIntAsync('Give me an int!');
-                expect(await result).toEqual(0);
+                expect(await result).toEqual(null);
             });
         });
     });

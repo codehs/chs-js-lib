@@ -23,10 +23,14 @@ Welcome! This is documentation for the CodeHS JavaScript Library.
 
 ## Console
 
--   {@link readInt}
 -   {@link readLine}
+-   {@link readInt}
 -   {@link readFloat}
 -   {@link readBoolean}
+-   {@link readLineAsync}
+-   {@link readIntAsync}
+-   {@link readFloatAsync}
+-   {@link readBooleanAsync}
 -   {@link print}
 -   {@link println}
 
