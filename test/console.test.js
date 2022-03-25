@@ -95,6 +95,19 @@ describe('Console', () => {
         });
     });
     describe('Input', () => {
+        describe('Aborting the prompt (default behavior in headless chrome)', () => {
+            it('Returns null for each input method', async () => {
+                const c = new Console();
+                expect(c.readLine('')).toBeNull();
+                expect(c.readInt('')).toBeNull();
+                expect(c.readFloat('')).toBeNull();
+                expect(c.readBoolean('')).toBeNull();
+                expect(await c.readLineAsync('')).toBeNull();
+                expect(await c.readIntAsync('')).toBeNull();
+                expect(await c.readFloatAsync('')).toBeNull();
+                expect(await c.readBooleanAsync('')).toBeNull();
+            });
+        });
         describe('readLine', () => {
             it('Returns the input', () => {
                 const c = new Console();
