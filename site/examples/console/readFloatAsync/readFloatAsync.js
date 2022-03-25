@@ -17,7 +17,7 @@ const console = new Console({
         const text = new Text(promptMessage);
         text.color = darkMode ? 'white' : 'black';
         text.setPosition(getWidth() / 2, getHeight() / 2);
-        text.setAnchor({ vertical: 0.5, horiztonal: 0.5 });
+        text.setAnchor({ vertical: 0.5, horizontal: 0.5 });
         add(text);
         return new Promise(resolve => {
             submitButton.disabled = false;
