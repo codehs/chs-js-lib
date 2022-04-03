@@ -2,11 +2,11 @@
  * Console provides utilities for interacting with a text console.
  * {@link Console#readInt}, {@link Console#readFloat}, {@link Console#readBoolean}, and {@link Console#readLine}
  * prompt the user for input and parse it to the corresponding type. This prompt will use the blocking
- * browser prompt by default, but can be configured using {@link Console#onPrompt}.
+ * browser prompt by default, but can be configured using {@link Console#onInput}.
  *
  * Console also exposes {@link Console#print} and {@link Console#println}, which are used for
  * emitting output. By default the output will print to the console, but can be configured using
- * {@link Console#onPrint}.
+ * {@link Console#onOutput}.
  */
 class Console {
     /**
@@ -17,7 +17,7 @@ class Console {
      * onPrompt is undefined, window.prompt is used as a fallback.
      * @type {Function}
      */
-    onPrompt = async promptString => await prompt(promptString);
+    onInput = async promptString => await prompt(promptString);
     /**
      * Function invoked when printing.
      * This function is invoked with any output, either in the case of explicit calls to `print`
@@ -25,7 +25,7 @@ class Console {
      * is used as a fallback.
      * @type {function}
      */
-    onPrint = window.console.log.bind(window.console);
+    onOutput = window.console.log.bind(window.console);
     /**
      * Function invoked when {@link Console#clear} is called.
      */
@@ -35,42 +35,43 @@ class Console {
      * Initialize the console class, additionally configuring any event handlers.
      * @constructor
      * @param {Object} options
-     * @param {function} options.onPrompt Function invoked when asking for user input asynchronously.
+     * @param {function} options.input Function invoked when asking for user input asynchronously.
      * This function is invoked with the string of the prompt, i.e. readIntAsync('give me an int!').
      * The result of invoking onPrompt will be awaited, then parsed to configrm it's the
      * appropriate data type (a float, in the case of readFloat, for example). If
      * onPrompt is undefined, window.prompt is used as a fallback.
-     * @param {function} options.onPrint Function invoked when printing.
+     * @param {function} options.output Function invoked when printing.
      * This function is invoked with any output, either in the case of explicit calls to `print`
      * or `println` or internal calls within the library. If onPrint is undefined, console.log
      * is used as a fallback.
-     * @param {function} options.onClear Function invoked when clear() is called.
+     * @param {function} options.clear Function invoked when clear() is called.
      */
     constructor(options = {}) {
-        this.onPrompt = options.onPrompt ?? (async promptString => await prompt(promptString));
-        this.onPrint = options.onPrint ?? window.console.log.bind(window.console);
-        this.onClear = options.onClear ?? window.console.clear.bind(window.console);
+        this.onInput = options.input ?? (async promptString => await prompt(promptString));
+        this.onOutput = options.output ?? window.console.log.bind(window.console);
+        this.onClear = options.clear ?? window.console.clear.bind(window.console);
     }
 
     /**
      * Configure the Console instance, providing methods it invokes
      * when prompting for input and emitting output.
      *
-     * @param {function} options.onPrompt Function invoked when asking for user input asynchronously.
+     * @param {Object} options
+     * @param {function} options.input Function invoked when asking for user input asynchronously.
      * This function is invoked with the string of the prompt, i.e. readIntAsync('give me an int!').
      * The result of invoking onPrompt will be awaited, then parsed to configrm it's the
      * appropriate data type (a float, in the case of readFloat, for example). If
      * onPrompt is undefined, window.prompt is used as a fallback.
-     * @param {function} options.onPrint Function invoked when printing.
+     * @param {function} options.output Function invoked when printing.
      * This function is invoked with any output, either in the case of explicit calls to `print`
      * or `println` or internal calls within the library. If onPrint is undefined, console.log
      * is used as a fallback.
-     * @param {function} options.onClear Function invoked when clear() is called.
+     * @param {function} options.clear Function invoked when clear() is called.
      */
     configure(options = {}) {
-        this.onPrompt = options.onPrompt ?? this.onPrompt;
-        this.onPrint = options.onPrint ?? this.onPrint;
-        this.onClear = options.onClear ?? this.onClear;
+        this.onInput = options.input ?? this.onInput;
+        this.onOutput = options.output ?? this.onOutput;
+        this.onClear = options.clear ?? this.onClear;
     }
 
     /**
@@ -87,7 +88,7 @@ class Console {
      * @param {string} promptString - The line to be printed before prompting.
      */
     readLinePrivateAsync(promptString) {
-        const input = this.onPrompt(promptString);
+        const input = this.onInput(promptString);
         return input;
     }
 
@@ -108,7 +109,7 @@ class Console {
         if (args.length < 1) {
             throw new Error('You should pass at least 1 argument to print');
         }
-        this.onPrint(...args);
+        this.onOutput(...args);
     }
 
     /**
@@ -126,7 +127,7 @@ class Console {
     }
 
     /**
-     * Read a number from the user using `prompt` or the Console's {@link Console#onPrompt} function, depending
+     * Read a number from the user using `prompt` or the Console's {@link Console#onInput} function, depending
      * on whether the caller was an async method (readLineAsync) or not (readLine)
      * We make sure here to check a few things.
      *
@@ -146,7 +147,7 @@ class Console {
      * why a given input was rejected. For example, the errorMsgType "an integer," would result in
      * printing "That was not an integer. Please try again." if parseFn failed.
      * @param {boolean} asynchronous A boolean indicating whether this function is being invoked asynchronously.
-     * If it is, then {@link readLinePrivateAsync} will be used to read input, which calls {@link Console#onPrompt}.
+     * If it is, then {@link readLinePrivateAsync} will be used to read input, which calls {@link Console#onInput}.
      * @returns {number}
      * @private
      */
@@ -228,7 +229,7 @@ class Console {
 
     /**
      * Read a line asynchronously from the user.
-     * This will receive input via the Console's configured {@link Console#onPrompt} function, which by default
+     * This will receive input via the Console's configured {@link Console#onInput} function, which by default
      * will return a Promise that resolves with the result of using `window.prompt`, which will
      * block the browser.
      * @param {str} str - A message associated with the modal asking for input.
@@ -277,7 +278,7 @@ class Console {
 
     /**
      * Read a bool from the user asynchronously.
-     * This will receive input via the Console's configured {@link Console#onPrompt} function, which by default
+     * This will receive input via the Console's configured {@link Console#onInput} function, which by default
      * will return a Promise that resolves with the result of using `window.prompt`, which will
      * block the browser.
      * @param {str} str - A message associated with the modal asking for input.
@@ -337,7 +338,7 @@ class Console {
 
     /**
      * Read an int from the user asynchronously.
-     * This will receive input via the Console's configured {@link Console#onPrompt} function, which by default
+     * This will receive input via the Console's configured {@link Console#onInput} function, which by default
      * will return a Promise that resolves with the result of using `window.prompt`, which will
      * block the browser.
      * @param {str} str - A message associated with the modal asking for input.
@@ -380,7 +381,7 @@ class Console {
 
     /**
      * Read a float from the user asynchronously.
-     * This will receive input via the Console's configured {@link Console#onPrompt} function, which by default
+     * This will receive input via the Console's configured {@link Console#onInput} function, which by default
      * will return a Promise that resolves with the result of using `window.prompt`, which will
      * block the browser.
      * @param {str} str - A message associated with the modal asking for input.

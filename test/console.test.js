@@ -4,19 +4,19 @@ describe('Console', () => {
     describe('The constructor', () => {
         it('Allows prompt configuration', () => {
             const promptSpy = jasmine.createSpy();
-            const c = new Console({ onPrompt: promptSpy });
+            const c = new Console({ input: promptSpy });
             c.readLineAsync('Give me a line: ');
             expect(promptSpy).toHaveBeenCalledOnceWith('Give me a line: ');
         });
         it('Allows print configuration', () => {
             const printSpy = jasmine.createSpy();
-            const c = new Console({ onPrint: printSpy });
+            const c = new Console({ output: printSpy });
             c.print('Hey!');
             expect(printSpy).toHaveBeenCalledOnceWith('Hey!');
         });
         it('Allows clear configuration', () => {
             const clearSpy = jasmine.createSpy();
-            const c = new Console({ onClear: clearSpy });
+            const c = new Console({ clear: clearSpy });
             c.clear();
             expect(clearSpy).toHaveBeenCalledTimes(1);
         });
@@ -26,7 +26,7 @@ describe('Console', () => {
             it('Allows an async prompt', async () => {
                 const c = new Console();
                 c.configure({
-                    onPrompt: async () => {
+                    input: async () => {
                         return await new Promise(resolve =>
                             setInterval(() => {
                                 resolve('nice');
@@ -39,7 +39,7 @@ describe('Console', () => {
             it('Allows an async prompt to be treated as a Promise', () => {
                 const c = new Console();
                 c.configure({
-                    onPrompt: async () => {
+                    input: async () => {
                         return await new Promise(resolve =>
                             setInterval(() => {
                                 resolve('nice');
@@ -56,7 +56,7 @@ describe('Console', () => {
                 spyOn(window, 'prompt').and.returnValue('nice');
                 c.configure({
                     // native prompt
-                    onPrompt: window.prompt,
+                    input: window.prompt,
                 });
                 expect(c.readLine('Give me a line: ')).toBe('nice');
             });
@@ -71,7 +71,7 @@ describe('Console', () => {
         describe('Configuring clear', () => {
             it('Defaults to an empty function', () => {
                 const c = new Console();
-                const clearSpy = spyOn(c, 'onClear');
+                const clearSpy = spyOn(c, 'clear');
                 c.configure();
                 c.clear();
                 expect(clearSpy).toHaveBeenCalledTimes(1);
@@ -79,7 +79,7 @@ describe('Console', () => {
             it('Allows a handler to be attached', () => {
                 const c = new Console();
                 const clearSpy = jasmine.createSpy();
-                c.configure({ onClear: clearSpy });
+                c.configure({ clear: clearSpy });
                 c.clear();
                 expect(clearSpy).toHaveBeenCalledTimes(1);
             });
@@ -88,7 +88,7 @@ describe('Console', () => {
             it('Allows a handler to be attached', () => {
                 const c = new Console();
                 const printSpy = jasmine.createSpy();
-                c.configure({ onPrint: printSpy });
+                c.configure({ output: printSpy });
                 c.print('Hellooo');
                 expect(printSpy).toHaveBeenCalledOnceWith('Hellooo');
             });
@@ -179,7 +179,7 @@ describe('Console', () => {
                 const c = new Console();
                 const promptSpy = jasmine.createSpy();
                 c.configure({
-                    onPrompt: (...args) => {
+                    input: (...args) => {
                         return promptSpy.and.returnValue('invalid')(...args);
                     },
                 });
@@ -238,7 +238,7 @@ describe('Console', () => {
             it("Doesn't add a newline to its output", () => {
                 const c = new Console();
                 const printSpy = jasmine.createSpy();
-                c.configure({ onPrint: printSpy });
+                c.configure({ output: printSpy });
                 c.print('Hello!');
                 expect(printSpy).toHaveBeenCalledOnceWith('Hello!');
             });
@@ -258,14 +258,14 @@ describe('Console', () => {
             it('Prints an empty newline for no input', () => {
                 const c = new Console();
                 const printSpy = jasmine.createSpy();
-                c.configure({ onPrint: printSpy });
+                c.configure({ output: printSpy });
                 c.println();
                 expect(printSpy).toHaveBeenCalledOnceWith('', '\n');
             });
             it('Adds a newline to its output', () => {
                 const c = new Console();
                 const printSpy = jasmine.createSpy();
-                c.configure({ onPrint: printSpy });
+                c.configure({ output: printSpy });
                 c.println('Hello!');
                 expect(printSpy).toHaveBeenCalledOnceWith('Hello!', '\n');
             });
@@ -279,7 +279,7 @@ describe('Console', () => {
             });
             it('Will not reprompt', async () => {
                 const c = new Console({
-                    onPrompt: promptMessage => {
+                    input: promptMessage => {
                         return promptMessage;
                     },
                 });
@@ -295,7 +295,7 @@ describe('Console', () => {
                 let i = 0;
                 const promptSpy = jasmine.createSpy();
                 const c = new Console({
-                    onPrompt: promptMessage => {
+                    input: promptMessage => {
                         promptSpy(promptMessage);
                         i += 1;
                         if (i < 3) {
@@ -314,7 +314,7 @@ describe('Console', () => {
             it('Will default after 100 loops', async () => {
                 const promptSpy = jasmine.createSpy();
                 const c = new Console({
-                    onPrompt: promptMessage => {
+                    input: promptMessage => {
                         promptSpy(promptMessage);
                         return 'ack';
                     },
@@ -332,7 +332,7 @@ describe('Console', () => {
                 let i = 0;
                 const promptSpy = jasmine.createSpy();
                 const c = new Console({
-                    onPrompt: promptMessage => {
+                    input: promptMessage => {
                         promptSpy(promptMessage);
                         i += 1;
                         if (i < 3) {
@@ -358,7 +358,7 @@ describe('Console', () => {
                 let i = 0;
                 const promptSpy = jasmine.createSpy();
                 const c = new Console({
-                    onPrompt: promptMessage => {
+                    input: promptMessage => {
                         promptSpy(promptMessage);
                         i += 1;
                         if (i < 3) {
@@ -375,7 +375,7 @@ describe('Console', () => {
                 ]);
             });
         });
-        describe('Not configuring an onPromptAsync', () => {
+        describe('Not configuring an inputAsync', () => {
             it('Will still return a promise', () => {
                 const c = new Console();
                 const result = c.readLineAsync('Give me a line!');

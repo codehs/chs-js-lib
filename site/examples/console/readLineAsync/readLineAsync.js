@@ -13,7 +13,7 @@ rerunButton.innerHTML = 'Rerun';
 document.body.appendChild(rerunButton);
 
 const console = new Console({
-    onPrompt: promptMessage => {
+    input: promptMessage => {
         const text = new Text(promptMessage);
         text.color = darkMode ? 'white' : 'black';
         text.setPosition(getWidth() / 2, getHeight() / 2);
