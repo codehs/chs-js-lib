@@ -949,21 +949,25 @@ var CHSJS = (() => {
       }));
       __publicField(this, "onOutput", window.console.log.bind(window.console));
       __publicField(this, "onClear", window.console.clear.bind(window.console));
-      var _a3, _b, _c;
+      var _a3, _b, _c, _d;
       this.onInput = (_a3 = options.input) != null ? _a3 : (promptString) => __async(this, null, function* () {
         return yield prompt(promptString);
       });
       this.onOutput = (_b = options.output) != null ? _b : window.console.log.bind(window.console);
       this.onClear = (_c = options.clear) != null ? _c : window.console.clear.bind(window.console);
+      this.promptTransform = (_d = options.prompt) != null ? _d : (promptString, defaultValue) => {
+        return promptString;
+      };
     }
     configure(options = {}) {
-      var _a3, _b, _c;
+      var _a3, _b, _c, _d;
       this.onInput = (_a3 = options.input) != null ? _a3 : this.onInput;
       this.onOutput = (_b = options.output) != null ? _b : this.onOutput;
       this.onClear = (_c = options.clear) != null ? _c : this.onClear;
+      this.promptTransform = (_d = options.prompt) != null ? _d : this.promptTransform;
     }
     readLinePrivate(promptString) {
-      const input = prompt(promptString);
+      const input = prompt(this.promptTransform(promptString));
       return input;
     }
     readLinePrivateAsync(promptString) {
