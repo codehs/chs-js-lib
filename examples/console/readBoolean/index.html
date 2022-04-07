@@ -6,11 +6,11 @@
         <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css" />
         <link rel="stylesheet" href="/chs-js-lib/assets/style.css" />
         <script type="text/javascript" src="/chs-js-lib/assets/main.js"></script>
-        <title>Console - Async Readline</title>
+        <title>Console - readBoolean</title>
     </head>
     <body>
         <header>
-            <h1>Console - Async Readline</h1>
+            <h1>Console - readBoolean</h1>
             <nav>
                 <a href="/chs-js-lib/">Home</a>
                 <a href="/chs-js-lib/examples">Examples</a>
@@ -20,27 +20,22 @@
 
         <main>
             <div style="display: flex">
-                <canvas id="game" width="480" height="200"></canvas>
+                <canvas id="game" width="1" height="1"></canvas>
             </div>
             <script src="/chs-js-lib/assets/chs.iife.js"></script>
             <script id="code" type="module">
-                import { Console } from '/assets/chs.mjs';
-                const c = new Console({
-                    onPrompt: message => {
-                        return new Promise(resolve => {
-                            setTimeout(() => {
-                                resolve(message);
-                            }, 1000);
-                        });
-                    },
+                const startButton = document.createElement('button');
+                startButton.innerHTML = 'Click to run the program!';
+                document.body.appendChild(startButton);
+                startButton.addEventListener('click', () => {
+                    alert(readBoolean('Enter yes/no or true/false'));
                 });
-
-                (async () => {
-                    const input = await c.readLine('Echo!');
-                    alert(input);
-                })();
             </script>
-            <p>Console can be configured to use async/await input methods.</p>
+            <p>
+                <code>readBoolean</code> will read a boolean from the user via the browser prompt.
+                <code>readBoolean</code> will reprompt the user for another boolean until it
+                receives one, either 'true', 'false', 'yes', or 'no'.
+            </p>
         </main>
     </body>
 </html>

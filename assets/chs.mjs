@@ -943,22 +943,30 @@ var require_tslib = __commonJS({
 // src/console/index.js
 var Console = class {
   constructor(options = {}) {
-    __publicField(this, "onPrompt", window.prompt.bind(window));
-    __publicField(this, "onPrint", window.console.log.bind(window.console));
+    __publicField(this, "onInput", (promptString) => __async(this, null, function* () {
+      return yield prompt(promptString);
+    }));
+    __publicField(this, "onOutput", window.console.log.bind(window.console));
     __publicField(this, "onClear", window.console.clear.bind(window.console));
     var _a3, _b, _c;
-    this.onPrompt = (_a3 = options.onPrompt) != null ? _a3 : window.prompt.bind(window);
-    this.onPrint = (_b = options.onPrint) != null ? _b : window.console.log.bind(window.console);
-    this.onClear = (_c = options.onClear) != null ? _c : window.console.clear.bind(window.console);
+    this.onInput = (_a3 = options.input) != null ? _a3 : (promptString) => __async(this, null, function* () {
+      return yield prompt(promptString);
+    });
+    this.onOutput = (_b = options.output) != null ? _b : window.console.log.bind(window.console);
+    this.onClear = (_c = options.clear) != null ? _c : window.console.clear.bind(window.console);
   }
   configure(options = {}) {
     var _a3, _b, _c;
-    this.onPrompt = (_a3 = options.onPrompt) != null ? _a3 : this.onPrompt;
-    this.onPrint = (_b = options.onPrint) != null ? _b : this.onPrint;
-    this.onClear = (_c = options.onClear) != null ? _c : this.onClear;
+    this.onInput = (_a3 = options.input) != null ? _a3 : this.onInput;
+    this.onOutput = (_b = options.output) != null ? _b : this.onOutput;
+    this.onClear = (_c = options.clear) != null ? _c : this.onClear;
   }
   readLinePrivate(promptString) {
-    const input = this.onPrompt(promptString);
+    const input = prompt(promptString);
+    return input;
+  }
+  readLinePrivateAsync(promptString) {
+    const input = this.onInput(promptString);
     return input;
   }
   clear() {
@@ -968,7 +976,7 @@ var Console = class {
     if (args.length < 1) {
       throw new Error("You should pass at least 1 argument to print");
     }
-    this.onPrint(...args);
+    this.onOutput(...args);
   }
   println(value) {
     if (arguments.length === 0) {
@@ -978,43 +986,56 @@ var Console = class {
     }
     this.print(value, "\n");
   }
-  readNumber(str, parseFn, errorMsgType) {
+  readNumber(str, parseFn, errorMsgType, asynchronous) {
     const DEFAULT = 0;
-    const INFINITE_LOOP_CHECK = 100;
+    const MAX_RECURSION_DEPTH = 100;
+    const ABORT = Symbol("ABORT");
     let promptString = str;
-    let loopCount = 0;
-    let successful = false;
     let parsedResult;
-    while (true) {
-      const result = this.readLinePrivate(promptString);
+    const parseInput = (result) => {
       if (result === null) {
-        parsedResult = null;
-        successful = false;
-        break;
+        return ABORT;
       }
       parsedResult = parseFn(result);
       if (!isNaN(parsedResult)) {
-        successful = true;
-        break;
+        return parsedResult;
       }
-      if (parsedResult === null) {
-        successful = false;
-        break;
+      return null;
+    };
+    const attemptInput = (promptString2, depth, asynchronous2) => {
+      if (depth >= MAX_RECURSION_DEPTH) {
+        return DEFAULT;
       }
-      if (loopCount > INFINITE_LOOP_CHECK) {
-        successful = false;
-        parsedResult = DEFAULT;
-        break;
+      const result = asynchronous2 ? this.readLinePrivateAsync(promptString2) : this.readLinePrivate(promptString2);
+      const next = (result2) => {
+        return attemptInput(`'${result2}' was not ${errorMsgType}. Please try again.
+${str}`, depth + 1, asynchronous2);
+      };
+      if (Promise.resolve(result) === result) {
+        return result.then((result2) => {
+          const parsedResult2 = parseInput(result2);
+          if (parsedResult2 === ABORT) {
+            return null;
+          }
+          if (parsedResult2 === null) {
+            return next(result2);
+          } else {
+            return parsedResult2;
+          }
+        });
+      } else {
+        const parsedResult2 = parseInput(result);
+        if (parsedResult2 === ABORT) {
+          return null;
+        }
+        if (parsedResult2 === null) {
+          return next(result);
+        } else {
+          return parsedResult2;
+        }
       }
-      promptString = `'${result}' was not ${errorMsgType}. Please try again.
-${str}`;
-      loopCount++;
-    }
-    if (successful) {
-      this.print(str);
-      this.println(parsedResult);
-    }
-    return parsedResult;
+    };
+    return attemptInput(promptString, 0, asynchronous);
   }
   readLine(str) {
     if (arguments.length !== 1) {
@@ -1024,6 +1045,17 @@ ${str}`;
     this.print(str);
     this.println(result);
     return result;
+  }
+  readLineAsync(_0) {
+    return __async(this, arguments, function* (str) {
+      if (arguments.length !== 1) {
+        throw new Error("You should pass exactly 1 argument to readLine");
+      }
+      const result = yield this.readLinePrivateAsync(str);
+      this.print(str);
+      this.println(result);
+      return result;
+    });
   }
   readBoolean(str) {
     if (arguments.length !== 1) {
@@ -1043,6 +1075,26 @@ ${str}`;
       return NaN;
     }, "a boolean (true/false)");
   }
+  readBooleanAsync(_0) {
+    return __async(this, arguments, function* (str) {
+      if (arguments.length !== 1) {
+        throw new Error("You should pass exactly 1 argument to readBooleanAsync");
+      }
+      return yield this.readNumber(str, (line) => {
+        if (line === null) {
+          return NaN;
+        }
+        line = line.toLowerCase();
+        if (line === "true" || line === "yes") {
+          return true;
+        }
+        if (line === "false" || line === "no") {
+          return false;
+        }
+        return NaN;
+      }, "a boolean (true/false)", true);
+    });
+  }
   readInt(str) {
     if (arguments.length !== 1) {
       throw new Error("You should pass exactly 1 argument to readInt");
@@ -1056,11 +1108,34 @@ ${str}`;
       return NaN;
     }, "an integer");
   }
+  readIntAsync(_0) {
+    return __async(this, arguments, function* (str) {
+      if (arguments.length !== 1) {
+        throw new Error("You should pass exactly 1 argument to readIntAsync");
+      }
+      return yield this.readNumber(str, function(x) {
+        var resultInt = parseInt(x);
+        var resultFloat = parseFloat(x);
+        if (resultInt === resultFloat) {
+          return resultInt;
+        }
+        return NaN;
+      }, "an integer", true);
+    });
+  }
   readFloat(str) {
     if (arguments.length !== 1) {
       throw new Error("You should pass exactly 1 argument to readFloat");
     }
     return this.readNumber(str, parseFloat, "a float");
+  }
+  readFloatAsync(_0) {
+    return __async(this, arguments, function* (str) {
+      if (arguments.length !== 1) {
+        throw new Error("You should pass exactly 1 argument to readFloat");
+      }
+      return yield this.readNumber(str, parseFloat, "a float", true);
+    });
   }
 };
 var console_default = Console;

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css" />
+        <link rel="stylesheet" href="/chs-js-lib/assets/style.css" />
+        <script type="text/javascript" src="/chs-js-lib/assets/main.js"></script>
+        <title>Console - readIntAsync</title>
+    </head>
+    <body>
+        <header>
+            <h1>Console - readIntAsync</h1>
+            <nav>
+                <a href="/chs-js-lib/">Home</a>
+                <a href="/chs-js-lib/examples">Examples</a>
+                <a href="/chs-js-lib/docs">Documentation</a>
+            </nav>
+        </header>
+
+        <main>
+            <div style="display: flex">
+                <canvas id="game" width="480" height="200"></canvas>
+            </div>
+            <script src="/chs-js-lib/assets/chs.iife.js"></script>
+            <script id="code" type="module">
+                let darkMode =
+                    window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+                const input = document.createElement('input');
+                input.type = 'text';
+                document.body.appendChild(input);
+
+                const submitButton = document.createElement('button');
+                submitButton.innerHTML = 'Submit!';
+                document.body.appendChild(submitButton);
+
+                const rerunButton = document.createElement('button');
+                rerunButton.innerHTML = 'Rerun';
+                document.body.appendChild(rerunButton);
+
+                const console = new Console({
+                    input: promptMessage => {
+                        const text = new Text(promptMessage);
+                        text.color = darkMode ? 'white' : 'black';
+                        text.setPosition(getWidth() / 2, getHeight() / 2);
+                        text.setAnchor({ vertical: 0.5, horizontal: 0.5 });
+                        add(text);
+                        return new Promise(resolve => {
+                            submitButton.disabled = false;
+                            submitButton.addEventListener(
+                                'click',
+                                () => {
+                                    resolve(input.value);
+                                    input.value = '';
+                                    submitButton.disabled = true;
+                                    remove(text);
+                                },
+                                { once: true }
+                            );
+                        });
+                    },
+                });
+
+                const run = async () => {
+                    rerunButton.disabled = true;
+                    const x = await console.readIntAsync('Give me an integer in the input box!!');
+                    alert(`You input ${x}!`);
+                    rerunButton.disabled = false;
+                    rerunButton.addEventListener('click', run, { once: true });
+                };
+
+                run();
+            </script>
+            <p>
+                <code>readIntAsync</code> will return a Promise that resolves with an integer. It
+                will re-prompt until it receives an integer or <code>null</code>. By default,
+                <code>readIntAsync</code> will use <code>prompt</code> and block the window, but it
+                can be configured to receive input other ways, like via an input. In this case, it's
+                configured to get input from an input box.
+            </p>
+        </main>
+    </body>
+</html>

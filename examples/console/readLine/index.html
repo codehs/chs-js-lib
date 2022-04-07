@@ -6,11 +6,11 @@
         <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css" />
         <link rel="stylesheet" href="/chs-js-lib/assets/style.css" />
         <script type="text/javascript" src="/chs-js-lib/assets/main.js"></script>
-        <title>Console - readInt</title>
+        <title>Console - readLine</title>
     </head>
     <body>
         <header>
-            <h1>Console - readInt</h1>
+            <h1>Console - readLine</h1>
             <nav>
                 <a href="/chs-js-lib/">Home</a>
                 <a href="/chs-js-lib/examples">Examples</a>
@@ -28,15 +28,12 @@
                 startButton.innerHTML = 'Click to run the program!';
                 document.body.appendChild(startButton);
                 startButton.addEventListener('click', () => {
-                    let x = readInt('Give me an x: ');
-                    let y = readInt('Give me a y: ');
-                    alert('y/x = ' + y / x);
+                    let input = readLine('Give me a line!');
+                    alert(input.toUpperCase());
                 });
             </script>
             <p>
-                <code>readInt</code> will read an integer from the user via the browser prompt.
-                <code>readInt</code> will reprompt the user for another input until it receives an
-                integer.
+                <code>readLine</code> will read a line of text from the user via the browser prompt.
             </p>
         </main>
     </body>
