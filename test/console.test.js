@@ -125,6 +125,14 @@ describe('Console', () => {
                 const c = new Console();
                 expect(c.readLine('Next line?')).toBeNull();
             });
+            it('Will invoke a configured prompt first', () => {
+                const promptSpy = jasmine.createSpy().and.returnValue('modified prompt');
+                const windowPromptSpy = spyOn(window, 'prompt').and.returnValue(null);
+                const c = new Console({ prompt: promptSpy });
+                c.readLine('give me a line!');
+                expect(promptSpy).toHaveBeenCalledOnceWith('give me a line!');
+                expect(windowPromptSpy).toHaveBeenCalledOnceWith('modified prompt');
+            });
         });
         describe('readFloat', () => {
             it('Errors for >1 argument', () => {
@@ -145,6 +153,14 @@ describe('Console', () => {
                     ["'two' was not a float. Please try again.\nGive me a float: "],
                 ]);
                 expect(int).toBe(3.0);
+            });
+            it('Will invoke a configured prompt first', () => {
+                const promptSpy = jasmine.createSpy().and.returnValue('modified prompt');
+                const windowPromptSpy = spyOn(window, 'prompt').and.returnValue(null);
+                const c = new Console({ prompt: promptSpy });
+                c.readFloat('give me a float!');
+                expect(promptSpy).toHaveBeenCalledOnceWith('give me a float!');
+                expect(windowPromptSpy).toHaveBeenCalledOnceWith('modified prompt');
             });
         });
         describe('readInt', () => {
@@ -187,6 +203,14 @@ describe('Console', () => {
                 expect(promptSpy).toHaveBeenCalledTimes(100);
                 expect(int).toBe(0);
             });
+            it('Will invoke a configured prompt first', () => {
+                const promptSpy = jasmine.createSpy().and.returnValue('modified prompt');
+                const windowPromptSpy = spyOn(window, 'prompt').and.returnValue(null);
+                const c = new Console({ prompt: promptSpy });
+                c.readInt('give me an int!');
+                expect(promptSpy).toHaveBeenCalledOnceWith('give me an int!');
+                expect(windowPromptSpy).toHaveBeenCalledOnceWith('modified prompt');
+            });
         });
         describe('readBoolean', () => {
             it('Errors for >1 argument', () => {
@@ -224,6 +248,14 @@ describe('Console', () => {
                     ["'yep' was not a boolean (true/false). Please try again.\nGive me a bool: "],
                 ]);
                 expect(bool).toBeTrue();
+            });
+            it('Will invoke a configured prompt first', () => {
+                const promptSpy = jasmine.createSpy().and.returnValue('modified prompt');
+                const windowPromptSpy = spyOn(window, 'prompt').and.returnValue(null);
+                const c = new Console({ prompt: promptSpy });
+                c.readInt('give me a boolean!');
+                expect(promptSpy).toHaveBeenCalledOnceWith('give me a boolean!');
+                expect(windowPromptSpy).toHaveBeenCalledOnceWith('modified prompt');
             });
         });
     });

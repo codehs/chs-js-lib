@@ -45,11 +45,17 @@ class Console {
      * or `println` or internal calls within the library. If onPrint is undefined, console.log
      * is used as a fallback.
      * @param {function} options.clear Function invoked when clear() is called.
+     * @param {function} options.prompt Function that transforms the prompt string to a function like `readInt` before it is passed to `prompt`.
      */
     constructor(options = {}) {
         this.onInput = options.input ?? (async promptString => await prompt(promptString));
         this.onOutput = options.output ?? window.console.log.bind(window.console);
         this.onClear = options.clear ?? window.console.clear.bind(window.console);
+        this.promptTransform =
+            options.prompt ??
+            ((promptString, defaultValue) => {
+                return promptString;
+            });
     }
 
     /**
@@ -67,11 +73,13 @@ class Console {
      * or `println` or internal calls within the library. If onPrint is undefined, console.log
      * is used as a fallback.
      * @param {function} options.clear Function invoked when clear() is called.
+     * @param {function} options.prompt Function that transforms the prompt string to a function like `readInt` before it is passed to `prompt`.
      */
     configure(options = {}) {
         this.onInput = options.input ?? this.onInput;
         this.onOutput = options.output ?? this.onOutput;
         this.onClear = options.clear ?? this.onClear;
+        this.promptTransform = options.prompt ?? this.promptTransform;
     }
 
     /**
@@ -79,7 +87,7 @@ class Console {
      * @param {string} promptString - The line to be printed before prompting.
      */
     readLinePrivate(promptString) {
-        const input = prompt(promptString);
+        const input = prompt(this.promptTransform(promptString));
         return input;
     }
 
