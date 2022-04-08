@@ -258,12 +258,10 @@ class Console {
      */
     async readLineAsync(str) {
         if (arguments.length !== 1) {
-            throw new Error('You should pass exactly 1 argument to readLine');
+            throw new Error('You should pass exactly 1 argument to readLineAsync');
         }
 
         const result = await this.readLinePrivateAsync(str);
-        this.print(str);
-        this.println(result);
         return result;
     }
 
@@ -410,7 +408,7 @@ class Console {
      */
     async readFloatAsync(str) {
         if (arguments.length !== 1) {
-            throw new Error('You should pass exactly 1 argument to readFloat');
+            throw new Error('You should pass exactly 1 argument to readFloatAsync');
         }
         return await this.readNumber(str, parseFloat, 'a float', true);
     }
