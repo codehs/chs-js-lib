@@ -1046,8 +1046,10 @@ ${str}`, depth + 1, asynchronous2);
     if (result === null) {
       return null;
     }
-    this.print(str);
-    this.println(result);
+    if (!asynchronous) {
+      this.print(str);
+      this.println(result);
+    }
     return result;
   }
   readLine(str) {
