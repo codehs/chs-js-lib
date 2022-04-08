@@ -992,16 +992,16 @@ var CHSJS = (() => {
       this.print(value, "\n");
     }
     readNumber(str, parseFn, errorMsgType, asynchronous) {
-      const DEFAULT = 0;
+      const DEFAULT = Symbol();
       const MAX_RECURSION_DEPTH = 100;
       const ABORT = Symbol("ABORT");
       let promptString = str;
       let parsedResult;
-      const parseInput = (result) => {
-        if (result === null) {
+      const parseInput = (result2) => {
+        if (result2 === null) {
           return ABORT;
         }
-        parsedResult = parseFn(result);
+        parsedResult = parseFn(result2);
         if (!isNaN(parsedResult)) {
           return parsedResult;
         }
@@ -1011,36 +1011,45 @@ var CHSJS = (() => {
         if (depth >= MAX_RECURSION_DEPTH) {
           return DEFAULT;
         }
-        const result = asynchronous2 ? this.readLinePrivateAsync(promptString2) : this.readLinePrivate(promptString2);
-        const next = (result2) => {
-          return attemptInput(`'${result2}' was not ${errorMsgType}. Please try again.
+        const result2 = asynchronous2 ? this.readLinePrivateAsync(promptString2) : this.readLinePrivate(promptString2);
+        const next = (result3) => {
+          return attemptInput(`'${result3}' was not ${errorMsgType}. Please try again.
 ${str}`, depth + 1, asynchronous2);
         };
-        if (Promise.resolve(result) === result) {
-          return result.then((result2) => {
-            const parsedResult2 = parseInput(result2);
+        if (Promise.resolve(result2) === result2) {
+          return result2.then((result3) => {
+            const parsedResult2 = parseInput(result3);
             if (parsedResult2 === ABORT) {
               return null;
             }
             if (parsedResult2 === null) {
-              return next(result2);
+              return next(result3);
             } else {
               return parsedResult2;
             }
           });
         } else {
-          const parsedResult2 = parseInput(result);
+          const parsedResult2 = parseInput(result2);
           if (parsedResult2 === ABORT) {
             return null;
           }
           if (parsedResult2 === null) {
-            return next(result);
+            return next(result2);
           } else {
             return parsedResult2;
           }
         }
       };
-      return attemptInput(promptString, 0, asynchronous);
+      const result = attemptInput(promptString, 0, asynchronous);
+      if (result === DEFAULT) {
+        return 0;
+      }
+      if (result === null) {
+        return null;
+      }
+      this.print(str);
+      this.println(result);
+      return result;
     }
     readLine(str) {
       if (arguments.length !== 1) {
