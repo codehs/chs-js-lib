@@ -160,7 +160,7 @@ class Console {
      * @private
      */
     readNumber(str, parseFn, errorMsgType, asynchronous) {
-        const DEFAULT = 0; // If we get into an infinite recursion, return DEFAULT.
+        const DEFAULT = Symbol(); // If we get into an infinite recursion, return DEFAULT.
         const MAX_RECURSION_DEPTH = 100;
         // a special indicator that th program should be exiting
         const ABORT = Symbol('ABORT');
@@ -215,7 +215,17 @@ class Console {
                 }
             }
         };
-        return attemptInput(promptString, 0, asynchronous);
+        const result = attemptInput(promptString, 0, asynchronous);
+        if (result === DEFAULT) {
+            return 0;
+        }
+        if (result === null) {
+            return null;
+        }
+        // success
+        this.print(str);
+        this.println(result);
+        return result;
     }
 
     /**

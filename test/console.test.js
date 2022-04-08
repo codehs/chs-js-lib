@@ -133,6 +133,13 @@ describe('Console', () => {
                 expect(promptSpy).toHaveBeenCalledOnceWith('give me a line!');
                 expect(windowPromptSpy).toHaveBeenCalledOnceWith('modified prompt');
             });
+            it('Prints a parsed result', () => {
+                const promptSpy = spyOn(window, 'prompt').and.returnValue('hiya');
+                const outputSpy = jasmine.createSpy();
+                const c = new Console({ output: outputSpy });
+                c.readLine('give me a line!');
+                expect(outputSpy.calls.allArgs()).toEqual([['give me a line!'], ['hiya', '\n']]);
+            });
         });
         describe('readFloat', () => {
             it('Errors for >1 argument', () => {
@@ -210,6 +217,20 @@ describe('Console', () => {
                 c.readInt('give me an int!');
                 expect(promptSpy).toHaveBeenCalledOnceWith('give me an int!');
                 expect(windowPromptSpy).toHaveBeenCalledOnceWith('modified prompt');
+            });
+            it('Prints a parsed result', () => {
+                const promptSpy = spyOn(window, 'prompt').and.returnValue(1);
+                const outputSpy = jasmine.createSpy();
+                const c = new Console({ output: outputSpy });
+                c.readInt('give me an int!');
+                expect(outputSpy.calls.allArgs()).toEqual([['give me an int!'], [1, '\n']]);
+            });
+            it('Doesnt print a default value', () => {
+                const promptSpy = spyOn(window, 'prompt').and.returnValue(null);
+                const outputSpy = jasmine.createSpy();
+                const c = new Console({ output: outputSpy });
+                c.readInt('give me an int!');
+                expect(outputSpy.calls.allArgs()).toEqual([]);
             });
         });
         describe('readBoolean', () => {
