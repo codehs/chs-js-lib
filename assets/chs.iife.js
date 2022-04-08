@@ -1065,11 +1065,9 @@ ${str}`, depth + 1, asynchronous2);
     readLineAsync(_0) {
       return __async(this, arguments, function* (str) {
         if (arguments.length !== 1) {
-          throw new Error("You should pass exactly 1 argument to readLine");
+          throw new Error("You should pass exactly 1 argument to readLineAsync");
         }
         const result = yield this.readLinePrivateAsync(str);
-        this.print(str);
-        this.println(result);
         return result;
       });
     }
@@ -1148,7 +1146,7 @@ ${str}`, depth + 1, asynchronous2);
     readFloatAsync(_0) {
       return __async(this, arguments, function* (str) {
         if (arguments.length !== 1) {
-          throw new Error("You should pass exactly 1 argument to readFloat");
+          throw new Error("You should pass exactly 1 argument to readFloatAsync");
         }
         return yield this.readNumber(str, parseFloat, "a float", true);
       });
