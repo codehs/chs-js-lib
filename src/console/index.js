@@ -222,9 +222,11 @@ class Console {
         if (result === null) {
             return null;
         }
-        // success
-        this.print(str);
-        this.println(result);
+        if (!asynchronous) {
+            // success
+            this.print(str);
+            this.println(result);
+        }
         return result;
     }
 
