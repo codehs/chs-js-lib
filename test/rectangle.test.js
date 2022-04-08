@@ -101,4 +101,12 @@ describe('Rectangle', () => {
             );
         });
     });
+    describe('.describe', () => {
+        it('Describes the Rectangle correctly', () => {
+            const r = new Rectangle(45, 10);
+            expect(r.describe()).toEqual(
+                'A Rectangle at 0, 0. Colored: #000000. Width: 45. Height: 10.'
+            );
+        });
+    });
 });

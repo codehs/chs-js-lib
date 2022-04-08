@@ -123,4 +123,18 @@ describe('Text', () => {
             expect(t.containsPoint(5, 5)).toBeTrue();
         });
     });
+    describe('.describe', () => {
+        it('Describes the Text correctly', () => {
+            const t = new Text('Hello World!');
+            expect(t.describe()).toEqual(
+                'A Text at 0, 0. Colored: #000000. Hello World! in font 20pt Arial.'
+            );
+            t.setFont('10pt Helvetica');
+            t.setPosition(50, 177);
+            t.setColor('#4cc9f0');
+            expect(t.describe()).toEqual(
+                'A Text at 50, 177. Colored: #4CC9F0. Hello World! in font 10pt Helvetica.'
+            );
+        });
+    });
 });
