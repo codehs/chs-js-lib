@@ -129,4 +129,16 @@ describe('Thing', () => {
             expect(t.getType()).toEqual('newType');
         });
     });
+    describe('.describe', () => {
+        it('Describes the thing correctly', () => {
+            const t = new Thing();
+            expect(t.describe()).toEqual('A Thing at 0, 0. Colored: #000000.');
+            t.setColor('#bad345');
+            expect(t.describe()).toEqual('A Thing at 0, 0. Colored: #BAD345.');
+            t.setColor('white');
+            expect(t.describe()).toEqual('A Thing at 0, 0. Colored: white.');
+            t.setPosition(30, 45);
+            expect(t.describe()).toEqual('A Thing at 30, 45. Colored: white.');
+        });
+    });
 });
