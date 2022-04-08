@@ -52,6 +52,13 @@ class Rectangle extends Thing {
     }
 
     /**
+     * Describes the rectangle for use with screen readers.
+     */
+    describe() {
+        return super.describe() + ` Width: ${this.width}. Height: ${this.height}.`;
+    }
+
+    /**
      * Sets the size of the Rectangle.
      *
      * @param {number} width - The desired width of the resulting Rectangle.

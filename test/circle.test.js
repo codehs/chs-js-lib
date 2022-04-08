@@ -228,4 +228,14 @@ describe('Circle', () => {
             });
         });
     });
+    describe('.describe', () => {
+        it('Describes the Circle correctly', () => {
+            const c = new Circle(125);
+            c.setPosition(100, 25);
+            expect(c.describe()).toEqual('A Circle at 100, 25. Colored: #000000. Radius: 125.');
+            c.setRadius(45);
+            c.setColor('green');
+            expect(c.describe()).toEqual('A Circle at 100, 25. Colored: green. Radius: 45.');
+        });
+    });
 });

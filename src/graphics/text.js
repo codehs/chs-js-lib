@@ -80,7 +80,7 @@ class Text extends Thing {
     }
 
     describe() {
-        return super.describe() + this.label;
+        return super.describe() + ' ' + this.label + ` in font ${this.font}.`;
     }
 
     /**
