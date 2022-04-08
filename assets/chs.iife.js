@@ -1604,7 +1604,8 @@ ${str}`, depth + 1, asynchronous2);
       this.focused = false;
     }
     describe() {
-      return `A ${this.type} at ${this.x}, ${this.y}. Colored: ${this.color}.`;
+      const color = this.color.startsWith("#") ? this.color.toUpperCase() : this.color;
+      return `A ${this.type} at ${this.x}, ${this.y}. Colored: ${color}.`;
     }
     containsPoint(x, y) {
       if (this.rotation) {
@@ -2224,6 +2225,9 @@ ${str}`, depth + 1, asynchronous2);
         context2.closePath();
         context2.translate(-this.radius, -this.radius);
       });
+    }
+    describe() {
+      return super.describe() + ` Radius: ${this.radius}.`;
     }
     getRadius() {
       return this.radius;
@@ -3626,6 +3630,9 @@ ${str}`, depth + 1, asynchronous2);
         context2.closePath();
       });
     }
+    describe() {
+      return super.describe() + ` Width: ${this.width}. Height: ${this.height}.`;
+    }
     setSize(width, height) {
       if (arguments.length !== 2) {
         throw new Error("You should pass exactly 2 arguments to `setSize(width, height)`.");
@@ -3708,7 +3715,7 @@ ${str}`, depth + 1, asynchronous2);
       });
     }
     describe() {
-      return super.describe() + this.label;
+      return super.describe() + " " + this.label + ` in font ${this.font}.`;
     }
     setFont(font) {
       if (arguments.length !== 1) {
