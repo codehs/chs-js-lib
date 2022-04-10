@@ -42,3 +42,7 @@ g3.setPosition((3 * getWidth()) / 4, getHeight() / 2);
 g3.setAnchor({ vertical: 1, horizontal: 1 });
 g3.debug = true;
 add(g3);
+
+console.log(g1.getBounds());
+console.log(g2.getBounds());
+console.log(g3.getBounds());
