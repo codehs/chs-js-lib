@@ -149,15 +149,33 @@ describe('Groups', () => {
                 right: 5,
             });
         });
+        it('Considers anchoring', () => {
+            const g = new Group();
+            g.add(new Rectangle(10, 10));
+            expect(g.getBounds().left).toEqual(0);
+            g.setAnchor({ horizontal: 1.0, vertical: 0 });
+            expect(g.getBounds().left).toEqual(-10);
+            g.setAnchor({ horizontal: 0.5, vertical: 0.5 });
+            expect(g.getBounds()).toEqual({ top: -5, left: -5, right: 5, bottom: 5 });
+        });
     });
     describe('Positioning', () => {
-        it('A groups x is its left bound', () => {
+        it("A Group's x is its left bound", () => {
             const g = new Group();
             g.add(new Rectangle(20, 20));
             expect(g.x).toEqual(g.getBounds().left);
             g.setPosition(10, 10);
             expect(g._boundsInvalidated).toBeTrue();
             expect(g.x).toEqual(g.getBounds().left);
+            expect(g.x).toEqual(10);
+        });
+        it("A Group's anchoring doesn't affect its position", () => {
+            const g = new Group();
+            g.add(new Rectangle(20, 20));
+            expect(g.x).toEqual(0);
+            g.setPosition(10, 10);
+            expect(g.x).toEqual(10);
+            g.setAnchor({ horizontal: 1.0, vertical: 0 });
             expect(g.x).toEqual(10);
         });
     });
