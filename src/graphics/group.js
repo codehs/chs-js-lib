@@ -44,10 +44,21 @@ class Group extends Thing {
         this._hiddenCanvas = document.createElement('canvas');
         this._hiddenCanvas.width = 1;
         this._hiddenCanvas.height = 1;
-        document.body.appendChild(this._hiddenCanvas);
         this._hiddenContext = this._hiddenCanvas.getContext('2d');
         this._lastRecordedBounds = {};
         this.bounds = null;
+        /**
+         * The left-most x coordinate of elements in this group, which is considered its x value.
+         * @private
+         * @type {number}
+         */
+        this._minX = 0;
+        /**
+         * The top-most y coordinate of elements in this group, which is considered its y value.
+         * @private
+         * @type {number}
+         */
+        this._minY = 0;
     }
 
     /**
@@ -55,15 +66,17 @@ class Group extends Thing {
      * @type {number}
      */
     get x() {
-        const bounds = this.getBounds();
-        return bounds.left + (bounds.right - bounds.left) * this.anchor.horizontal;
+        if (this._boundsInvalidated) {
+            this._updateBounds();
+        }
+        return this._minX;
     }
 
     set x(x) {
         if (!this.bounds) {
             return;
         }
-        this.setPosition(x, this.bounds.top);
+        this.setPosition(x, this._minY);
     }
 
     /**
@@ -71,15 +84,17 @@ class Group extends Thing {
      * @type {number}
      */
     get y() {
-        const bounds = this.getBounds();
-        return bounds.top + (bounds.bottom - bounds.top) * this.anchor.vertical;
+        if (this._boundsInvalidated) {
+            this._updateBounds();
+        }
+        return this._minY;
     }
 
     set y(y) {
         if (!this.bounds) {
             return;
         }
-        this.setPosition(this.bounds.left, y);
+        this.setPosition(this._minX, y);
     }
 
     /**
@@ -160,9 +175,8 @@ class Group extends Thing {
      * @param {number} y
      */
     setPosition(x, y) {
-        const bounds = this.getBounds();
-        const dx = x - bounds.left;
-        const dy = y - bounds.top;
+        const dx = x - this.x;
+        const dy = y - this.y;
         this.move(dx, dy);
     }
 
@@ -282,6 +296,8 @@ class Group extends Thing {
             top: minY - this.anchor.vertical * height,
             bottom: maxY - this.anchor.vertical * height,
         };
+        this._minX = minX;
+        this._minY = minY;
         this._hiddenCanvas.width = this.devicePixelRatio * width;
         this._hiddenCanvas.height = this.devicePixelRatio * height;
         this._hiddenCanvas.style.width = `${width}px`;
