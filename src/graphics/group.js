@@ -47,6 +47,18 @@ class Group extends Thing {
         this._hiddenContext = this._hiddenCanvas.getContext('2d');
         this._lastRecordedBounds = {};
         this.bounds = null;
+        /**
+         * The left-most x coordinate of elements in this group, which is considered its x value.
+         * @private
+         * @type {number}
+         */
+        this._minX = 0;
+        /**
+         * The top-most y coordinate of elements in this group, which is considered its y value.
+         * @private
+         * @type {number}
+         */
+        this._minY = 0;
     }
 
     /**
@@ -54,14 +66,17 @@ class Group extends Thing {
      * @type {number}
      */
     get x() {
-        return this.getBounds().left;
+        if (this._boundsInvalidated) {
+            this._updateBounds();
+        }
+        return this._minX;
     }
 
     set x(x) {
         if (!this.bounds) {
             return;
         }
-        this.setPosition(x, this.bounds.top);
+        this.setPosition(x, this._minY);
     }
 
     /**
@@ -69,14 +84,17 @@ class Group extends Thing {
      * @type {number}
      */
     get y() {
-        return this.getBounds().top;
+        if (this._boundsInvalidated) {
+            this._updateBounds();
+        }
+        return this._minY;
     }
 
     set y(y) {
         if (!this.bounds) {
             return;
         }
-        this.setPosition(this.bounds.left, y);
+        this.setPosition(this._minX, y);
     }
 
     /**
@@ -157,9 +175,8 @@ class Group extends Thing {
      * @param {number} y
      */
     setPosition(x, y) {
-        const bounds = this.getBounds();
-        const dx = x - bounds.left;
-        const dy = y - bounds.top;
+        const dx = x - this.x;
+        const dy = y - this.y;
         this.move(dx, dy);
     }
 
@@ -184,14 +201,14 @@ class Group extends Thing {
             // in the top left corner.
             // this means that only the bounding box surrounding the top
             // left corner needs to be drawn to the destination canvas
-            this._hiddenContext.translate(-bounds.left, -bounds.top);
+            this._hiddenContext.translate(-this.x, -this.y);
             this.elements
                 .filter(element => element.alive)
                 .sort((a, b) => a.layer - b.layer)
                 .forEach(element => {
                     element.draw(this._hiddenContext);
                 });
-            this._hiddenContext.translate(bounds.left, bounds.top);
+            this._hiddenContext.translate(this.x, this.y);
             context.drawImage(this._hiddenCanvas, 0, 0, width, height);
             context.closePath();
         });
@@ -271,14 +288,16 @@ class Group extends Thing {
             maxX = Math.max(maxX, right);
             maxY = Math.max(maxY, bottom);
         });
-        this.bounds = {
-            left: minX,
-            right: maxX,
-            top: minY,
-            bottom: maxY,
-        };
         const width = maxX - minX;
         const height = maxY - minY;
+        this.bounds = {
+            left: minX - this.anchor.horizontal * width,
+            right: maxX - this.anchor.horizontal * width,
+            top: minY - this.anchor.vertical * height,
+            bottom: maxY - this.anchor.vertical * height,
+        };
+        this._minX = minX;
+        this._minY = minY;
         this._hiddenCanvas.width = this.devicePixelRatio * width;
         this._hiddenCanvas.height = this.devicePixelRatio * height;
         this._hiddenCanvas.style.width = `${width}px`;

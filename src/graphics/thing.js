@@ -571,6 +571,7 @@ class Thing {
             context.strokeStyle = 'red';
             context.fill();
             const bounds = this.getBounds();
+            // move back to the origin
             context.translate(-drawX, -drawY);
             context.strokeRect(
                 bounds.left,

@@ -7,6 +7,15 @@ describe('Polygon', () => {
             expect(new Polygon().type).toEqual('Polygon');
         });
     });
+    describe("A Polygon's position (x, y)", () => {
+        it('Is unaffected by adding points', () => {
+            const p = new Polygon();
+            p.addPoint(10, 10);
+            p.addPoint(20, 10);
+            p.addPoint(10, 20);
+            expect(p.x).toEqual(0);
+        });
+    });
     describe('addPoint', () => {
         it("Invalidates the superclass's bounds", () => {
             const p = new Polygon();
@@ -27,6 +36,7 @@ describe('Polygon', () => {
             p.addPoint(30, 0);
             p.addPoint(200, 0);
             expect(p.getWidth()).toBe(200);
+            expect(p.width).toBe(200);
         });
     });
     describe('getHeight()', () => {
@@ -37,6 +47,7 @@ describe('Polygon', () => {
             p.addPoint(0, 120);
             p.addPoint(0, 90);
             expect(p.getHeight()).toBe(100);
+            expect(p.height).toBe(100);
         });
     });
     describe('move()', () => {
@@ -107,6 +118,26 @@ describe('Polygon', () => {
                 left: -60,
                 bottom: 15,
                 right: 0,
+            });
+        });
+        it('Its bounds are affected by anchoring', () => {
+            const p = new Polygon();
+            p.addPoint(-10, 0);
+            p.addPoint(10, 0);
+            p.addPoint(10, 20);
+            p.addPoint(-10, 20);
+            expect(p.getBounds()).toEqual({
+                top: 0,
+                left: -10,
+                right: 10,
+                bottom: 20,
+            });
+            p.setAnchor({ vertical: 1, horizontal: 1 });
+            expect(p.getBounds()).toEqual({
+                top: -20,
+                left: -30,
+                bottom: 0,
+                right: -10,
             });
         });
     });
