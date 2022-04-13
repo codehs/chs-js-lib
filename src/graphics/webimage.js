@@ -44,6 +44,13 @@ class WebImage extends Thing {
          * @type {boolean}
          */
         this.imageLoaded = false;
+        /**
+         * Whether image smoothing should be applied when the image is scaled up.
+         * For more information, see {@link https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/imageSmoothingEnabled}
+         * @default false
+         * @type {boolean}
+         */
+        this.imageSmoothingEnabled = false;
     }
 
     /**
@@ -119,19 +126,12 @@ class WebImage extends Thing {
             this.updateHiddenCanvas();
         }
         super.draw(context, () => {
+            const existingImageSmoothing = context.imageSmoothingEnabled;
             context.beginPath();
-            // the __hiddenCanvas contains the ImageData, sized as it originally was.
-            // in order to perform scaling, the destination width and height are
-            // currentWidth * (currentWidth / originalWidth),
-            // meaning the current size times the amount the size has changed
-            context.drawImage(
-                this._hiddenCanvas,
-                0,
-                0,
-                (this.width * this.width) / this.data.width,
-                (this.height * this.height) / this.data.height
-            );
+            context.imageSmoothingEnabled = this.imageSmoothingEnabled;
+            context.drawImage(this._hiddenCanvas, 0, 0, this.width, this.height);
             context.closePath();
+            context.imageSmoothingEnabled = existingImageSmoothing;
         });
     }
 
@@ -370,8 +370,6 @@ class WebImage extends Thing {
      * This is automatically called after operations that modify ImageData.
      */
     updateHiddenCanvas() {
-        this._hiddenCanvas.width = Math.max(this._hiddenCanvas.width, this.width);
-        this._hiddenCanvas.height = Math.max(this._hiddenCanvas.height, this.height);
         const context = this._hiddenCanvas.getContext('2d');
         context.putImageData(this.data, 0, 0);
         this._hiddenCanvasOutOfSync = false;
