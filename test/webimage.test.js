@@ -246,4 +246,24 @@ describe('WebImage', () => {
             });
         });
     });
+    describe('Resizing', () => {
+        it('Properly shrinks the WebImage', () => {
+            const img = new WebImage(RGBURL);
+            const g = new Graphics({ shouldUpdate: false });
+            g.add(img);
+            return new Promise(resolve => {
+                img.loaded(() => {
+                    g.redraw();
+                    // the img is 90x90
+                    let bottomRightPixel = g.getPixel(89, 89);
+                    expect(bottomRightPixel).toEqual([0, 0, 255, 255]);
+                    img.setSize(50, 50);
+                    g.redraw();
+                    bottomRightPixel = g.getPixel(49, 49);
+                    expect(bottomRightPixel).toEqual([0, 0, 255, 255]);
+                    resolve();
+                });
+            });
+        });
+    });
 });
