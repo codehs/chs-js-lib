@@ -122,6 +122,7 @@ class Text extends Thing {
             );
         }
         this.label = label;
+        this.resetDimensions()
     }
 
     /**
@@ -143,6 +144,7 @@ class Text extends Thing {
             );
         }
         this.label = label;
+        this.resetDimensions()
     }
 
     /**

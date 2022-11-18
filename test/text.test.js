@@ -87,6 +87,12 @@ describe('Text', () => {
             t.setText('fdsa');
             expect(t.label).toEqual('fdsa');
         });
+        it('Updates dimensions', () => {
+            const t = new Text('mmmm');
+            const originalWidth = t.getWidth();
+            t.setText('mmmmmmm');
+            expect(t.getWidth()).toBeGreaterThan(originalWidth);
+        });
     });
     describe('setLabel', () => {
         it('Errors for invalid arguments', () => {
@@ -108,6 +114,12 @@ describe('Text', () => {
             const t = new Text('asdf');
             t.setLabel('fdsa');
             expect(t.label).toEqual('fdsa');
+        });
+        it('Updates dimensions', () => {
+            const t = new Text('mmmm');
+            const originalWidth = t.getWidth();
+            t.setLabel('mmmmmmm');
+            expect(t.getWidth()).toBeGreaterThan(originalWidth);
         });
     });
     describe('containsPoint', () => {
