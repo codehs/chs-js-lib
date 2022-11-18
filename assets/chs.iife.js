@@ -3753,6 +3753,7 @@ ${str}`, depth + 1, asynchronous2);
         throw new TypeError("Invalid value passed to `setLabel`. You passed a value of type " + typeof label + ", but a string or number is required.");
       }
       this.label = label;
+      this.resetDimensions();
     }
     setText(label) {
       if (arguments.length !== 1) {
@@ -3762,6 +3763,7 @@ ${str}`, depth + 1, asynchronous2);
         throw new TypeError("Invalid value passed to `setText`. You passed a value of type " + typeof label + ", but a string or number is required.");
       }
       this.label = label;
+      this.resetDimensions();
     }
     getLabel() {
       return this.label;
