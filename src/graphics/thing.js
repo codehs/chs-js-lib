@@ -648,7 +648,7 @@ class Thing {
      * // this method is on every Shape
      * let thing = new Thing();
      * // center the object around its position
-     * thing.setPosition({vertical: 0.5, horizontal: 0.5});
+     * thing.setAnchor({vertical: 0.5, horizontal: 0.5});
      *
      * @param {{vertical: number, horizontal: number}} anchor
      */
