@@ -29,11 +29,11 @@
     "author": "CodeHS",
     "license": "ISC",
     "devDependencies": {
-        "@11ty/eleventy": "^0.12.1",
+        "@11ty/eleventy": "^2.0.1",
         "docdash": "^1.2.0",
         "esbuild": "^0.13.13",
         "husky": "^7.0.4",
-        "jsdoc": "^3.6.7",
+        "jsdoc": "^4.0.2",
         "karma": "^6.3.4",
         "karma-chrome-launcher": "^3.1.0",
         "karma-coverage": "^2.0.3",
